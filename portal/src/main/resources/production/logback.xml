@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="log.base" value="."/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--PROD-->
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <Encoding>UTF-8</Encoding>
+        <File>/mydata/mtx/log/mtx.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/mydata/mtx/log/mtx-%d{yyyy-MM-dd}_%i.log</FileNamePattern>
+            <MaxHistory>10</MaxHistory>
+            <TimeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <MaxFileSize>50MB</MaxFileSize>
+            </TimeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>[%-5level] %d{HH:mm:ss.SSS} [%thread] %logger{36} - %msg%n
+            </pattern>
+        </layout>
+    </appender>
+
+    <!-- project default level -->
+    <logger name="com.mtx" level="info"/>
+    <!--log4jdbc -->
+    <logger name="com.ibatis"/>
+    <logger name="com.ibatis.common.jdbc.SimpleDataSource"/>
+    <logger name="com.ibatis.common.jdbc.ScriptRunner"/>
+    <logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate"/>
+    <logger name="java.sql.Connection"/>
+    <logger name="java.sql.Statement"/>
+    <logger name="java.sql.PreparedStatement"/>
+    <logger name="java.sql.ResultSet"/>
+
+    <root level="info">
+        <!--<appender-ref ref="console"/>-->
+        <appender-ref ref="file"/>
+    </root>
+
+</configuration>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.wechat.mapper.WpMenuMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.wechat.entity.wpMenu.WpMenu">
+    </resultMap>
+
+    <select id="selectWpMenuName" resultMap="selectResultMap">
+        select m.menusname,m.menustype
+        from tb_wp_menu m
+        where m.bindid = #{wpMenu.bindid}
+        GROUP by m.menusname
+        ORDER by m.menustype,m.createon;
+    </select>
+
+    <select id="selectWpMenu" resultMap="selectResultMap">
+        select *
+        from tb_wp_menu m
+        where m.bindid = #{wpMenu.bindid}
+        <if test="wpMenu.menusname != null and wpMenu.menusname != ''">
+            and m.menusname = #{wpMenu.menusname}
+        </if>
+        <if test="wpMenu.parentid != null and wpMenu.parentid != ''">
+            and m.parentid = #{wpMenu.parentid}
+        </if>
+        <if test="wpMenu.parentid == null or wpMenu.parentid == ''">
+            and (m.parentid is null or m.parentid = '')
+        </if>
+        order by m.orderno;
+    </select>
+
+    <select id="selectWpMenuMaster" resultMap="selectResultMap">
+        select *
+        from tb_wp_menu m
+        where m.bindid = #{wpMenu.bindid}
+        and m.menusname = #{wpMenu.menusname}
+        and m.orderno = #{wpMenu.orderno}
+        and (m.parentid is null or m.parentid = '')
+        order by m.orderno;
+    </select>
+
+    <select id="selectWpMenuByName" resultMap="selectResultMap">
+        select *
+        from tb_wp_menu m
+        where m.bindid = #{wpMenu.bindid}
+        and m.menusname = #{wpMenu.menusname}
+        order by m.orderno;
+    </select>
+</mapper>

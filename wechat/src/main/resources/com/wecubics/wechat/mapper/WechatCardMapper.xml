@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.wechat.mapper.WechatCardMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.wechat.entity.admin.WechatBaseCard">
+    </resultMap>
+
+    <update id="updateCardAfterCreate">
+        update tb_wechat_card
+        set card_id = #{card_id}
+        where card_id = #{org_card_id};
+    </update>
+</mapper>

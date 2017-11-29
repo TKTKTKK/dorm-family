@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+        version="2.0">
+    <tlib-version>1.1</tlib-version>
+    <short-name>WebTag</short-name>
+    <uri>/webTags</uri>
+    <tag>
+        <name>pagination</name>
+        <tag-class>com.mtx.portal.tag.PaginationTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>pageList</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>postParam</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <function>
+        <description>获取当前登录用户的菜单对象列表</description>
+        <name>getMenuList</name>
+        <function-class>com.mtx.common.utils.UserUtils</function-class>
+        <function-signature>java.util.List getMenuList()</function-signature>
+        <example>${web:getMenuList()}</example>
+    </function>
+
+    <function>
+        <description>获取上传文件路径</description>
+        <name>getUploadViewPath</name>
+        <function-class>com.mtx.common.utils.UploadUtils</function-class>
+        <function-signature>java.lang.String getUploadViewPath()</function-signature>
+        <example>${web:getUploadViewPath()}</example>
+    </function>
+
+    <function>
+        <description>查询code描述</description>
+        <name>getCodeDesc</name>
+        <function-class>com.mtx.common.utils.CodeUtils</function-class>
+        <function-signature>java.lang.String getCodeDesc(java.lang.String,java.lang.String)</function-signature>
+        <example>${web:getCodeDesc(java.lang.String,java.lang.String)}</example>
+    </function>
+
+    <function>
+        <description>根据用户id查询用户姓名</description>
+        <name>queryNameById</name>
+        <function-class>com.mtx.common.utils.UserUtils</function-class>
+        <function-signature>java.lang.String queryNameById(java.lang.String)</function-signature>
+        <example>${web:queryNameById(java.lang.String)}</example>
+    </function>
+
+    <function>
+        <description>根据用户id查询用户组名称</description>
+        <name>queryRoleById</name>
+        <function-class>com.mtx.common.utils.UserUtils</function-class>
+        <function-signature>java.lang.String queryRoleById(java.lang.String)</function-signature>
+        <example>${web:queryRoleById(java.lang.String)}</example>
+    </function>
+
+    <function>
+        <description>根据type查询code描述列表</description>
+        <name>queryCommonCodeList</name>
+        <function-class>com.mtx.common.utils.CodeUtils</function-class>
+        <function-signature>java.util.List queryCommonCodeList(java.lang.String)</function-signature>
+        <example>${web:queryCommonCodeList(java.lang.String)}</example>
+    </function>
+
+    <function>
+        <description>根据name和bindid查询配置</description>
+        <name>getConfigByNameAndBindid</name>
+        <function-class>com.mtx.common.utils.ConfigUtil</function-class>
+        <function-signature>java.lang.String getConfigByNameAndBindid(java.lang.String,java.lang.String)</function-signature>
+        <example>${web:getConfigByNameAndBindid(java.lang.String,java.lang.String)}</example>
+    </function>
+
+    <function>
+        <description>根据name查询配置</description>
+        <name>getConfigByName</name>
+        <function-class>com.mtx.common.utils.ConfigUtil</function-class>
+        <function-signature>java.lang.String getConfigByName(java.lang.String)</function-signature>
+        <example>${web:getConfigByName(java.lang.String)}</example>
+    </function>
+
+    <function>
+        <description>查询当前用户信息</description>
+        <name>getUser</name>
+        <function-class>com.mtx.common.utils.UserUtils</function-class>
+        <function-signature>com.mtx.common.entity.PlatformUser getUser()</function-signature>
+        <example>${web:getUser()}</example>
+    </function>
+
+    <function>
+        <description>根据模板名称查询shortid</description>
+        <name>queryTmIdShortByName</name>
+        <function-class>com.mtx.wechat.utils.WechatMasterUtil</function-class>
+        <function-signature>java.lang.String queryTmIdShortByName(java.lang.String)</function-signature>
+        <example>${web:queryTmIdShortByName(java.lang.String)}</example>
+    </function>
+
+    <function>
+        <description>根据小区和角色查询用户列表</description>
+        <name>queryUserListByCommunityAndRole</name>
+        <function-class>com.mtx.common.utils.UserUtils</function-class>
+        <function-signature>java.util.List queryUserListByCommunityAndRole(java.lang.String, java.lang.String, java.lang.String)</function-signature>
+        <example>${web:queryUserListByCommunityAndRole(java.lang.String, java.lang.String, java.lang.String)}</example>
+    </function>
+
+    <function>
+        <description>获取微信用户信息</description>
+        <name>getWechatUser</name>
+        <function-class>com.mtx.wechat.utils.WechatBindingUtil</function-class>
+        <function-signature>com.mtx.wechat.entity.WechatUser getWechatUser(java.lang.String)</function-signature>
+        <example>${web:getWechatUser(java.lang.String)}</example>
+    </function>
+
+    <function>
+        <description>获取微信昵称</description>
+        <name>getWechatNickname</name>
+        <function-class>com.mtx.wechat.utils.WechatBindingUtil</function-class>
+        <function-signature>java.lang.String getWechatNickname(java.lang.String)</function-signature>
+        <example>${web:getWechatNickname(java.lang.String)}</example>
+    </function>
+
+
+</taglib>

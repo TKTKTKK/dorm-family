@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.common.mapper.AuditLogMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.common.audit.AuditLog">
+    </resultMap>
+
+    <select id="selectAuditLogListByEntity" resultMap="selectResultMap">
+        select al.*,
+        ifnull(u.name, al.createby) as createbyname
+        from tb_common_audit_log al
+        left join tb_platform_user u on al.createby = u.uuid
+        where al.entityid = #{entityid}
+        and al.entityname = #{entityname}
+        order by al.createon desc;
+    </select>
+</mapper>

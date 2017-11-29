@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sitemesh>
+    <!-- 指明需要被装饰页面的path -->
+    <mapping path="/admin/*" decorator="/WEB-INF/layout/decorators/admin/decorators.jsp"/>
+
+    <!-- 指明满足被装饰页面路径，但需要排除在外的/不需要被装饰的页面的path -->
+    <mapping path="/admin/login" exclude="true"/>
+    <mapping path="/admin/register" exclude="true"/>
+    <mapping path="/admin/weproperty/iframe/*" exclude="true"/>
+    <!--查看图文详细页内容-->
+    <mapping path="/admin/autoRep/showArticleDetail" exclude="true"/>
+    <mapping path="/static/*" exclude="true"/>
+</sitemesh>

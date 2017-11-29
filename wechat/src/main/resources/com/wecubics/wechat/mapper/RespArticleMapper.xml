@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.wechat.mapper.RespArticleMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.wechat.entity.admin.RespArticle">
+    </resultMap>
+
+    <select id="selectRespArticleList" resultMap="selectResultMap">
+        select *
+        from tb_resp_article
+        where newsid = #{respArticle.newsid}
+        order by createon;
+    </select>
+</mapper>

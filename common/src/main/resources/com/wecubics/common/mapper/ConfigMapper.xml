@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.common.mapper.ConfigMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.common.entity.Config">
+    </resultMap>
+
+    <select id="getAllConfig" resultMap="selectResultMap">
+        select cc.*,c.name as communityname
+        from tb_common_config cc,tb_wp_community c
+        where
+        cc.refid = c.uuid
+        and cc.refid is not null and cc.refid!=''
+        <if test="config.bindid !=null and config.bindid!=''">
+           and  cc.bindid = #{config.bindid}
+        </if>
+        <if test="config.refid !=null and config.refid!=''">
+           and  cc.refid = #{config.refid}
+        </if>
+        <if test="config.configname !=null and config.configname!=''">
+           and cc.configname like concat("%", #{config.configname},"%")
+        </if>
+        <if test="topAccount == ''">
+            and cc.refid in (select c.uuid
+                            from tb_platform_user a, tb_wp_user_com b, tb_wp_community c
+                            where a.uuid = b.userid
+                            and   b.communityid = c.uuid
+                            and   a.uuid = #{userid}
+                            and (c.parentCommunity is null or c.parentCommunity != '000000')
+                            )
+        </if>
+        order by cc.refid
+        ;
+    </select>
+
+    <select id="getAllConfigvalue" resultMap="selectResultMap">
+        select distinct configvalue
+        from tb_common_config c
+        ;
+    </select>
+
+    <select id="deleteByName">
+        delete
+        from tb_common_config
+        where configname = #{config.configname}
+        <if test="config.refid != null and config.refid != ''">
+            and refid = #{config.refid}
+        </if>
+        ;
+    </select>
+    <select id="queryConfigByConfigName" resultMap="selectResultMap">
+        select c.* from tb_common_config c
+        where c.configname=#{configname}
+        and c.refid=#{refid}
+    </select>
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.wechat.mapper.WechatCardCodeMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.wechat.entity.admin.WechatCardCode">
+    </resultMap>
+
+    <select id="selectCodeByBindIdAndOpenIdList" resultMap="selectResultMap">
+      SELECT
+	    *
+      FROM
+	    tb_wechat_card_code co
+      INNER JOIN tb_wechat_card ca ON ca.bindid = #{bindid}
+        AND ca.card_type = #{cardType}
+        AND co.cardid = ca.uuid
+        AND co.openid = #{openid}
+    </select>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<ehcache updateCheck="false" name="defaultCache">
+
+    <diskStore path="java.io.tmpdir/mtx/ehcache" />
+
+    <!-- DefaultCache setting. -->
+    <defaultCache maxEntriesLocalHeap="100" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"
+                  overflowToDisk="true" maxEntriesLocalDisk="100000" />
+
+    <cache name="sysCache" maxElementsInMemory="500" eternal="true" overflowToDisk="true"/>
+    <cache name="origidBindMapCache" maxElementsInMemory="500" eternal="true" overflowToDisk="true"/>
+    <cache name="bindDetailsCache" maxElementsInMemory="500" eternal="true" overflowToDisk="true"/>
+    <cache name="accessTokenCache" maxElementsInMemory="500" eternal="true" overflowToDisk="true"/>
+    <cache name="jsApiTicketCache" maxElementsInMemory="500" eternal="true" overflowToDisk="true"/>
+    <cache name="apiTicketCache" maxElementsInMemory="500" eternal="true" overflowToDisk="true"/>
+    <cache name="wpuserCache" maxElementsInMemory="500" eternal="true" overflowToDisk="true"/>
+    <cache name="authorizerAccessTokenCache" maxElementsInMemory="500" eternal="true" overflowToDisk="true"/>
+    <cache name="validationCode" maxElementsInMemory="5000" eternal="false" overflowToDisk="true" timeToLiveSeconds="120"/>
+
+    <cache name="shiro-activeSessionCache"
+           maxElementsInMemory="500"
+           overflowToDisk="true"
+           eternal="true"
+           timeToLiveSeconds="0"
+           timeToIdleSeconds="0"
+           diskPersistent="true"
+           diskExpiryThreadIntervalSeconds="600"/>
+
+    <cache name="shiro.realm.authorizationCache"
+           maxElementsInMemory="500"
+           eternal="true"
+           overflowToDisk="true"/>
+
+</ehcache>

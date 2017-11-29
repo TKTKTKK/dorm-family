@@ -1,0 +1,197 @@
+/*************************************************************************/
+/* TABLE-1-1 */
+/*************************************************************************/
+
+
+/*!---------- PRICING ----------*/
+.pricing .row:nth-of-type(1) {
+    margin-bottom: 53.33333333px;
+}
+.word{
+    font-size: 22px;
+    font-weight:bold;
+}
+.pricing-1-1 i{
+    font-size: 66px;
+    opacity: 0.2;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+.pricing-1-1 .pricing-option h5 {
+    color: #888888;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 0px;
+}
+.pricing-1-1 .dollar,
+.pricing-1-1 .price,
+.pricing-1-1 .terms {
+    color: #6dc77a;
+}
+.pricing-1-1 .dollar,
+.pricing-1-1 .terms {
+    font-size: 22px;
+}
+.pricing-1-1 .dollar {
+    position: relative;
+    bottom: 52px;
+}
+
+/*!---------- Purchase Button ----------*/
+.pricing-1-1 .btn-success{
+    text-decoration: none;
+    display: inline-block;
+    color: #fff;
+    padding: 5px 10px;
+    background: #6dc77a;
+    border-radius: 3px;
+    margin-top: 0px;
+    /*tansition*/
+    transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+}
+
+
+.pricing-1-1 .pricing-option:hover .btn-success,.pricing-1-1 .pricing-option.active .btn-success {
+    color: #6dc77a !important;
+    background: #f9f9f9;
+
+}
+/*.pricing-option.active .btn-success:hover{*/
+    /*background: #fff !important;*/
+    /*transform: scale(1.05);*/
+    /*-webkit-transform: scale(1.05);*/
+
+
+/*}*/
+
+.pricing-1-1 .price {
+    font-size: 90px;
+    font-weight: 700;
+    line-height: 120px;
+}
+.pricing-1-1 .price-container {
+    margin-bottom: 26.66666667px;
+}
+.pricing-1-1 .pricing-option {
+    padding: 0;
+    margin: 25px 0;
+
+    /*transition*/
+    transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+}
+
+.pricing-1-1 .pricing-option .price-index{
+    width: 98%;
+    margin: 0 auto;
+    border: 1px solid#6dc77a;
+    border-radius: 5px;
+    padding: 30px 0;
+    padding-bottom: 0;
+}
+
+.pricing-1-1.bg-dark .pricing-option {
+    border: 1px solid #444;
+}
+.pricing-1-1 .pricing-option:hover,
+.pricing-1-1 .pricing-option.active {
+    background: #6dc77a;
+    transform: scale(1.05);
+    -webkit-transform: scale(1.05);
+    z-index: 10;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 3px !important;
+
+    /*Box-Shadow*/
+    -webkit-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+    -o-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+}
+.pricing-1-1 .pricing-option:hover .price,
+.pricing-1-1 .pricing-option.active .price,
+.pricing-1-1 .pricing-option:hover .dollar,
+.pricing-1-1 .pricing-option.active .dollar,
+.pricing-1-1 .pricing-option:hover .terms,
+.pricing-1-1 .pricing-option.active .terms,
+.pricing-1-1 .pricing-option:hover h5,
+.pricing-1-1 .pricing-option.active h5,
+.pricing-1-1 .pricing-option:hover p,
+.pricing-1-1 .pricing-option.active p,
+.pricing-1-1 .pricing-option:hover span,
+.pricing-1-1 .pricing-option.active span,
+.pricing-option:hover i,
+.pricing-option.active i {
+    color: #fff;
+    transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+}
+.pricing-1-1 .pricing-option:hover i,
+.pricing-1-1 .pricing-option.active i {
+    opacity: 0.5;
+}
+.pricing-1-1 .pricing-option:hover h6,
+.pricing-1-1 .pricing-option.active h6 {
+    font-weight: 400;
+}
+@media all and (min-width: 1024px) {
+    .pricing-1-1 a:nth-of-type(1) .pricing-option {
+        border-radius: 3px 0px 0px 3px;
+    }
+    .pricing-1-1 a:nth-of-type(4) .pricing-option {
+        border-radius: 0px 3px 3px 0px;
+    }
+    .pricing-1-1 a:nth-of-type(2) .pricing-option,
+    .pricing-1-1 a:nth-of-type(3) .pricing-option {
+        border-radius: 0px;
+    }
+    .pricing-1-1 a:nth-of-type(2) .pricing-option,
+    .pricing-1-1 a:nth-of-type(3) .pricing-option,
+    .pricing-1-1 a:nth-of-type(4) .pricing-option {
+        border-left: none;
+    }
+}
+@media all and (max-width: 990px) {
+    .pricing-1-1 .pricing-option {
+        margin-bottom: 0;
+    }
+    .pricing-1-1 a:nth-of-type(1) .pricing-option {
+        border-radius: 3px 0px 0px 0px;
+        border-right: none;
+    }
+    .pricing-1-1 a:nth-of-type(2) .pricing-option {
+        border-radius: 0px 3px 0px 0px;
+    }
+    .pricing-1-1 a:nth-of-type(3) .pricing-option {
+        border-radius: 0px 0px 0px 3px;
+        border-right: none;
+    }
+    .pricing-1-1 a:nth-of-type(3) .pricing-option {
+        border-radius: 0px 0px 3px 0px;
+        margin-bottom: 20px;
+    }
+    .pricing-1-1 a:nth-of-type(1) .pricing-option,
+    .pricing-1-1 a:nth-of-type(2) .pricing-option {
+        border-bottom: none;
+    }
+}
+@media all and (max-width: 767px) {
+    .pricing-1-1 .pricing-option {
+        border-radius: 3px;
+        margin-bottom: 20px;
+    }
+}
+
+@media all and (max-width: 990px) {
+    .pricing-option:hover,
+    .pricing-option.active {
+        transform: scale(1) !important;
+        -webkit-transform: scale(1) !important;
+    }
+}

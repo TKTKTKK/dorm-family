@@ -1,0 +1,112 @@
+/*************************************************************************/
+/* TABLE-2-1 */
+/*************************************************************************/
+
+
+/*!---------- Sign Up BUTTON ----------*/
+.pricing-2-2 .plan li a.btn-sign-up{
+    padding: 10px 15px;
+    border-radius: 3px;
+    background: #e74c3c;
+    color: #f9f9f9;
+    text-decoration: none;
+    /*tansition*/
+    transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+}
+
+
+.pricing-2-2 .plan li a.btn-sign-up:hover{
+    /*transform*/
+    -webkit-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+    transform: scale(1.05);
+}
+
+/*!---------- COMMON STYLES ----------*/
+.pricing-2-2 .plan {
+    border-radius: 6px;
+    list-style: none;
+    padding: 0 0 20px;
+    margin: 30px 0;
+    background: #fff;
+    text-align: center;
+}
+.pricing-2-2 .plan li {
+    padding: 10px 15px;
+    color: #ccc;
+    border-top: 1px solid #f5f5f5;
+    -webkit-transition: 300ms;
+    transition: 300ms;
+}
+.pricing-2-2 .plan li.plan-price {
+    border-top: 0;
+}
+.pricing-2-2 .plan li.plan-name {
+    border-radius: 6px 6px 0 0;
+    padding: 15px;
+    font-size: 24px;
+    line-height: 24px;
+    color: #fff;
+    background: #e74c3c;
+    margin-bottom: 30px;
+    border-top: 0;
+}
+.pricing-2-2 .plan li > strong {
+    color: #e74c3c;
+}
+.pricing-2-2 .plan li.plan-action {
+    margin-top: 10px;
+    border-top: 0;
+}
+.pricing-2-2 .plan.featured {
+    -webkit-transform: scale(1.07);
+    -ms-transform: scale(1.07);
+    transform: scale(1.07);
+
+    /*Box-Shadow*/
+    -webkit-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+    -o-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+
+    /*transition*/
+    transition: all 0.6s ease-in-out;
+    -webkit-transition: all 0.6s ease-in-out;
+    -moz-transition: all 0.6s ease-in-out;
+}
+
+
+
+/*!---------- Featured Table Colors ----------*/
+.pricing-2-2 .plan.featured li.plan-name,.pricing-2-2 .featured li a.btn-sign-up{
+    background: #E74C3C;
+}
+.pricing-2-2 .featured li > strong{
+    color: #E74C3C;
+}
+
+#footer {
+    margin-top: 100px;
+    padding-bottom: 30px;
+}
+
+
+
+/*!---------- Responsive-Quires ----------*/
+@media all and (min-width: 768px){
+    .pricing-2-2 .plan.featured {
+        -webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+}
+    @media all and (max-width: 767px){
+        .pricing-2-2 .plan.featured {
+            -webkit-transform: scale(1.01);
+            -ms-transform: scale(1.01);
+            transform: scale(1.01);
+        }
+
+    }
