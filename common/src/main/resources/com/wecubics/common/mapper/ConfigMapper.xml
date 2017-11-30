@@ -48,9 +48,18 @@
         </if>
         ;
     </select>
+
     <select id="queryConfigByConfigName" resultMap="selectResultMap">
         select c.* from tb_common_config c
         where c.configname=#{configname}
         and c.refid=#{refid}
+    </select>
+
+
+    <select id="queryConfigByBindidAndName" resultMap="selectResultMap">
+        select c.* from tb_common_config c
+        where c.configname=#{configname}
+        and c.bindid=#{bindid}
+        and c.refid is null
     </select>
 </mapper>

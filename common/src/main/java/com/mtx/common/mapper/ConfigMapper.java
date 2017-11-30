@@ -15,7 +15,8 @@ import java.util.List;
 @Repository
 public interface ConfigMapper extends BaseMapper<Config> {
     public PageList<Config> getAllConfig(@Param("userid") String userid, @Param("config") Config config, @Param("topAccount") String topAccount, PageBounds pageBounds);
-    public List<Config> getAllConfigvalue(@Param("config")Config config);
-    public void deleteByName(@Param("config")Config config);
-    public Config queryConfigByConfigName(@Param("refid")String refid,@Param("configname") String configname);
+    public List<Config> getAllConfigvalue(@Param("config") Config config);
+    public void deleteByName(@Param("config") Config config);
+    public Config queryConfigByConfigName(@Param("refid") String refid, @Param("configname") String configname);
+    public Config queryConfigByBindidAndName(@Param("bindid") String refid, @Param("configname") String configname);
 }

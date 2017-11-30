@@ -41,10 +41,7 @@ public class ConfigUtil {
      * @return
      */
     public static String getConfigByNameAndBindid(String bindid,String configName){
-        Config config = new Config();
-        config.setBindid(bindid);
-        config.setConfigname(configName);
-        config = configService.queryForObjectByUniqueKey(config);
+        Config config = configService.queryConfigByBindidAndName(bindid,configName);
         if(config != null){
             return config.getConfigvalue();
         }else{

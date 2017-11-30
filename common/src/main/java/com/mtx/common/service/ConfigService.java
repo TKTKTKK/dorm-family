@@ -76,6 +76,10 @@ public class ConfigService extends BaseService<ConfigMapper,Config> {
         return this.mapper.queryConfigByConfigName(refid,configname);
     }
 
+    public Config queryConfigByBindidAndName(String bindid,String configname){
+        return this.mapper.queryConfigByBindidAndName(bindid,configname);
+    }
+
     public Config getWpCommunityConfigInfo(Config config) {
         config.setBindid(UserUtils.getUserBindId());
         List<Config> configList = queryForList(config);
