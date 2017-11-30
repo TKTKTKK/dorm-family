@@ -1,16 +1,11 @@
 package com.mtx.wechat.utils;
 
-import com.mtx.wechat.entity.*;
-import com.mtx.wechat.entity.param.card.ActivateMemberCard;
-import com.mtx.wechat.entity.param.card.EncryptCode;
-import com.mtx.wechat.entity.param.tm.TemplateMessage;
 import com.mtx.common.base.CommonConstants;
 import com.mtx.common.utils.ApplicationContextUtil;
 import com.mtx.common.utils.StringUtils;
+import com.mtx.wechat.entity.*;
 import com.mtx.wechat.entity.admin.WechatBinding;
-import com.mtx.wechat.entity.param.card.UpdateMemberCard;
-import com.mtx.wechat.entity.result.card.DecryptCodeResult;
-import com.mtx.wechat.entity.result.card.UpdateMemberCardResult;
+import com.mtx.wechat.entity.param.tm.TemplateMessage;
 import com.mtx.wechat.entity.result.jssdk.JsApiTicket;
 import com.mtx.wechat.entity.result.material.MaterialNewsResult;
 import com.mtx.wechat.entity.result.qrcode.QrcodeResult;
@@ -195,40 +190,6 @@ public class WechatBindingUtil {
     public static String saveMedia(String bindId,String serverId,String type){
         String accessToken = getAccessTokenByBindId(bindId);
         return AdvancedUtil.saveMedia(accessToken, serverId, type);
-    }
-
-    /**
-     *
-     * @param bindId
-     * @param encryptCode
-     * @return
-     */
-    public static String decryptCode(String bindId,EncryptCode encryptCode){
-        String accessToken = getAccessTokenByBindId(bindId);
-        DecryptCodeResult decryptCodeResult = CardUtil.decryptCode(accessToken, encryptCode);
-        return decryptCodeResult.getCode();
-    }
-
-    /**
-     *
-     * @param bindId
-     * @param activateMemberCard
-     * @return
-     */
-    public static int activateMemberCard(String bindId,ActivateMemberCard activateMemberCard){
-        String accessToken = getAccessTokenByBindId(bindId);
-        return CardUtil.activateMemberCard(accessToken, activateMemberCard);
-    }
-
-    /**
-     *
-     * @param bindId
-     * @param updateMemberCard
-     * @return
-     */
-    public static UpdateMemberCardResult updateMemberCard(String bindId,UpdateMemberCard updateMemberCard){
-        String accessToken = getAccessTokenByBindId(bindId);
-        return CardUtil.updateMemberCard(accessToken, updateMemberCard);
     }
 
     /**

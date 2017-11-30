@@ -2,21 +2,19 @@ package com.mtx.portal.controller.admin;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
-import com.mtx.portal.PortalContants;
-import com.mtx.wechat.service.*;
 import com.mtx.common.base.CommonConstants;
 import com.mtx.common.exception.ServiceException;
-import com.mtx.common.service.AttachmentService;
 import com.mtx.common.utils.*;
+import com.mtx.portal.PortalContants;
 import com.mtx.wechat.WechatConstants;
 import com.mtx.wechat.entity.WechatError;
 import com.mtx.wechat.entity.WechatGroup;
 import com.mtx.wechat.entity.WpUser;
 import com.mtx.wechat.entity.admin.WechatBinding;
-import com.mtx.wechat.entity.admin.WechatStore;
 import com.mtx.wechat.entity.admin.WechatTm;
 import com.mtx.wechat.entity.result.material.MaterialNewsResult;
 import com.mtx.wechat.entity.wpMenu.WpMenu;
+import com.mtx.wechat.service.*;
 import com.mtx.wechat.utils.AdvancedUtil;
 import com.mtx.wechat.utils.WechatBindingUtil;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -39,8 +37,6 @@ import java.util.*;
 public class PublicAccountController {
     @Autowired
     private WechatBindingService wechatBindingService;
-    @Autowired
-    private WechatStoreService wechatStoreService;
     @Autowired
     private WpUserService wpUserService;
     @Autowired
@@ -160,104 +156,6 @@ public class PublicAccountController {
         return "admin/authorizationSetting";
     }
 
-
-    /**
-     * 门店管理
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/storeManage", method = RequestMethod.GET)
-    public String storeManage(Model model, HttpServletRequest request){
-        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
-        model.addAttribute("wechatBinding", wechatBinding);
-
-        if(null != wechatBinding){
-            WechatStore wechatStore = new WechatStore();
-            wechatStore.setBindid(wechatBinding.getUuid());
-            wechatStore.setOrderby("modifyon desc");
-            List<WechatStore> wechatStoreList = wechatStoreService.queryForList(wechatStore);
-            model.addAttribute("wechatStoreList", wechatStoreList);
-
-            //删除
-            if(StringUtils.isNotEmpty(request.getParameter("deleteFlag"))){
-                int deleteFlag = Integer.parseInt(request.getParameter("deleteFlag"));
-                if(deleteFlag == 1){
-                    model.addAttribute("successMessage", "删除成功");
-                }else {
-                    model.addAttribute("errorMessage", "删除失败");
-                }
-            }
-        }
-
-        return "admin/storeManage";
-    }
-
-    /**
-     * 门店信息界面
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/storeInfo", method = RequestMethod.GET)
-    public String storeInfo(Model model, HttpServletRequest request){
-        String storeId = request.getParameter("storeId");
-        //修改
-        if(StringUtils.isNotEmpty(storeId)){
-            WechatStore wechatStore = new WechatStore();
-            wechatStore.setUuid(storeId);
-            wechatStore = wechatStoreService.queryForObjectByPk(wechatStore);
-            model.addAttribute("wechatStore", wechatStore);
-        }
-
-        //查看信息
-        if(StringUtils.isNotEmpty(request.getParameter("view"))){
-            model.addAttribute("view", request.getParameter("view"));
-        }
-        return "admin/storeInfo";
-    }
-
-    /**
-     * 添加/修改门店
-     * @param wechatStore
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/storeInfo", method = RequestMethod.POST)
-    public String storeInfo(WechatStore wechatStore, Model model){
-        //修改
-        if(StringUtils.isNotEmpty(wechatStore.getUuid())){
-            try {
-                wechatStoreService.updatePartial(wechatStore);
-                model.addAttribute("successMessage","保存成功");
-            } catch (ServiceException e) {
-                model.addAttribute("errorMessage","系统忙，稍候再试");
-            }
-            wechatStore = wechatStoreService.queryForObjectByPk(wechatStore);
-        }else{
-            //新增
-            WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
-            wechatStore.setBindid(wechatBinding.getUuid());
-            wechatStoreService.insert(wechatStore);
-            model.addAttribute("successMessage","保存成功");
-            wechatStore = new WechatStore();
-        }
-        model.addAttribute("wechatStore", wechatStore);
-
-        return "admin/storeInfo";
-    }
-
-    /**
-     * 删除门店
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/deleteStore")
-    public String deleteStore(HttpServletRequest request){
-        String storeId = request.getParameter("storeId");
-        WechatStore wechatStore = new WechatStore();
-        wechatStore.setUuid(storeId);
-        int deleteFlage = wechatStoreService.delete(wechatStore);
-        return "redirect:/admin/account/storeManage?deleteFlag="+deleteFlage;
-    }
 
     /**
      * 投诉管理 （界面）

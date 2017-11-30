@@ -80,30 +80,6 @@ public class RequestEventMessageProvider implements RequestMessageProvider {
             locationEventMessage.setLongitude(longitude);
             locationEventMessage.setPrecision(precision);
             return locationEventMessage;
-        }else if(MessageUtil.isCardEvent(eventType)){
-            String cardId = requestMap.get(WechatConstants.MSG_PROP_CARDID);
-            String isGiveByFriend = requestMap.get(WechatConstants.MSG_PROP_ISGIVEBYFRIEND);
-            String userCardCode = requestMap.get(WechatConstants.MSG_PROP_USERCARDCODE);
-            String outerId = requestMap.get(WechatConstants.MSG_PROP_OUTERID);
-
-            RequestCardEventMessage cardEventMessage = new RequestCardEventMessage();
-            cardEventMessage.setToUserName(toUserName);
-            cardEventMessage.setFromUserName(fromUserName);
-            cardEventMessage.setMsgType(MessageUtil.REQ_MESSAGE_TYPE_EVENT);
-            cardEventMessage.setEvent(eventType);
-            cardEventMessage.setCardId(cardId);
-            cardEventMessage.setUserCardCode(userCardCode);
-            try {
-                if (StringUtils.isNotBlank(isGiveByFriend)) {
-                    cardEventMessage.setIsGiveByFriend(Integer.parseInt(isGiveByFriend));
-                }
-                if (StringUtils.isNotBlank(outerId)) {
-                    cardEventMessage.setOuterId(Integer.parseInt(outerId));
-                }
-            } catch (NumberFormatException e) {
-                logger.error("error",e);
-            }
-            return cardEventMessage;
         }
 
         return eventMessage;
