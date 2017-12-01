@@ -70,7 +70,7 @@
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocation" value="classpath:mybatis/mybatis-conf.xml"/>
         <property name="typeAliasesPackage" value="com.mtx.**.entity"/>
-        <property name="mapperLocations" value="classpath*:com/wecubics/**/mapper/*Mapper.xml"/>
+        <property name="mapperLocations" value="classpath*:com/mtx/**/mapper/*Mapper.xml"/>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
