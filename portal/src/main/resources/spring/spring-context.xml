@@ -105,21 +105,6 @@
     <!-- RequestUtil -->
     <bean id="requestUtil" class="com.mtx.common.utils.RequestUtil">
         <property name="domainUrl" value="${domain.url}" />
-        <property name="apiId" value="${rrm.api.id}" />
-        <property name="apiKey" value="${rrm.api.key}" />
-    </bean>
-
-    <!-- ConfigHolder -->
-    <bean id="configHolder" class="com.mtx.common.utils.ConfigHolder">
-        <property name="amyBindid" value="${front.special.bindid}" />
-        <property name="phExpressUrl" value="${ph.express.url}" />
-        <property name="phExpressTrackUrl" value="${ph.express.track.url}" />
-        <property name="phExpressTrackId" value="${ph.express.track.id}" />
-        <property name="phExpressTrackPsd" value="${ph.express.track.psd}" />
-        <property name="phUsername" value="${ph.username}" />
-        <property name="phPassword" value="${ph.password}" />
-        <property name="phAddress" value="${ph.address}" />
-        <property name="cacheEnable" value="${cache.enable}" />
     </bean>
 
     <!-- Production 环境 -->

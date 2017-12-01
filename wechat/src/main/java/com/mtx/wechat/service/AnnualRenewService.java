@@ -1,7 +1,7 @@
 package com.mtx.wechat.service;
 
-import com.mtx.wechat.entity.admin.WechatBinding;
 import com.mtx.wechat.WechatConstants;
+import com.mtx.wechat.entity.admin.WechatBinding;
 import com.mtx.wechat.entity.message.request.BaseRequestMessage;
 import org.springframework.stereotype.Service;
 

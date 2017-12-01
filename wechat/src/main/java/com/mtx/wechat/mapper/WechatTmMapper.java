@@ -1,7 +1,7 @@
 package com.mtx.wechat.mapper;
 
-import com.mtx.wechat.entity.admin.WechatTm;
 import com.mtx.common.base.BaseMapper;
+import com.mtx.wechat.entity.admin.WechatTm;
 import org.springframework.stereotype.Repository;
 
 /**

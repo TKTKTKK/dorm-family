@@ -1,8 +1,8 @@
 package com.mtx.wechat.provider.request;
 
-import com.mtx.wechat.entity.message.request.*;
 import com.mtx.common.utils.StringUtils;
 import com.mtx.wechat.WechatConstants;
+import com.mtx.wechat.entity.message.request.*;
 import com.mtx.wechat.utils.MessageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

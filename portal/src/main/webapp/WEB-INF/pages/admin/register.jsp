@@ -5,7 +5,7 @@
 <html lang="en" class="app">
     <head>
         <meta charset="UTF-8">
-        <title>爱米社区| 注册</title>
+        <title>满田星| 注册</title>
         <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <link rel="stylesheet" href="${ctx}/static/admin/css/c32171bd.vendor.min.css">
@@ -30,53 +30,18 @@
         }
     </style>
     <body>
-        <%--<section id="content" class="m-t-lg wrapper-md animated fadeInUp">--%>
-            <%--<div class="container aside-xl">--%>
-                <%--<a class="navbar-brand block" href="#"><span class="h1 font-bold">微物业</span></a>--%>
-                <%--<section class="m-b-lg">--%>
-                    <%--<form action="${ctx}/admin/register" method="post" data-validate="parsley" onsubmit="return registUser()">--%>
-                        <%--<c:if test="${not empty errorMessage}">--%>
-                            <%--<p class="text-danger">${errorMessage}</p>--%>
-                        <%--</c:if>--%>
-                        <%--<div class="form-group">--%>
-                            <%--<input name="username" placeholder="用户名" class="form-control rounded input-lg text-center no-border" required="true" onblur="trimText(this),validateChineseText(30, this.value, 'usernameError')" id="username">--%>
-                            <%--<span id="usernameError" class="text-danger"></span>--%>
-                        <%--</div>--%>
-                        <%--<div class="form-group">--%>
-                            <%--<input type="password" name="password" placeholder="密码" class="form-control rounded input-lg text-center no-border" required="true" id="pwd" onblur="checkPassword(this.value)">--%>
-                            <%--<span id="passwordError" class="text-danger"></span>--%>
-                        <%--</div>--%>
-                        <%--<div class="form-group">--%>
-                            <%--<input type="password" name="password2"  placeholder="确认密码" class="form-control rounded input-lg text-center no-border" required="true" data-equalto="#pwd">--%>
-                        <%--</div>--%>
-                        <%--<div class="checkbox i-checks m-b">--%>
-                            <%--<label class="m-l">--%>
-                                <%--<input type="checkbox" name="trusteeship" value="Y"><i></i> <span class="text-white">托管</span>--%>
-                            <%--</label>--%>
-                        <%--</div>--%>
-                        <%--<button type="submit" class="btn btn-lg btn-warning lt b-white b-2x btn-block btn-rounded"><i class="icon-arrow-right pull-right"></i><span class="m-r-n-lg">注 册</span></button>--%>
-                        <%--<div class="line line-dashed"></div>--%>
-                        <%--<p class="text-muted text-center"><small>已经有账号?</small></p>--%>
-                        <%--<a href="${ctx}/admin/login" class="btn btn-lg btn-info btn-block rounded">登 录</a>--%>
-                    <%--</form>--%>
-                <%--</section>--%>
-            <%--</div>--%>
-        <%--</section>--%>
 
 
         <div  class="ember-view">
-            <%--<script  type="text/x-placeholder"></script>--%>
-            <%--<script  type="text/x-placeholder"></script>--%>
             <div class="login">
         <!-- BEGIN LOGO -->
         <div class="logo">
-        <a href="/"><img src="/static/guest/property/img/mi2.png" alt="爱米社区" style="width: 150px;height:150px"></a>
+        <a href="/"><img src="/static/guest/property/img/mi2.png" alt="满田星" style="width: 150px;height:150px"></a>
         </div>
         <!-- END LOGO -->
         <!-- BEGIN LOGIN -->
         <div class="content"><div  class="ember-view"><div id="ember729" class="ember-view form-body">
         <form class="login-form" data-ember-action="8" action="${ctx}/admin/register" method="post" data-validate="parsley"
-              <%--onsubmit="return registUser()"--%>
               id="registFrm">
             <c:if test="${not empty errorMessage}">
             <p class="text-danger">${errorMessage}</p>
@@ -107,13 +72,10 @@
         <div class="input-icon">
         <i class="fa fa-lock"></i>
         <input id="cPwd" name="password2"  class="form-control placeholder-no-fix" placeholder="确认密码" type="password" required="true"
-               <%--data-equalto="#pwd"--%>
                style="padding-left: 33px !important;height:34px;padding: 6px 12px;-webkit-box-shadow:none;box-shadow:none;width: 100%;line-height: 1.4285;vertical-align: middle;border: 1px solid #ccc"
-               <%--onblur="checkTwoPassword(document.getElementsByName('password')[0].value,this.value)"--%>
                 >
             <span id="cfrmPasswordError" class="text-danger" ></span>
         </div>
-        <%--<script id="metamorph-11-start" type="text/x-placeholder"></script><script id="metamorph-11-end" type="text/x-placeholder"></script>--%>
         </div>
 
         <div id="brandnameDiv" class="ember-view form-group hidden panel" style="background-color: transparent;border: 0">
@@ -127,27 +89,7 @@
             </div>
         </div>
 
-        <%--<div  class="ember-view hide form-group panel">--%>
-        <%--<div  class="ember-view input-group">--%>
-            <%--<span  class="ember-view input-group-addon" style="background-color: transparent; cursor: pointer; border-color: #E5E5E5;">--%>
-                <%--<img src="/static/guest/property/img/mi2.png" data-bindattr-9="9" style="height: 20px;"></span>--%>
-            <%--<div  class="ember-view input-icon right">--%>
-                <%--<input id="ember752" class="ember-view ember-text-field form-control" placeholder="验证码" type="text">--%>
-        <%--<i class="fa fa-bell-o" data-toggle="tooltip" data-bindattr-10="10"></i>--%>
-            <%--</div>--%>
-        <%--</div>--%>
-        <%--</div>--%>
-        <div  class="ember-view form-group panel" style="margin: 0;background-color: transparent">
-        <label class="checkbox"
-                style="padding-left: 0px"><div class="checker" id="uniform-ember754 "><span id="test" >
-            <input class="ember-view ember-checkbox" name="trusteeship" value="Y" type="checkbox"
-                   style="margin-left: 0"
-                    id="trusteeship"
-                    onclick="showOrHideBrandName()"></span></div> 由爱米社区托管</label>
-            <p class="text-white" style="text-align: right">　　已经有帐号？</p>
-        </div>
         <div class="form-actions">
-            <%--<button type="submit" class="ember-view btn  pull-right green"><i class="fa fa-arrow-circle-left"></i>&nbsp;<span>注册</span></button>--%>
             <a class="ember-view btn  pull-right green"
                onclick="submitRegist()"><i class="fa fa-arrow-circle-left"></i>&nbsp;<span>注册</span></a>
             <div  class="ember-view btn  btn-default pull-left button-submit btn-default">
@@ -195,21 +137,11 @@
                 var usernameValid = validateChineseText(30,
                         document.getElementById("username").value, "usernameError");
                 //验证密码合法性
-//                var pwdValid = checkPassword(document.getElementById("pwd").value);
                 var pwdValid = checkPassword(document.getElementsByName('password')[0].value);
                 //一致两次密码输入是否一致
                 var twoPwdValid = checkTwoPassword(document.getElementsByName('password')[0].value,document.getElementsByName('password2')[0].value);
                 if(!usernameValid || !pwdValid || !twoPwdValid){
                     return false;
-                }
-                //选择托管时
-                if(document.getElementById('trusteeship').checked ){
-                    document.getElementById('brand_nameError').innerHTML = "";
-                    //社区总称必填
-                    if(document.getElementById('brand_name').value.length == 0){
-                        document.getElementById('brand_nameError').innerHTML = "社区总称为必填项";
-                        return false;
-                    }
                 }
                 return true;
             }
@@ -249,7 +181,6 @@
             //两次密码是否一致
             function checkTwoPassword(userPassword, cPwd){
                 var cfrmPasswordError = document.getElementById("cfrmPasswordError");
-//                var cPwd = document.getElementById("cPwd");
                 cfrmPasswordError.innerText = "";
                 //两次密码是否一致
                 if(userPassword != cPwd){

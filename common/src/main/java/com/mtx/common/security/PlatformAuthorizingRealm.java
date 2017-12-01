@@ -2,13 +2,13 @@ package com.mtx.common.security;
 
 import com.mtx.common.entity.PlatformPermit;
 import com.mtx.common.entity.PlatformRole;
+import com.mtx.common.entity.PlatformUser;
+import com.mtx.common.service.PlatformPermitService;
 import com.mtx.common.service.PlatformUserService;
 import com.mtx.common.utils.CacheUtils;
 import com.mtx.common.utils.Encodes;
 import com.mtx.common.utils.RequestUtil;
 import com.mtx.common.utils.UserUtils;
-import com.mtx.common.entity.PlatformUser;
-import com.mtx.common.service.PlatformPermitService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;

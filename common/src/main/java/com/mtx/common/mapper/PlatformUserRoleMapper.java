@@ -1,7 +1,7 @@
 package com.mtx.common.mapper;
 
-import com.mtx.common.entity.PlatformUserRole;
 import com.mtx.common.base.BaseMapper;
+import com.mtx.common.entity.PlatformUserRole;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

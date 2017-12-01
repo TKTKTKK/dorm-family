@@ -1,17 +1,17 @@
 package com.mtx.wechat.utils;
 
 
-import com.mtx.wechat.entity.message.response.*;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.mtx.common.utils.StringUtils;
 import com.mtx.wechat.entity.message.Article;
 import com.mtx.wechat.entity.message.request.BaseRequestMessage;
+import com.mtx.wechat.entity.message.response.*;
+import com.mtx.wechat.entity.message.response.cs.ResponseTransferCsMessage;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
-import com.mtx.wechat.entity.message.response.cs.ResponseTransferCsMessage;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;

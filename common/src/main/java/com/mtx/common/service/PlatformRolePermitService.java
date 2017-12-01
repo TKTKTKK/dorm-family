@@ -1,9 +1,9 @@
 package com.mtx.common.service;
 
-import com.mtx.common.entity.PlatformRole;
-import com.mtx.common.mapper.PlatformRolePermitMapper;
 import com.mtx.common.base.BaseService;
+import com.mtx.common.entity.PlatformRole;
 import com.mtx.common.entity.PlatformRolePermit;
+import com.mtx.common.mapper.PlatformRolePermitMapper;
 import com.mtx.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -113,14 +113,6 @@
          and   pu.status = 'NORMAL'
     </select>
 
-    <select id="selectUsersForSuppliertype" resultMap="selectResultMap">
-         select distinct pu.openid
-         from tb_platform_user pu
-         where pu.suppliertype = #{platformUser.suppliertype}
-         and pu.status = 'NORMAL'
-         and (pu.bindid = #{platformUser.bindid} or pu.bindid = #{amyBindid})
-    </select>
-
     <select id="selectUsersForStep" resultMap="selectResultMap">
         select u.*
         from tb_platform_user u,tb_wp_user_com uc

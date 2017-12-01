@@ -1,7 +1,7 @@
 package com.mtx.wechat.mapper;
 
-import com.mtx.wechat.entity.admin.WechatBinding;
 import com.mtx.common.base.BaseMapper;
+import com.mtx.wechat.entity.admin.WechatBinding;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

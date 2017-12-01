@@ -8,7 +8,6 @@ import org.apache.ibatis.plugin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Statement;
 import java.util.Properties;
 
 @Intercepts({@Signature(

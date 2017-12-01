@@ -5,7 +5,7 @@
 <html lang="en" class="app">
 <head>
     <meta charset="UTF-8">
-    <title>爱米社区 | 登录</title>
+    <title>满田星 | 登录</title>
     <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
@@ -60,40 +60,6 @@
 </p>
 <![endif]-->
 
-<%--<section id="content" class="m-t-lg wrapper-md animated fadeInUp">--%>
-<%--<div class="container aside-xl">--%>
-<%--<a class="navbar-brand block" href="#"><span class="h1 font-bold">微物业</span></a>--%>
-<%--<section class="m-b-lg">--%>
-<%--<form action="${ctx}/admin/login" method="post" data-validate="parsley" >--%>
-<%--<c:if test="${not empty errorMessage}">--%>
-<%--<p class="text-danger">${errorMessage}</p>--%>
-<%--</c:if>--%>
-<%--<div class="form-group">--%>
-<%--<input name="username" placeholder="用户名" class="form-control rounded input-lg text-center no-border" required="true" >--%>
-<%--</div>--%>
-<%--<div class="form-group">--%>
-<%--<input type="password" name="password" placeholder="密码" class="form-control rounded input-lg text-center no-border" required="true">--%>
-<%--</div>--%>
-<%--<c:if test="${isValidateCodeLogin}">--%>
-<%--<div class="form-group validateCode">--%>
-<%--<label for="validateCode">验证码：</label>--%>
-<%--<tags:validateCode name="validateCode" inputCssStyle="margin-bottom:0;"/>--%>
-<%--</div>--%>
-<%--</c:if>--%>
-<%--<div class="checkbox i-checks m-b">--%>
-<%--<label class="m-l">--%>
-<%--<input type="checkbox" name="rememberMe" value="Y"><i></i> <span class="text-white">三十天内免登录</span>--%>
-<%--</label>--%>
-<%--</div>--%>
-<%--<button type="submit" class="btn btn-lg btn-warning lt b-white b-2x btn-block btn-rounded"><i class="icon-arrow-right pull-right"></i><span class="m-r-n-lg">登 录</span></button>--%>
-<%--<div class="line line-dashed"></div>--%>
-<%--<p class="text-muted text-center"><small>还没有账号?</small></p>--%>
-<%--<a href="${ctx}/admin/register" class="btn btn-lg btn-info btn-block rounded">注 册</a>--%>
-<%--</form>--%>
-<%--</section>--%>
-<%--</div>--%>
-<%--</section>--%>
-
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <!-- Bootstrap -->
 <script src="${ctx}/static/admin/js/bootstrap.js"></script>
@@ -111,7 +77,7 @@
     <div class="login">
         <!-- BEGIN LOGO -->
         <div class="logo">
-            <a href="/"><img src="/static/guest/property/img/mi2.png" alt="爱米社区" style="width: 150px;height:150px"></a>
+            <a href="/"><img src="/static/guest/property/img/mi2.png" alt="满田星" style="width: 150px;height:150px"></a>
         </div>
         <!-- END LOGO -->
 

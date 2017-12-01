@@ -5,10 +5,9 @@
  */
 package com.mtx.common.client;
 
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 @SuppressWarnings("restriction")
 @XmlRootElement(name = "client")
 public class Client implements Serializable{

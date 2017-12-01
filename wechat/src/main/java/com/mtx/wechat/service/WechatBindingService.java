@@ -1,15 +1,17 @@
 package com.mtx.wechat.service;
 
 
-import com.mtx.wechat.entity.admin.WechatBinding;
-import com.mtx.wechat.utils.WechatBindingUtil;
 import com.mtx.common.base.BaseService;
 import com.mtx.common.entity.PlatformUser;
 import com.mtx.common.mapper.PlatformUserMapper;
-import com.mtx.common.utils.*;
+import com.mtx.common.utils.CacheUtils;
+import com.mtx.common.utils.StringUtils;
+import com.mtx.common.utils.UserUtils;
 import com.mtx.wechat.WechatConstants;
+import com.mtx.wechat.entity.admin.WechatBinding;
 import com.mtx.wechat.mapper.WechatBindingMapper;
 import com.mtx.wechat.utils.AdvancedUtil;
+import com.mtx.wechat.utils.WechatBindingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,12 +59,7 @@ public class WechatBindingService extends BaseService<WechatBindingMapper,Wechat
             WechatBinding wechatBinding = new WechatBinding();
             wechatBinding.setWechatorigid(toUserName);
             List<WechatBinding> wechatBindings = queryForList(wechatBinding);
-            if(wechatBindings.size() > 1){
-                //查到多个原始ID，说明是托管社区，直接返回爱米社区
-                wechatBinding.setUuid(ConfigHolder.getFrontSpecialBindid());
-            }else{
-                wechatBinding = wechatBindings.get(0);
-            }
+            wechatBinding = wechatBindings.get(0);
             CacheUtils.put(WechatConstants.ORIGID_BIND_MAP_CACHE,toUserName,wechatBinding.getUuid());
             return wechatBinding.getUuid();
         }else{
@@ -126,11 +123,7 @@ public class WechatBindingService extends BaseService<WechatBindingMapper,Wechat
             wechatBinding.setAppid(appId);
             List<WechatBinding> wechatBindingList = queryForList(wechatBinding);
             if (wechatBindingList != null && wechatBindingList.size() > 0) {
-                if(wechatBindingList.size() == 1){
-                    wechatBinding = wechatBindingList.get(0);
-                }else {
-                    wechatBinding = getWechatBindingByBindId(ConfigHolder.getFrontSpecialBindid());
-                }
+                wechatBinding = wechatBindingList.get(0);
                 CacheUtils.put(WechatConstants.BIND_DETAILS_CACHE, appId, wechatBinding);
             }
         }
@@ -147,11 +140,7 @@ public class WechatBindingService extends BaseService<WechatBindingMapper,Wechat
             wechatBinding.setAppid(appId);
             List<WechatBinding> wechatBindingList = queryForList(wechatBinding);
             if (wechatBindingList != null && wechatBindingList.size() > 0) {
-                if(wechatBindingList.size() == 1){
-                    wechatBinding = wechatBindingList.get(0);
-                }else {
-                    wechatBinding = getWechatBindingByBindId(ConfigHolder.getFrontSpecialBindid());
-                }
+                wechatBinding = wechatBindingList.get(0);
             }
         return wechatBinding;
     }

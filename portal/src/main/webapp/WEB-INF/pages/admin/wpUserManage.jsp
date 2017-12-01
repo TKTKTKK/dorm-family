@@ -13,7 +13,7 @@
 <section class="vbox">
 <section class="scrollable">
 <header class="panel-heading bg-white text-lg">
-    微物业 / 关注用户列表
+    满田星 / 关注用户列表
 </header>
 
 <c:if test="${not empty wechatBinding}">

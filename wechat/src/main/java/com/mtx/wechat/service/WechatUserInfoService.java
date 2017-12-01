@@ -2,11 +2,11 @@ package com.mtx.wechat.service;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
-import com.mtx.wechat.mapper.WechatUserInfoMapper;
 import com.mtx.common.base.BaseService;
 import com.mtx.common.entity.PlatformUser;
 import com.mtx.common.service.PlatformUserService;
 import com.mtx.wechat.entity.WechatUserInfo;
+import com.mtx.wechat.mapper.WechatUserInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

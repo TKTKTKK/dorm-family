@@ -29,8 +29,6 @@ public class PlatformUser extends BaseEntity {
     @Column
     private String title;
     @Column
-    private String suppliertype;
-    @Column
     private String status;
     //是否托管
     private String trusteeship;
@@ -53,10 +51,6 @@ public class PlatformUser extends BaseEntity {
 
     //当前用户手上的任务数
     private Integer taskcount;
-    //维修数
-    private Integer maintaincount;
-    //金额
-    private Double totalamount;
 
 
     public String getBindid() {
@@ -195,10 +189,6 @@ public class PlatformUser extends BaseEntity {
         this.brand_name = brand_name;
     }
 
-    public String getSuppliertype() { return suppliertype;}
-
-    public void setSuppliertype(String suppliertype) { this.suppliertype = suppliertype;}
-
     public Integer getGroupId() { return groupId;}
 
     public void setGroupId(Integer groupId) { this.groupId = groupId;}
@@ -209,13 +199,5 @@ public class PlatformUser extends BaseEntity {
 
     public void setTaskcount(Integer taskcount) {
         this.taskcount = taskcount;
-    }
-
-    public Integer getMaintaincount() {
-        return maintaincount;
-    }
-
-    public Double getTotalamount() {
-        return totalamount;
     }
 }

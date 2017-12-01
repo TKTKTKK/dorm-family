@@ -1,8 +1,8 @@
 package com.mtx.wechat.processor;
 
 import com.mtx.wechat.entity.admin.WechatBinding;
-import com.mtx.wechat.factory.MessageProcessServiceFactory;
 import com.mtx.wechat.entity.message.request.BaseRequestMessage;
+import com.mtx.wechat.factory.MessageProcessServiceFactory;
 import com.mtx.wechat.service.MessageProcessService;
 
 /**

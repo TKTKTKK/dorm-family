@@ -1,9 +1,9 @@
 package com.mtx.common.template;
 
 
+import com.mtx.common.base.BaseEntity;
 import com.mtx.common.utils.DateUtils;
 import com.mtx.common.utils.ReflectUtil;
-import com.mtx.common.base.BaseEntity;
 import com.mtx.common.utils.StringUtils;
 import com.mtx.common.utils.UserUtils;
 import org.apache.ibatis.jdbc.SQL;

@@ -2,8 +2,8 @@ package com.mtx.common.audit;
 
 
 import com.mtx.common.base.BaseEntity;
-import com.mtx.common.utils.ApplicationContextUtil;
 import com.mtx.common.mapper.AuditLogMapper;
+import com.mtx.common.utils.ApplicationContextUtil;
 
 public class AuditLogUtil {
 

@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.Column;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.List;
 
 /**

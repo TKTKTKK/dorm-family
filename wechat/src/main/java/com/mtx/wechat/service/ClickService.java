@@ -2,8 +2,8 @@ package com.mtx.wechat.service;
 
 import com.mtx.wechat.entity.admin.RespSetting;
 import com.mtx.wechat.entity.admin.WechatBinding;
-import com.mtx.wechat.entity.message.request.RequestMenuEventMessage;
 import com.mtx.wechat.entity.message.request.BaseRequestMessage;
+import com.mtx.wechat.entity.message.request.RequestMenuEventMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

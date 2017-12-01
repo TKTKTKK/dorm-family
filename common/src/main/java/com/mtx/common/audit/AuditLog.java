@@ -4,7 +4,6 @@ import com.mtx.common.base.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
-import java.util.Date;
 
 @Table(name="tb_common_audit_log")
 public class AuditLog extends BaseEntity {

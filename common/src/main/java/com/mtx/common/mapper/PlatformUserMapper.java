@@ -26,10 +26,6 @@ public interface PlatformUserMapper extends BaseMapper<PlatformUser> {
 
     public List<PlatformUser> selectUsersForStep(@Param("platformUser")PlatformUser platformUser);
 
-    public List<PlatformUser> selectUsersForSuppliertype(@Param("platformUser")PlatformUser platformUser,@Param("amyBindid")String amyBindid);
-
-    List<PlatformUser> selectUsersForSpecialHousehold(@Param("platformUser")PlatformUser platformUser, @Param("bindid")String bindid);
-
     public List<PlatformUser> selectNonSuperUsersForVIP(@Param("platformUser")PlatformUser platformUser);
 
     List<PlatformUser> selectManagersByCurrentCommunityid(@Param("communityid")String communityid, @Param("bindid")String bindid);

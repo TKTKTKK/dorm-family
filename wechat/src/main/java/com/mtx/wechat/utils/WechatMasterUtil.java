@@ -1,9 +1,9 @@
 package com.mtx.wechat.utils;
 
 
-import com.mtx.wechat.service.WechatTmMasterService;
 import com.mtx.common.utils.ApplicationContextUtil;
 import com.mtx.wechat.entity.admin.WechatTmMaster;
+import com.mtx.wechat.service.WechatTmMasterService;
 
 import java.util.List;
 

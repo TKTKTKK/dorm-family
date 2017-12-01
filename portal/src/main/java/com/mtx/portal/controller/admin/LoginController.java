@@ -103,30 +103,6 @@ public class LoginController {
     public String register(PlatformUser platformUser,Model model) {
         PlatformUser tempUser = platformUserService.getPlatformUserByUserName(platformUser.getUsername());
         if(tempUser == null){
-            //托管
-            if("Y".equals(platformUser.getTrusteeship())){
-                //特殊bindid(爱米社区bindid)
-                String frontSpecialBindid = ConfigHolder.getFrontSpecialBindid();
-                WechatBinding spclWechatBinding = new WechatBinding();
-                spclWechatBinding.setUuid(frontSpecialBindid);
-                spclWechatBinding = wechatBindingService.queryForObjectByPk(spclWechatBinding);
-                if(null != spclWechatBinding){
-                    WechatBinding wechatBinding = new WechatBinding();
-                    wechatBinding.setToken(spclWechatBinding.getToken());
-                    wechatBinding.setWechatname(spclWechatBinding.getWechatname());
-                    wechatBinding.setWechatorigid(spclWechatBinding.getWechatorigid());
-                    wechatBinding.setWechatid(spclWechatBinding.getWechatid());
-                    wechatBinding.setAppid(spclWechatBinding.getAppid());
-                    wechatBinding.setAppsecret(spclWechatBinding.getAppsecret());
-                    wechatBinding.setBrand_name(spclWechatBinding.getBrand_name());
-                    wechatBinding.setLogo_url(spclWechatBinding.getLogo_url());
-                    wechatBinding.setTrusteeship(platformUser.getTrusteeship());
-                    wechatBinding.setBrand_name(platformUser.getBrand_name());
-                    wechatBindingService.insert(wechatBinding);
-                    platformUser.setBindid(wechatBinding.getUuid());
-                }
-
-            }
             platformUserService.registerPlatformUser(platformUser);
             UsernamePasswordToken token = new UsernamePasswordToken();
             token.setUsername(platformUser.getUsername());

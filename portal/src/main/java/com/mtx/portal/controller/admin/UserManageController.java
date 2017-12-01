@@ -1,20 +1,18 @@
 package com.mtx.portal.controller.admin;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
-import com.mtx.portal.PortalContants;
 import com.mtx.common.entity.PlatformPermit;
 import com.mtx.common.entity.PlatformUser;
 import com.mtx.common.entity.PlatformUserRole;
-import com.mtx.common.service.CommonCodeService;
 import com.mtx.common.service.PlatformRoleService;
 import com.mtx.common.service.PlatformUserRoleService;
 import com.mtx.common.service.PlatformUserService;
 import com.mtx.common.utils.StringUtils;
 import com.mtx.common.utils.UserUtils;
+import com.mtx.portal.PortalContants;
 import com.mtx.wechat.entity.WechatUser;
 import com.mtx.wechat.entity.WechatUserInfo;
 import com.mtx.wechat.entity.admin.WechatBinding;
-import com.mtx.wechat.service.WechatBindingDtlService;
 import com.mtx.wechat.service.WechatBindingService;
 import com.mtx.wechat.service.WechatUserInfoService;
 import com.mtx.wechat.utils.WechatBindingUtil;

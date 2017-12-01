@@ -231,24 +231,7 @@
                                         </div>
                                     </c:if>
 
-                                    <div class="form-group" id="finantionId" style="display:none;">
-                                        <label class="col-sm-3 control-label">金融供应商角色：</label>
-                                        <div class="col-sm-9  b-l bg-white">
-                                            <c:set var="commonCodeTypeList" value="${web:queryCommonCodeList('SUPPLIER_TYPE')}"></c:set>
-                                            <select  class="form-control" name="suppliertype" id="suppliertype" value="${platformUser.suppliertype}">
-                                                <option value="">--全部--</option>
-                                                <c:forEach items="${commonCodeTypeList}" var="commonCode">
-                                                    <c:if test="${platformUser.suppliertype == commonCode.code}">
-                                                        <option value="${commonCode.code}" selected>${commonCode.codevalue}</option>
-                                                    </c:if>
-                                                    <c:if test="${platformUser.suppliertype != commonCode.code}">
-                                                        <option value="${commonCode.code}">${commonCode.codevalue}</option>
-                                                    </c:if>
-                                                </c:forEach>
-                                            </select>
-                                            <span id="remarksError" class="text-danger"></span>
-                                        </div>
-                                    </div>
+
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">绑定微信：</label>
                                         <div class="col-sm-9  b-l bg-white">

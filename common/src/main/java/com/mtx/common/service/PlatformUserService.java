@@ -2,11 +2,11 @@ package com.mtx.common.service;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
-import com.mtx.common.mapper.PlatformRoleMapper;
 import com.mtx.common.base.BaseService;
 import com.mtx.common.entity.PlatformRole;
 import com.mtx.common.entity.PlatformUser;
 import com.mtx.common.entity.PlatformUserRole;
+import com.mtx.common.mapper.PlatformRoleMapper;
 import com.mtx.common.mapper.PlatformUserMapper;
 import com.mtx.common.mapper.PlatformUserRoleMapper;
 import com.mtx.common.utils.Digests;
@@ -68,17 +68,8 @@ public class PlatformUserService  extends BaseService<PlatformUserMapper,Platfor
         String password= entryptPassword(platformUser.getPassword());
         platformUser.setPassword(password);
         PlatformRole defaultRole = new PlatformRole();
-        //托管
-        if("Y".equals(platformUser.getTrusteeship())){
-            //默认为管理员
-            defaultRole.setRolekey("WP_ADM");
-            defaultRole = platformRoleMapper.retrieveByUniqueKey(defaultRole);
-        }else {
-            //非托管，默认为超级管理员
-            defaultRole.setRolekey("WP_SUPER");
-            defaultRole = platformRoleMapper.retrieveByUniqueKey(defaultRole);
-        }
-
+        defaultRole.setRolekey("WP_SUPER");
+        defaultRole = platformRoleMapper.retrieveByUniqueKey(defaultRole);
         insert(platformUser);
         PlatformUserRole platformUserRole = new PlatformUserRole();
         platformUserRole.setUserid(platformUser.getUuid());

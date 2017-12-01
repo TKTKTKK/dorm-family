@@ -3,7 +3,7 @@ package com.mtx.common.utils;
 import net.glxn.qrgen.QRCode;
 import net.glxn.qrgen.image.ImageType;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
 
 /**
  * Created by wensheng on 15-6-4.

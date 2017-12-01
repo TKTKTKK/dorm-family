@@ -1,5 +1,8 @@
 package com.mtx.wechat.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.mtx.common.base.CommonConstants;
 import com.mtx.common.utils.CacheUtils;
 import com.mtx.wechat.WechatConstants;
@@ -7,9 +10,6 @@ import com.mtx.wechat.entity.WechatError;
 import com.mtx.wechat.entity.token.AccessToken;
 import com.mtx.wechat.manager.WechatX509TrustManager;
 import com.mtx.wechat.menu.Menu;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

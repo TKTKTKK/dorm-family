@@ -1,9 +1,9 @@
 package com.mtx.wechat.service;
 
-import com.mtx.wechat.menu.*;
 import com.mtx.common.base.BaseService;
 import com.mtx.wechat.entity.wpMenu.WpMenu;
 import com.mtx.wechat.mapper.WpMenuMapper;
+import com.mtx.wechat.menu.*;
 import com.mtx.wechat.utils.WechatBindingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

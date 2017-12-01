@@ -1,7 +1,7 @@
 package com.mtx.common.security;
 
-import com.mtx.common.utils.ApplicationContextUtil;
 import com.mtx.common.service.PlatformPermitService;
+import com.mtx.common.utils.ApplicationContextUtil;
 import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
 
 import javax.servlet.ServletRequest;

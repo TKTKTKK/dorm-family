@@ -2,11 +2,11 @@ package com.mtx.common.utils;
 
 import com.mtx.common.entity.PlatformPermit;
 import com.mtx.common.entity.PlatformRole;
-import com.mtx.common.service.PlatformRoleService;
-import com.mtx.common.service.PlatformUserService;
 import com.mtx.common.entity.PlatformUser;
 import com.mtx.common.security.PlatformAuthorizingRealm;
 import com.mtx.common.service.PlatformPermitService;
+import com.mtx.common.service.PlatformRoleService;
+import com.mtx.common.service.PlatformUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;

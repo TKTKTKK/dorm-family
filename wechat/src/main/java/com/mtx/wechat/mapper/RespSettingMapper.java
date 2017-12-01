@@ -1,9 +1,9 @@
 package com.mtx.wechat.mapper;
 
-import com.mtx.wechat.entity.admin.RespSetting;
-import com.mtx.common.base.BaseMapper;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
+import com.mtx.common.base.BaseMapper;
+import com.mtx.wechat.entity.admin.RespSetting;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
