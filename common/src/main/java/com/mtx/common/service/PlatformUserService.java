@@ -18,9 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Created by wensheng on 14-12-12.
- */
+
 @Service
 @Transactional
 public class PlatformUserService  extends BaseService<PlatformUserMapper,PlatformUser> {
@@ -123,11 +121,11 @@ public class PlatformUserService  extends BaseService<PlatformUserMapper,Platfor
      * 查询该bindid下的用户
      * @return
      */
-    public PageList<PlatformUser> selectNonSuperUsers(String topAccount, String communityid, PageBounds pageBounds, String username, String name){
+    public PageList<PlatformUser> selectNonSuperUsers(String topAccount, String merchantid, PageBounds pageBounds, String username, String name){
         PlatformUser platformUser = new PlatformUser();
         platformUser.setBindid(UserUtils.getUserBindId());
         platformUser.setUuid(UserUtils.getUserId());
-        platformUser.setCommunityid(communityid);
+        platformUser.setMerchantid(merchantid);
         platformUser.setUsername(username);
         platformUser.setName(name);
         return mapper.selectNonSuperUsers(platformUser,topAccount, pageBounds);
@@ -179,18 +177,6 @@ public class PlatformUserService  extends BaseService<PlatformUserMapper,Platfor
      */
     public void deleteUser(PlatformUser platformUser){
         mapper.delete(platformUser);
-    }
-
-    /**
-     * 查询该bindid下的用户
-     * @return
-     */
-    public List<PlatformUser> selectNonSuperUsers(String communityid){
-        PlatformUser platformUser = new PlatformUser();
-        platformUser.setBindid(UserUtils.getUserBindId());
-        platformUser.setUuid(UserUtils.getUserId());
-        platformUser.setCommunityid(communityid);
-        return mapper.selectNonSuperUsersForVIP(platformUser);
     }
 
 

@@ -38,14 +38,10 @@ public class PlatformUser extends BaseEntity {
     private String plainpassword;
     //角色
     private String[] roles;
-    //所管小区id
-    private String communityid;
+    //所管merchant id
+    private String merchantid;
     //所管小区名称
-    private String communityname;
-    //所管栋/幢
-    private String blknos;
-    //社区总称
-    private String brand_name;
+    private String merchantname;
     //用户分组ID
     private Integer groupId;
 
@@ -141,28 +137,20 @@ public class PlatformUser extends BaseEntity {
         this.roles = roles;
     }
 
-    public String getCommunityid() {
-        return communityid;
+    public String getMerchantid() {
+        return merchantid;
     }
 
-    public void setCommunityid(String communityid) {
-        this.communityid = communityid;
+    public void setMerchantid(String merchantid) {
+        this.merchantid = merchantid;
     }
 
-    public String getCommunityname() {
-        return communityname;
+    public String getMerchantname() {
+        return merchantname;
     }
 
-    public void setCommunityname(String communityname) {
-        this.communityname = communityname;
-    }
-
-    public String getBlknos() {
-        return blknos;
-    }
-
-    public void setBlknos(String blknos) {
-        this.blknos = blknos;
+    public void setMerchantname(String merchantname) {
+        this.merchantname = merchantname;
     }
 
     public String getStatus() {
@@ -179,14 +167,6 @@ public class PlatformUser extends BaseEntity {
 
     public void setTrusteeship(String trusteeship) {
         this.trusteeship = trusteeship;
-    }
-
-    public String getBrand_name() {
-        return brand_name;
-    }
-
-    public void setBrand_name(String brand_name) {
-        this.brand_name = brand_name;
     }
 
     public Integer getGroupId() { return groupId;}

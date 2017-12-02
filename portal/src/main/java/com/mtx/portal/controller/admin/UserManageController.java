@@ -2,13 +2,17 @@ package com.mtx.portal.controller.admin;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.mtx.common.entity.PlatformPermit;
+import com.mtx.common.entity.PlatformRole;
 import com.mtx.common.entity.PlatformUser;
 import com.mtx.common.entity.PlatformUserRole;
+import com.mtx.common.service.PlatformPermitService;
 import com.mtx.common.service.PlatformRoleService;
 import com.mtx.common.service.PlatformUserRoleService;
 import com.mtx.common.service.PlatformUserService;
 import com.mtx.common.utils.StringUtils;
 import com.mtx.common.utils.UserUtils;
+import com.mtx.family.entity.Merchant;
+import com.mtx.family.service.MerchantService;
 import com.mtx.portal.PortalContants;
 import com.mtx.wechat.entity.WechatUser;
 import com.mtx.wechat.entity.WechatUserInfo;
@@ -36,6 +40,8 @@ public class UserManageController extends BaseAdminController {
     @Autowired
     private PlatformUserService platformUserService;
     @Autowired
+    private PlatformPermitService platformPermitService;
+    @Autowired
     private PlatformRoleService platformRoleService;
     @Autowired
     private PlatformUserRoleService platformUserRoleService;
@@ -43,6 +49,8 @@ public class UserManageController extends BaseAdminController {
     private WechatBindingService wechatBindingService;
     @Autowired
     private WechatUserInfoService wechatUserInfoService;
+    @Autowired
+    private MerchantService merchantService;
 
     /**
      * 用户微信管理
@@ -233,6 +241,73 @@ public class UserManageController extends BaseAdminController {
         return "redirect:userInfo?userId=" + platformUser.getUuid();
 
     }
+
+    /**
+     * 角色分配界面
+     * @return
+     */
+    @RequestMapping(value = "/roleDistribute", method = RequestMethod.GET)
+    public String roleDistributePage(@RequestParam(required = false,defaultValue = "1") int page,Model model,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        boolean allMerchants = false;
+        if(null != wechatBinding){
+            List<Merchant> merchantList = merchantService.selectMerchantForUser();
+            if(merchantList == null || merchantList.size()== 0) {
+                allMerchants = true;
+                model.addAttribute("allMerchants", allMerchants);
+            }
+            model.addAttribute("merchantList", merchantList);
+
+            String username = request.getParameter("username");
+            String name = request.getParameter("name");
+            String merchantid=request.getParameter("merchantid");
+            if(StringUtils.isBlank(merchantid)){
+                if(allMerchants){
+                    merchantid="";
+                }else{
+                    merchantid = merchantList.get(0).getUuid();
+                }
+            }
+            //默认查询非顶级账号
+            String topAccount = request.getParameter("topAccount");
+            if(StringUtils.isBlank(topAccount)){
+                topAccount = "N";
+            }
+            model.addAttribute("username",username);
+            model.addAttribute("name",name);
+            model.addAttribute("merchantid",merchantid);
+            model.addAttribute("topAccount",topAccount);
+            model.addAttribute("page",page);
+            //查询该bindid下的用户：（当前用户是超级管理员时，可以查看全部角色的用户；当前用户是管理员时，只可以查看非超级管理员角色的用户。）
+            //设置分页参数
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            List<PlatformUser> platformUserList = platformUserService.selectNonSuperUsers(topAccount,merchantid,pageBounds,username,name);
+            model.addAttribute("platformUserList", platformUserList);
+
+            //所有非超级管理员角色
+            List<PlatformRole> platformRoleList = platformRoleService.selectNonSuperRoles();
+            model.addAttribute("roleList", platformRoleList);
+
+            String saveFlag = request.getParameter("saveFlag");
+            //保存成功
+            if("1".equals(saveFlag)){
+                model.addAttribute("successMessage", "保存成功");
+            }
+
+            String deleteFlag = request.getParameter("deleteFlag");
+            //保存成功
+            if("1".equals(deleteFlag)){
+                model.addAttribute("successMessage", "删除成功");
+            }
+
+            String currentUserId = UserUtils.getUserId();
+            model.addAttribute("currentUserId", currentUserId);
+        }
+        return "admin/usermanage/roleDistribute";
+    }
+
+
     /**
      * 角色分配
      * @param request
@@ -309,4 +384,22 @@ public class UserManageController extends BaseAdminController {
         return resultMap;
     }
 
+    /**
+     * 根据菜单名称查询菜单id
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/queryPermitIdByMenuName")
+    @ResponseBody
+    public Map<String, Object> queryPermitIdByMenuName(HttpServletRequest request){
+        String menuName = request.getParameter("menuName");
+        PlatformPermit platformPermit = new PlatformPermit();
+        platformPermit.setPermitname(menuName);
+        platformPermit = platformPermitService.queryPermitIdByMenuName(menuName);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        if(null != platformPermit){
+            resultMap.put("parentPermitId", platformPermit.getUuid());
+        }
+        return resultMap;
+    }
 }

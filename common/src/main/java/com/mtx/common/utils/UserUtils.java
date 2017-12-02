@@ -244,29 +244,6 @@ public class UserUtils {
 
 
     /**
-     * 根据角色查询逐层上报的openids
-     * @param bindid
-     * @param communityid
-     * @param rolekey
-     * @return
-     */
-    public static List<String> queryOpenidsByRole(String bindid, String communityid, String rolekey){
-        List<String> openidList = new ArrayList<String>();
-        PlatformUser platformUser = new PlatformUser();
-        platformUser.setBindid(bindid);
-        platformUser.setCommunityid(communityid);
-        //角色
-        platformUser.setTitle(rolekey);
-        List<PlatformUser> platformUserList = platformUserService.selectUsersForStep(platformUser);
-        for(PlatformUser pu: platformUserList){
-            if(StringUtils.isNotBlank(pu.getOpenid())){
-                openidList.add(pu.getOpenid());
-            }
-        }
-        return openidList;
-    }
-
-    /**
      * 根据小区和角色查询用户列表
      * @param bindId
      * @param communityId

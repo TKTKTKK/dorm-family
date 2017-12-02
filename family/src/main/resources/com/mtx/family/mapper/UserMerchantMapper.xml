@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.family.mapper.UserMerchantMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.family.entity.UserMerchant">
+    </resultMap>
+
+    <delete id="deleteUserCommunity">
+        delete from tb_mtx_user_merchant
+        where userid = #{userMerchant.userid}
+        <if test="userMerchant.merchantid != null and userMerchant.merchantid != ''">
+            and merchantid = #{userMerchant.merchantid}
+        </if>;
+    </delete>
+
+    <select id="selectUserMerchantListByUserId"   resultMap="selectResultMap">
+        select uc.*, co.name as merchantname
+        from tb_mtx_user_merchant uc, tb_wp_merchant co
+        where uc.merchantid = co.uuid
+        and uc.userid = #{userid}
+        order by uc.modifyon desc;
+    </select>
+
+    <select id="selectUserMerchantInfoById"   resultMap="selectResultMap">
+        select uc.*, co.name as merchantname
+        from tb_mtx_user_merchant uc, tb_wp_merchant co
+        where uc.merchantid = co.uuid
+        and uc.uuid = #{userMerchantId};
+    </select>
+</mapper>

@@ -118,7 +118,7 @@ function checkFileSize(){
 
 //显示父菜单
 function showParentMenu(menuName){
-    $.get(encodeURI("/admin/family/queryPermitIdByMenuName?menuName="+menuName+ "&version=" + Math.random()),function(data,status){
+    $.get(encodeURI("/admin/usermanage/queryPermitIdByMenuName?menuName="+menuName+ "&version=" + Math.random()),function(data,status){
         if(data.parentPermitId != null && data.parentPermitId.length > 0){
             document.getElementById(data.parentPermitId).click();
         }
