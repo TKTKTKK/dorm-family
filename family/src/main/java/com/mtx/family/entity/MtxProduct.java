@@ -1,0 +1,52 @@
+package com.mtx.family.entity;
+
+import com.mtx.common.base.BaseEntity;
+
+import javax.persistence.Column;
+import javax.persistence.Table;
+
+
+@Table(name = "tb_mtx_product")
+public class MtxProduct extends BaseEntity {
+
+    @Column
+    private String model;
+    @Column
+    private String name;
+    @Column
+    private String img;
+    @Column
+    private String status;
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+}
