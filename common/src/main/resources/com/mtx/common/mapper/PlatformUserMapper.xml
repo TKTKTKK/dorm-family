@@ -8,7 +8,7 @@
     <select id="selectNonSuperUsers" resultMap="selectResultMap">
         select u.*
         <if test="topAccount =='N'.toString()">
-            ,c.name as merchantname, uc.blknos as blknos
+            ,c.name as merchantname
         </if>
         from tb_platform_user u
         <if test="topAccount =='N'.toString()">

@@ -51,10 +51,10 @@
                                         <td>
                                             <c:if test="${not empty wpUser.headimgurl}">
                                                 <c:if test="${fn:indexOf(wpUser.headimgurl, 'static') == 0}">
-                                                    <img src="${web:getFileViewUrl(wpUser.headimgurl)}" width="50" height="50">
+                                                    <img src="${wpUser.headimgurl}" width="50" height="50">
                                                 </c:if>
                                                 <c:if test="${fn:indexOf(wpUser.headimgurl, 'static') != 0}">
-                                                    <img src="${web:getFileViewUrl(wpUser.headimgurl)}" width="50" height="50">
+                                                    <img src="${wpUser.headimgurl}" width="50" height="50">
                                                 </c:if>
                                             </c:if>
                                         </td>

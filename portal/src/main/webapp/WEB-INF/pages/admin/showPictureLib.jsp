@@ -41,7 +41,7 @@
                                             <input type="hidden" name="imgname" id="imgnameId" value="${image.imgname}">
                                             <c:if test="${not empty image.imgname}">
                                                 <br/><br/>
-                                                <img src="${web:getFileViewUrl(image.imgname)}" width="100" height="100">
+                                                <img src="${image.imgname}" width="100" height="100">
                                             </c:if>
                                         </div>
                                         </div>
@@ -78,7 +78,7 @@
                     <div class="col-sm-12">
                         <c:forEach items="${respImageList}" var="picture" varStatus="status">
                             <div class="col-sm-2" style="padding-bottom: 30px; cursor: pointer;" data-toggle="modal" data-target=".bs-example-modal-lg${status.index}">
-                                <img src="${web:getFileViewUrl(picture.imgname)}" width="100%" height="150"/>
+                                <img src="${picture.imgname}" width="100%" height="150"/>
                             </div>
                             <!-- /.modal -->
                             <div class="modal fade bs-example-modal-lg${status.index}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -92,7 +92,7 @@
                                         <div class="modal-body">
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <img src="${web:getFileViewUrl(picture.imgname)}" width="100%" height="100%"/>
+                                                    <img src="${picture.imgname}" width="100%" height="100%"/>
                                                 </div>
                                             </div>
                                         </div>

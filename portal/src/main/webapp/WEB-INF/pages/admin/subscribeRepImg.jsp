@@ -46,7 +46,7 @@
                                     </c:if>
                                     " id="imgDiv">
                                             <c:if test="${not empty respSetting.imgname}">
-                                                <img src="${web:getFileViewUrl(respSetting.imgname)}" width="100" height="100">
+                                                <img src="${respSetting.imgname}" width="100" height="100">
                                             </c:if>
                                             <c:if test="${empty respSetting.imgname}">
                                                 <img width="100" height="100">
@@ -89,7 +89,7 @@
                                     <c:if test="${not empty respImageList}">
                                         <c:forEach items="${respImageList}" var="pictrue" varStatus="status">
                                             <div class="col-sm-3 text-center" style="border: 1px dashed #657789; margin-right: 30px; margin-bottom: 30px">
-                                                <img src="${web:getFileViewUrl(pictrue.imgname)}" width="100%" height="100"/>
+                                                <img src="${pictrue.imgname}" width="100%" height="100"/>
                                                 <c:if test="${status.index == 0}">
                                                     <input type="radio" name="pic" checked>
                                                 </c:if>

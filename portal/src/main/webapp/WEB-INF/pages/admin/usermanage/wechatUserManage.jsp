@@ -161,14 +161,10 @@
                                         </td>
                                         <td>
                                                 ${wechatUserInfo.nickname}
-                                                <%--${web:getWechatUser(wechatUserInfo.openid).nickname}--%>
                                         </td>
                                         <td>
-                                            <%--<c:if test="${web:getWechatUser(wechatUserInfo.openid).headimgurl != null && web:getWechatUser(wechatUserInfo.openid).headimgurl  !=''}">
-                                                <img src="${web:getFileViewUrl(web:getWechatUser(wechatUserInfo.openid).headimgurl)}" style="width: 50px;height: 50px;">
-                                            </c:if>--%>
                                             <c:if test="${wechatUserInfo.headimgurl != null && wechatUserInfo.headimgurl != ''}">
-                                                <img src="${web:getFileViewUrl(wechatUserInfo.headimgurl)}" style="width: 50px;height: 50px;">
+                                                <img src="${wechatUserInfo.headimgurl}" style="width: 50px;height: 50px;">
                                             </c:if>
                                         </td>
                                         <td>

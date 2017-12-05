@@ -99,7 +99,7 @@
                                 <a href="javascript:showUserInfo()" class="btn btn-primary btn-s-xs"  style="color: #fff">创建用户</a>
                                 <div class="col-sm-1 text-right" style="float: right">
                                     <c:if test="${not empty staffqrcode}">
-                                        <img src="${web:getFileViewUrl(staffqrcode)}" style="width: 100px;height: 100px;margin-top: -56px;"
+                                        <img src="${staffqrcode}" style="width: 100px;height: 100px;margin-top: -56px;"
                                              data-toggle="modal" data-target=".bs-example-modal-lg">
                                     </c:if>
                                 </div>
@@ -193,7 +193,7 @@
                                             <c:otherwise>
                                                 <td>
                                                     <c:if test="${not empty web:getWechatUser(platformUser.openid).headimgurl}">
-                                                        <img src="${web:getFileViewUrl(web:getWechatUser(platformUser.openid).headimgurl)}" style="width: 50px;height: 50px;">
+                                                        <img src="${web:getWechatUser(platformUser.openid).headimgurl}" style="width: 50px;height: 50px;">
                                                     </c:if>
                                                 </td>
                                             </c:otherwise>
@@ -304,7 +304,7 @@
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <img src="${web:getFileViewUrl(staffqrcode)}" width="100%" height="100%"/>
+                                        <img src="${staffqrcode}" width="100%" height="100%"/>
                                     </div>
                                 </div>
                                 <div class="row">

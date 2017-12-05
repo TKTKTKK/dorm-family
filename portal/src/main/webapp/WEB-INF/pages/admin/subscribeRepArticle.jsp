@@ -61,7 +61,7 @@
                                             <td style="word-wrap: break-word;word-break:break-all;">${respNews.firstRespArticle.title}</td>
                                             <td>
                                                 <c:if test="${not empty respNews.firstRespArticle.picurl}">
-                                                    <img src="${web:getFileViewUrl(respNews.firstRespArticle.picurl)}" width="50" height="50">
+                                                    <img src="${respNews.firstRespArticle.picurl}" width="50" height="50">
                                                 </c:if>
                                             </td>
                                             <td style="word-wrap: break-word;word-break:break-all;">${respNews.firstRespArticle.url}</td>

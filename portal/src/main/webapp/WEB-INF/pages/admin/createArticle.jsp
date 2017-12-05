@@ -42,7 +42,7 @@
                                     <td>${respArticle.title}</td>
                                     <td style="word-wrap: break-word;word-break:break-all;">
                                         <c:if test="${not empty respArticle.picurl}">
-                                            <img src="${web:getFileViewUrl(respArticle.picurl)}" width="50" height="50">
+                                            <img src="${respArticle.picurl}" width="50" height="50">
                                         </c:if>
                                     </td>
                                     <td style="word-wrap: break-word;word-break:break-all;">${respArticle.url}</td>
@@ -115,7 +115,7 @@
                                                             <c:if test="${not empty respImageList}">
                                                                 <c:forEach items="${respImageList}" var="pictrue" varStatus="status">
                                                                     <div class="col-sm-3 text-center" style="border: 1px dashed #657789; margin-right: 30px; margin-bottom: 30px">
-                                                                        <img src="${web:getFileViewUrl(pictrue.imgname)}" width="100%" height="100"/>
+                                                                        <img src="${pictrue.imgname}" width="100%" height="100"/>
                                                                         <c:if test="${status.index == 0}">
                                                                             <input type="radio" name="pic" checked>
                                                                         </c:if>
