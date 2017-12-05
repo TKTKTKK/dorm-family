@@ -87,5 +87,7 @@ public class UploadUtils {
         return uploadViewPath + type + "/" + folder + "/";
     }
 
-
+    public static String getViewPath() {
+        return RequestUtil.getDomainUrl()+ "/";
+    }
 }

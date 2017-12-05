@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.family.mapper.MxtProductMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.family.entity.MtxProduct">
+    </resultMap>
+
+    <select id="selectMxtProductList" resultMap="selectResultMap">
+        select *
+        from tb_mtx_product
+        where TRUE
+        <if test="mxtProduct.name != null and mxtProduct.name != ''">
+            and name like concat("%",#{mxtProduct.name},"%")
+        </if>
+        <if test="mxtProduct.model != null and mxtProduct.model != ''">
+            and model like concat("%",#{mxtProduct.model},"%")
+        </if>
+        <if test="mxtProduct.status != null and mxtProduct.status != ''">
+            and status = #{mxtProduct.status}
+        </if>
+        order by modifyon desc;
+    </select>
+</mapper>
