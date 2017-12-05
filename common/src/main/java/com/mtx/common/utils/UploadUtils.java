@@ -86,8 +86,4 @@ public class UploadUtils {
         String folder = DateUtils.getDate("yyyyMMdd");
         return uploadViewPath + type + "/" + folder + "/";
     }
-
-    public static String getViewPath() {
-        return RequestUtil.getDomainUrl()+ "/";
-    }
 }

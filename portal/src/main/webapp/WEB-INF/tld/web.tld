@@ -33,14 +33,6 @@
     </function>
 
     <function>
-        <description>获取上传文件路径</description>
-        <name>getViewPath</name>
-        <function-class>com.mtx.common.utils.UploadUtils</function-class>
-        <function-signature>java.lang.String getViewPath()</function-signature>
-        <example>${web:getViewPath()}</example>
-    </function>
-
-    <function>
         <description>查询code描述</description>
         <name>getCodeDesc</name>
         <function-class>com.mtx.common.utils.CodeUtils</function-class>

@@ -60,7 +60,8 @@ public class CommonUploader implements Uploader{
             logger.error(e.getMessage(),e);
         }
 
-        return getFolder(type) + filename + ext;
+        return
+                (type) + filename + ext;
     }
 
 

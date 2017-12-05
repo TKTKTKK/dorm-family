@@ -5,7 +5,7 @@
 <%@ page import="org.apache.commons.fileupload.servlet.ServletFileUpload" %>
 <%@ page import="org.json.simple.JSONObject" %>
 <%@ page import="java.util.*" %>
-<%@ page import="com.mtx.common.service.CosUploader" %>
+<%@ page import="com.mtx.common.service.CommonUploader" %>
 <%@ page import="com.mtx.common.utils.ApplicationContextUtil" %>
 <%
 
@@ -56,8 +56,8 @@ while (itr.hasNext()) {
 			return;
 		}
 
-		CosUploader cosUploader = ApplicationContextUtil.getBean(CosUploader.class);
-		String newFileName = cosUploader.uploadFile(item.get(),"attached","."+fileExt);
+		CommonUploader commonUploader = ApplicationContextUtil.getBean(CommonUploader.class);
+		String newFileName = commonUploader.uploadFile(item.get(),"attached","."+fileExt);
 
 		JSONObject obj = new JSONObject();
 		obj.put("error", 0);
