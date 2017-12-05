@@ -3,12 +3,15 @@ package com.mtx.portal.controller.admin;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.exception.ServiceException;
+import com.mtx.common.utils.DateUtils;
 import com.mtx.common.utils.StringUtils;
 import com.mtx.common.utils.UploadUtils;
 import com.mtx.common.utils.UserUtils;
 import com.mtx.family.entity.Merchant;
+import com.mtx.family.entity.Order;
 import com.mtx.family.entity.MtxProduct;
 import com.mtx.family.service.MerchantService;
+import com.mtx.family.service.OrderService;
 import com.mtx.family.service.MxtProductService;
 import com.mtx.portal.PortalContants;
 import com.mtx.wechat.entity.admin.WechatBinding;
@@ -27,6 +30,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +47,8 @@ public class WeFamilyController extends BaseAdminController {
     private WechatBindingService wechatBindingService;
     @Autowired
     private MerchantService merchantService;
+    @Autowired
+    private OrderService orderService;
     @Autowired
     private MxtProductService mxtProductService;
 
@@ -227,4 +234,164 @@ public class WeFamilyController extends BaseAdminController {
     public String product_center() {
         return "guest/product_center";
     }
+    /**
+     * 订单管理（界面）
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/orderManage",method = RequestMethod.GET)
+    public String orderManage(Model model,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        model.addAttribute("successMessage",request.getParameter("successMessage"));
+        return "admin/wefamily/orderManage";
+    }
+
+    /**
+     * 订单管理
+     * @param order
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/orderManage",method = RequestMethod.POST)
+    public String orderManage(@RequestParam(required = false,defaultValue = "1") int page,Order order,Model model,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        model.addAttribute("order",order);
+        if(null != wechatBinding){
+            String startDateStr = request.getParameter("startDateStr");
+            model.addAttribute("startDateStr", startDateStr);
+            String endDateStr = request.getParameter("endDateStr");
+            model.addAttribute("endDateStr", endDateStr);
+            Date startDate = DateUtils.parseDate(startDateStr);
+            Date endDate = DateUtils.parseDate(endDateStr);
+            startDate = DateUtils.getDateStart(startDate);
+            endDate = DateUtils.getDateEnd(endDate);
+            String startDateTimeStr = "";
+            if(null != startDate){
+                startDateTimeStr = DateUtils.formatDate(startDate, "yyyy-MM-dd HH:mm:ss");
+            }
+            String endDateTimeStr = "";
+            if(null != endDate){
+                endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
+            }
+            order.setBindid(wechatBinding.getUuid());
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<Order> orderList = orderService.queryOrderList(order, startDateTimeStr, endDateTimeStr, pageBounds);
+            model.addAttribute("orderList", orderList);
+
+            //删除结果
+            String deleteFlag = request.getParameter("deleteFlag");
+            if("1".equals(deleteFlag)){
+                model.addAttribute("successMessage", "删除成功");
+            }else if("0".equals(deleteFlag)){
+                model.addAttribute("errorMessage", "删除失败");
+            }
+            //订单发送结果
+            String sendFlag = request.getParameter("sendFlag");
+            if("1".equals(sendFlag)){
+                model.addAttribute("successMessage", "发送成功");
+            }else if("0".equals(sendFlag)){
+                model.addAttribute("errorMessage", "发送失败");
+            }
+        }
+
+        return "admin/wefamily/orderManage";
+    }
+
+    /**
+     * 删除仓库
+     * @param request
+     * @return
+     */
+    @RequestMapping("/deleteOrder")
+    @ResponseBody
+    public Map<String, Object> deleteWarehouse(HttpServletRequest request){
+        int deleteFlag = 0;
+        String orderId = request.getParameter("orderId");
+        if(StringUtils.isNotBlank(orderId)){
+            Order order = new Order();
+            order.setUuid(orderId);
+            deleteFlag = orderService.delete(order);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
+    }
+
+    /**
+     * 发送订单
+     * @param request
+     * @return
+     */
+    @RequestMapping("/sendOrder")
+    @ResponseBody
+    public Map<String, Object> sendOrder(HttpServletRequest request){
+        int sendFlag = 0;
+        String orderId = request.getParameter("orderId");
+        String versionno = request.getParameter("versionno");
+        if(StringUtils.isNotBlank(orderId)){
+            Order order = new Order();
+            order.setUuid(orderId);
+            order.setVersionno(Integer.valueOf(versionno));
+            sendFlag = orderService.sendOrder(order);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("sendFlag", sendFlag);
+        return resultMap;
+    }
+
+    /**
+     * 订单信息（界面）
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/orderInfo",method = RequestMethod.GET)
+    public String orderInfo(HttpServletRequest request,Model model){
+        String orderId = request.getParameter("orderId");
+        if(StringUtils.isNotBlank(orderId)){
+            Order order = new Order();
+            order.setUuid(orderId);
+            order = orderService.queryForObjectByPk(order);
+            model.addAttribute("order", order);
+        }
+        return "admin/wefamily/orderInfo";
+    }
+
+    /**
+     * 订单信息
+     * @param order
+     * @param redirectAttributes
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/orderInfo",method = RequestMethod.POST)
+    public String orderInfo(Order order, RedirectAttributes redirectAttributes, Model model){
+        order.setBindid(UserUtils.getUserBindId());
+        List<Order> orderList = orderService.queryOrderForSnnoRepeat(order);
+        if(null != orderList && orderList.size()>0){
+            model.addAttribute("errorMessage", "抱歉，订单编号重复!");
+            return  "admin/wefamily/orderInfo";
+        }
+        //修改
+        if(StringUtils.isNotBlank(order.getUuid())){
+            try {
+                orderService.updatePartial(order);
+                redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");
+            }
+        }else{
+            //添加
+            order.setStatus("NEW");
+            orderService.insert(order);
+            redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+            order = new Order();
+        }
+
+        return "redirect:orderInfo?orderId=" + order.getUuid();
+    }
+
 }

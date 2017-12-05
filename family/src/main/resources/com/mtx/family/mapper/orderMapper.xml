@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.family.mapper.OrderMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.family.entity.Order">
+    </resultMap>
+
+    <select id="selectOrderForSnnoRepeat" resultMap="selectResultMap">
+        select mo.*
+        from tb_mtx_order mo
+        where
+        mo.bindid = #{order.bindid}
+        <if test="order.snno != null and order.snno != ''">
+            and mo.snno = #{order.snno}
+        </if>
+        <if test="order.uuid != null and order.uuid != ''">
+            and mo.uuid != #{order.uuid}
+        </if>
+        ;
+    </select>
+
+    <select id="selectOrderList" resultMap="selectResultMap">
+      select mo.*
+      from tb_mtx_order mo
+      where
+      mo.bindid = #{order.bindid}
+        <if test="order.snno != null and order.snno != ''">
+            and mo.snno like CONCAT('%',#{order.snno},'%')
+        </if>
+        <if test="order.machinemodel != null and order.machinemodel != ''">
+            and mo.machinemodel like CONCAT('%',#{order.machinemodel},'%')
+        </if>
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+                              and mo.createon >= #{startTime}
+                            ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+                              and mo.createon <= #{endTime}
+                            ]]>
+        </if>
+        order by mo.modifyon desc
+    </select>
+
+</mapper>
