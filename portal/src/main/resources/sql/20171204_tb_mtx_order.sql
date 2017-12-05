@@ -5,7 +5,7 @@ CREATE TABLE `tb_mtx_order` (
   `bindid` varchar(32) NOT NULL,
   `snno` varchar(32) NOT NULL,
   `machinemodel` varchar(32) NOT NULL,
-  `machinename` varchar(32) NOT NULL,
+  `machinename` varchar(32) DEFAULT NULL,
   `quantity` int(11) NOT NULL,
   `createon` varchar(23) NOT NULL,
   `createby` varchar(32) NOT NULL,
