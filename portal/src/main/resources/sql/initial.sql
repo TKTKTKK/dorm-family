@@ -48,6 +48,24 @@ CREATE TABLE `tb_common_sequence` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+-- Table structure for tb_wp_attachment
+-- ----------------------------
+CREATE TABLE `tb_common_attachment` (
+  `uuid` varchar(32) NOT NULL,
+  `refid` varchar(32) NOT NULL,
+  `name` varchar(300) NOT NULL,
+  `type` varchar(10) DEFAULT NULL,
+  `createon` varchar(23) NOT NULL,
+  `createby` varchar(32) NOT NULL,
+  `modifyon` varchar(23) NOT NULL,
+  `modifyby` varchar(32) NOT NULL,
+  `versionno` int(11) NOT NULL,
+  `delind` char(1) NOT NULL,
+  PRIMARY KEY (`uuid`),
+  KEY `ind_common_att_refid` (`refid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
 -- Table structure for tb_platform_permit
 -- ----------------------------
 CREATE TABLE `tb_platform_permit` (

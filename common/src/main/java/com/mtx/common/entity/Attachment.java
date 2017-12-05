@@ -11,6 +11,8 @@ public class Attachment extends BaseEntity {
     private String refid;
     @Column
     private String name;
+    @Column
+    private String type;
 
     public String getRefid() {
         return refid;
