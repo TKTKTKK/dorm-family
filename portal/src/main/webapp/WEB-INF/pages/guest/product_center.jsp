@@ -11,7 +11,7 @@
     <meta name="format-detection" content="telephone=no"><!-- 禁止了把数字转化为拨号链接 -->
     <meta http-equiv="x-dns-prefetch-control" content="on"><!-- 浏览器开启预解析功能 -->
     <title>产品中心</title>
-    <link rel="stylesheet" href="${ctx}/static/admin/css/common.css"  type="text/css" />
+    <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
     <style>
         .content .goods_list li {width:48%;background-color: #fff;border-radius:1rem;margin-bottom: 1.25rem;}
         .content .goods_list li:nth-child(odd){float: left;}
@@ -31,20 +31,20 @@
 <div class="head">
     <a class="back" href="" ></a>
     <span>产品中心</span>
-    <img src="../../../static/admin/img/sao.png" alt="">
+    <img src="../../../static/guest/img/sao.png" alt="">
 </div>
 <div class="content">
     <ul class="goods_list">
         <c:forEach items="${mtxProductList}" var="mtxProduct">
         <li>
-            <a href="${ctx}/guest/goods_detail?uuid=${mtxProduct.uuid}">
+            <a href="${ctx}/guest/product_detail?uuid=${mtxProduct.uuid}">
                 <img src="${mtxProduct.img}" alt="">
                 <div class="goods_desword">
                     <p>${mtxProduct.model}${mtxProduct.name}</p>
                 </div>
             </a>
             <div class="goods_action">
-                <a href="${ctx}/guest/reserve?uuid=${mtxProduct.uuid}">
+                <a href="${ctx}/guest/consult?uuid=${mtxProduct.uuid}">
                     咨询购买
                 </a>
             </div>

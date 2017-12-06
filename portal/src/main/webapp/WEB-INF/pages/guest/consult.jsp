@@ -11,7 +11,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta http-equiv="x-dns-prefetch-control" content="on">
     <title>预订</title>
-    <link rel="stylesheet" href="${ctx}/static/admin/css/common.css"  type="text/css" />
+    <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
     <style>
         .goods{ display: flex;display: -webkit-flex;justify-content: space-between;align-items: center;margin: 0 0 1.25rem 0;height: 8rem;background: #fff;padding: 1rem 2rem;box-sizing: border-box;}
         .goods>img{width: 5rem;height:5rem;}
@@ -38,7 +38,7 @@
     <img src="${mtxProduct.img}" alt="">
     <span>${mtxProduct.model}${mtxProduct.name}</span>
 </div>
-<form method="post" action="${ctx}/guest/updateMtxConsult"
+<form method="post" action="${ctx}/guest/consult"
       data-validate="parsley" id="searchForm"
     >
 

@@ -11,7 +11,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta http-equiv="x-dns-prefetch-control" content="on">
     <title>产品详情</title>
-    <link rel="stylesheet" href="${ctx}/static/admin/css/common.css"  type="text/css" />
+    <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
     <style>
         .parm{background: #fff;padding:1.25rem;color: #333;font-size: 1.4rem;}
         .parm>p{border-bottom: 1px solid rgba(0,0,0,0.1);font-size: 1.4rem;display: block;height: 3.35rem;line-height: 3.35rem;margin-bottom: 1rem;}

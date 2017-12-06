@@ -26,7 +26,7 @@ html,body{max-width: 1080px;margin: auto;}
 body{background-color: #f8f8f8}
 .head {background: #5bbc4e;height: 3.67rem;line-height:3.67rem;text-align: center;color: #fff;font-size: 1.7rem;position: relative;}
 .head img{width: 2.4rem;vertical-align: text-bottom;float: right;position: relative;top: 0.635rem;right: 1.5rem;}
-.head .back {width: 3.67rem;height: 3.67rem;position: absolute;left: 0;vertical-align: middle;background: url(../../../static/admin/img/back.png) no-repeat center center;background-size: 1.2rem;}
+.head .back {width: 3.67rem;height: 3.67rem;position: absolute;left: 0;vertical-align: middle;background: url(../../guest/img/back.png) no-repeat center center;background-size: 1.2rem;}
 .head .finish {color: #fff;font-size: 1.4rem;padding: 0 2rem;position: absolute;right: 0;}
 .content{padding: 1.25rem;background-color: #f8f8f8}
 .bottom{height: 3.4rem;background: #5bbc4e;line-height: 3.4rem;text-align: center;color: #fff;font-size: 1.7rem;position: absolute;bottom: 0;width: 100%;}

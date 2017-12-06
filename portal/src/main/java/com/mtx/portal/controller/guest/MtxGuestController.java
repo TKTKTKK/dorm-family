@@ -21,7 +21,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/guest")
-public class MtxGuestController extends BaseAdminController {
+public class MtxGuestController{
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -40,20 +40,23 @@ public class MtxGuestController extends BaseAdminController {
         model.addAttribute("mtxProductList",mtxProductList);
         return "guest/product_center";
     }
-    @RequestMapping(value = "/goods_detail")
+
+    @RequestMapping(value = "/product_detail")
     public String goods_detail(Model model,MtxProduct mtxProduct) {
         MtxProduct mtxProductTemp= mxtProductService.queryForObjectByPk(mtxProduct);
         model.addAttribute("mtxProduct",mtxProductTemp);
-        return "guest/goods_detail";
+        return "guest/product_detail";
     }
-    @RequestMapping(value = "/reserve")
-    public String reserve(Model model,MtxProduct mtxProduct) {
+
+    @RequestMapping(value = "/consult",method = RequestMethod.GET)
+    public String consult(Model model,MtxProduct mtxProduct) {
         MtxProduct mtxProductTemp= mxtProductService.queryForObjectByPk(mtxProduct);
         model.addAttribute("mtxProduct",mtxProductTemp);
-        return "guest/reserve";
+        return "guest/consult";
     }
-    @RequestMapping(value = "/updateMtxConsult",method = RequestMethod.POST)
-    public String updateMtxConsult(MtxConsult mtxConsult){
+
+    @RequestMapping(value = "/consult",method = RequestMethod.POST)
+    public String saveMtxConsult(MtxConsult mtxConsult){
         if(StringUtils.isBlank(mtxConsult.getProductid())){
             mtxConsult.setProductid(null);
         }
@@ -63,8 +66,9 @@ public class MtxGuestController extends BaseAdminController {
         mtxConsultService.insert(mtxConsult);
         return "redirect:/guest/product_center";
     }
-    @RequestMapping(value = "/enquiry")
+
+    @RequestMapping(value = "/message")
     public String enquiry(Model model) {
-        return "guest/enquiry";
+        return "guest/message";
     }
 }
