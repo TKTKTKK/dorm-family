@@ -4,7 +4,7 @@ import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.base.BaseService;
 import com.mtx.family.entity.MtxProduct;
-import com.mtx.family.mapper.MxtProductMapper;
+import com.mtx.family.mapper.MtxProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class MxtProductService extends BaseService<MxtProductMapper,MtxProduct> {
+public class MtxProductService extends BaseService<MtxProductMapper,MtxProduct> {
 
     @Autowired
-    public void setMapper(MxtProductMapper mapper) {
+    public void setMapper(MtxProductMapper mapper) {
         super.setMapper(mapper);
     }
 

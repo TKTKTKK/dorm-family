@@ -3,7 +3,11 @@
 <!DOCTYPE html>
 <html lang="en" class="app">
 <head>
-
+<style>
+    .money{
+        margin-top: 10px;
+    }
+</style>
 </head>
 <body class="">
 
@@ -22,7 +26,8 @@
                 </div>
                 <form class="form-horizontal form-bordered" data-validate="parsley"
                       action="${ctx}/admin/wefamily/updateMtxProduct" method="POST"
-                      enctype="multipart/form-data" id="frm">
+                      enctype="multipart/form-data" id="frm"
+                onsubmit="return validateMoney(document.getElementById('price'),'priceError')">
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
                             <i class="fa fa-gift"></i>
@@ -47,7 +52,21 @@
                                            value="${mtxProduct.name}">
                                 </div>
                             </div>
-
+                            <div class="form-group">
+                                <div class="col-sm-3 control-label"><span class="text-danger">*</span>价格：</div>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <div class="col-sm-8 col-xs-11" style="padding-left: 0">
+                                        <input class="form-control" type="text" name="price" value="${mtxProduct.price}"
+                                               id="price"
+                                               data-maxlength="10"
+                                               data-required="true"
+                                               onblur="validateMoney(this,'priceError')">
+                                        <div class="text-danger" id="priceError"></div>
+                                    </div>
+                                    <div class="col-sm-1 col-xs-1 my-unit money">元</div>
+                                    <div style="clear: both"></div>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>状态：</label>
                                 <div class="col-sm-9 b-l bg-white">
@@ -70,7 +89,7 @@
                                     >
                                     <input type="text" class="hidden" name="img" value="${mtxProduct.img}">
                                     <div class="hidden" id="imgDiv" style="margin-top: 20px">
-                                        <img src="${web:getViewPath()}${mtxProduct.img}" width="100" height="100"
+                                        <img src="${mtxProduct.img}" width="100" height="100"
                                              data-toggle="modal" data-target=".bs-example-modal-lg1"
                                              class="hover-pointer">
                                     </div>
@@ -88,7 +107,7 @@
                                                 <div class="modal-body">
                                                     <div class="row">
                                                         <div class="col-sm-12">
-                                                            <img src="${web:getViewPath()}${mtxProduct.img}" width="100%" height="100%" id="showLargePic"/>
+                                                            <img src="${mtxProduct.img}" width="100%" height="100%" id="showLargePic"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -97,7 +116,12 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"><span class="text-danger"></span>产品详情：</label>
+                                <div class="col-sm-9 b-l bg-white" style="margin-top: 10px;margin-bottom: 10px">
+                                    <textarea name="detail" id="notificationContent" style="width:100%; height: 350px;">${mtxProduct.detail}</textarea>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <div class="col-sm-12">
@@ -124,6 +148,9 @@
     <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen,open" data-target="#nav,html"></a>
 </section>
 <script type="text/javascript" src="${ctx}/static/admin/geo.js"></script>
+<script charset="utf-8" src="${ctx}/static/admin/editor/kindeditor.js"></script>
+<script charset="utf-8" src="${ctx}/static/admin/editor/lang/zh_CN.js"></script>
+<script charset="utf-8" src="${ctx}/static/admin/editor/plugins/lineheight/lineheight.js"></script>
 <script type="text/javascript">
 
     window.onload = function () {
@@ -132,8 +159,23 @@
         if(${mtxProduct.img!=null && mtxProduct.img!=''}){
             $('#imgDiv').removeClass('hidden');
         }
+        if('${mtxProduct.price}'.length > 0){
+            formatMoney(document.getElementById('price'));
+        }
     }
+    KindEditor.ready(function(K) {
+        window.editor = K.create('#notificationContent', {
+            uploadJson : '${ctx}/static/editor/jsp/upload_json.jsp',
+            fileManagerJson : '${ctx}/static/editor/jsp/file_manager_json.jsp',
+            items : ['fullscreen', 'source', 'undo', 'redo', 'print', 'cut', 'copy', 'paste',
+                'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'lineheight','subscript',
+                'superscript', '|', 'selectall', '-',
+                'title', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                'italic', 'underline', 'strikethrough', 'removeformat', '|', 'advtable', 'hr', 'image', 'link', 'unlink']
+        });
 
+    });
 </script>
 
 </body>

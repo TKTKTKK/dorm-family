@@ -8,11 +8,13 @@ import com.mtx.common.utils.StringUtils;
 import com.mtx.common.utils.UploadUtils;
 import com.mtx.common.utils.UserUtils;
 import com.mtx.family.entity.Merchant;
+import com.mtx.family.entity.MtxConsult;
 import com.mtx.family.entity.Order;
 import com.mtx.family.entity.MtxProduct;
 import com.mtx.family.service.MerchantService;
+import com.mtx.family.service.MtxConsultService;
 import com.mtx.family.service.OrderService;
-import com.mtx.family.service.MxtProductService;
+import com.mtx.family.service.MtxProductService;
 import com.mtx.portal.PortalContants;
 import com.mtx.wechat.entity.admin.WechatBinding;
 import com.mtx.wechat.service.WechatBindingService;
@@ -31,7 +33,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +51,9 @@ public class WeFamilyController extends BaseAdminController {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private MxtProductService mxtProductService;
+    private MtxProductService mxtProductService;
+    @Autowired
+    private MtxConsultService mtxConsultService;
 
     /**
      * 经销商管理界面
@@ -393,5 +396,19 @@ public class WeFamilyController extends BaseAdminController {
 
         return "redirect:orderInfo?orderId=" + order.getUuid();
     }
-
+    /**
+     * 咨询管理
+     */
+    @RequestMapping(value = "/MtxConsultManage")
+    public String MtxConsultManage(@RequestParam(required = false, defaultValue = "1") int page, MtxConsult mtxConsult, Model model) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if (null != wechatBinding) {
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<MtxConsult> mtxConsultList = mtxConsultService.queryForListWithPagination(mtxConsult, pageBounds);
+            model.addAttribute("mtxConsultList", mtxConsultList);
+            model.addAttribute("mtxConsult",mtxConsult);
+        }
+        return "admin/wefamily/mtxConsultManage";
+    }
 }

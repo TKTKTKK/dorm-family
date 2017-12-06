@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.family.mapper.MtxConsultMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.family.entity.MtxConsult">
+    </resultMap>
+
+    <select id="selectMtxConsultList" resultMap="selectResultMap">
+        select mc.*,mp.model as productname
+        from tb_mtx_consult mc
+        left join tb_mtx_product mp on mp.uuid=mc.productid
+        where TRUE
+        <if test="mtxConsult.name != null and mtxConsult.name != ''">
+            and mc.name like concat("%",#{mtxConsult.name},"%")
+        </if>
+        <if test="mtxConsult.phone != null and mtxConsult.phone != ''">
+            and mc.phone like concat("%",#{mtxConsult.phone},"%")
+        </if>
+        order by mc.modifyon desc;
+    </select>
+</mapper>

@@ -66,8 +66,9 @@
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
                                     <tr>
-                                        <th width="20%">商品型号</th>
-                                        <th width="20%">名称</th>
+                                        <th width="15%">商品型号</th>
+                                        <th width="15%">名称</th>
+                                        <th width="10%">价格</th>
                                         <th width="10%">状态</th>
                                         <th width="20%">图片</th>
                                         <th width="30%">操作</th>
@@ -83,11 +84,14 @@
                                                     ${mtxProduct.name}
                                             </td>
                                             <td>
+                                                    ${mtxProduct.price}
+                                            </td>
+                                            <td>
                                                 <c:if test="${mtxProduct.status=='1'}">上架</c:if>
                                                 <c:if test="${mtxProduct.status=='0'}">下架</c:if>
                                             </td>
                                             <td>
-                                                <img src="${web:getViewPath()}${mtxProduct.img}" width="50" height="50">
+                                                <img src="${mtxProduct.img}" width="50" height="50">
                                             </td>
                                             <td>
                                                 <a href="${ctx}/admin/wefamily/goMtxProduct?uuid=${mtxProduct.uuid}"
