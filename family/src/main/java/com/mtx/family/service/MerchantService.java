@@ -63,4 +63,8 @@ public class MerchantService extends BaseService<MerchantMapper,Merchant> {
         String userid = UserUtils.getUserId();
         return mapper.selectMerchantForUser(userid);
     }
+
+    public List<Merchant> queryMerchantListNotInUserMerhantTable(String bindid, String userId){
+        return mapper.selectMerchantListNotInUserMerhantTable(bindid,userId);
+    }
 }

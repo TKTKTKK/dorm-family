@@ -20,5 +20,7 @@ public interface MerchantMapper extends BaseMapper<Merchant> {
 
     PageList<Merchant> selectMerchantForUserWithPagination(@Param("userid") String userid,@Param("topAccount") String topAccount,@Param("merchant") Merchant merchant, PageBounds pageBounds);
 
+    List<Merchant> selectMerchantListNotInUserMerhantTable(@Param("bindid") String bindid, @Param("userid") String userid);
+
 
 }

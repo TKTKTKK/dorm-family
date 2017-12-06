@@ -4,7 +4,6 @@
 <!DOCTYPE html>
 <html lang="en" class="app">
 <head>
-    <%--<link href="${ctx}/static/admin/css/sweetalert.css" rel="stylesheet">--%>
         <link href="${ctx}/static/admin/css/qikoo/qikoo.css" rel="stylesheet">
     <style>
         @media (min-width: 768px){
@@ -48,9 +47,9 @@
                     <form method="post" action="" class="form-horizontal" data-validate="parsley" id="searchForm" style="margin: 10px 0">
                         <div>
                             <c:choose>
-                                <c:when test="${allCommunities}">
+                                <c:when test="${allMerchants}">
                                     <div class="col-sm-2">
-                                        <select class="form-control" name="topAccount"  id="topAccount" onchange="showCommunityid()">
+                                        <select class="form-control" name="topAccount"  id="topAccount" onchange="showMerchantid()">
                                                 <option value="Y" <c:if test="${'Y' eq topAccount}">selected="selected"</c:if>>顶级用户</option>
                                                 <option value="N" <c:if test="${'N' eq topAccount}">selected="selected"</c:if>>非顶级用户</option>
                                         </select>
@@ -60,14 +59,14 @@
                                         <input type="hidden" name="topAccount" id="topAccount" value="N">
                                 </c:otherwise>
                             </c:choose>
-                            <div class="col-sm-2" id="communityidDiv">
-                                <select class="form-control" name="communityid"  id="communityid">
-                                    <c:if test="${allCommunities}">
-                                        <option value="">机构</option>
+                            <div class="col-sm-2" id="merchantidDiv">
+                                <select class="form-control" name="merchantid"  id="merchantid">
+                                    <c:if test="${allMerchants}">
+                                        <option value="">经销商</option>
                                     </c:if>
 
-                                    <c:forEach items="${wpCommunityList}" var="community">
-                                        <option value="${community.uuid}" <c:if test="${communityid == community.uuid}">selected = "selected"</c:if>  communityType="${community.type}" >${community.name}</option>
+                                    <c:forEach items="${merchantList}" var="merchant">
+                                        <option value="${merchant.uuid}" <c:if test="${merchantid == merchant.uuid}">selected = "selected"</c:if> >${merchant.name}</option>
                                     </c:forEach>
 
                                 </select>
@@ -121,8 +120,7 @@
                                     <th class="text-center">是否关注</th>
                                     <th class="text-center">绑定微信</th>
                                     <c:if test="${topAccount == 'N'}">
-                                        <th class="text-center">机构</th>
-                                        <th class="text-center">片区</th>
+                                        <th class="text-center">经销商</th>
                                     </c:if>
                                     <th class="text-center">操作</th>
                                 </tr>
@@ -238,12 +236,7 @@
                                         </c:choose>
                                         <c:if test="${topAccount == 'N'}">
                                             <td>
-                                                    ${platformUser.communityname}
-                                            </td>
-                                            <td>
-                                            <span class="hsspan">
-                                                    ${platformUser.blknos}
-                                            </span>
+                                                    ${platformUser.merchantname}
                                             </td>
                                         </c:if>
                                         <c:choose>
@@ -255,12 +248,9 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <td>
-                                                    <a href="javascript:goModifyuserInfo('${platformUser.uuid}','${communityid}')"  type="button"
+                                                    <a href="javascript:goModifyuserInfo('${platformUser.uuid}','${merchantid}')"  type="button"
                                                        class="btn btn-sm btn-dangernew  a-noline" style="color:white">
                                                         修改</a>
-                                                        <%--<a href="javascript:gouserInfo('${platformUser.uuid}','${communityid}')"  type="button"
-                                                           class="btn btn-sm btn-infonew a-noline" style="color: white">
-                                                            详情</a>--%>
                                                     <c:if test="${currentUserId != platformUser.uuid}">
                                                         <a href="javascript:deleteUserInfo('${platformUser.uuid}')" type="button"
                                                            class="btn btn-sm btn-yellow a-noline" style="color:white">
@@ -323,8 +313,6 @@
     <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen,open" data-target="#nav,html"></a>
 </section>
 
-<%--<script type="text/javascript" src="${ctx}/static/admin/geo.js"></script>--%>
-<%--<script src="${ctx}/static/admin/js/sweetalert.min.js"></script>--%>
 <script src="${ctx}/static/admin/js/qikoo/qikoo.js"></script>
 <script type="text/javascript">
 
@@ -334,83 +322,33 @@
 
         var topAccount = $("#topAccount").find("option:selected").val();
         if(topAccount == 'Y'){
-            $("#communityidDiv").addClass("hidden");
+            $("#merchantidDiv").addClass("hidden");
         }
         if(topAccount == 'N'){
-            $("#communityidDiv").removeClass("hidden");
+            $("#merchantidDiv").removeClass("hidden");
         }
     }
 
     function resubmitSearch(page){
-        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?topAccount="+$('#topAccount').val()+"&page="+page+"&communityid="+$('#communityid').val()+"&username="+$('#username').val()+"&name="+$('#name').val();
+        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?topAccount="+$('#topAccount').val()+"&page="+page+"&merchantid="+$('#merchantid').val()+"&username="+$('#username').val()+"&name="+$('#name').val();
     }
     function submitInfo(){
-        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?topAccount="+$('#topAccount').val()+"&communityid="+$('#communityid').val()+"&username="+$('#username').val()+"&name="+$('#name').val();
+        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?topAccount="+$('#topAccount').val()+"&merchantid="+$('#merchantid').val()+"&username="+$('#username').val()+"&name="+$('#name').val();
     }
-    function goModifyuserInfo(userId,communityid){
-        window.location.href="${ctx}/admin/usermanage/userInfo?userId="+userId+"&communityid="+communityid+"&username="+$('#username').val()+"&name="+$('#name').val()+"&topAccount="+$('#topAccount').val();
+    function goModifyuserInfo(userId,merchantid){
+        window.location.href="${ctx}/admin/usermanage/userInfo?userId="+userId+"&merchantid="+merchantid+"&username="+$('#username').val()+"&name="+$('#name').val()+"&topAccount="+$('#topAccount').val();
     }
-    function gouserInfo(userId,communityid){
-        window.location.href="${ctx}/admin/usermanage/userInfo?userId="+userId+"&view=1&communityid="+communityid+"&username="+$('#username').val()+"&name="+$('#name').val()+"&topAccount="+$('#topAccount').val();
+    function gouserInfo(userId,merchantid){
+        window.location.href="${ctx}/admin/usermanage/userInfo?userId="+userId+"&view=1&merchantid="+merchantid+"&username="+$('#username').val()+"&name="+$('#name').val()+"&topAccount="+$('#topAccount').val();
     }
-    function showCommunityid(){
+    function showMerchantid(){
         var topAccount = document.getElementById('topAccount').value;
         if(topAccount == 'Y'){
-            $("#communityidDiv").addClass("hidden");
+            $("#merchantidDiv").addClass("hidden");
         }
         if(topAccount == 'N'){
-            $("#communityidDiv").removeClass("hidden");
+            $("#merchantidDiv").removeClass("hidden");
         }
-    }
-
-    //检查图片格式
-    function checkPicType(){
-        var pictureError = document.getElementById('pictureError');
-        pictureError.innerHTML = '';
-
-        var pic = document.getElementById('pictureId').value;
-        var imgname = document.getElementById('logonameId').value;
-        var type = '';
-        //提交时
-        if(pic.length == 0){
-            type = imgname.substr(imgname.lastIndexOf('.')+1);
-        }else{
-            //预览时
-            type = pic.substr(pic.lastIndexOf('.')+1);
-        }
-        //格式：bmp，png，jpeg，jpg，gif。
-        if(type != 'bmp' && type != 'png' && type != 'jpeg' && type != 'jpg'){
-            pictureError.innerHTML = "图片格式不合法。（格式只允许：bmp，png，jpeg，jpg）";
-            return false;
-        }
-
-        return true;
-    }
-
-    //上传文件
-    function uploadFile(){
-        //检查图片格式
-        if(checkPicType()){
-            var frm = document.getElementById("frm");
-            frm.submit();
-        }
-    }
-
-
-    //添加商家信息
-    function addBrandInfo(){
-        var brand_name = document.getElementById('brand_name');
-        //检查商家名称
-        var brandNameValid = validateChineseTextForTwo(24, brand_name, 'brand_nameError');
-
-        //检查图片格式
-        var picTypeValid = checkPicType();
-
-        if(!brandNameValid || !picTypeValid){
-            return false;
-        }
-
-        return true;
     }
 
     //用户信息界面
@@ -420,20 +358,9 @@
 
     //删除用户
     function deleteUserInfo(userId){
-        <%--swal({--%>
-            <%--title: "确定删除?",--%>
-            <%--text: "你将删除该用户!",--%>
-            <%--type: "warning",--%>
-            <%--showCancelButton: true,--%>
-            <%--confirmButtonColor: "#DD6B55",--%>
-            <%--confirmButtonText: "确定",--%>
-            <%--closeOnConfirm: false--%>
-        <%--}, function () {--%>
-            <%--window.location.href = "<%=request.getContextPath()%>/admin/usermanage/deleteUser?userId="+userId;--%>
-        <%--});--%>
         qikoo.dialog.confirm('确定删除？',function(){
             //确定
-            window.location.href = "<%=request.getContextPath()%>/admin/usermanage/deleteUser?userId="+userId+"&communityid=${communityid}";
+            window.location.href = "<%=request.getContextPath()%>/admin/usermanage/deleteUser?userId="+userId+"&merchantid=${merchantid}";
         },function(){
             //取消
         });
@@ -442,7 +369,6 @@
     //重载当前页面
     function reloadPage(){
         resubmitSearch(1);
-        <%--window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?communityid="+communityid;--%>
     }
 </script>
 </body>

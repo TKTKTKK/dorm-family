@@ -3,7 +3,6 @@
 <!DOCTYPE html>
 <html lang="en" class="app">
 <head>
-    <%--<link href="${ctx}/static/admin/css/sweetalert.css" rel="stylesheet">--%>
         <link href="${ctx}/static/admin/css/qikoo/qikoo.css" rel="stylesheet">
     <style type="text/css">
         .permit-list{
@@ -83,11 +82,11 @@
                         <c:choose>
                             <c:when test="${empty querytype or querytype eq 'user'}">
                                 <li class="active" onclick="toggleTab('user')"><a data-toggle="tab">用户信息</a></li>
-                                <li onclick="toggleTab('district')"><a data-toggle="tab">片区信息</a></li>
+                                <li onclick="toggleTab('district')"><a data-toggle="tab">经销商</a></li>
                             </c:when>
                             <c:when test="${'district' eq querytype}">
                                 <li onclick="toggleTab('user')"><a data-toggle="tab">用户信息</a></li>
-                                <li class="active" onclick="toggleTab('district')"><a data-toggle="tab">片区信息</a></li>
+                                <li class="active" onclick="toggleTab('district')"><a data-toggle="tab">经销商</a></li>
                             </c:when>
                         </c:choose>
                     </ul>
@@ -143,7 +142,7 @@
                                         </div>
                                     </div>
 
-                                        <input name="queryCommunityid" id="queryCommunityid" value="${queryCommunityid}" type="hidden">
+                                        <input name="queryMerchantid" id="queryMerchantid" value="${queryMerchantid}" type="hidden">
                                         <input name="queryUsername" id="queryUsername" value="${queryUsername}" type="hidden">
                                         <input name="queryName" id="queryName" value="${queryName}" type="hidden">
                                         <input name="queryTopAccount" id="queryTopAccount" value="${queryTopAccount}" type="hidden">
@@ -202,8 +201,6 @@
                                                 <c:forEach items="${roleList}" var="role">
                                                     <div class="checkbox i-checks" style="padding-left: 0px;position: relative">
                                                         <label class="checkbox m-n">
-                                                                <%--<input type="checkbox" name="roles" value="${role.uuid}"><i></i> ${role.rolename}--%>
-
                                                             <c:set var="showFlag" value="0" scope="page"></c:set>
                                                             <c:forEach items="${platformUser.roles}" var="userRole">
                                                                 <c:if test="${userRole == role.uuid}">
@@ -211,13 +208,13 @@
                                                                 </c:if>
                                                             </c:forEach>
                                                             <c:if test="${showFlag == 1}">
-                                                                <input type="checkbox" name="roles" value="${role.uuid}" onclick="checkFinantion()" checked>
+                                                                <input type="checkbox" name="roles" value="${role.uuid}" checked>
                                                                 <i></i>
                                                             <span onmouseover="queryPermitListByRoleId(this, '${role.uuid}')"
                                                                   onmouseout="hidePermitList(this)">${role.rolename}</span>
                                                             </c:if>
                                                             <c:if test="${showFlag == 0}">
-                                                                <input type="checkbox" name="roles" value="${role.uuid}" onclick="checkFinantion()">
+                                                                <input type="checkbox" name="roles" value="${role.uuid}" >
                                                                 <i></i>
                                                             <span onmouseover="queryPermitListByRoleId(this, '${role.uuid}')"
                                                                   onmouseout="hidePermitList(this)">${role.rolename}</span>
@@ -237,36 +234,18 @@
                                         <div class="col-sm-9  b-l bg-white">
                                             <div class="col-sm-4 col-xs-12">
                                                 <input id="openid" name="openid" class="form-control" value="${platformUser.openid}"
-                                                       onchange="showGroup(this.value),checkIfSubscribe()"/>
+                                                       onchange="checkIfSubscribe()"/>
                                             </div>
-                                                <%--<label class="col-sm-1"></label>--%>
                                             <div class="col-sm-5">
                                                 <a class="btn btn-default btn-s-xs" onclick="sendTestMessage()">发送测试模板消息</a>
                                                 <span style="margin-left: 10px" id="subscribeInfo"></span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group" id="wechatGroupId" style="display:none;">
-                                        <label class="col-sm-3 control-label">用户分组：</label>
-                                        <div class="col-sm-9  b-l bg-white">
-                                            <select  class="form-control" name="groupId" id="groupId" value="${platformUser.groupId}">
-                                                <c:forEach items="${wechatGroupList}" var="group">
-                                                    <c:if test="${group.id == platformUser.groupId}">
-                                                        <option value="${group.id}" selected>${group.name}</option>
-                                                    </c:if>
-                                                    <c:if test="${group.id !=  platformUser.groupId}">
-                                                        <option value="${group.id}">${group.name}</option>
-                                                    </c:if>
-                                                </c:forEach>
-                                            </select>
-                                            <span id="wechatGroupError" class="text-danger"></span>
-                                        </div>
-                                    </div>
                                     <div class="form-group">
                                         <div class="col-sm-12">
                                             <input type="hidden" name="uuid" id="hidPlatformUserId" class="form-control" value="${platformUser.uuid}">
                                             <input type="hidden" name="versionno" id="hidVersionno" class="form-control" value="${platformUser.versionno}">
-                                            <%--<input type="hidden" name="queryCommunityid" class="form-control" value="${queryCommunityid}">--%>
                                         </div>
                                     </div>
                                 </div>
@@ -301,30 +280,24 @@
                             <table class="table table-striped b-t b-light b-b b-l b-r">
                                 <thead>
                                 <tr>
-                                    <th width="30%">小区名称</th>
-                                    <th width="40%">楼栋号</th>
+                                    <th width="30%">供应商名称</th>
                                     <th width="30%">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach items="${userCommunityList}" var="userCommunity" varStatus="stat">
+                                <c:forEach items="${userMerchantList}" var="userMerchant" varStatus="stat">
                                     <tr>
                                         <td>
-                                                ${userCommunity.communityname}
+                                                ${userMerchant.merchantname}
                                         </td>
                                         <td>
-                                            <span class="hsspan">
-                                                ${userCommunity.blknos}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a onclick="showUserCommunityInfo('${userCommunity.uuid}')" type="button"
+                                            <a onclick="showUserMerchantInfo('${userMerchant.uuid}')" type="button"
                                                class="btn btn-sm btn-dangernew  a-noline" style="color:white"
                                                data-toggle="modal" data-target=".bs-example-modal-tj"
                                             >
                                                 修改</a>
                                             <c:if test="${currentUserId != platformUser.uuid}">
-                                                <a href="javascript:deleteUserCommunityInfo('${userCommunity.uuid}', '${platformUser.uuid}')" type="button"
+                                                <a href="javascript:deleteUserMerchantInfo('${userMerchant.uuid}', '${platformUser.uuid}')" type="button"
                                                    class="btn btn-sm btn-yellow a-noline" style="color:white">
                                                     删除</a>
                                             </c:if>
@@ -333,15 +306,15 @@
                                 </c:forEach>
                                 </tbody>
                             </table>
-                            <c:if test="${not empty userCommunityList}">
-                                <web:pagination pageList="${userCommunityList}"/>
+                            <c:if test="${not empty userMerchantList}">
+                                <web:pagination pageList="${userMerchantList}"/>
                             </c:if>
                         </div>
                         <div class="navbar-left">
-                            <c:if test="${fn:length(partialCommunityList) > 0}">
+                            <c:if test="${fn:length(partialMerchantList) > 0}">
                                 <a class="btn btn-primary btn-s-xs"
                                    data-toggle="modal" data-target=".bs-example-modal-tj" style="color: #fff"
-                                   onclick="showUserCommunityInfo()"
+                                   onclick="showUserMerchantInfo()"
                                 >添 加</a>
                             </c:if>
                             <c:if test="${platformUser.uuid != null && currentUserId != platformUser.uuid && platformUser.status == 'FREEZE'}">
@@ -358,54 +331,37 @@
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" id="modelCloseBtnAdd"><span
                                                 aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                                        <h4 class="modal-title" id="myLargeModalLabelAdd">片区信息</h4>
+                                        <h4 class="modal-title" id="myLargeModalLabelAdd">经销商</h4>
                                     </div>
-                                    <form action="${ctx}/admin/usermanage/saveUserCommunity" method="POST" id="addUserCommunityFrm">
+                                    <form action="${ctx}/admin/usermanage/saveUserMerchant" method="POST" id="addUserMerchantFrm">
                                         <div class="modal-body">
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <div class="row static-info" id="communityAdd">
-                                                        <div class="col-md-3 col-xs-4 name"><span class="text-danger">*</span>小区:</div>
+                                                    <div class="row static-info" id="merchantAdd">
+                                                        <div class="col-md-3 col-xs-4 name"><span class="text-danger">*</span>经销商:</div>
                                                         <div class="col-md-9 col-xs-12 value">
                                                             <div class="my-display-inline-box">
-                                                                <select class="form-control" name="communityid" id="communityid"
-                                                                        onchange="queryBuildingnoesByCommunityid()"
-                                                                        data-required="true"
-                                                                >
-                                                                    <c:if test="${fn:length(partialCommunityList) > 0}">
-                                                                        <option value="">--请选择小区--</option>
+                                                                <select class="form-control" name="merchantid" id="merchantid" data-required="true">
+                                                                    <c:if test="${fn:length(partialMerchantList) > 0}">
+                                                                        <option value="">--请选择经销商--</option>
                                                                     </c:if>
-                                                                    <c:forEach items="${partialCommunityList}" var="community">
-                                                                        <option value="${community.uuid}">${community.name}</option>
+                                                                    <c:forEach items="${partialMerchantList}" var="merchant">
+                                                                        <option value="${merchant.uuid}">${merchant.name}</option>
                                                                     </c:forEach>
                                                                 </select>
                                                             </div></div>
                                                     </div>
-                                                    <div class="row static-info">
-                                                        <div class="col-md-3 col-xs-4 name">楼栋号:</div>
-                                                        <div class="col-md-9 col-xs-12 value">
-                                                            <div class="row col-sm-12 checkbox i-checks hidden" id="sltAllDiv">
-                                                                <label class="checkbox m-n col-sm-3">
-                                                                    <input type="checkbox" name="sltAll" value="" id="sltAllBlknoes"
-                                                                           onclick="selectAllOrNone('blknos','sltAllBlknoes')"><i></i>全选
-                                                                </label>
-                                                            </div>
-                                                            <div class="row col-sm-12" style="padding-left: 0px">
-                                                                <div class="row col-sm-12">
-                                                                    <div class="checkbox i-checks " id="buildingnoes"
-                                                                         onclick="modifySelectAllOrNone('blknos','sltAllBlknoes')"></div>
-                                                                </div>
-                                                                <%--<div class="row col-sm-12 text-right" style="margin-top: 8px">--%>
-                                                                    <%--<a href="javascript:showOrHideBuildingnoes('OPEN')" class=" text-info" id="openBuildingnoes">展开》</a>--%>
-                                                                    <%--<a href="javascript:showOrHideBuildingnoes('CLOSE')" class=" text-info hidden" id="closeBuildingnoes">《收起</a>--%>
-                                                                <%--</div>--%>
-                                                            </div>
-                                                        </div>
+
+                                                    <p>
+
+                                                    <div class="row col-sm-12" style="padding-left: 0px">
+
                                                     </div>
+
                                                     <div class="hidden">
                                                         <input type="hidden" name="userid" value="${platformUser.uuid}">
-                                                        <input type="hidden" name="uuid" id="userComId">
-                                                        <input name="queryCommunityid" id="queryCommunityid" value="${queryCommunityid}" type="hidden">
+                                                        <input type="hidden" name="uuid" id="userMerchantId">
+                                                        <input name="queryMerchantid" id="queryMerchantid" value="${queryMerchantid}" type="hidden">
                                                         <input name="queryUsername" id="queryUsername" value="${queryUsername}" type="hidden">
                                                         <input name="queryName" id="queryName" value="${queryName}" type="hidden">
                                                         <input name="queryTopAccount" id="queryTopAccount" value="${queryTopAccount}" type="hidden">
@@ -414,11 +370,11 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer" style="text-align: center;border: 0;margin: 0;padding: 0 20px 20px 20px;">
-                                                <a href="javascript:saveUserCommuintyInfo()"
+                                                <a href="javascript:saveUserMerchantInfo()"
                                                    class="btn btn-submit btn-s-md a-noline" style="color: #fff"
                                                    id="submitAddBtn"
                                                 >提交</a>
-                                                <a href="javascript:deleteUserCommunityInfo($('#userComId').val(), '${platformUser.uuid}')" type="button"
+                                                <a href="javascript:deleteUserMerchantInfo($('#userMerchantId').val(), '${platformUser.uuid}')" type="button"
                                                    class="btn btn-s-md btn-yellow a-noline hidden" style="color:white" id="deleteBtn">
                                                     删除</a>
                                             </div>
@@ -542,27 +498,27 @@
             };
             $("#openid").easyAutocomplete(options);
         }
-        //检查返回时用户是否有片区信息
+        //检查返回时用户是否有供应商
         function backRoleDistribute(){
-            var communityid = $('#queryCommunityid').val();
+            var merchantid = $('#queryMerchantid').val();
             var username = $('#queryUsername').val();
             var name = $('#queryName').val();
             var topAccount = $('#queryTopAccount').val();
 
             if('${platformUser.uuid}'=='' || '${view}'=='1'){
-                window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?communityid="+communityid+"&username="+username+"&name="+name+"&topAccount="+topAccount;
+                window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?merchantid="+merchantid+"&username="+username+"&name="+name+"&topAccount="+topAccount;
             }else{
-                var url = "${ctx}/admin/usermanage/checkIfUserCommunity?userId=${platformUser.uuid}";
+                var url = "${ctx}/admin/usermanage/checkIfUserMerchant?userId=${platformUser.uuid}";
                 $.get(url,function(data,status){
-                    if(data.checkIfUserCommunityFlag == 'N'){
-                        qikoo.dialog.confirm('未添加片区信息，确定返回？',function(){
+                    if(data.checkIfUserMerchantFlag == 'N'){
+                        qikoo.dialog.confirm('未添加供应商，确定返回？',function(){
                             //确定
-                            window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?communityid="+communityid+"&username="+username+"&name="+name+"&topAccount="+topAccount;
+                            window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?merchantid="+merchantid+"&username="+username+"&name="+name+"&topAccount="+topAccount;
                         },function(){
                             //取消
                         });
                     }else{
-                        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?communityid="+communityid+"&username="+username+"&name="+name+"&topAccount="+topAccount;
+                        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?merchantid="+merchantid+"&username="+username+"&name="+name+"&topAccount="+topAccount;
                     }
                 });
             }
@@ -576,22 +532,20 @@
         var usernameValid = validateChineseText(30, document.getElementById('username'), 'usernameError');
          //检查姓名
         var nameValid = validateChineseText(90, document.getElementById('name'), 'nameError');
-        //检查小区的合法性
-//        var communityValid = checkCommunity();
 
         return usernameValid && nameValid;
     }
 
 
         function changeUsername(platformUserId,versionno){
-            var communityid = $('#queryCommunityid').val();
+            var merchantid = $('#queryMerchantid').val();
             var username = $('#queryUsername').val();
             var name = $('#queryName').val();
             var topAccount = $('#queryTopAccount').val();
-            window.location.href = "${ctx}/admin/usermanage/changeUsername?newUsername="+$('#newUsername').val()+"&platformUserId="+platformUserId+"&versionno="+versionno+"&queryCommunityid="+communityid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
+            window.location.href = "${ctx}/admin/usermanage/changeUsername?newUsername="+$('#newUsername').val()+"&platformUserId="+platformUserId+"&versionno="+versionno+"&queryMerchantid="+merchantid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
         }
         function resetPassword(platformUserId,versionno,password){
-            var communityid = $('#queryCommunityid').val();
+            var merchantid = $('#queryMerchantid').val();
             var username = $('#queryUsername').val();
             var name = $('#queryName').val();
             var topAccount = $('#queryTopAccount').val();
@@ -599,32 +553,32 @@
 
             if($('#passwordfrm').parsley().isValid()){
                 if(checkPassword(password)){
-                    passwordfrm.action = "${ctx}/admin/usermanage/resetPassword?platformUserId="+platformUserId+"&versionno="+versionno+"&queryCommunityid="+communityid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
+                    passwordfrm.action = "${ctx}/admin/usermanage/resetPassword?platformUserId="+platformUserId+"&versionno="+versionno+"&queryMerchantid="+merchantid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
                     passwordfrm.submit();
                 }
             }
         }
         function changeUserStatus(platformUserId,versionno,querytype){
-            var communityid = $('#queryCommunityid').val();
+            var merchantid = $('#queryMerchantid').val();
             var username = $('#queryUsername').val();
             var name = $('#queryName').val();
             var topAccount = $('#queryTopAccount').val();
             if(${allCommunities && platformUser.status == 'FREEZE'}){
-                var url = "${ctx}/admin/usermanage/checkIfUserCommunity?userId="+platformUserId;
+                var url = "${ctx}/admin/usermanage/checkIfUserMerchant?userId="+platformUserId;
                 $.get(url,function(data,status){
-                    if(data.checkIfUserCommunityFlag == 'N'){
-                        qikoo.dialog.confirm('未添加片区信息，确定生效？',function(){
+                    if(data.checkIfUserMerchantFlag == 'N'){
+                        qikoo.dialog.confirm('未添加供应商，确定生效？',function(){
                             //确定
-                            window.location.href = "${ctx}/admin/usermanage/changeUserStatus?platformUserId="+platformUserId+"&versionno="+versionno+"&querytype="+querytype+"&queryCommunityid="+communityid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
+                            window.location.href = "${ctx}/admin/usermanage/changeUserStatus?platformUserId="+platformUserId+"&versionno="+versionno+"&querytype="+querytype+"&queryMerchantid="+merchantid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
                         },function(){
                             //取消
                         });
                     }else{
-                        window.location.href = "${ctx}/admin/usermanage/changeUserStatus?platformUserId="+platformUserId+"&versionno="+versionno+"&querytype="+querytype+"&queryCommunityid="+communityid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
+                        window.location.href = "${ctx}/admin/usermanage/changeUserStatus?platformUserId="+platformUserId+"&versionno="+versionno+"&querytype="+querytype+"&queryMerchantid="+merchantid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
                     }
                 });
             }else{
-                window.location.href = "${ctx}/admin/usermanage/changeUserStatus?platformUserId="+platformUserId+"&versionno="+versionno+"&querytype="+querytype+"&queryCommunityid="+communityid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
+                window.location.href = "${ctx}/admin/usermanage/changeUserStatus?platformUserId="+platformUserId+"&versionno="+versionno+"&querytype="+querytype+"&queryMerchantid="+merchantid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
             }
 
         }
@@ -707,84 +661,12 @@
                     });
         }
 
-    //检查小区的合法性
-    function checkCommunity(){
-        var title = $("select[name='title'] option:selected").val();
-        var communityid = $("select[name='communityid'] option:selected").val();
-        var communityidError = document.getElementById('communityidError');
-        communityidError.innerText = '';
-        //选择了工程人员时，小区必填
-        if(title == 'ENGINEERING_PERSON' && communityid.length == 0 ){
-            communityidError.innerText = '该项为必填项';
-            return false;
-        }
-
-        return true;
-    }
-
-
-    //查询小区中的栋/幢
-    function queryBuildingnoesByCommunityid(userCommunityId){
-        //选择的小区
-        var communityid = $('#communityid').val();
-        //已选
-        if(undefined != communityid && communityid.length > 0){
-            //显示栋/幢
-            $('#buildingnoesDiv').removeClass('hidden');
-            $.get("${ctx}/admin/usermanage/queryBuildingnoByCommunityId?communityId="+communityid+"&userId=${platformUser.uuid}"+"&userCommunityId="+userCommunityId,function(data,status){
-                var buildingnoList = data.buildingnoList;
-                var managedBuildingnoes = data.managedBuildingnoes;
-                var managedCommunityId = data.managedCommunityId;
-                $("#buildingnoes").empty();
-                for(i=0;i<buildingnoList.length;i++){
-                    var managed = false;
-                    if(managedBuildingnoes != null){
-                        for(j=0; j<managedBuildingnoes.length; j++){
-                            if(buildingnoList[i].buildingno == managedBuildingnoes[j]){
-                                managed = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if(communityid === managedCommunityId && managed){
-                        $("#buildingnoes").append( '<label class="checkbox m-n col-sm-4">' +
-                                '<input type="checkbox" name="blknos" checked value="'+buildingnoList[i].buildingno+'" ><i></i>'+formatBuildingno(buildingnoList[i].buildingno)+
-                                '</label>');
-                    }else{
-                        $("#buildingnoes").append( '<label class="checkbox m-n col-sm-4">' +
-                                '<input type="checkbox" name="blknos" value="'+buildingnoList[i].buildingno+'" ><i></i>'+formatBuildingno(buildingnoList[i].buildingno)+
-                                '</label>');
-                    }
-
-                }
-            });
-        }else{
-            var sltAllBlknoes = document.getElementById('sltAllBlknoes');
-            if(null != sltAllBlknoes && undefined != sltAllBlknoes){
-                //初始化栋幢全选复选框
-                sltAllBlknoes.checked = false;
-            }
-
-            //清空栋幢
-            $("#buildingnoes").empty();
-            //隐藏栋/幢
-            $('#buildingnoesDiv').addClass('hidden');
-        }
-    }
-
     window.onload = function(){
         //显示父菜单
         showParentMenu('用户');
-
-        if('district' != '${querytype}'){
-            checkFinantion();
-            showGroup('${platformUser.groupId}');
-        }
     }
 
     function resubmitSearch(page){
-        <%--window.location.href = "<%=request.getContextPath()%>/admin/usermanage/userInfo?userId=${platformUser.uuid}&page="+page;--%>
         var frm = document.getElementById('frm');
         frm.action = "${ctx}/admin/usermanage/saveUserInfo?page=" + page;
         frm.submit();
@@ -793,35 +675,8 @@
     function sendTestMessage(){
         var openid = document.getElementById("openid").value;
         if(openid==null||openid==""){
-//            swal({
-//                title: "微信openid不能为空",
-//                type: "warning"
-//                })
             qikoo.dialog.alert("微信openid不能为空");
         }else{
-            <%--swal({--%>
-                <%--title: "确定发送模板?",--%>
-                <%--text: "你将发送一个消息至此微信openid!",--%>
-                <%--type: "warning",--%>
-                <%--showCancelButton: true,--%>
-                <%--confirmButtonColor: "#DD6B55",--%>
-                <%--confirmButtonText: "确定"--%>
-            <%--}, function(isConfirm){--%>
-                <%--if(isConfirm){--%>
-                    <%--$.get("${ctx}/admin/usermanage/sendMessageToOpenid?openid="+openid,function(data,status){--%>
-
-                        <%--if(data.successMessage != undefined || data.errorMessage != undefined){--%>
-                            <%--if(data.successMessage != undefined){--%>
-                                <%--$("#successMessage").text(data.successMessage);--%>
-                            <%--}--%>
-                            <%--if(data.errorMessage != undefined){--%>
-                                <%--$("#errorMessage").text(data.errorMessage);--%>
-                            <%--}--%>
-                        <%--}--%>
-                    <%--});--%>
-                <%--}--%>
-                <%--return;--%>
-            <%--});--%>
             qikoo.dialog.confirm('确定发送模板？',function(){
                 //确定
                 $.get("${ctx}/admin/usermanage/sendMessageToOpenid?openid="+openid,function(data,status){
@@ -838,26 +693,6 @@
             },function(){
                 //取消
             });
-        }
-    }
-
-    function checkFinantion(){
-       var chooseValues = document.getElementsByName("roles");
-        console.log(chooseValues);
-       for(var i =0;i<chooseValues.length;i++){
-            if(chooseValues[i].checked && chooseValues[i].value == "2015122500000001"){
-                document.getElementById("finantionId").style.display="block";
-                return;
-           }
-       }
-        document.getElementById("finantionId").style.display="none";
-    }
-
-    function showGroup(obj){
-        if(obj !=null && obj !=""){
-            $('#wechatGroupId').css('display','block');
-        }else{
-            $('#wechatGroupId').css('display','none');
         }
     }
 
@@ -880,74 +715,6 @@
     }
     if('district' != '${querytype}'){
         checkIfSubscribe();
-    }
-
-    //全选 或 全不选
-    function selectAllOrNone(communityid, sltAll){
-        var communityids = document.getElementsByName(communityid);
-        for(var i=0; i<communityids.length; i++){
-            //全选
-            if(document.getElementById(sltAll).checked){
-                if(!communityids[i].checked){
-                    communityids[i].checked = true;
-                }
-            }else{
-                //全不选
-                if(communityids[i].checked){
-                    communityids[i].checked = false;
-                }
-            }
-        }
-        //点击小区的全选时
-        if('communityid' == communityid){
-            //清空栋幢
-            $("#buildingnoes").empty();
-            //隐藏栋/幢
-            $('#buildingnoesDiv').addClass('hidden');
-        }
-    }
-
-    //修改全选、全不选
-    function modifySelectAllOrNone(communityid,sltAll){
-        var communityids = document.getElementsByName(communityid);
-        //小区选择的个数
-        var sltCount = querySltCount(communityid);
-        if(sltCount == communityids.length){
-            var sltAllChk = document.getElementById(sltAll);
-            if(undefined != sltAllChk && null != sltAllChk){
-                sltAllChk.checked = true;
-            }
-        }else{
-            var sltAllChk = document.getElementById(sltAll);
-            if(undefined != sltAllChk && null != sltAllChk){
-                sltAllChk.checked = false;
-            }
-        }
-    }
-
-    //显示或隐藏栋/幢
-    function showOrHideBuildingnoes(type){
-        if(type == 'OPEN'){
-            $('#openBuildingnoes').addClass('hidden');
-            $('#closeBuildingnoes').removeClass('hidden');
-            $('#buildingnoes').removeClass('hidden');
-        }else{
-            $('#openBuildingnoes').removeClass('hidden');
-            $('#closeBuildingnoes').addClass('hidden');
-            $('#buildingnoes').addClass('hidden');
-        }
-    }
-
-    //小区选择的个数
-    function querySltCount(communityid){
-        var communityids = document.getElementsByName(communityid);
-        var sltCount = 0;
-        for(var i=0; i<communityids.length; i++){
-            if(communityids[i].checked){
-                sltCount ++;
-            }
-        }
-        return sltCount;
     }
 
     //根据角色查询权限
@@ -979,61 +746,47 @@
 
     //切换选项卡
     function toggleTab(tabId){
-        var communityid = $('#queryCommunityid').val();
+        var merchantid = $('#queryMerchantid').val();
         var username = $('#queryUsername').val();
         var name = $('#queryName').val();
         var topAccount = $('#queryTopAccount').val();
         var wechatUserInfoId = $('#wechatUserInfoId').val();
-        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/userInfo?userId=${platformUser.uuid}&querytype="+tabId+"&communityid="+communityid+"&username="+username+"&name="+name+"&topAccount="+topAccount+"&wechatUserInfoId="+wechatUserInfoId;
+        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/userInfo?userId=${platformUser.uuid}&querytype="+tabId+"&merchantid="+merchantid+"&username="+username+"&name="+name+"&topAccount="+topAccount+"&wechatUserInfoId="+wechatUserInfoId;
     }
 
-    //保存片区信息
-    function saveUserCommuintyInfo(){
-        $("#addUserCommunityFrm").parsley("validate");
+    function saveUserMerchantInfo(){
+        $("#addUserMerchantFrm").parsley("validate");
         //检查支信息合法性
-        if($('#addUserCommunityFrm').parsley().isValid()){
-            $('#addUserCommunityFrm').submit();
+        if($('#addUserMerchantFrm').parsley().isValid()){
+            $('#addUserMerchantFrm').submit();
         }
     }
 
-    //显示片区信息
-    function showUserCommunityInfo(userCommunityId){
+    function showUserMerchantInfo(userMerchantId){
         //修改
-        if(undefined != userCommunityId){
-            $.get("${ctx}/admin/usermanage/queryUserCommunityInfo?userCommunityId="+userCommunityId+"&version=" + Math.random(),function(data,status){
-                if(undefined != data.wpUserCommunity){
-                    $('#communityid>option').remove('.updateCom');
-                    $('#communityid').append($("<option>").val(data.wpUserCommunity.communityid).text(data.wpUserCommunity.communityname).addClass('updateCom'));
-                    $('#communityid').val(data.wpUserCommunity.communityid);
-                    $('#userComId').val(data.wpUserCommunity.uuid);
-                    //查询小区中的栋/幢
-                    queryBuildingnoesByCommunityid(userCommunityId);
+        if(undefined != userMerchantId){
+            $.get("${ctx}/admin/usermanage/queryUserMerchantInfo?userMerchantId="+userMerchantId+"&version=" + Math.random(),function(data,status){
+                if(undefined != data.userMerchant){
+                    $('#merchantid').append($("<option>").val(data.userMerchant.merchantid).text(data.userMerchant.merchantname));
+                    $('#merchantid').val(data.userMerchant.merchantid);
+                    $('#userMerchantId').val(data.userMerchant.uuid);
                 }
             });
-            //显示删除按钮
-            $('#deleteBtn').removeClass('hidden');
         }else{
             //添加
-            $('#communityid>option').remove('.updateCom');
-            $('#communityid').val("");
-            //清空栋幢
-            $("#buildingnoes").empty();
-            //隐藏栋/幢
-            $('#buildingnoesDiv').addClass('hidden');
-            //隐藏删除按钮
-            $('#deleteBtn').addClass('hidden');
+            $('#merchantid').val("");
         }
     }
 
-    //删除片区信息
-    function deleteUserCommunityInfo(userComId, userId){
-        var communityid = $('#queryCommunityid').val();
+
+    function deleteUserMerchantInfo(userComId, userId){
+        var merchantid = $('#queryMerchantid').val();
         var username = $('#queryUsername').val();
         var name = $('#queryName').val();
         var topAccount = $('#queryTopAccount').val();
         if(confirm("确定删除?")){
             //确定
-            window.location.href = "<%=request.getContextPath()%>/admin/usermanage/deleteUserCommunity?userId="+userId+"&userComId="+userComId+"&queryCommunityid="+communityid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
+            window.location.href = "<%=request.getContextPath()%>/admin/usermanage/deleteUserMerchant?userId="+userId+"&userMerchantId="+userComId+"&queryMerchantid="+merchantid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
         }
     }
 </script>

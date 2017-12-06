@@ -1,19 +1,18 @@
 package com.mtx.portal.controller.admin;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
-import com.mtx.common.entity.PlatformPermit;
-import com.mtx.common.entity.PlatformRole;
-import com.mtx.common.entity.PlatformUser;
-import com.mtx.common.entity.PlatformUserRole;
-import com.mtx.common.service.PlatformPermitService;
-import com.mtx.common.service.PlatformRoleService;
-import com.mtx.common.service.PlatformUserRoleService;
-import com.mtx.common.service.PlatformUserService;
+import com.github.miemiedev.mybatis.paginator.domain.PageList;
+import com.mtx.common.entity.*;
+import com.mtx.common.exception.ServiceException;
+import com.mtx.common.service.*;
 import com.mtx.common.utils.StringUtils;
 import com.mtx.common.utils.UserUtils;
 import com.mtx.family.entity.Merchant;
+import com.mtx.family.entity.UserMerchant;
 import com.mtx.family.service.MerchantService;
+import com.mtx.family.service.UserMerchantService;
 import com.mtx.portal.PortalContants;
+import com.mtx.wechat.entity.WechatGroup;
 import com.mtx.wechat.entity.WechatUser;
 import com.mtx.wechat.entity.WechatUserInfo;
 import com.mtx.wechat.entity.admin.WechatBinding;
@@ -23,10 +22,7 @@ import com.mtx.wechat.utils.WechatBindingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +47,12 @@ public class UserManageController extends BaseAdminController {
     private WechatUserInfoService wechatUserInfoService;
     @Autowired
     private MerchantService merchantService;
+    @Autowired
+    private UserMerchantService userMerchantService;
+    @Autowired
+    private PlatformRolePermitService platformRolePermitService;
+    @Autowired
+    private BindRoleService bindRoleService;
 
     /**
      * 用户微信管理
@@ -252,11 +254,12 @@ public class UserManageController extends BaseAdminController {
         model.addAttribute("wechatBinding", wechatBinding);
         boolean allMerchants = false;
         if(null != wechatBinding){
-            List<Merchant> merchantList = merchantService.selectMerchantForUser();
+            List<Merchant> merchantList = merchantService.selectAssignedMerchantForUser();
             if(merchantList == null || merchantList.size()== 0) {
                 allMerchants = true;
                 model.addAttribute("allMerchants", allMerchants);
             }
+            merchantList = merchantService.selectMerchantForUser();
             model.addAttribute("merchantList", merchantList);
 
             String username = request.getParameter("username");
@@ -399,6 +402,701 @@ public class UserManageController extends BaseAdminController {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         if(null != platformPermit){
             resultMap.put("parentPermitId", platformPermit.getUuid());
+        }
+        return resultMap;
+    }
+
+    /**
+     * 用户信息
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/userInfo")
+    public String showUserInfo(Model model, HttpServletRequest request, @RequestParam(required = false,defaultValue = "1") int page){
+
+        model.addAttribute("view", request.getParameter("view"));
+
+        String userId = request.getParameter("userId");
+        String merchantid = request.getParameter("merchantid");
+        model.addAttribute("queryMerchantid", merchantid);
+        String username = request.getParameter("username");
+        model.addAttribute("queryUsername",username);
+        String name = request.getParameter("name");
+        model.addAttribute("queryName",name);
+        String topAccount = request.getParameter("topAccount");
+        model.addAttribute("queryTopAccount",topAccount);
+        String querytype = request.getParameter("querytype");
+        model.addAttribute("querytype", querytype);
+
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        boolean allMerchants = false;
+        if(null != wechatBinding) {
+            List<Merchant> merchantList = merchantService.selectAssignedMerchantForUser();
+            if(merchantList == null || merchantList.size()== 0) {
+                allMerchants = true;
+                model.addAttribute("allMerchants", allMerchants);
+            }
+        }
+        model.addAttribute("allMerchants",allMerchants);
+        //片区信息
+        if("district".equals(querytype)){
+            if(StringUtils.isNotBlank(userId)){
+                PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+                PageList<UserMerchant> userMerchantList = userMerchantService.queryUserMerchantListByUserId(userId, pageBounds);
+                model.addAttribute("userMerchantList", userMerchantList);
+                PlatformUser platformUser = platformUserService.getPlatformUserById(userId);
+                model.addAttribute("platformUser", platformUser);
+                List<Merchant> partialMerchantList = merchantService.queryMerchantListNotInUserMerhantTable(UserUtils.getUserBindId(),userId);
+                model.addAttribute("partialMerchantList", partialMerchantList);
+            }
+        }else{
+            //用户信息
+            //用户信息界面初始信息
+            model = initUserInfo(model);
+            if(StringUtils.isNotBlank(userId)){
+                PlatformUser platformUser = new PlatformUser();
+                platformUser.setUuid(userId);
+                platformUser = platformUserService.queryForObjectByPk(platformUser);
+                //查询用户角色
+                List<PlatformRole> platformRoleList = platformRoleService.getUserRoleList(platformUser.getUuid());
+                String[] roles = new String[platformRoleList.size()];
+                for(int i=0; i<platformRoleList.size(); i++){
+                    roles[i] = platformRoleList.get(i).getUuid();
+                }
+                platformUser.setRoles(roles);
+                model.addAttribute("platformUser", platformUser);
+            }
+            List<WechatGroup> wechatGroupList = WechatBindingUtil.getWechatGroups().getGroups();
+            model.addAttribute("wechatGroupList",wechatGroupList);
+        }
+        model.addAttribute("successMessage",request.getParameter("successMessage"));
+        model.addAttribute("errorMessage",request.getParameter("errorMessage"));
+
+        String currentUserId = UserUtils.getUserId();
+        model.addAttribute("currentUserId", currentUserId);
+
+        String wechatUserInfoId = request.getParameter("wechatUserInfoId");
+        model.addAttribute("wechatUserInfoId",wechatUserInfoId);
+        if(StringUtils.isNotBlank(wechatUserInfoId)){
+            WechatUserInfo wechatUserInfo = new WechatUserInfo();
+            wechatUserInfo.setUuid(wechatUserInfoId);
+            wechatUserInfo = wechatUserInfoService.queryForObjectByPk(wechatUserInfo);
+            PlatformUser platformUser = new PlatformUser();
+            platformUser.setUsername(wechatUserInfo.getContactno());
+            platformUser.setName(wechatUserInfo.getName());
+            platformUser.setCellphone(wechatUserInfo.getContactno());
+            platformUser.setOpenid(wechatUserInfo.getOpenid());
+            model.addAttribute("platformUser",platformUser);
+        }
+
+        return "admin/usermanage/userInfo";
+    }
+
+    /**
+     * 用户信息界面初始信息
+     * @param model
+     * @return
+     */
+    public Model initUserInfo(Model model){
+        //所有非超级管理员角色
+        List<PlatformRole> platformRoleList = platformRoleService.queryRolesByBindId();
+        model.addAttribute("roleList", platformRoleList);
+        return model;
+    }
+
+
+
+    /**
+     * 创建用户
+     * @param platformUser
+     * @return
+     */
+    @RequestMapping(value = "/saveUserInfo", method = RequestMethod.POST)
+    public String createUser(PlatformUser platformUser, Model model, HttpServletRequest request){
+        //用户信息界面初始信息
+        model = initUserInfo(model);
+        String queryCommunityid = request.getParameter("queryCommunityid");
+        model.addAttribute("queryCommunityid", queryCommunityid);
+        String queryUsername = request.getParameter("queryUsername");
+        model.addAttribute("queryUsername",queryUsername);
+        String queryName = request.getParameter("queryName");
+        model.addAttribute("queryName",queryName);
+        String queryTopAccount = request.getParameter("queryTopAccount");
+        model.addAttribute("queryTopAccount",queryTopAccount);
+
+        if(StringUtils.isNotBlank(platformUser.getUuid())){
+            try {
+                //修改用户信息
+                userMerchantService.modifyUserInfo(platformUser);
+                model.addAttribute("successMessage", "保存成功");
+            } catch (Exception e) {
+                model.addAttribute("errorMessage", "系统忙，稍候再试");
+            }
+
+            platformUser = platformUserService.queryForObjectByPk(platformUser);
+            //查询用户角色
+            List<PlatformRole> platformRoleList = platformRoleService.getUserRoleList(platformUser.getUuid());
+            String[] roles = new String[platformRoleList.size()];
+            for(int i=0; i<platformRoleList.size(); i++){
+                roles[i] = platformRoleList.get(i).getUuid();
+            }
+            platformUser.setRoles(roles);
+            model.addAttribute("platformUser", platformUser);
+        }else {
+            PlatformUser tempUser = platformUserService.getPlatformUserByUserName(platformUser.getUsername());
+            if(null == tempUser){
+                //添加用户信息
+                StringBuilder password = new StringBuilder();
+                for (int i = 0; i < 8; i++) {
+                    password.append(Math.round(Math.floor(Math.random() * 10)));
+                }
+                platformUser.setPassword(password.toString());
+                userMerchantService.addUserInfo(platformUser);
+                //发送手机短信验证码
+//                SMSUtil.sendPlatformUserCreatedNotification(platformUser.getCellphone(), password.toString());
+                model.addAttribute("platformUser", platformUser);
+                model.addAttribute("successMessage", "保存成功");
+                return "redirect:userInfo?userId="+platformUser.getUuid()+"&querytype=district";
+            }else {
+                model.addAttribute("errorMessage", "用户名已存在");
+            }
+        }
+        String currentUserId = UserUtils.getUserId();
+        model.addAttribute("currentUserId", currentUserId);
+        List<WechatGroup> wechatGroupList = WechatBindingUtil.getWechatGroups().getGroups();
+        model.addAttribute("wechatGroupList",wechatGroupList);
+        return "admin/usermanage/userInfo";
+    }
+
+    /**
+     * 权限管理界面
+     * @param page
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/rolePermitManage", method = RequestMethod.GET)
+    public String rolePermitManage(@RequestParam(required = false, defaultValue = "1")int page,HttpServletRequest request, Model model){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if(null != wechatBinding) {
+            String signType = request.getParameter("signType");
+            if(StringUtils.isNoneBlank(signType)){
+                model.addAttribute("signType",signType);
+            }else{
+                signType="role";
+                model.addAttribute("signType","role");
+            }
+            //角色
+            if("role".equals(signType)){
+                List<PlatformRole> roleList = platformRoleService.queryBindRoleList();
+                model.addAttribute("roleList", roleList);
+            }
+
+            //资源
+            if("permit".equals(signType)){
+                PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+                PageList<PlatformPermit> permitList = platformPermitService.getPermitList(pageBounds);
+                model.addAttribute("permitList", permitList);
+            }
+
+            //权限配置
+            if("rolepermit".equals(signType)){
+                PlatformRolePermit platformRolePermit = new PlatformRolePermit();
+                platformRolePermit.setOrderby("createon");
+                List<PlatformRolePermit> rolePermitList = platformRolePermitService.getPermitList("");
+                model.addAttribute("rolePermitList", rolePermitList);
+
+            }
+        }
+
+        String deleteFlag = request.getParameter("deleteFlag");
+        //删除成功
+        if("1".equals(deleteFlag)){
+            model.addAttribute("successMessage", "删除成功");
+        }
+
+        String saveFlag = request.getParameter("saveFlag");
+        //添加成功
+        if("1".equals(saveFlag)){
+            model.addAttribute("successMessage", "添加成功");
+        }
+
+        String updateFlag = request.getParameter("updateFlag");
+        //更新成功
+        if("1".equals(updateFlag)){
+            model.addAttribute("successMessage", "更新成功");
+        }
+
+        return  "admin/usermanage/rolePermitManage";
+    }
+
+    @RequestMapping(value = "/createBindRole/{roleid}", method = RequestMethod.POST)
+    public String createBindRole(@PathVariable("roleid") String roleid, Model model){
+        String bindid = UserUtils.getUserBindId();
+        BindRole bindRole = new BindRole();
+        bindRole.setBindid(bindid);
+        bindRole.setRoleid(roleid);
+        bindRoleService.insert(bindRole);
+        return "redirect:/admin/usermanage/rolePermitManage";
+    }
+
+    @RequestMapping(value = "/deleteBindRole/{bindroleid}", method = RequestMethod.POST)
+    public String deleteBindRole(@PathVariable("bindroleid") String bindroleid, Model model){
+        BindRole bindRole = new BindRole();
+        bindRole.setUuid(bindroleid);
+        bindRoleService.delete(bindRole);
+        return "redirect:/admin/usermanage/rolePermitManage";
+    }
+
+
+
+    /**
+     * 添加/修改角色
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/roleInfo", method = RequestMethod.GET)
+    public String roleInfo(HttpServletRequest request, Model model){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        return "admin/usermanage/roleInfo";
+    }
+
+    /**
+     * 添加/修改角色
+     * @param platformRole
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/roleInfo", method = RequestMethod.POST)
+    public String addRoleInfo(PlatformRole platformRole, HttpServletRequest request,Model model){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        String signType = request.getParameter("signType");
+        if(signType!=null && "role".equals(signType)){
+            String roleId = request.getParameter("uuid");
+            if(StringUtils.isNotBlank(roleId)){
+                PlatformRole platformRoleSample = new PlatformRole();
+                platformRoleSample.setUuid(roleId);
+                platformRoleSample = platformRoleService.queryForObjectByPk(platformRoleSample);
+                model.addAttribute("platformRole", platformRoleSample);
+            }
+            return "admin/usermanage/roleInfo";
+        }
+        String keyexist = getRolekey(platformRole);
+        if("true".equals(keyexist)){
+            model.addAttribute("platformRole", platformRole);
+            model.addAttribute("rolekeyExist", keyexist);
+            return "admin/usermanage/roleInfo";
+        }
+        String nameexist = getRolename(platformRole);
+        if("true".equals(nameexist)){
+            model.addAttribute("platformRole", platformRole);
+            model.addAttribute("rolenameExist", nameexist);
+            return "admin/usermanage/roleInfo";
+        }
+        //修改
+        if(StringUtils.isNotBlank(platformRole.getUuid())){
+            try {
+                platformRoleService.updatePartial(platformRole);
+                return "redirect:/admin/usermanage/rolePermitManage?updateFlag=1";
+
+            } catch (ServiceException e) {
+                model.addAttribute("platformRole", platformRole);
+                model.addAttribute("errorMessage", "系统忙，稍候再试！");
+                return "admin/usermanage/roleInfo";
+            }
+        }else {
+            platformRole.setBindid(wechatBinding.getUuid());
+            platformRoleService.createRole(platformRole);
+            return "redirect:/admin/usermanage/rolePermitManage?saveFlag=1";
+        }
+    }
+
+    /**
+     * 角色CODE是否已存在
+     * @param platformRole
+     * @return
+     */
+    public String getRolekey(PlatformRole platformRole){
+        PlatformRole platformRoleSample = new PlatformRole();
+        platformRoleSample.setRolekey(platformRole.getRolekey());
+        List<PlatformRole> platformRoleList = platformRoleService.queryForList(platformRoleSample);
+        if(platformRoleList != null &&platformRoleList.size()>0){
+            platformRoleSample=platformRoleList.get(0);
+            if(platformRole.getUuid()!=null&&platformRole.getUuid().equals(platformRoleSample.getUuid())){
+                return "false";
+            }
+            return "true";
+        }
+        return "false";
+    }
+
+    /**
+     * 角色名称是否已存在
+     * @param platformRole
+     * @return
+     */
+    public String getRolename(PlatformRole platformRole){
+        PlatformRole platformRoleSample = new PlatformRole();
+        platformRoleSample.setRolename(platformRole.getRolename());
+        List<PlatformRole> platformRoleList = platformRoleService.queryForList(platformRoleSample);
+        if(platformRoleList != null &&platformRoleList.size()>0){
+            platformRoleSample=platformRoleList.get(0);
+            if(platformRole.getUuid()!=null&&platformRole.getUuid().equals(platformRoleSample.getUuid())){
+                return "false";
+            }
+            return "true";
+        }
+        return "false";
+    }
+
+    /**
+     * 添加/修改资源
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/permitInfo", method = RequestMethod.GET)
+    public String permitInfo(HttpServletRequest request, Model model){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        List<PlatformPermit> parentPermitList = platformPermitService.queryPermitList("");
+        model.addAttribute("parentPermitList", parentPermitList);
+        return "admin/usermanage/permitInfo";
+    }
+
+    /**
+     * 添加/修改资源
+     * @param platformPermit
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/permitInfo", method = RequestMethod.POST)
+    public String addPermitInfo(PlatformPermit platformPermit, Model model,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        String signType = request.getParameter("signType");
+        if(signType!=null && "permit".equals(signType)){
+            String permitId = request.getParameter("uuid");
+            if(StringUtils.isNotBlank(permitId)){
+                PlatformPermit platformPermitSample  = platformPermitService.queryPermitIdByMenuId(permitId);
+                model.addAttribute("platformPermit", platformPermitSample);
+            }
+            List<PlatformPermit> parentPermitList = platformPermitService.queryPermitList("");
+            model.addAttribute("parentPermitList", parentPermitList);
+            return "admin/usermanage/permitInfo";
+        }
+        String nameExist = getPermitname(platformPermit);
+        if("true".equals(nameExist)){
+            List<PlatformPermit> parentPermitList = platformPermitService.queryPermitList("");
+            model.addAttribute("parentPermitList", parentPermitList);
+            model.addAttribute("platformPermit", platformPermit);
+            model.addAttribute("nameExist", nameExist);
+            return "admin/usermanage/permitInfo";
+        }
+        String resourceExist = getPermitresource(platformPermit);
+        if("true".equals(resourceExist)){
+            List<PlatformPermit> parentPermitList = platformPermitService.queryPermitList("");
+            model.addAttribute("parentPermitList", parentPermitList);
+            model.addAttribute("platformPermit", platformPermit);
+            model.addAttribute("resourceExist", resourceExist);
+            return "admin/usermanage/permitInfo";
+        }
+        List<PlatformPermit> permitList = platformPermitService.queryPermitList("");
+        model.addAttribute("permitList", permitList);
+        String[] permitids = request.getParameterValues("permitid");
+        //修改
+        if(StringUtils.isNotBlank(platformPermit.getUuid())){
+            try {
+                PlatformPermit platformPermitSample = new PlatformPermit();
+                platformPermitSample.setUuid(platformPermit.getUuid());
+                platformPermitSample = platformPermitService.queryForObjectByPk(platformPermitSample);
+                if(!StringUtils.isNoneBlank(platformPermit.getParentpermitid())){
+                    platformPermit.setParentpermitid(null);
+                    if(platformPermit.getMenuicon()!=null){
+                        platformPermitSample.setMenuicon(platformPermit.getMenuicon());
+                    }else{
+                        platformPermitSample.setMenuicon("");
+                    }
+                }
+                if(StringUtils.isNoneBlank(platformPermit.getParentpermitid())){
+                    platformPermitSample.setMenuicon("");
+                }
+                platformPermitSample.setParentpermitid(platformPermit.getParentpermitid());
+                platformPermitSample.setPermittype(platformPermit.getPermittype());
+                platformPermitSample.setPermitresource(platformPermit.getPermitresource());
+                platformPermitSample.setPermitname(platformPermit.getPermitname());
+                platformPermitSample.setPermitorder(platformPermit.getPermitorder());
+                platformPermitSample.setStatus(platformPermit.getStatus());
+                platformPermitService.update(platformPermitSample);
+                return "redirect:/admin/usermanage/rolePermitManage?signType=permit&updateFlag=1";
+
+            } catch (ServiceException e) {
+                List<PlatformPermit> parentPermitList = platformPermitService.queryPermitList("");
+                model.addAttribute("parentPermitList", parentPermitList);
+                model.addAttribute("platformPermit", platformPermit);
+                model.addAttribute("errorMessage", "系统忙，稍候再试！");
+                return "admin/usermanage/roleInfo";
+            }
+        }else {
+            if(!StringUtils.isNoneBlank(platformPermit.getParentpermitid())){
+                platformPermit.setParentpermitid(null);
+            }
+            if(StringUtils.isNoneBlank(platformPermit.getParentpermitid())){
+                platformPermit.setMenuicon("");
+            }
+            platformPermitService.insert(platformPermit);
+            return "redirect:/admin/usermanage/rolePermitManage?signType=permit&saveFlag=1";
+        }
+    }
+
+    /**
+     * 资源名称是否已存在
+     * @param platformPermit
+     * @return
+     */
+    public String getPermitname(PlatformPermit platformPermit){
+        PlatformPermit platformPermitSample = platformPermitService.queryPermitIdByMenuName(platformPermit.getPermitname());
+        if(platformPermitSample != null && platformPermitSample.getUuid()!= null){
+            if(platformPermit.getUuid()!=null && platformPermitSample.getUuid().equals(platformPermit.getUuid())){
+                return "false";
+            }
+            return "true";
+        }
+        return "false";
+    }
+
+    /**
+     * 资源地址是否已存在
+     * @param platformPermit
+     * @return
+     */
+    public String getPermitresource(PlatformPermit platformPermit){
+        PlatformPermit platformPermitSample = platformPermitService.queryPermitIdByResource(platformPermit.getPermitresource());
+        if(platformPermitSample != null &&platformPermitSample.getUuid()!= null){
+            if(platformPermit.getUuid()!=null && platformPermitSample.getUuid().equals(platformPermit.getUuid())){
+                return "false";
+            }
+            return "true";
+        }
+        return "false";
+    }
+
+    /**
+     * 添加/修改权限
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/rolePermitInfo", method = RequestMethod.GET)
+    public String rolePermitInfo(HttpServletRequest request, Model model){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+
+        PlatformRole platformRole = new PlatformRole();
+        List<PlatformRole> platformRoleList = platformRoleService.queryForList(platformRole);
+        model.addAttribute("platformRoleList", platformRoleList);
+
+        List<PlatformPermit> permitList = platformPermitService.queryPermitList("");
+        int i=0;
+        for(PlatformPermit platformPermit:permitList){
+            permitList.get(i).setChildPermits(platformPermitService.queryPermitList(platformPermit.getUuid()));
+            i++;
+        }
+        model.addAttribute("permitList", permitList);
+        return "admin/usermanage/rolePermitInfo";
+    }
+
+
+    /**
+     * 添加/修改权限
+     * @param platformRolePermit
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/rolePermitInfo", method = RequestMethod.POST)
+    public String addPermitInfo(PlatformRolePermit platformRolePermit, Model model,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        String signType = request.getParameter("signType");
+        if(signType!=null && "rolepermit".equals(signType)){
+            String rolePermitId = request.getParameter("uuid");
+            String rolename = request.getParameter("name");
+            if(StringUtils.isNotBlank(rolePermitId)){
+                List<PlatformRolePermit> rolePermitList = platformRolePermitService.getPermitList(rolePermitId);
+                PlatformRolePermit platformRolePermitSample = rolePermitList.get(0);
+                model.addAttribute("platformRolePermit", platformRolePermitSample);
+            }
+            if(!StringUtils.isNotBlank(rolePermitId)&&StringUtils.isNotBlank(rolename)){
+                PlatformRolePermit platformRolePermitSample = new PlatformRolePermit();
+                platformRolePermitSample.setRolename(rolename);
+                model.addAttribute("platformRolePermit", platformRolePermitSample);
+            }
+
+            PlatformRole platformRole = new PlatformRole();
+            List<PlatformRole> platformRoleList = platformRoleService.queryForList(platformRole);
+            model.addAttribute("platformRoleList", platformRoleList);
+
+            List<PlatformPermit> permitList = platformPermitService.queryPermitList("");
+            int i=0;
+            for(PlatformPermit platformPermit:permitList){
+                permitList.get(i).setChildPermits(platformPermitService.queryPermitList(platformPermit.getUuid()));
+                i++;
+            }
+            model.addAttribute("permitList", permitList);
+            return "admin/usermanage/rolePermitInfo";
+        }
+        String[] permitids = request.getParameterValues("permitid");
+        //修改
+        if(StringUtils.isNotBlank(platformRolePermit.getRoleid())){
+            PlatformRolePermit platformRolePermitSample = new PlatformRolePermit();
+            platformRolePermitSample.setRoleid(platformRolePermit.getRoleid());
+            platformRolePermitService.deleteByRoleId(platformRolePermit.getRoleid());
+        }
+        PlatformRole platformRole = new PlatformRole();
+        platformRole.setRolename(platformRolePermit.getRolename());
+        platformRole = platformRoleService.queryForObjectByUniqueKey(platformRole);
+        platformRolePermit.setRoleid(platformRole.getUuid());
+        if(permitids!=null){
+            for(String permitid:permitids){
+                PlatformRolePermit platformRolePermitSample = new PlatformRolePermit();
+                PlatformPermit platformPermit = platformPermitService.queryPermitIdByMenuId(permitid);
+                platformRolePermitSample.setRoleid(platformRolePermit.getRoleid());
+                platformRolePermitSample.setPermitid(platformPermit.getUuid());
+                int flag3 = platformRolePermitService.insert(platformRolePermitSample);
+            }
+        }
+        return "redirect:/admin/usermanage/rolePermitManage?updateFlag=1&signType=rolepermit";
+    }
+
+    /**
+     * 删除角色/资源/权限
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/deleteRole", method = RequestMethod.GET)
+    public String deleteRole(Model model,HttpServletRequest request){
+        String uuid=request.getParameter("uuid");
+        String signType = request.getParameter("signType");
+        //角色
+        if("role".equals(signType)){
+            PlatformRole platformRole = new PlatformRole();
+            platformRole.setUuid(uuid);
+            int flag = platformRoleService.delete(platformRole);
+            return "redirect:/admin/usermanage/rolePermitManage?signType=role&deleteFlag="+flag;
+        }
+        //资源
+        if("permit".equals(signType)){
+            PlatformPermit platformPermit=new PlatformPermit();
+            platformPermit.setUuid(uuid);
+            int flag = platformPermitService.delete(platformPermit);
+            return "redirect:/admin/usermanage/rolePermitManage?signType=permit&deleteFlag="+flag;
+        }
+        //权限配置
+        if("rolepermit".equals(signType)){
+            int flag = platformRolePermitService.deleteByRoleId(uuid);
+            return "redirect:/admin/usermanage/rolePermitManage?signType=rolepermit&deleteFlag="+flag;
+        }
+        return "redirect:/admin/usermanage/rolePermitManage";
+    }
+
+    /**
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/queryUserMerchantInfo")
+    @ResponseBody
+    public Map<String, Object> queryUserMerchantInfo(HttpServletRequest request){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        String userMerchantId = request.getParameter("userMerchantId");
+        if(StringUtils.isNotBlank(userMerchantId)){
+            UserMerchant userMerchant = userMerchantService.queryUserMerchantInfoById(userMerchantId);
+            resultMap.put("userMerchant", userMerchant);
+        }
+        return resultMap;
+    }
+
+    /**
+     *
+     * @param userMerchant
+     * @param redirectAttributes
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/saveUserMerchant", method = RequestMethod.POST)
+    public String saveUserMerchant(UserMerchant userMerchant,
+                                    RedirectAttributes redirectAttributes,HttpServletRequest request){
+        String queryMerchantid = request.getParameter("queryMerchantid");
+        redirectAttributes.addAttribute("merchantid",queryMerchantid);
+        String queryUsername = request.getParameter("queryUsername");
+        redirectAttributes.addAttribute("username",queryUsername);
+        String queryName = request.getParameter("queryName");
+        redirectAttributes.addAttribute("name",queryName);
+        String queryTopAccount = request.getParameter("queryTopAccount");
+        redirectAttributes.addAttribute("topAccount",queryTopAccount);
+        //修改
+        if(StringUtils.isNotBlank(userMerchant.getUuid())){
+            try {
+                UserMerchant tempUserMerchant = userMerchantService.queryForObjectByPk(userMerchant);
+                if(null != tempUserMerchant){
+                    tempUserMerchant.setMerchantid(userMerchant.getMerchantid());
+                    userMerchantService.update(tempUserMerchant);
+                    redirectAttributes.addAttribute("successMessage", "保存成功");
+                }
+            } catch (Exception e) {
+                redirectAttributes.addAttribute("errorMessage", "系统忙，稍候再试");
+            }
+        }else{
+            //添加
+            userMerchantService.insert(userMerchant);
+            redirectAttributes.addAttribute("successMessage", "保存成功");
+        }
+        return "redirect:userInfo?userId=" + userMerchant.getUserid() + "&querytype=district";
+    }
+
+    /**
+     * @param redirectAttributes
+     * @return
+     */
+    @RequestMapping(value = "/deleteUserMerchant")
+    public String deleteUserMerchant(HttpServletRequest request,
+                                   RedirectAttributes redirectAttributes) {
+        String userMerchantId = request.getParameter("userMerchantId");
+        String userId = request.getParameter("userId");
+        String queryMerchantid = request.getParameter("queryMerchantid");
+        redirectAttributes.addAttribute("merchantid", queryMerchantid);
+        String queryUsername = request.getParameter("queryUsername");
+        redirectAttributes.addAttribute("username", queryUsername);
+        String queryName = request.getParameter("queryName");
+        redirectAttributes.addAttribute("name", queryName);
+        String queryTopAccount = request.getParameter("queryTopAccount");
+        redirectAttributes.addAttribute("topAccount", queryTopAccount);
+
+        if (StringUtils.isNotBlank(userMerchantId)) {
+            UserMerchant userMerchant = new UserMerchant();
+            userMerchant.setUuid(userMerchantId);
+            userMerchantService.delete(userMerchant);
+            redirectAttributes.addAttribute("successMessage", "删除成功");
+        }
+
+        return "redirect:userInfo?userId=" + userId + "&querytype=district";
+    }
+
+    @RequestMapping(value = "/checkIfUserMerchant")
+    @ResponseBody
+    public Map<String, Object> checkIfUserCommunity(HttpServletRequest request){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        String userId = request.getParameter("userId");
+        PageBounds pageBounds = new PageBounds();
+        List<UserMerchant> userMerchantList = userMerchantService.queryUserMerchantListByUserId(userId,pageBounds);
+        if(userMerchantList.size()==0){
+            resultMap.put("checkIfUserMerchantFlag", "N");
         }
         return resultMap;
     }
