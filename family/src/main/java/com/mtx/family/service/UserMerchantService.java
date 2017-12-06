@@ -124,7 +124,7 @@ public class UserMerchantService extends BaseService<UserMerchantMapper, UserMer
      * @param pageBounds
      * @return
      */
-    public PageList<UserMerchant> queryUserCommunityListByUserId(String userId, PageBounds pageBounds){
+    public PageList<UserMerchant> queryUserMerchantListByUserId(String userId, PageBounds pageBounds){
         return this.mapper.selectUserMerchantListByUserId(userId, pageBounds);
     }
 

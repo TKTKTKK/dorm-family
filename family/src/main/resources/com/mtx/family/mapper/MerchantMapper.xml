@@ -45,4 +45,12 @@
         order by modifyon desc;
     </select>
 
+    <select id="selectMerchantListNotInUserMerhantTable" resultMap="selectResultMap">
+        select distinct c.*
+        from tb_mtx_merchant c
+        where c.bindid = #{bindid}
+        and c.uuid not in (select uc.merchantid from tb_mtx_user_merchant uc where uc.userid = #{userid})
+        order by c.createon;
+    </select>
+
 </mapper>

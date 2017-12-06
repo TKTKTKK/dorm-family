@@ -13,5 +13,5 @@ public interface UserMerchantMapper extends BaseMapper<UserMerchant> {
 
     PageList<UserMerchant> selectUserMerchantListByUserId(@Param("userid")String userid, PageBounds pageBounds);
 
-    UserMerchant selectUserMerchantInfoById(@Param("userComId")String userComId);
+    UserMerchant selectUserMerchantInfoById(@Param("userMerchantId")String userMerchantId);
 }

@@ -29,14 +29,14 @@
 
     <select id="queryBindRoleList" resultMap="selectResultMap">
         select r.* , br.uuid as bindroleid
-        from tb_platform_role r left join tb_wp_bind_role br
+        from tb_platform_role r left join tb_common_bind_role br
         on r.uuid = br.roleid and br.bindid = #{bindid}
         where r.bindid = #{bindid} or r.bindid is null
     </select>
 
     <select id="selectRolesByBindId" resultMap="selectResultMap">
         select r.*
-        from tb_platform_role r,tb_wp_bind_role br
+        from tb_platform_role r,tb_common_bind_role br
         where r.uuid = br.roleid
         and br.bindid = #{bindid}
         and r.rolekey != 'WP_SUPER'

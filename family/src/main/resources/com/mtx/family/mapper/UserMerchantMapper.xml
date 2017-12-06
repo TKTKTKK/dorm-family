@@ -15,7 +15,7 @@
 
     <select id="selectUserMerchantListByUserId"   resultMap="selectResultMap">
         select uc.*, co.name as merchantname
-        from tb_mtx_user_merchant uc, tb_wp_merchant co
+        from tb_mtx_user_merchant uc, tb_mtx_merchant co
         where uc.merchantid = co.uuid
         and uc.userid = #{userid}
         order by uc.modifyon desc;
@@ -23,7 +23,7 @@
 
     <select id="selectUserMerchantInfoById"   resultMap="selectResultMap">
         select uc.*, co.name as merchantname
-        from tb_mtx_user_merchant uc, tb_wp_merchant co
+        from tb_mtx_user_merchant uc, tb_mtx_merchant co
         where uc.merchantid = co.uuid
         and uc.uuid = #{userMerchantId};
     </select>
