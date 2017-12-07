@@ -387,6 +387,31 @@ CREATE TABLE `tb_mtx_user_merchant` (
   PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- 微信公众平台菜单详情表
+-- ----------------------------
+-- Table structure for tb_wp_menu
+-- ----------------------------
+CREATE TABLE `tb_wp_menu` (
+  `uuid` varchar(32) NOT NULL,
+  `bindid` varchar(32) NOT NULL,
+  `menusname` varchar(15) NOT NULL,
+  `menustype` char(1) NOT NULL,
+  `parentid` varchar(32) DEFAULT NULL,
+  `name` varchar(10) NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `link` varchar(2000) DEFAULT NULL,
+  `orderno` int(11) NOT NULL,
+  `groupid` varchar(10) DEFAULT NULL,
+  `createon` varchar(23) NOT NULL,
+  `createby` varchar(32) NOT NULL,
+  `modifyon` varchar(23) NOT NULL,
+  `modifyby` varchar(32) NOT NULL,
+  `versionno` int(11) NOT NULL,
+  `delind` char(1) NOT NULL,
+  PRIMARY KEY (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 INSERT INTO `tb_platform_permit` VALUES ('2015050510000001', 'MENU', '公众号', '公众号', null, '1000', 'APP', '2015-05-20 19:31:10', 'sys', '2016-01-21 11:33:31 051', 'e34638d3152c49ecac24467591cc4365', '2', 'N', 'icon-home');
 INSERT INTO `tb_platform_permit` VALUES ('2015050510000002', 'MENU', '公众号管理', 'admin/account/search', '2015050510000001', '1010', 'APP', '2015-05-20 19:37:23', 'sys', '2015-05-20 19:37:23', 'sys', '1', 'N', '');
 INSERT INTO `tb_platform_permit` VALUES ('2015050510000003', 'MENU', '授权设置', 'admin/account/authorizationSetting', '2015050510000001', '1020', 'APP', '2015-05-20 19:37:23', 'sys', '2015-05-20 19:37:23', 'sys', '1', 'N', '');
@@ -400,6 +425,11 @@ INSERT INTO `tb_platform_permit` VALUES ('2015050510000010', 'MENU', '用户管�
 INSERT INTO `tb_platform_permit` VALUES ('2015110210000001', 'MENU', '权限管理', 'admin/usermanage/rolePermitManage', '2015050510000009', '2100', 'APP', '2015-11-05 06:49:35', 'sys', '2015-11-05 06:49:35', 'sys', '1', 'N', '');
 INSERT INTO `tb_platform_permit` VALUES ('2015050510000011', 'MENU', '销售服务', '销售服务', null, '1090', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', 'icon-users');
 INSERT INTO `tb_platform_permit` VALUES ('2015050510000012', 'MENU', '经销商管理', 'admin/wefamily/merchant', '2015050510000011', '1100', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
+
+INSERT INTO `tb_platform_permit` VALUES ('2015112510000001', 'MENU', '模板消息', 'admin/account/templateMessageSetting', '2015050510000001', '1221', 'APP', '2015-12-05 06:35:35', 'sys', '2015-12-05 06:35:35', 'sys', '1', 'N', '');
+INSERT INTO `tb_platform_permit` VALUES ('2015122810000001', 'MENU', '图文消息', 'admin/account/articleMessage', '2015050510000001', '1080', 'APP', '2015-12-29 17:01:01', 'sys', '2015-12-29 17:01:01', 'sys', '1', 'N', '');
+INSERT INTO `tb_platform_permit` VALUES ('2016011210000001', 'MENU', '菜单配置', 'admin/account/menusSetting', '2015050510000001', '1234', 'APP', '2016-01-29 18:58:00', 'sys', '2016-01-29 18:58:00', 'sys', '1', 'N', '');
+
 
 -- INSERT INTO `tb_platform_role` VALUES ('2017120100000001', null, 'SYSTEM_ADM', '系统管理员', '2017-12-01 10:08:10', 'sys', '2017-12-01 10:08:10', 'sys', '1', 'N');
 INSERT INTO `tb_platform_role` VALUES ('2015062610000001', null, 'WP_SUPER', '超级管理员', '2015-06-26 14:08:10', 'sys', '2015-06-26 14:08:10', 'sys', '1', 'N');
@@ -418,3 +448,6 @@ INSERT INTO `tb_platform_role_permit` VALUES ('2017120100000010', '2015062610000
 INSERT INTO `tb_platform_role_permit` VALUES ('2017120100000011', '2015062610000001', '2015050510000011', '2015-06-26 14:16:24', 'sys', '2015-06-26 14:16:24', 'sys', '1', 'N');
 INSERT INTO `tb_platform_role_permit` VALUES ('2017120100000012', '2015062610000001', '2015050510000012', '2015-06-26 14:16:24', 'sys', '2015-06-26 14:16:24', 'sys', '1', 'N');
 INSERT INTO `tb_platform_role_permit` VALUES ('2017120100000013', '2015062610000001', '2015110210000001', '2015-06-26 14:16:24', 'sys', '2015-06-26 14:16:24', 'sys', '1', 'N');
+INSERT INTO `tb_platform_role_permit` VALUES ('2017120100000014', '2015062610000001', '2015112510000001', '2015-06-26 14:16:24', 'sys', '2015-06-26 14:16:24', 'sys', '1', 'N');
+INSERT INTO `tb_platform_role_permit` VALUES ('2017120100000015', '2015062610000001', '2015122810000001', '2015-06-26 14:16:24', 'sys', '2015-06-26 14:16:24', 'sys', '1', 'N');
+INSERT INTO `tb_platform_role_permit` VALUES ('2017120100000016', '2015062610000001', '2016011210000001', '2015-06-26 14:16:24', 'sys', '2015-06-26 14:16:24', 'sys', '1', 'N');
