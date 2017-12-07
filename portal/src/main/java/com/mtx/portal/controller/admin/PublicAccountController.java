@@ -158,26 +158,6 @@ public class PublicAccountController {
 
 
     /**
-     * 投诉管理 （界面）
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/suggestionManage", method = RequestMethod.GET)
-    public String suggestionManage( Model model){
-        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
-        model.addAttribute("wechatBinding", wechatBinding);
-
-        if(null != wechatBinding){
-            String startDateStr = DateUtils.getDate();
-            String endDateStr = DateUtils.getDate();
-            model.addAttribute("startDateStr", startDateStr);
-            model.addAttribute("endDateStr", endDateStr);
-        }
-        return "admin/suggestionManage";
-    }
-
-
-    /**
      * 模板管理界面
      * @param request
      * @param model
