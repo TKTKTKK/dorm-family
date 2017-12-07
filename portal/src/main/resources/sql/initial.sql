@@ -398,10 +398,10 @@ INSERT INTO `tb_platform_permit` VALUES ('2015050510000008', 'MENU', '图片库'
 INSERT INTO `tb_platform_permit` VALUES ('2015050510000009', 'MENU', '用户', '用户', null, '1080', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', 'icon-users');
 INSERT INTO `tb_platform_permit` VALUES ('2015050510000010', 'MENU', '用户管理', 'admin/usermanage/roleDistribute', '2015050510000009', '1090', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
 INSERT INTO `tb_platform_permit` VALUES ('2015110210000001', 'MENU', '权限管理', 'admin/usermanage/rolePermitManage', '2015050510000009', '2100', 'APP', '2015-11-05 06:49:35', 'sys', '2015-11-05 06:49:35', 'sys', '1', 'N', '');
-INSERT INTO `tb_platform_permit` VALUES ('2015050510000011', 'MENU', '满田星', '满田星', null, '1090', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', 'icon-users');
-INSERT INTO `tb_platform_permit` VALUES ('2015050510000012', 'MENU', '经销商', 'admin/wefamily/merchant', '2015050510000011', '1100', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
+INSERT INTO `tb_platform_permit` VALUES ('2015050510000011', 'MENU', '销售服务', '销售服务', null, '1090', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', 'icon-users');
+INSERT INTO `tb_platform_permit` VALUES ('2015050510000012', 'MENU', '经销商管理', 'admin/wefamily/merchant', '2015050510000011', '1100', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
 
-INSERT INTO `tb_platform_role` VALUES ('2017120100000001', null, 'SYSTEM_ADM', '系统管理员', '2017-12-01 10:08:10', 'sys', '2017-12-01 10:08:10', 'sys', '1', 'N');
+-- INSERT INTO `tb_platform_role` VALUES ('2017120100000001', null, 'SYSTEM_ADM', '系统管理员', '2017-12-01 10:08:10', 'sys', '2017-12-01 10:08:10', 'sys', '1', 'N');
 INSERT INTO `tb_platform_role` VALUES ('2015062610000001', null, 'WP_SUPER', '超级管理员', '2015-06-26 14:08:10', 'sys', '2015-06-26 14:08:10', 'sys', '1', 'N');
 INSERT INTO `tb_platform_role` VALUES ('2015050510000001', null, 'WP_ADM', '管理员', '2015-05-20 19:11:09', 'sys', '2016-01-21 11:33:04 505', 'sys', '1', 'N');
 
