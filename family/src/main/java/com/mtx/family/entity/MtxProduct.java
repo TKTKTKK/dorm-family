@@ -1,7 +1,6 @@
 package com.mtx.family.entity;
 
 import com.mtx.common.base.BaseEntity;
-
 import javax.persistence.Column;
 import javax.persistence.Table;
 
@@ -17,6 +16,26 @@ public class MtxProduct extends BaseEntity {
     private String img;
     @Column
     private String status;
+    @Column
+    private Double price;
+    @Column
+    private String detail;
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
 
     public String getModel() {
         return model;

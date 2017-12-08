@@ -47,13 +47,15 @@ public class WeFamilyController extends BaseAdminController {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private MxtProductService mxtProductService;
-    @Autowired
     private SequenceService sequenceService;
     @Autowired
     private MachineService machineService;
     @Autowired
     private LogisticsService logisticsService;
+    @Autowired
+    private MtxProductService mxtProductService;
+    @Autowired
+    private MtxConsultService mtxConsultService;
 
     /**
      * 经销商管理界面
@@ -290,6 +292,13 @@ public class WeFamilyController extends BaseAdminController {
             }else if("0".equals(deleteFlag)){
                 model.addAttribute("errorMessage", "删除失败");
             }
+            //订单发送结果
+            String sendFlag = request.getParameter("sendFlag");
+            if("1".equals(sendFlag)){
+                model.addAttribute("successMessage", "发送成功");
+            }else if("0".equals(sendFlag)){
+                model.addAttribute("errorMessage", "发送失败");
+            }
         }
 
         return "admin/wefamily/orderManage";
@@ -365,6 +374,11 @@ public class WeFamilyController extends BaseAdminController {
     @RequestMapping(value = "/orderInfo",method = RequestMethod.POST)
     public String orderInfo(Order order, RedirectAttributes redirectAttributes, Model model){
         order.setBindid(UserUtils.getUserBindId());
+        List<Order> orderList = orderService.queryOrderForSnnoRepeat(order);
+        if(null != orderList && orderList.size()>0){
+            model.addAttribute("errorMessage", "抱歉，订单编号重复!");
+            return  "admin/wefamily/orderInfo";
+        }
         //修改
         if(StringUtils.isNotBlank(order.getUuid())){
             try {
@@ -660,4 +674,19 @@ public class WeFamilyController extends BaseAdminController {
     }
 
 
+    /**
+     * 咨询管理
+     */
+    @RequestMapping(value = "/MtxConsultManage")
+    public String MtxConsultManage(@RequestParam(required = false, defaultValue = "1") int page, MtxConsult mtxConsult, Model model) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if (null != wechatBinding) {
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<MtxConsult> mtxConsultList = mtxConsultService.queryForListWithPagination(mtxConsult, pageBounds);
+            model.addAttribute("mtxConsultList", mtxConsultList);
+            model.addAttribute("mtxConsult",mtxConsult);
+        }
+        return "admin/wefamily/mtxConsultManage";
+    }
 }

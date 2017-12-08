@@ -89,6 +89,14 @@
     </function>
 
     <function>
+        <description>根据tmType和bindid查询图文</description>
+        <name>getTMByTypeAndBindid</name>
+        <function-class>com.mtx.wechat.utils.WechatMasterUtil</function-class>
+        <function-signature>java.lang.String getTMByTypeAndBindid(java.lang.String,java.lang.String)</function-signature>
+        <example>${web:getTMByTypeAndBindid(java.lang.String,java.lang.String)}</example>
+    </function>
+
+    <function>
         <description>根据模板名称查询shortid</description>
         <name>queryTmIdShortByName</name>
         <function-class>com.mtx.wechat.utils.WechatMasterUtil</function-class>
