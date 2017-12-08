@@ -3,16 +3,13 @@ package com.mtx.portal.controller.admin;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.exception.ServiceException;
+import com.mtx.common.service.SequenceService;
 import com.mtx.common.utils.DateUtils;
 import com.mtx.common.utils.StringUtils;
 import com.mtx.common.utils.UploadUtils;
 import com.mtx.common.utils.UserUtils;
-import com.mtx.family.entity.Merchant;
-import com.mtx.family.entity.Order;
-import com.mtx.family.entity.MtxProduct;
-import com.mtx.family.service.MerchantService;
-import com.mtx.family.service.OrderService;
-import com.mtx.family.service.MxtProductService;
+import com.mtx.family.entity.*;
+import com.mtx.family.service.*;
 import com.mtx.portal.PortalContants;
 import com.mtx.wechat.entity.admin.WechatBinding;
 import com.mtx.wechat.service.WechatBindingService;
@@ -51,6 +48,12 @@ public class WeFamilyController extends BaseAdminController {
     private OrderService orderService;
     @Autowired
     private MxtProductService mxtProductService;
+    @Autowired
+    private SequenceService sequenceService;
+    @Autowired
+    private MachineService machineService;
+    @Autowired
+    private LogisticsService logisticsService;
 
     /**
      * 经销商管理界面
@@ -287,26 +290,19 @@ public class WeFamilyController extends BaseAdminController {
             }else if("0".equals(deleteFlag)){
                 model.addAttribute("errorMessage", "删除失败");
             }
-            //订单发送结果
-            String sendFlag = request.getParameter("sendFlag");
-            if("1".equals(sendFlag)){
-                model.addAttribute("successMessage", "发送成功");
-            }else if("0".equals(sendFlag)){
-                model.addAttribute("errorMessage", "发送失败");
-            }
         }
 
         return "admin/wefamily/orderManage";
     }
 
     /**
-     * 删除仓库
+     * 删除订单
      * @param request
      * @return
      */
     @RequestMapping("/deleteOrder")
     @ResponseBody
-    public Map<String, Object> deleteWarehouse(HttpServletRequest request){
+    public Map<String, Object> deleteOrder(HttpServletRequest request){
         int deleteFlag = 0;
         String orderId = request.getParameter("orderId");
         if(StringUtils.isNotBlank(orderId)){
@@ -369,11 +365,6 @@ public class WeFamilyController extends BaseAdminController {
     @RequestMapping(value = "/orderInfo",method = RequestMethod.POST)
     public String orderInfo(Order order, RedirectAttributes redirectAttributes, Model model){
         order.setBindid(UserUtils.getUserBindId());
-        List<Order> orderList = orderService.queryOrderForSnnoRepeat(order);
-        if(null != orderList && orderList.size()>0){
-            model.addAttribute("errorMessage", "抱歉，订单编号重复!");
-            return  "admin/wefamily/orderInfo";
-        }
         //修改
         if(StringUtils.isNotBlank(order.getUuid())){
             try {
@@ -386,6 +377,12 @@ public class WeFamilyController extends BaseAdminController {
         }else{
             //添加
             order.setStatus("NEW");
+            order.setSnno(sequenceService.getOrderSeqNo());
+            List<Order> orderList = orderService.queryOrderForSnnoRepeat(order);
+            if(null != orderList && orderList.size()>0){
+                model.addAttribute("errorMessage", "抱歉，订单编号重复!");
+                return  "admin/wefamily/orderInfo";
+            }
             orderService.insert(order);
             redirectAttributes.addFlashAttribute("successMessage", "保存成功");
             order = new Order();
@@ -393,5 +390,274 @@ public class WeFamilyController extends BaseAdminController {
 
         return "redirect:orderInfo?orderId=" + order.getUuid();
     }
+
+    /**
+     * 机器管理（界面）
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/machineManage",method = RequestMethod.GET)
+    public String machineManage(Model model,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        model.addAttribute("successMessage",request.getParameter("successMessage"));
+        return "admin/wefamily/machineManage";
+    }
+
+    /**
+     * 机器管理
+     * @param machine
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/machineManage",method = RequestMethod.POST)
+    public String machineManage(@RequestParam(required = false,defaultValue = "1") int page,Machine machine,Model model,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        model.addAttribute("machine",machine);
+        if(null != wechatBinding){
+            String startDateStr = request.getParameter("startDateStr");
+            model.addAttribute("startDateStr", startDateStr);
+            String endDateStr = request.getParameter("endDateStr");
+            model.addAttribute("endDateStr", endDateStr);
+            Date startDate = DateUtils.parseDate(startDateStr);
+            Date endDate = DateUtils.parseDate(endDateStr);
+            startDate = DateUtils.getDateStart(startDate);
+            endDate = DateUtils.getDateEnd(endDate);
+            String startDateTimeStr = "";
+            if(null != startDate){
+                startDateTimeStr = DateUtils.formatDate(startDate, "yyyy-MM-dd HH:mm:ss");
+            }
+            String endDateTimeStr = "";
+            if(null != endDate){
+                endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
+            }
+            machine.setBindid(wechatBinding.getUuid());
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<Machine> machineList = machineService.queryMachineList(machine, startDateTimeStr, endDateTimeStr, pageBounds);
+            model.addAttribute("machineList", machineList);
+
+            //删除结果
+            String deleteFlag = request.getParameter("deleteFlag");
+            if("1".equals(deleteFlag)){
+                model.addAttribute("successMessage", "删除成功");
+            }else if("0".equals(deleteFlag)){
+                model.addAttribute("errorMessage", "删除失败");
+            }
+        }
+
+        return "admin/wefamily/machineManage";
+    }
+
+    /**
+     * 机器信息（界面）
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/machineInfo",method = RequestMethod.GET)
+    public String machineInfo(HttpServletRequest request,Model model){
+        String machineId = request.getParameter("machineId");
+        if(StringUtils.isNotBlank(machineId)){
+            Machine machine = new Machine();
+            machine.setUuid(machineId);
+            machine = machineService.queryForObjectByPk(machine);
+            model.addAttribute("machine", machine);
+        }
+        return "admin/wefamily/machineInfo";
+    }
+
+    /**
+     * 机器信息
+     * @param machine
+     * @param redirectAttributes
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/machineInfo",method = RequestMethod.POST)
+    public String machineInfo(Machine machine, RedirectAttributes redirectAttributes, Model model){
+        machine.setBindid(UserUtils.getUserBindId());
+        List<Machine> machineList = machineService.queryMachineForNoRepeat(machine);
+        if(null != machineList && machineList.size()>0){
+            model.addAttribute("errorMessage", "抱歉，机器号重复!");
+            return  "admin/wefamily/machineInfo";
+        }
+        //修改
+        if(StringUtils.isNotBlank(machine.getUuid())){
+            try {
+                machineService.updatePartial(machine);
+                redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");
+            }
+        }else{
+            //添加
+            machineService.insert(machine);
+            redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+            machine = new Machine();
+        }
+
+        return "redirect:machineInfo?machineId=" + machine.getUuid();
+    }
+
+    /**
+     * 删除机器
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/deleteMachine")
+    @ResponseBody
+    public Map<String, Object> deleteMachine(HttpServletRequest request){
+        int deleteFlag = 0;
+        String machineId = request.getParameter("machineId");
+        if(StringUtils.isNotBlank(machineId)){
+            Machine machine = new Machine();
+            machine.setUuid(machineId);
+            deleteFlag = machineService.delete(machine);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
+    }
+
+    /**
+     * 订单详情
+     */
+    @RequestMapping(value = "/orderDetail",method = RequestMethod.GET)
+    public String orderDetail(@RequestParam(required = false,defaultValue = "1") int page,Model model,HttpServletRequest request){
+        String orderId = request.getParameter("orderId");
+        if(StringUtils.isNotBlank(orderId)){
+            Order order = new Order();
+            order.setUuid(orderId);
+            order = orderService.queryForObjectByPk(order);
+            model.addAttribute("order",order);
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            List<Machine> machineList = machineService.queryMachineByOrderId(orderId,pageBounds);
+            model.addAttribute("machineList",machineList);
+
+            Logistics logistics = new Logistics();
+            logistics.setOrderid(orderId);
+            logistics.setOrderby("createon desc");
+            List<Logistics> logisticsList = logisticsService.queryForList(logistics);
+            model.addAttribute("logisticsList",logisticsList);
+        }
+        model.addAttribute("successMessage",request.getParameter("successMessage"));
+
+        //订单删除机器结果
+        String deleteFlag = request.getParameter("deleteFlag");
+        if("1".equals(deleteFlag)){
+            model.addAttribute("successMessage", "删除成功");
+        }else if("0".equals(deleteFlag)){
+            model.addAttribute("errorMessage", "删除失败");
+        }
+
+        //订单发送结果
+        String sendFlag = request.getParameter("sendFlag");
+        if("1".equals(sendFlag)){
+            model.addAttribute("successMessage", "发送成功");
+        }else if("0".equals(sendFlag)){
+            model.addAttribute("errorMessage", "发送失败");
+        }
+
+        return "admin/wefamily/orderDetail";
+    }
+
+    /**
+     *订单添加机器
+     */
+    @RequestMapping(value = "/addMachineForOrder",method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> addMachineForOrder(HttpServletRequest request){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        Machine machine = new Machine();
+        machine.setBindid(UserUtils.getUserBindId());
+        machine.setMachinename(request.getParameter("machinenameAdd"));
+        machine.setMachinemodel(request.getParameter("machinemodelAdd"));
+        machine.setMachineno(request.getParameter("machinenoAdd"));
+        machine.setEngineno(request.getParameter("enginenoAdd"));
+        machine.setProductiondate(request.getParameter("productiondateAdd"));
+        String versionno = request.getParameter("versionno");
+        if(StringUtils.isNotBlank(versionno)){
+            machine.setVersionno(Integer.valueOf(versionno));
+        }
+
+        String orderId = request.getParameter("orderId");
+
+        String machineId = request.getParameter("machineId");
+        if(StringUtils.isNotBlank(machineId)){
+            machine.setUuid(machineId);
+            List<Machine> machineList = machineService.queryMachineForNoRepeat(machine);
+            if(null != machineList && machineList.size() > 0){
+                resultMap.put("returnMsg","机器号或发动机号重复！");
+            }else{
+                machineService.updatePartial(machine);
+                resultMap.put("successMessage", "修改成功");
+            }
+        }else{
+            if(StringUtils.isNotBlank(orderId)){
+                try {
+                    String returnMsg = orderService.addMachineForOrder(orderId,machine);
+                    if(StringUtils.isNotBlank(returnMsg)){
+                        resultMap.put("returnMsg",returnMsg);
+                    }else{
+                        resultMap.put("successMessage", "添加成功");
+                    }
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                    resultMap.put("errorMessage", "系统忙，稍候再试");
+                }
+            }
+        }
+        return resultMap;
+    }
+
+    /**
+     * 订单删除机器
+     */
+    @RequestMapping("/deleteMachineForOrder")
+    @ResponseBody
+    public Map<String, Object> deleteMachineForOrder(HttpServletRequest request){
+        int deleteFlag = 0;
+        String machineId = request.getParameter("machineId");
+        if(StringUtils.isNotBlank(machineId)){
+            deleteFlag = orderService.deleteMachineForOrder(machineId);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
+    }
+
+    /**
+     *订单添加物流
+     */
+    @RequestMapping(value = "/addLogisticsForOrder",method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> addLogisticsForOrder(HttpServletRequest request){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        String orderId = request.getParameter("orderId");
+
+        Logistics logistics = new Logistics();
+        logistics.setBindid(UserUtils.getUserBindId());
+        logistics.setOrderid(orderId);
+        logistics.setDriverphone(request.getParameter("driverphoneAdd"));
+        logistics.setPlatenumber(request.getParameter("platenumberAdd"));
+        logistics.setLocation(request.getParameter("locationAdd"));
+
+        try {
+            logisticsService.insert(logistics);
+            resultMap.put("successMessage", "添加成功");
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            resultMap.put("errorMessage", "系统忙，稍候再试");
+        }
+
+
+        return resultMap;
+    }
+
 
 }

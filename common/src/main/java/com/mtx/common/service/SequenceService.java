@@ -23,4 +23,10 @@ public class SequenceService {
         return prefix + formatSeq;
     }
 
+    public String getOrderSeqNo() {
+        Integer seq = sequenceMapper.selectNextVal("MTX_ORDER");
+        String formatSeq = StringUtils.leftPad(seq.toString(),8,"0");
+        String prefix = DateUtils.getDate("yyMMdd");
+        return prefix + formatSeq;
+    }
 }
