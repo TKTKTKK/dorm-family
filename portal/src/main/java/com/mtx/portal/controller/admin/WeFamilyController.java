@@ -374,11 +374,6 @@ public class WeFamilyController extends BaseAdminController {
     @RequestMapping(value = "/orderInfo",method = RequestMethod.POST)
     public String orderInfo(Order order, RedirectAttributes redirectAttributes, Model model){
         order.setBindid(UserUtils.getUserBindId());
-        List<Order> orderList = orderService.queryOrderForSnnoRepeat(order);
-        if(null != orderList && orderList.size()>0){
-            model.addAttribute("errorMessage", "抱歉，订单编号重复!");
-            return  "admin/wefamily/orderInfo";
-        }
         //修改
         if(StringUtils.isNotBlank(order.getUuid())){
             try {
