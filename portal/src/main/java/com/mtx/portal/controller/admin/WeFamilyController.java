@@ -7,14 +7,8 @@ import com.mtx.common.utils.DateUtils;
 import com.mtx.common.utils.StringUtils;
 import com.mtx.common.utils.UploadUtils;
 import com.mtx.common.utils.UserUtils;
-import com.mtx.family.entity.Merchant;
-import com.mtx.family.entity.MtxConsult;
-import com.mtx.family.entity.Order;
-import com.mtx.family.entity.MtxProduct;
-import com.mtx.family.service.MerchantService;
-import com.mtx.family.service.MtxConsultService;
-import com.mtx.family.service.OrderService;
-import com.mtx.family.service.MtxProductService;
+import com.mtx.family.entity.*;
+import com.mtx.family.service.*;
 import com.mtx.portal.PortalContants;
 import com.mtx.wechat.entity.admin.WechatBinding;
 import com.mtx.wechat.service.WechatBindingService;
@@ -53,7 +47,13 @@ public class WeFamilyController extends BaseAdminController {
     @Autowired
     private MtxProductService mxtProductService;
     @Autowired
+    private MtxReserveService mtxReserveService;
+    @Autowired
     private MtxConsultService mtxConsultService;
+    @Autowired
+    private MtxConsultDetailService mtxConsultDetailService;
+    @Autowired
+    private MtxMemberService mtxMemberService;
 
     /**
      * 经销商管理界面
@@ -233,10 +233,7 @@ public class WeFamilyController extends BaseAdminController {
         resultMap.put("deleteFlag", deleteFlag);
         return resultMap;
     }
-    @RequestMapping(value = "/product_center")
-    public String product_center() {
-        return "guest/product_center";
-    }
+
     /**
      * 订单管理（界面）
      * @param model
@@ -399,8 +396,24 @@ public class WeFamilyController extends BaseAdminController {
     /**
      * 咨询管理
      */
-    @RequestMapping(value = "/MtxConsultManage")
-    public String MtxConsultManage(@RequestParam(required = false, defaultValue = "1") int page, MtxConsult mtxConsult, Model model) {
+    @RequestMapping(value = "/mtxReserveManage")
+    public String mtxReserveManage(@RequestParam(required = false, defaultValue = "1") int page, MtxReserve mtxReserve, Model model) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if (null != wechatBinding) {
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<MtxReserve> mtxReserveList = mtxReserveService.queryForListWithPagination(mtxReserve, pageBounds);
+            model.addAttribute("mtxReserveList", mtxReserveList);
+            model.addAttribute("mtxReserve",mtxReserve);
+        }
+        return "admin/wefamily/mtxReserveManage";
+    }
+
+    /**
+     * 留言管理
+     */
+    @RequestMapping(value = "/mtxConsultManage")
+    public String mtxConsultManage(@RequestParam(required = false, defaultValue = "1") int page, MtxConsult mtxConsult, Model model) {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         if (null != wechatBinding) {
@@ -410,5 +423,100 @@ public class WeFamilyController extends BaseAdminController {
             model.addAttribute("mtxConsult",mtxConsult);
         }
         return "admin/wefamily/mtxConsultManage";
+    }
+
+    @RequestMapping(value = "/goMtxConsultDetail")
+    public String goMtxConsultDetail(MtxConsultDetail mtxConsultDetail, Model model,String uuid,HttpServletRequest request) {
+        if(StringUtils.isNotBlank(uuid)){
+            mtxConsultDetail.setConsultid(uuid);
+            model.addAttribute("uuid",uuid);
+        }
+        List<MtxConsultDetail> mtxConsultDetailList = mtxConsultDetailService.queryForListWithPagination(mtxConsultDetail);
+        model.addAttribute("mtxConsultDetailList", mtxConsultDetailList);
+        String successMsg=request.getParameter("successMsg");
+        if(StringUtils.isNotBlank(successMsg)&&"1".equals(successMsg)){
+            model.addAttribute("successMessage","回复成功！");
+        }
+        if(StringUtils.isNotBlank(successMsg)&&"0".equals(successMsg)){
+            model.addAttribute("errorMessage","回复失败！");
+        }
+        return "admin/wefamily/mtxConsultDetailManage";
+    }
+
+
+    @RequestMapping(value = "/answer")
+    public String answer(MtxConsultDetail mtxConsultDetail) {
+        String flag=mtxConsultService.answerQuestion(mtxConsultDetail);
+        String successMsg=null;
+        if("Y".equals(flag)){
+            successMsg="1";
+        }else{
+            successMsg="0";
+        }
+        return "redirect:goMtxConsultDetail?uuid="+mtxConsultDetail.getConsultid()+"&successMsg="+successMsg;
+    }
+
+    /**
+     * 会员管理
+     */
+    @RequestMapping(value = "/mtxMemberManage")
+    public String mtxMemberManage(@RequestParam(required = false, defaultValue = "1") int page, MtxMember mtxMember, Model model, HttpServletRequest request) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if (null != wechatBinding) {
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<MtxMember> mtxMemberList = mtxMemberService.queryForListWithPagination(mtxMember, pageBounds);
+            model.addAttribute("mtxMemberList", mtxMemberList);
+            model.addAttribute("mtxMember",mtxMember);
+        }
+        String successFlag=request.getParameter("deleteFlag");
+        if("1".equals(successFlag)){
+            model.addAttribute("successFlag","删除成功");
+        }
+        return "admin/wefamily/mtxMemberManage";
+    }
+    @RequestMapping(value = "/goMtxMember", method = RequestMethod.GET)
+    public String goMtxMember(Model model,MtxMember mtxMember){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        MtxMember mtxMemberTemp=mtxMemberService.queryForObjectByPk(mtxMember);
+        model.addAttribute("mtxMember",mtxMemberTemp);
+        return "admin/wefamily/mtxMemberInfo";
+    }
+    @RequestMapping(value = "/updateMtxMember",method = RequestMethod.POST)
+    public String updateMtxMember(@RequestParam(value = "imgfile", required = false)MultipartFile multipartFile, MtxMember mtxMember, RedirectAttributes redirectAttributes, Model model){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if(null != multipartFile && !multipartFile.isEmpty()){
+            String foldername = "member";
+            String filename = UploadUtils.uploadFile(multipartFile, foldername);
+            mtxMember.setWechatimg(filename);
+        }
+        if (StringUtils.isBlank(mtxMember.getUuid())) {
+            mtxMemberService.insert(mtxMember);
+            model.addAttribute("mtxMember", mtxMember);
+            model.addAttribute("successMessage", "保存成功！");
+        } else {
+            try {
+                mtxMemberService.updatePartial(mtxMember);
+                MtxMember mtxMemberTemp = mtxMemberService.queryForObjectByPk(mtxMember);
+                model.addAttribute("mtxMember", mtxMemberTemp);
+            } catch (ServiceException e) {
+                logger.error(e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("errorMessage", "数据已修改，请重试！");
+                return "redirect:/admin/wefamily/goMtxMember?uuid=" + mtxMember.getUuid();
+
+            }
+            model.addAttribute("successMessage", "保存成功！");
+        }
+        return "admin/wefamily/mtxMemberInfo";
+    }
+    @RequestMapping(value = "/deleteMtxMember", method = RequestMethod.POST)
+    @ResponseBody
+    public Map deleteMtxMember(MtxMember mtxMember){
+        int deleteFlag=mtxMemberService.delete(mtxMember);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
     }
 }

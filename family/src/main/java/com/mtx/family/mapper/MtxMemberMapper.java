@@ -3,12 +3,12 @@ package com.mtx.family.mapper;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.base.BaseMapper;
-import com.mtx.family.entity.MtxConsult;
-import com.mtx.family.entity.MtxReserve;
+import com.mtx.family.entity.MtxMember;
+import com.mtx.family.entity.MtxProduct;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MtxConsultMapper extends BaseMapper<MtxConsult> {
-    public PageList<MtxConsult> selectMtxConsultList(@Param("mtxConsult") MtxConsult mtxConsult, PageBounds pageBounds);
+public interface MtxMemberMapper extends BaseMapper<MtxMember> {
+    public PageList<MtxMember> selectMtxMemberList(@Param("mtxMember") MtxMember mtxMember, PageBounds pageBounds);
 }

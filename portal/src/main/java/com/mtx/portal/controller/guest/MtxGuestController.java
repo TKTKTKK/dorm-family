@@ -2,10 +2,13 @@ package com.mtx.portal.controller.guest;
 
 import com.mtx.common.utils.StringUtils;
 import com.mtx.family.entity.MtxConsult;
+import com.mtx.family.entity.MtxConsultDetail;
+import com.mtx.family.entity.MtxReserve;
 import com.mtx.family.entity.MtxProduct;
+import com.mtx.family.service.MtxConsultDetailService;
 import com.mtx.family.service.MtxConsultService;
+import com.mtx.family.service.MtxReserveService;
 import com.mtx.family.service.MtxProductService;
-import com.mtx.portal.controller.admin.BaseAdminController;
 import com.mtx.wechat.service.WechatBindingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -29,7 +33,11 @@ public class MtxGuestController{
     @Autowired
     private MtxProductService mxtProductService;
     @Autowired
+    private MtxReserveService mtxReserveService;
+    @Autowired
     private MtxConsultService mtxConsultService;
+    @Autowired
+    private MtxConsultDetailService mtxConsultDetailService;
 
 
     @RequestMapping(value = "/product_center")
@@ -48,27 +56,53 @@ public class MtxGuestController{
         return "guest/product_detail";
     }
 
-    @RequestMapping(value = "/consult",method = RequestMethod.GET)
-    public String consult(Model model,MtxProduct mtxProduct) {
+    @RequestMapping(value = "/reserve",method = RequestMethod.GET)
+    public String reserve(Model model,MtxProduct mtxProduct) {
         MtxProduct mtxProductTemp= mxtProductService.queryForObjectByPk(mtxProduct);
         model.addAttribute("mtxProduct",mtxProductTemp);
-        return "guest/consult";
+        return "guest/reserve";
     }
 
-    @RequestMapping(value = "/consult",method = RequestMethod.POST)
-    public String saveMtxConsult(MtxConsult mtxConsult){
-        if(StringUtils.isBlank(mtxConsult.getProductid())){
-            mtxConsult.setProductid(null);
+    @RequestMapping(value = "/reserve",method = RequestMethod.POST)
+    public String saveMtxReserve(MtxReserve mtxReserve){
+        if(StringUtils.isBlank(mtxReserve.getProductid())){
+            mtxReserve.setProductid(null);
         }
-        if(StringUtils.isBlank(mtxConsult.getDetail())){
-            mtxConsult.setDetail(null);
+        if(StringUtils.isBlank(mtxReserve.getDetail())){
+            mtxReserve.setDetail(null);
         }
-        mtxConsultService.insert(mtxConsult);
+        mtxReserveService.insert(mtxReserve);
         return "redirect:/guest/product_center";
     }
 
     @RequestMapping(value = "/message")
-    public String enquiry(Model model) {
+    public String enquiry(MtxConsultDetail mtxConsultDetail, String userid, Model model, HttpServletRequest request) {
+        if(StringUtils.isNotBlank(userid)){
+            MtxConsult mtxConsult=new MtxConsult();
+            mtxConsult.setUserid(userid);
+            List<MtxConsult> consultList=mtxConsultService.queryForList(mtxConsult);
+            if(consultList.size()==0){
+                model.addAttribute("userid",userid);
+            }else{
+                MtxConsult consult=consultList.get(0);
+                model.addAttribute("userid",consult.getUserid());
+                model.addAttribute("identify",consult.getIdentify());
+                model.addAttribute("flag","1");
+                mtxConsultDetail.setConsultid(consult.getUuid());
+            }
+        }
+        List<MtxConsultDetail> mtxConsultDetailList = mtxConsultDetailService.queryForListWithPagination(mtxConsultDetail);
+        model.addAttribute("mtxConsultDetailList", mtxConsultDetailList);
+        String flag=request.getParameter("flag");
+        if(StringUtils.isNotBlank(flag)){
+            model.addAttribute("flag",flag);
+        }
         return "guest/message";
+    }
+
+    @RequestMapping(value = "/addMessage",method = RequestMethod.POST)
+    public String addMessage(MtxConsult mtxConsult,String content) {
+        String userid=mtxConsultService.addMessage(mtxConsult,content);
+        return "redirect:/guest/message?userid="+userid+"&flag=1";
     }
 }
