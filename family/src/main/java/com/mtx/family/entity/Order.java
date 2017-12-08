@@ -1,6 +1,7 @@
 package com.mtx.family.entity;
 
 import com.mtx.common.base.BaseEntity;
+import org.apache.ibatis.annotations.Param;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
@@ -18,11 +19,28 @@ public class Order extends BaseEntity {
     @Column
     private String machinemodel;
     @Column
-    private String machinename;
-    @Column
     private String quantity;
     @Column
+    private String electricstart;
+    @Column
+    private String rowspace;
+    @Column
+    private String transversetime;
+    @Column
+    private String seedlingneedle;
+    @Column
+    private String entrusttransport;
+    @Column
+    private String seedlingbasket;
+    @Column
+    private String coverall;
+    @Column
+    private String plasticcover;
+    @Column
+    private String fueltank;
+    @Column
     private String status;
+
 
     public String getBindid() {
         return bindid;
@@ -48,20 +66,84 @@ public class Order extends BaseEntity {
         this.machinemodel = machinemodel;
     }
 
-    public String getMachinename() {
-        return machinename;
-    }
-
-    public void setMachinename(String machinename) {
-        this.machinename = machinename;
-    }
-
     public String getQuantity() {
         return quantity;
     }
 
     public void setQuantity(String quantity) {
         this.quantity = quantity;
+    }
+
+    public String getElectricstart() {
+        return electricstart;
+    }
+
+    public void setElectricstart(String electricstart) {
+        this.electricstart = electricstart;
+    }
+
+    public String getRowspace() {
+        return rowspace;
+    }
+
+    public void setRowspace(String rowspace) {
+        this.rowspace = rowspace;
+    }
+
+    public String getTransversetime() {
+        return transversetime;
+    }
+
+    public void setTransversetime(String transversetime) {
+        this.transversetime = transversetime;
+    }
+
+    public String getSeedlingneedle() {
+        return seedlingneedle;
+    }
+
+    public void setSeedlingneedle(String seedlingneedle) {
+        this.seedlingneedle = seedlingneedle;
+    }
+
+    public String getEntrusttransport() {
+        return entrusttransport;
+    }
+
+    public void setEntrusttransport(String entrusttransport) {
+        this.entrusttransport = entrusttransport;
+    }
+
+    public String getSeedlingbasket() {
+        return seedlingbasket;
+    }
+
+    public void setSeedlingbasket(String seedlingbasket) {
+        this.seedlingbasket = seedlingbasket;
+    }
+
+    public String getCoverall() {
+        return coverall;
+    }
+
+    public void setCoverall(String coverall) {
+        this.coverall = coverall;
+    }
+
+    public String getPlasticcover() {
+        return plasticcover;
+    }
+
+    public void setPlasticcover(String plasticcover) {
+        this.plasticcover = plasticcover;
+    }
+
+    public String getFueltank() {
+        return fueltank;
+    }
+
+    public void setFueltank(String fueltank) {
+        this.fueltank = fueltank;
     }
 
     public String getStatus() {

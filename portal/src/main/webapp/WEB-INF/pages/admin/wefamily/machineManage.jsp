@@ -13,22 +13,22 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 订单管理</span>
+            满田星 / <span class="font-bold  text-shallowred"> 机器管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
                 <div class="bg-white closel">
                     <div class="col-sm-12 no-padder">
-                        <form method="post" action="${ctx}/admin/wefamily/orderManage" class="form-horizontal b-l b-r b-b padding20"
+                        <form method="post" action="${ctx}/admin/wefamily/machineManage" class="form-horizontal b-l b-r b-b padding20"
                               data-validate="parsley"
                               id="searchForm">
                             <div class="row">
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
-                                    <input type="text" class="form-control" id="snno" name="snno" onblur="trimText(this)" value="${order.snno}"  placeholder="订单编号"/>
+                                    <input type="text" class="form-control" id="machineno" name="machineno" onblur="trimText(this)" value="${machine.machineno}"  placeholder="机器号"/>
                                 </div>
 
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
-                                    <input type="text" class="form-control" id="machinemodel" name="machinemodel" onblur="trimText(this)" value="${order.machinemodel}"  placeholder="机器型号"/>
+                                    <input type="text" class="form-control" id="engineno" name="engineno" onblur="trimText(this)" value="${machine.engineno}"  placeholder="发动机号"/>
                                 </div>
 
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
@@ -69,58 +69,47 @@
 
                                     <thead>
                                     <tr>
-                                        <th class="text-center">订单编号</th>
+                                        <th class="text-center">机器名称</th>
                                         <th class="text-center">机器型号</th>
-                                        <th class="text-center">数量</th>
-                                        <th class="text-center">运输</th>
-                                        <th class="text-center">订单状态</th>
-                                        <th class="text-center">创建时间</th>
+                                        <th class="text-center">机器号</th>
+                                        <th class="text-center">发动机号</th>
+                                        <th class="text-center">生产日期</th>
                                         <th class="text-center">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach items="${orderList}" var="order">
+                                    <c:forEach items="${machineList}" var="machine">
                                         <tr>
                                             <td>
-                                                    ${order.snno}
+                                                    ${machine.machinename}
                                             </td>
                                             <td>
-                                                    ${order.machinemodel}
+                                                    ${machine.machinemodel}
                                             </td>
                                             <td>
-                                                    ${order.quantity}
+                                                    ${machine.machineno}
                                             </td>
                                             <td>
-                                                    ${web:getCodeDesc("ENTRUST_TRANSPORT",order.entrusttransport)}
+                                                    ${machine.engineno}
                                             </td>
                                             <td>
-                                                <c:if test="${order.status == 'NEW'}">未发送</c:if>
-                                                <c:if test="${order.status == 'OUT'}">已发送</c:if>
+                                                    ${machine.productiondate}
                                             </td>
                                             <td>
-                                                    ${order.createon}
-                                            </td>
-                                            <td>
-                                                <a href="${ctx}/admin/wefamily/orderInfo?orderId=${order.uuid}" class="btn  btn-infonew btn-sm" style="color: white" <c:if test="${order.status == 'OUT'}">disabled="disabled" </c:if>>修改</a>
-                                                <a href="javascript:deleteOrder('${order.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white" <c:if test="${order.status == 'OUT'}">disabled="disabled" </c:if>>删除</a>
-                                                <a href="javascript:addMachineForOrder('${order.uuid}')" class="btn btn-sm btn-yellow a-noline" style="color:white">管理订单</a>
-                                                <c:if test="${order.status == 'NEW'}">
-                                                    <a href="javascript:sendOrder('${order.uuid}','${order.versionno}')" class="btn  btn-success btn-sm" style="color: white">
-                                                        发送订单
-                                                    </a>
-                                                </c:if>
+                                                <a href="${ctx}/admin/wefamily/machineInfo?machineId=${machine.uuid}" class="btn  btn-infonew btn-sm" style="color: white" >修改</a>
+                                                <a href="javascript:deleteMachine('${machine.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white" >删除</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
                                     </tbody>
                                 </table>
-                                <c:if test="${not empty orderList}">
-                                    <web:pagination pageList="${orderList}" postParam="true"/>
+                                <c:if test="${not empty machineList}">
+                                    <web:pagination pageList="${machineList}" postParam="true"/>
                                 </c:if>
                             </div>
                         <div class="navbar-left">
-                            <a class="btn btn-sm btn-info" href="javascript:showOrderInfo()"
-                               style="color:white">添加订单</a>
+                            <a class="btn btn-sm btn-info" href="javascript:showMachineInfo()"
+                               style="color:white">添加机器</a>
                         </div>
                         <div style="clear: both"></div>
                     </c:if>
@@ -180,27 +169,14 @@
     }
 
 
-    function deleteOrder(orderId){
+    function deleteMachine(machineId){
         qikoo.dialog.confirm('确定删除该仓库？',function(){
             //确定
-            $.get("${ctx}/admin/wefamily/deleteOrder?orderId="+orderId+"&version="+Math.random(),function(data,status){
+            $.get("${ctx}/admin/wefamily/deleteMachine?machineId="+machineId+"&version="+Math.random(),function(data,status){
                 if(undefined != data.deleteFlag){
                     var searchForm = document.getElementById("searchForm");
-                    searchForm.action = "${ctx}/admin/wefamily/orderManage?deleteFlag=" + data.deleteFlag;
+                    searchForm.action = "${ctx}/admin/wefamily/machineManage?deleteFlag=" + data.deleteFlag;
                     searchForm.submit();
-                }
-            });
-        },function(){
-            //取消
-        });
-    }
-
-    function sendOrder(orderId,versionno){
-        qikoo.dialog.confirm('确定发送订单？',function(){
-            //确定
-            $.get("${ctx}/admin/wefamily/sendOrder?orderId="+orderId+"&versionno="+versionno,function(data,status){
-                if(undefined != data.sendFlag){
-                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId="+orderId+"&sendFlag="+data.sendFlag;
                 }
             });
         },function(){
@@ -217,18 +193,14 @@
             //ui block
             pleaseWait();
             var searchForm = document.getElementById("searchForm");
-            searchForm.action = "${ctx}/admin/wefamily/orderManage?page=" + page;
+            searchForm.action = "${ctx}/admin/wefamily/machineManage?page=" + page;
             searchForm.submit();
         }
     }
 
 
-    function showOrderInfo(){
-        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderInfo";
-    }
-
-    function addMachineForOrder(orderId){
-        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId="+orderId;
+    function showMachineInfo(){
+        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/machineInfo";
     }
 
 </script>
