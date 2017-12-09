@@ -25,9 +25,9 @@
                     <span class="text-danger">${errorMessage}</span>
                 </div>
                 <form class="form-horizontal form-bordered" data-validate="parsley"
-                      action="${ctx}/admin/wefamily/updateMtxMember" method="POST"
+                      action="" method="POST"
                       enctype="multipart/form-data" id="frm"
-                onsubmit="checkValid()">
+                >
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
                             <i class="fa fa-gift"></i>
@@ -73,6 +73,14 @@
                                         </select>
                                     </div>
                                     <span id="addressError" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>详细地址：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <input type="text" class="form-control" data-required="true" name="address" id="address"
+                                           onblur="trimText(this)"
+                                           value="${mtxMember.address}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -134,7 +142,6 @@
                                 <label class="col-sm-3  control-label"><span class="text-danger"></span>积分：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="number" class="form-control"  name="points" id="points"
-                                           data-maxlength="32"
                                            onblur="trimText(this)"
                                            value="${mtxMember.points}">
                                 </div>
@@ -148,9 +155,10 @@
                             </div>
                         </div>
                         <div class="panel-footer text-left bg-light lter">
-                            <button type="submit" class="btn btn-submit btn-s-xs ">
-                                <i class="fa fa-check"></i>&nbsp;提&nbsp;交
-                            </button>
+                            <a onclick="checkValid()"
+                               class="btn  btn-infonew btn-sm" style="color: white;font-size: 14px">
+                                提  交
+                            </a>
                         </div>
                     </section>
                     <div>
@@ -177,13 +185,50 @@
         }
     }
     function checkValid(){
-
+        $("#frm").parsley("validate");
+        if(checkIfValid() && $('#frm').parsley().isValid()&&isPoneAvailable()){
+            var searchForm = document.getElementById("frm");
+            searchForm.action = "${ctx}/admin/wefamily/updateMtxMember";
+            searchForm.submit();
+        }
     }
     setup();
     promptinfo();
 
+
+    if (('${mtxMember.province}'.length > 0 && '${mtxMember.city}'.length > 0 && '${mtxMember.district}'.length > 0)) {
+        var s1Slt = document.getElementById('s1');
+        var s2Slt = document.getElementById('s2');
+        var s3Slt = document.getElementById('s3');
+        s1Slt.value = '${mtxMember.province}';
+        change(1);
+        if ('${mtxMember.address}'.length <= 0) {
+            promptinfo();
+        }
+        s2Slt.value = '${mtxMember.city}';
+        change(2);
+        if ('${mtxMember.address}'.length <= 0) {
+            promptinfo();
+        }
+        s3Slt.value = '${mtxMember.district}';
+        if ('${mtxMember.address}'.length <= 0) {
+            promptinfo();
+        }
+        if ('${mtxMember.address}'.length > 0) {
+            var address = document.getElementById('address');
+            address.value = '${mtxMember.address}';
+        }
+    }
+
     //这个函数是必须的，因为在geo.js里每次更改地址时会调用此函数
-    function promptinfo() {}
+    function promptinfo() {
+        var address = document.getElementById('address');
+        var s1 = document.getElementById('s1');
+        var s2 = document.getElementById('s2');
+        var s3 = document.getElementById('s3');
+        address.value = s1.value + s2.value + s3.value;
+    }
+
     function isPoneAvailable() {
         var phoneError = document.getElementById("phoneError");
         phoneError.innerHTML = "";
@@ -194,10 +239,25 @@
         }else{
             var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
             if (!myreg.test(phone)) {
+                phoneError.innerHTML ="手机号输入不正确！";
                 return false;
             } else {
                 return true;
             }
+        }
+    }
+    //检查省市区是否合法
+    function checkIfValid() {
+        var addressError = document.getElementById("addressError");
+        addressError.innerHTML = "";
+        var province = document.getElementById("s1").value;
+        var city = document.getElementById("s2").value;
+        var district = document.getElementById("s3").value;
+        if (province === '省份' || city === '地级市' || district === '市、县级市、县') {
+            addressError.innerHTML = '省份，地级市，市、县级市、县 均为必填项';
+            return false;
+        }else{
+            return true;
         }
     }
 </script>

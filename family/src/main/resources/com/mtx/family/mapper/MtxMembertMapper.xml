@@ -11,10 +11,10 @@
         inner join tb_mtx_merchant tmm on tmm.uuid=mm.merchantid
         where TRUE
         <if test="mtxMember.name != null and mtxMember.name != ''">
-            and name like concat("%",#{mtxMember.name},"%")
+            and mm.name like concat("%",#{mtxMember.name},"%")
         </if>
         <if test="mtxMember.phone != null and mtxMember.phone != ''">
-            and phone like concat("%",#{mtxMember.phone},"%")
+            and mm.phone like concat("%",#{mtxMember.phone},"%")
         </if>
         order by modifyon desc;
     </select>

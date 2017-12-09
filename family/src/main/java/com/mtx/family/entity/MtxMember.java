@@ -22,6 +22,8 @@ public class MtxMember extends BaseEntity {
     @Column
     private String district;
     @Column
+    private String address;
+    @Column
     private String wechatname;
     @Column
     private String wechatimg;
@@ -29,6 +31,14 @@ public class MtxMember extends BaseEntity {
     private Double points;
 
     private String merchantname;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getMerchantid() {
         return merchantid;

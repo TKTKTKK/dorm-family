@@ -1,14 +1,8 @@
 package com.mtx.portal.controller.guest;
 
-import com.mtx.common.utils.StringUtils;
-import com.mtx.family.entity.MtxConsult;
-import com.mtx.family.entity.MtxConsultDetail;
-import com.mtx.family.entity.MtxReserve;
-import com.mtx.family.entity.MtxProduct;
-import com.mtx.family.service.MtxConsultDetailService;
-import com.mtx.family.service.MtxConsultService;
-import com.mtx.family.service.MtxReserveService;
-import com.mtx.family.service.MtxProductService;
+import com.mtx.common.utils.*;
+import com.mtx.family.entity.*;
+import com.mtx.family.service.*;
 import com.mtx.wechat.service.WechatBindingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +21,6 @@ import java.util.List;
 @RequestMapping(value = "/guest")
 public class MtxGuestController{
     private Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private WechatBindingService wechatBindingService;
     @Autowired
@@ -38,6 +31,8 @@ public class MtxGuestController{
     private MtxConsultService mtxConsultService;
     @Autowired
     private MtxConsultDetailService mtxConsultDetailService;
+    @Autowired
+    private MtxMemberService mtxMemberService;
 
 
     @RequestMapping(value = "/product_center")
@@ -104,5 +99,25 @@ public class MtxGuestController{
     public String addMessage(MtxConsult mtxConsult,String content) {
         String userid=mtxConsultService.addMessage(mtxConsult,content);
         return "redirect:/guest/message?userid="+userid+"&flag=1";
+    }
+
+    /**
+     * 登录注册
+     */
+    @RequestMapping(value = "/login")
+    public String login() {
+        return "guest/login";
+    }
+    @RequestMapping(value = "/register",method = RequestMethod.GET)
+    public String register() {
+        return "guest/register";
+    }
+    @RequestMapping(value = "/register",method = RequestMethod.POST)
+    public String addRegister(MtxMember mtxMember) {
+        if(StringUtils.isBlank(mtxMember.getMerchantid())){
+            mtxMember.setMerchantid("2ae953499da148d89cc3209a00e3b265");
+        }
+        mtxMemberService.insert(mtxMember);
+        return "guest/register";
     }
 }

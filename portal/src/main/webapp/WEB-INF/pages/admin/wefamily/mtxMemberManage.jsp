@@ -53,7 +53,7 @@
                                     <tr>
                                         <th width="10%">姓名</th>
                                         <th width="10%">手机号</th>
-                                        <th width="15%">地址</th>
+                                        <th width="15%">详细地址</th>
                                         <th width="10%">微信昵称</th>
                                         <th width="10%">微信头像</th>
                                         <th width="10%">积分</th>
@@ -71,7 +71,7 @@
                                                     ${mtxMember.phone}
                                             </td>
                                             <td>
-                                                    ${mtxMember.province}-${mtxMember.city}-${mtxMember.district}
+                                                    ${mtxMember.address}
                                             </td>
                                             <td>
                                                     ${mtxMember.wechatname}

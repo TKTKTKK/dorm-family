@@ -29,7 +29,7 @@
 </head>
 <body>
 <div class="head">
-    <a class="back" href="" ></a>
+    <a class="back" href=""></a>
     <span>产品中心</span>
     <img src="../../../static/guest/img/sao.png" alt="">
 </div>
