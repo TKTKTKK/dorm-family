@@ -16,8 +16,8 @@
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
                 满田星 /
-                <a href="${ctx}/admin/wefamily/MtxProduct">产品管理 </a> /
-                <span class="font-bold  text-shallowred"> 产品详情</span>
+                <a href="${ctx}/admin/wefamily/mtxGoodManage">商品管理 </a> /
+                <span class="font-bold  text-shallowred"> 商品详情</span>
             </header>
             <div class="col-sm-12 pos">
                 <div style="margin-bottom: 5px">
@@ -25,46 +25,29 @@
                     <span class="text-danger">${errorMessage}</span>
                 </div>
                 <form class="form-horizontal form-bordered" data-validate="parsley"
-                      action="${ctx}/admin/wefamily/updateMtxProduct" method="POST"
-                      enctype="multipart/form-data" id="frm"
-                onsubmit="return validateMoney(document.getElementById('price'),'priceError')">
+                      action="${ctx}/admin/wefamily/updateMtxGood" method="POST"
+                      enctype="multipart/form-data" id="frm">
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
                             <i class="fa fa-gift"></i>
-                            <span class="text-lg">产品详情：</span>
+                            <span class="text-lg">商品详情：</span>
                         </header>
                         <div class="panel-body p-0-15">
-                            <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>产品型号：</label>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" data-required="true" name="model" id="model"
-                                           data-maxlength="48"
-                                           onblur="trimText(this)"
-                                           value="${mtxProduct.model}">
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>名称：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="text" class="form-control" data-required="true" name="name" id="name"
                                            data-maxlength="256"
                                            onblur="trimText(this)"
-                                           value="${mtxProduct.name}">
+                                           value="${mtxGood.name}">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-3 control-label"><span class="text-danger">*</span>价格：</div>
+                                <div class="col-sm-3 control-label"><span class="text-danger">*</span>积分：</div>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <div class="col-sm-8 col-xs-11" style="padding-left: 0">
-                                        <input class="form-control" type="text" name="price" value="${mtxProduct.price}"
-                                               id="price"
-                                               data-maxlength="10"
-                                               data-required="true"
-                                               onblur="validateMoney(this,'priceError')">
-                                        <div class="text-danger" id="priceError"></div>
-                                    </div>
-                                    <div class="col-sm-1 col-xs-1 my-unit money">元</div>
-                                    <div style="clear: both"></div>
+                                    <input class="form-control" type="number" name="points" value="${mtxGood.points}"
+                                           id="points"
+                                           data-required="true">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -72,10 +55,10 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <select class="form-control" id="status" name="status">
                                         <option value="1"
-                                                <c:if test="${mtxProduct.status=='1'}">selected</c:if>
+                                                <c:if test="${mtxGood.status=='1'}">selected</c:if>
                                         >上架</option>
                                         <option value="0"
-                                                <c:if test="${mtxProduct.status=='0'}">selected</c:if>
+                                                <c:if test="${mtxGood.status=='0'}">selected</c:if>
                                         >下架</option>
                                     </select>
                                 </div>
@@ -87,9 +70,9 @@
                                            data-classInput="form-control inline v-middle input-s"
                                            id="value"
                                     >
-                                    <input type="text" class="hidden" name="img" value="${mtxProduct.img}">
+                                    <input type="text" class="hidden" name="img" value="${mtxGood.img}">
                                     <div class="hidden" id="imgDiv" style="margin-top: 20px">
-                                        <img src="${mtxProduct.img}" width="100" height="100"
+                                        <img src="${mtxGood.img}" width="100" height="100"
                                              data-toggle="modal" data-target=".bs-example-modal-lg1"
                                              class="hover-pointer">
                                     </div>
@@ -107,7 +90,7 @@
                                                 <div class="modal-body">
                                                     <div class="row">
                                                         <div class="col-sm-12">
-                                                            <img src="${mtxProduct.img}" width="100%" height="100%" id="showLargePic"/>
+                                                            <img src="${mtxGood.img}" width="100%" height="100%" id="showLargePic"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -117,17 +100,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label"><span class="text-danger"></span>产品详情：</label>
-                                <div class="col-sm-9 b-l bg-white" style="margin-top: 10px;margin-bottom: 10px">
-                                    <textarea name="detail" id="notificationContent" style="width:100%; height: 350px;">${mtxProduct.detail}</textarea>
+                                <label class="col-sm-3 control-label"><span class="text-danger"></span>商品详情：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <input type="text" class="form-control" name="detail" value="${mtxGood.detail}">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <input type="hidden" name="uuid" class="form-control" value="${mtxProduct.uuid}">
+                                    <input type="hidden" name="uuid" class="form-control" value="${mtxGood.uuid}">
                                     <input type="hidden" name="versionno" class="form-control"
-                                           value="${mtxProduct.versionno}">
+                                           value="${mtxGood.versionno}">
                                 </div>
                             </div>
                         </div>
@@ -156,26 +139,10 @@
     window.onload = function () {
         //显示父菜单
         showParentMenu('满田星');
-        if(${mtxProduct.img!=null && mtxProduct.img!=''}){
+        if(${mtxGood.img!=null && mtxGood.img!=''}){
             $('#imgDiv').removeClass('hidden');
         }
-        if('${mtxProduct.price}'.length > 0){
-            formatMoney(document.getElementById('price'));
-        }
     }
-    KindEditor.ready(function(K) {
-        window.editor = K.create('#notificationContent', {
-            uploadJson : '${ctx}/static/editor/jsp/upload_json.jsp',
-            fileManagerJson : '${ctx}/static/editor/jsp/file_manager_json.jsp',
-            items : ['fullscreen', 'source', 'undo', 'redo', 'print', 'cut', 'copy', 'paste',
-                'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
-                'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'lineheight','subscript',
-                'superscript', '|', 'selectall', '-',
-                'title', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
-                'italic', 'underline', 'strikethrough', 'removeformat', '|', 'advtable', 'hr', 'image', 'link', 'unlink']
-        });
-
-    });
 </script>
 
 </body>

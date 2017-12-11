@@ -21,7 +21,7 @@
                     <c:if test="${not empty wechatBinding}">
                         <form method="post" action="" class="form-horizontal bg-white padding20 b-t b-b b-l b-r" data-validate="parsley" id="searchForm">
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 身份类型：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <select class="form-control" id="identify" name="identify">
@@ -38,7 +38,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">读取状态：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <select class="form-control" id="status" name="status">
@@ -55,8 +55,8 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div style="clear: both"></div>
-                                <div class="row col-sm-12 text-center text-white" style="margin-top: 20px">
+                                <%--<div style="clear: both"></div>--%>
+                                <div class="col-sm-4 text-center text-white">
                                     <a type="submit"  class="btn btn-submit btn-s-xs"
                                        onclick="searchMtxConsult()"
                                        id="searchBtn" style="color: #fff">查 询</a>

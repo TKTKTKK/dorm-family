@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 咨询管理</span>
+            满田星 / <span class="font-bold  text-shallowred"> 积分管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
@@ -24,64 +24,58 @@
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 姓名：</label>
                                     <div class="col-sm-7  my-display-inline-box">
-                                        <input type="text" class="form-control" name="name" id="name" data-maxlength="90"
-                                               onblur="trimText(this)" value="${mtxReserve.name}">
+                                        <input type="text" class="form-control" name="membername" id="membername"
+                                               onblur="trimText(this)" value="${mtxPoint.membername}">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">手机号：</label>
+                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 电话：</label>
                                     <div class="col-sm-7  my-display-inline-box">
-                                        <input type="text" class="form-control" name="phone" id="phone" data-maxlength="90"
-                                               onblur="trimText(this)" value="${mtxReserve.phone}">
+                                        <input type="text" class="form-control" name="phone" id="phone"
+                                               onblur="trimText(this)" value="${mtxPoint.phone}">
                                     </div>
                                 </div>
                                 <div class="col-sm-4 text-center text-white">
                                     <a type="submit"  class="btn btn-submit btn-s-xs"
-                                       onclick="searchMtxReserve()"
+                                       onclick="searchMtxPoint()"
                                        id="searchBtn" style="color: #fff">查 询</a>
                                 </div>
                             </div>
                         </form>
-                        <div style="margin-top: 30px">
-                        </div>
+                            <div style="margin-top: 30px">
+                                <span class="text-success">${successMessage}</span>
+                                <span class="text-success">${successFlag}</span>
+                            </div>
                             <div class="table-responsive" >
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
                                     <tr>
-                                        <th width="15%">姓名</th>
-                                        <th width="15%">电话</th>
-                                        <th width="20%">所在地区</th>
-                                        <th width="20%">详细地址</th>
-                                        <th width="20%">详细信息</th>
-                                        <th width="10%">机型</th>
+                                        <th width="25%">姓名</th>
+                                        <th width="25%">手机号</th>
+                                        <th width="25%">商品名</th>
+                                        <th width="25%">积分</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach items="${mtxReserveList}" var="mtxReserve">
+                                    <c:forEach items="${mtxPointList}" var="mtxPoint">
                                         <tr>
                                             <td>
-                                                    ${mtxReserve.name}
+                                                    ${mtxPoint.membername}
                                             </td>
                                             <td>
-                                                    ${mtxReserve.phone}
+                                                    ${mtxPoint.phone}
                                             </td>
                                             <td>
-                                                    ${mtxReserve.province}${mtxReserve.city}${mtxReserve.district}
+                                                    ${mtxPoint.productname}
                                             </td>
                                             <td>
-                                                    ${mtxReserve.address}
-                                            </td>
-                                            <td>
-                                                    ${mtxReserve.detail}
-                                            </td>
-                                            <td>
-                                                    ${mtxReserve.productname}
+                                                    ${mtxPoint.points}
                                             </td>
                                         </tr>
                                     </c:forEach>
                                     </tbody>
                                 </table>
-                                <web:pagination pageList="${mtxReserveList}" postParam="true"/>
+                                <web:pagination pageList="${mtxPointList}" postParam="true"/>
                             </div>
                     </c:if>
                     <c:if test="${empty wechatBinding}">
@@ -102,14 +96,15 @@
         //显示父菜单
         showParentMenu('满田星');
     }
-    function searchMtxReserve(){
+
+    function resubmitSearch(page){
         var searchForm = document.getElementById("searchForm");
-        searchForm.action = "${ctx}/admin/wefamily/mtxReserveManage";
+        searchForm.action = "${ctx}/admin/wefamily/mtxPointManage?page="+page;
         searchForm.submit();
     }
-     function resubmitSearch(page){
+    function searchMtxPoint(){
         var searchForm = document.getElementById("searchForm");
-        searchForm.action = "${ctx}/admin/wefamily/mtxReserveManage?page="+page;
+        searchForm.action = "${ctx}/admin/wefamily/mtxPointManage";
         searchForm.submit();
     }
 </script>

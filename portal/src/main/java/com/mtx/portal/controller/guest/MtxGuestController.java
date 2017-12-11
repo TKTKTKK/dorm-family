@@ -102,22 +102,38 @@ public class MtxGuestController{
     }
 
     /**
-     * 登录注册
+     * 注册
      */
-    @RequestMapping(value = "/login")
-    public String login() {
-        return "guest/login";
-    }
     @RequestMapping(value = "/register",method = RequestMethod.GET)
     public String register() {
         return "guest/register";
     }
+
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public String addRegister(MtxMember mtxMember) {
         if(StringUtils.isBlank(mtxMember.getMerchantid())){
             mtxMember.setMerchantid("2ae953499da148d89cc3209a00e3b265");
         }
         mtxMemberService.insert(mtxMember);
-        return "guest/register";
+        return "guest/product_center";
+    }
+
+    /**
+     * 会员中心
+     * @return
+     */
+    @RequestMapping(value = "/member_center",method = RequestMethod.GET)
+    public String member_center() {
+        return "guest/member_center";
+    }
+
+    /**
+     * 积分列表
+     * @return
+     */
+
+    @RequestMapping(value = "/point_list",method = RequestMethod.GET)
+    public String point_list() {
+        return "guest/point_list";
     }
 }

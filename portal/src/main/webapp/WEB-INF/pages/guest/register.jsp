@@ -168,6 +168,7 @@
         }else{
             errorMessage.innerHTML="信息不完整或输入有误，请确认后重试！";
             $(".choose").css("display","block");
+            $("#imgDiv").css("display","none");
         }
     }
     function closeModel(){

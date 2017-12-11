@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 产品管理</span>
+            满田星 / <span class="font-bold  text-shallowred"> 商品管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
@@ -22,17 +22,10 @@
                         <form method="post" action="" class="form-horizontal bg-white padding20 b-t b-b b-l b-r" data-validate="parsley" id="searchForm">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 型号：</label>
-                                    <div class="col-sm-7  my-display-inline-box">
-                                        <input type="text" class="form-control" name="model" id="model" data-maxlength="90"
-                                               onblur="trimText(this)" value="${mtxProduct.model}">
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 名称：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <input type="text" class="form-control" name="name" id="name" data-maxlength="90"
-                                               onblur="trimText(this)" value="${mtxProduct.name}">
+                                               onblur="trimText(this)" value="${mtxGood.name}">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
@@ -42,18 +35,17 @@
                                             <option value=""
                                             >全部</option>
                                             <option value="1"
-                                                    <c:if test="${mtxProduct.status=='1'}">selected</c:if>
+                                                    <c:if test="${mtxGood.status=='1'}">selected</c:if>
                                             >上架</option>
                                             <option value="0"
-                                                    <c:if test="${mtxProduct.status=='0'}">selected</c:if>
+                                                    <c:if test="${mtxGood.status=='0'}">selected</c:if>
                                             >下架</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div style="clear: both"></div>
-                                <div class="row col-sm-12 text-center text-white" style="margin-top: 20px">
+                                <div class="col-sm-4 text-center text-white" >
                                     <a type="submit"  class="btn btn-submit btn-s-xs"
-                                       onclick="searchMtxProduct()"
+                                       onclick="searchMtxGood()"
                                        id="searchBtn" style="color: #fff">查 询</a>
                                 </div>
                             </div>
@@ -66,47 +58,47 @@
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
                                     <tr>
-                                        <th width="15%">产品型号</th>
                                         <th width="15%">名称</th>
-                                        <th width="10%">价格</th>
+                                        <th width="10%">所需积分</th>
                                         <th width="10%">状态</th>
-                                        <th width="20%">图片</th>
+                                        <th width="15%">图片</th>
+                                        <th width="20%">详情</th>
                                         <th width="30%">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach items="${mtxProductList}" var="mtxProduct">
+                                    <c:forEach items="${mtxGoodList}" var="mtxGood">
                                         <tr>
                                             <td>
-                                                    ${mtxProduct.model}
+                                                    ${mtxGood.name}
                                             </td>
                                             <td>
-                                                    ${mtxProduct.name}
+                                                    ${mtxGood.points}
                                             </td>
                                             <td>
-                                                    ${mtxProduct.price}
+                                                <c:if test="${mtxGood.status=='1'}">上架</c:if>
+                                                <c:if test="${mtxGood.status=='0'}">下架</c:if>
                                             </td>
                                             <td>
-                                                <c:if test="${mtxProduct.status=='1'}">上架</c:if>
-                                                <c:if test="${mtxProduct.status=='0'}">下架</c:if>
+                                                <img src="${mtxGood.img}" width="50" height="50">
                                             </td>
                                             <td>
-                                                <img src="${mtxProduct.img}" width="50" height="50">
+                                                    ${mtxGood.detail}
                                             </td>
                                             <td>
-                                                <a href="${ctx}/admin/wefamily/goMtxProduct?uuid=${mtxProduct.uuid}"
+                                                <a href="${ctx}/admin/wefamily/goMtxGood?uuid=${mtxGood.uuid}"
                                                    class="btn  btn-infonew btn-sm" style="color: white">
                                                     修改
                                                 </a>
 
-                                                <a href="javascript:deleteMtxProduct('${mtxProduct.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
+                                                <a href="javascript:deleteMtxGood('${mtxGood.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
                                     </tbody>
                                 </table>
-                                <web:pagination pageList="${mtxProductList}" postParam="true"/>
-                                <button class="btn btn-sm btn-submit" onclick="showMtxProductInfo()"> 添加</button>
+                                <web:pagination pageList="${mtxGoodList}" postParam="true"/>
+                                <button class="btn btn-sm btn-submit" onclick="showMtxGoodInfo()"> 添加</button>
                             </div>
                     </c:if>
                     <c:if test="${empty wechatBinding}">
@@ -127,14 +119,14 @@
         //显示父菜单
         showParentMenu('满田星');
     }
-    function deleteMtxProduct(uuid){
+    function deleteMtxGood(uuid){
         qikoo.dialog.confirm('确定要删除吗？',function(){
             //确定删除
-            $.post("${ctx}/admin/wefamily/deleteMtxProduct?uuid="+uuid,function(data){
+            $.post("${ctx}/admin/wefamily/deleteMtxGood?uuid="+uuid,function(data){
                 //删除成功
                 if(data.deleteFlag){
                     var searchForm = document.getElementById("searchForm");
-                    searchForm.action = "${ctx}/admin/wefamily/MtxProduct?deleteFlag=1";
+                    searchForm.action = "${ctx}/admin/wefamily/mtxGoodManage?deleteFlag=1";
                     searchForm.submit();
                 }
             });
@@ -144,17 +136,17 @@
     }
     function resubmitSearch(page){
         var searchForm = document.getElementById("searchForm");
-        searchForm.action = "${ctx}/admin/wefamily/MtxProduct?page="+page;
+        searchForm.action = "${ctx}/admin/wefamily/mtxGoodManage?page="+page;
         searchForm.submit();
     }
 
 
-    function showMtxProductInfo(){
-        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/goMtxProduct";
+    function showMtxGoodInfo(){
+        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/goMtxGood";
     }
-    function searchMtxProduct(){
+    function searchMtxGood(){
         var searchForm = document.getElementById("searchForm");
-        searchForm.action = "${ctx}/admin/wefamily/MtxProduct";
+        searchForm.action = "${ctx}/admin/wefamily/mtxGoodManage";
         searchForm.submit();
     }
 
