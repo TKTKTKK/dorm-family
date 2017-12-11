@@ -17,10 +17,12 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.Map;
 
 /**
@@ -38,6 +40,26 @@ public class WechatUtil {
     public final static String MENU_DELETE_URL = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=ACCESS_TOKEN";
 
     private static AccessToken accessToken = null;
+
+    public static boolean isWechatBrowser(HttpServletRequest request) {
+        String userAgent = request.getHeader("user-agent");
+        return userAgent != null && userAgent.toLowerCase().contains("micromessenger");
+    }
+
+    public static String getOAuthUrl(String appid,String originUrl){
+        String redirectUri = null;
+        try {
+            redirectUri = URLEncoder.encode(originUrl, CommonConstants.ENCODING_UTF8);
+        } catch (UnsupportedEncodingException e) {
+            log.error(e.getMessage(),e);
+        }
+        String requestUrl = WechatConstants.WECHAT_OAUTH2_URL.replace(WechatConstants.PARAM_PLACEHOLDER_APPID, appid)
+                .replace(WechatConstants.PARAM_PLACEHOLDER_REDIRECT_URI, redirectUri)
+                .replace(WechatConstants.PARAM_PLACEHOLDER_STATE, "mtx")
+                .replace(WechatConstants.PARAM_PLACEHOLDER_SCOPE, WechatConstants.OAUTH2_SCOPE_BASE);
+        log.info("getOAuthUrl : " + requestUrl);
+        return requestUrl;
+    }
 
     /**
      * 发起https请求并获取结果

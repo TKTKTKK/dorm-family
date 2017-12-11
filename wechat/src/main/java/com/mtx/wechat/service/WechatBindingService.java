@@ -13,6 +13,7 @@ import com.mtx.wechat.mapper.WechatBindingMapper;
 import com.mtx.wechat.utils.AdvancedUtil;
 import com.mtx.wechat.utils.WechatBindingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,13 @@ public class WechatBindingService extends BaseService<WechatBindingMapper,Wechat
 
     @Autowired
     private PlatformUserMapper platformUserMapper;
+
+    @Value("${bindid}")
+    private String bindid;
+
+    public String getBindid() {
+        return bindid;
+    }
 
     /**
      * 绑定微信公众号

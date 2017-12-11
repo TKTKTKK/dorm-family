@@ -2,6 +2,7 @@ package com.mtx.wechat.utils;
 
 import com.mtx.common.base.CommonConstants;
 import com.mtx.common.utils.ApplicationContextUtil;
+import com.mtx.common.utils.ConfigHolder;
 import com.mtx.common.utils.StringUtils;
 import com.mtx.wechat.entity.*;
 import com.mtx.wechat.entity.admin.WechatBinding;

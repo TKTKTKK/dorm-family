@@ -42,6 +42,16 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>WechatOAuth</filter-name>
+        <filter-class>com.mtx.portal.filter.WechatOAuthFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>WechatOAuth</filter-name>
+        <url-pattern>/guest/*</url-pattern>
+    </filter-mapping>
+
     <!-- Apache Shiro -->
     <filter>
         <filter-name>shiroFilter</filter-name>
