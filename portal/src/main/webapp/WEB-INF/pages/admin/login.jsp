@@ -1,200 +1,85 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/layout/taglib.jsp" %>
-
 <!DOCTYPE html>
-<html lang="en" class="app">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>满田星 | 登录</title>
-    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-
-    <link rel="stylesheet" href="${ctx}/static/admin/css/c32171bd.vendor.min.css">
-    <link rel="stylesheet" href="${ctx}/static/admin/css/aa3a9c5b.app.min.css">
-    <link href="${ctx}/static/admin/css/darkblue.css" rel="stylesheet" type="text/css" id="style_color"/>
-    <link rel="stylesheet" href="${ctx}/static/admin/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctx}/static/admin/css/font-awesome.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctx}/static/admin/css/simple-line-icons.css" type="text/css" />
-    <link rel="stylesheet" href="${ctx}/static/admin/css/font.css" type="text/css" />
-    <link rel="stylesheet" href="${ctx}/static/admin/css/app.css" type="text/css" />
-    <!--[if lt IE 9]>
-    <script src="${ctx}/static/admin/js/ie/html5shiv.js"></script>
-    <script src="${ctx}/static/admin/js/ie/respond.min.js"></script>
-    <script src="${ctx}/static/admin/js/ie/excanvas.js"></script>
-    <![endif]-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    <title>登录</title>
+    <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
+    <style>
+        @media  screen  and (max-width: 520px){
+            body{background: url(../../../static/admin/img/background.jpg) no-repeat 0 0;background-size: cover;}
+        }
+        @media  screen  and (min-width: 520px){
+            body{background: url(../../../static/admin/img/backgroundpc.jpg) no-repeat 0 0;background-size: cover;}
+            input:-webkit-autofill{width:90%}
+        }
+        body{max-width: 520px;margin: auto;}
+        html {max-width: none}
+        .logo{text-align: center;position: relative;padding: 7rem 0 7rem 0;}
+        .logo img{width: 9rem}
+        .uid{margin: 0 2.5rem 2.85rem 2.5rem;border-bottom: 1px solid rgba(255,255,255,0.5);padding: 1rem 0;}
+        .uid img{width:2rem;vertical-align: middle;margin-right:0.5rem }
+        input{background: transparent;font-size: 1.5rem;color: #fff;vertical-align: middle;}
+        input::-webkit-input-placeholder {color: #fff;font-size: 1.5rem;}
+        .login{background: #5bbc4e;color: #fff;font-size: 1.7rem;padding: 1rem;text-align: center;margin: 0 2.5rem;}
+        .notice a{color: #fff}
+        input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px #c6d8e4 inset;
+            -webkit-text-fill-color: #333;
+        }
+        #fontErrorId{font-size: 1.2rem;margin-bottom: 1px;margin: 0 2.5rem 2.85rem 2.5rem;color: coral;}
+    </style>
 </head>
-<style>
-    .create-account p>a{
-        text-shadow: none;
-        color: #428bca;
-    }
-    .create-account p>a:hover{
-        color:#2a6496;
-        text-decoration:underline
-    }
-    .checkbox a{
-        text-shadow: none;
-        color: #428bca;
-    }
-    .checkbox a:hover{
-        color:#2a6496;
-        text-decoration:underline
-    }
-    .form-group {
-        margin-bottom: 30px;
-    }
-    .backstretch img{
-        /*float: left;*/
-        margin: auto;
-        /*width: 100%;*/
-    }
-    .backstretch{
-        margin: 0 auto;
-        text-align: center;
-    }
-</style>
-<body   class="page-header-fixed ember-application ">
-<!--[if lt IE 8]>
-<p class="browsehappy" style="color: white;font-size:15px;">
-    我们的系统不支持<strong>IE8</strong>以下的浏览器版本，建议您<a href="http://ie.microsoft.com/">升级浏览器</a>到最新版本！
-</p>
-<![endif]-->
-
-<script src="${ctx}/static/admin/js/jquery.min.js"></script>
-<script src="${ctx}/static/admin/js/ie/placeholderfriend.js"></script>
-<!-- Bootstrap -->
-<script src="${ctx}/static/admin/js/bootstrap.js"></script>
-<!-- App -->
-<script src="${ctx}/static/admin/js/app.js"></script>
-<script src="${ctx}/static/admin/js/app.plugin.js"></script>
-<!-- parsley -->
-<script src="${ctx}/static/admin/js/parsley/parsley.min.js"></script>
-<script src="${ctx}/static/admin/js/parsley/parsley.extend.js"></script>
-
-<!--ie8placehoder-->
-
-<script src="${ctx}/static/guest/common/js/sliderTrans.js" type="text/javascript"></script>
-<div id="ember493" class="ember-view">
-    <script id="metamorph-2-start" type="text/x-placeholder"></script>
-    <script id="metamorph-1-start" type="text/x-placeholder"></script>
-    <div class="login">
-    <!-- BEGIN LOGO -->
-    <div class="logo">
-        <a href="/"><img src="/static/guest/property/img/mi2.png" alt="满田星" style="width: 150px;height:150px"></a>
+<body>
+<div class="logo">
+    <img src="../../../static/guest/img/logo.png" alt="">
+</div>
+<div  id="errorId" style="display: none">
+    <span id="fontErrorId"></span>
+</div>
+<form method="post" action="" id="searchForm">
+    <div class="uid" style="margin-bottom:0">
+        <img src="../../../static/guest/img/number.png" alt="">
+        <input type="text" name="username" id="username" placeholder="请输入手机号码">
     </div>
-    <!-- END LOGO -->
-    <!-- BEGIN LOGIN -->
-    <div class="content"><script id="metamorph-3-start" type="text/x-placeholder"></script><div id="ember1126" class="ember-view"><!-- BEGIN LOGIN FORM -->
-        <div id="ember1138" class="ember-view form-body">
-            <form class="login-form" data-ember-action="43" action="${ctx}/admin/login" method="post" data-validate="parsley">
-                <h3 class="form-title text-white" style="color: #fff">登录到您的帐户</h3>
-                <%--<div class="alert alert-danger hidden" data-bindattr-44="44">--%>
-                    <%--<!--<button class="close" data-close="alert"></button>-->--%>
-                    <%--<i class="fa fa-warning"></i>--%>
-                    <%--<span><script id="metamorph-47-start" type="text/x-placeholder"></script><script id="metamorph-47-end" type="text/x-placeholder"></script></span>--%>
-                <%--</div>--%>
-                <c:if test="${not empty errorMessage}">
-                <p class="text-danger">${errorMessage}</p>
-                </c:if>
-                <div id="ember1139" class="ember-view form-group panel" style="background-color: transparent">
-                    <label class="control-label visible-ie8 visible-ie9">用户名：</label>
-                    <div class="input-icon">
-                        <i class="fa fa-user" data-original-title="不可为空" data-bindattr-45="45" data-toggle="tooltip"></i>
-                        <input name="username" id="username" class="ember-view ember-text-field form-control placeholder-no-fix" placeholder="用户名" type="text" required="true" >
-                    </div>
-                </div>
-                <div id="ember1141" class="ember-view form-group panel" style="background-color: transparent">
-                    <label class="control-label visible-ie8 visible-ie9">密码：</label>
-                    <div class="input-icon">
-                        <i class="fa fa-lock" data-original-title="不可为空" data-bindattr-46="46" data-toggle="tooltip"></i>
-                        <input  id="password" name="password" class="ember-view ember-text-field form-control placeholder-no-fix"  type="password" required="true" placeholder="密码"
-                                style="padding-left: 33px !important;height:34px;padding: 6px 12px;-webkit-box-shadow:none;box-shadow:none;width: 100%;line-height: 1.4285;vertical-align: middle;border: 1px solid #ccc">
-                    </div>
-                </div>
-                <c:if test="${isValidateCodeLogin}">
-                    <div class="form-group validateCode panel" style="background-color: transparent">
-                        <label for="validateCode">验证码：</label>
-                        <tags:validateCode name="validateCode" inputCssStyle="margin-bottom:0;"/>
-                    </div>
-                </c:if>
-                <%--<div id="ember1143" class="ember-view hide form-group">--%>
-                    <%--<div id="ember1145" class="ember-view input-group"><span id="ember1146" class="ember-view input-group-addon" style="background-color: transparent; cursor: pointer; border-color: #E5E5E5;"><img src="/api/profile/verificationCode" data-bindattr-47="47" style="height: 20px;"></span><div id="ember1147" class="ember-view input-icon right"><input id="ember1148" class="ember-view ember-text-field form-control" placeholder="验证码" type="text" value="ddde">--%>
-                        <%--<i class="fa fa-bell-o" data-toggle="tooltip" data-bindattr-48="48"></i></div></div>--%>
-                <%--</div>--%>
-                <div class="form-actions">
-                    <label class="checkbox">
-                        <div class="checker"  >
-                            <span  id="test">
-                                <input id="ember1149" name="rememberMe" value="Y" class="ember-view ember-checkbox"
-                                       type="checkbox" style="margin-left: 0">
-                            </span>
-                        </div>
-                        三十天内免登录
-                    </label>
-                    <button type="submit" class="btn blue pull-right" data-bindattr-49="49"> 登录 <i class="fa fa-arrow-circle-right"></i></button>
-                </div>
-                <!--<div class="forget-password">-->
-                <!--<h4>忘记密码？</h4>-->
-                <!--<p>点击 link-to "这儿" "profile.forget-password" 重置您的密码。</p>-->
-                <!--</div>-->
-                <%--<div class="create-account">--%>
-                    <%--<p style="color: #595959">还没有账号？&nbsp; <a id="ember1150" class="ember-view" href="${ctx}/admin/register">创建一个账号</a></p>--%>
-                <%--</div>--%>
-            </form>
-        </div>
-        <!-- END LOGIN FORM -->
-    </div><script id="metamorph-3-end" type="text/x-placeholder"></script></div>
-    <!-- END LOGIN -->
-    <%--<div class="content" style="margin-top: 20px;">--%>
-        <%--<ul style="list-style-type: none;padding: 0;">--%>
-            <%--<li><a href="#" style="font-size: 16px;color: #fff;">友情链接</a></li>--%>
-        <%--</ul>--%>
-        <%--<div>--%>
-            <%--<ul style="list-style-type: none;padding: 0;">--%>
-                <%--<li ><a href="http://m.kuaidi100.com" target="_blank" style="color: navajowhite">快递查询</a></li>--%>
-            <%--</ul>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-</div>
-    <%--<script id="metamorph-1-end" type="text/x-placeholder"></script><script id="metamorph-2-end" type="text/x-placeholder"></script>--%>
-    <%--<script id="metamorph-5-start" type="text/x-placeholder"></script><script id="metamorph-0-start" type="text/x-placeholder"></script><script id="metamorph-6-start" type="text/x-placeholder"></script><script id="metamorph-6-end" type="text/x-placeholder"></script><script id="metamorph-7-start" type="text/x-placeholder"></script><script id="metamorph-7-end" type="text/x-placeholder"></script><script id="metamorph-0-end" type="text/x-placeholder"></script><script id="metamorph-5-end" type="text/x-placeholder"></script>--%>
-    <%--<div id="toast-container" class="ember-view toast-top-right"></div>--%>
-    <%--<script id="metamorph-8-start" type="text/x-placeholder"></script><script id="metamorph-8-end" type="text/x-placeholder"></script></div>--%>
-
-</div>
-<div id="idContainer1" style=" width:100%;top: 0px; overflow: hidden; margin: 0 auto; padding: 0px; height: 100%; z-index: -999999; position: fixed;">
-    <table id="idSlider" style="width: 100%;text-align: center">
-        <tr>
-            <td style="vertical-align:middle;">
-                <img src="/static/admin/img/login22.jpg" style="width: 100%">
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align:middle;">
-                <img src="/static/admin/img/login44.jpg">
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align:middle;">
-                <img src="/static/admin/img/login33.jpg">
-            </td>
-        </tr>
-    </table>
-</div>
+    <div class="uid">
+        <img src="../../../static/guest/img/password.png" alt="">
+        <input type="password" name="password" id="password" placeholder="请输入密码">
+    </div>
+    <div class="login" onclick="submitLogin()">登录</div>
+</form>
 </body>
-<script>
+<script src="${ctx}/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
     $(document).ready(function(){
-        var st = new SlideTrans("idContainer1", "idSlider", 3, { Vertical:true });
-        st.Pause=5000;
-        st.Duration=80;
-        st.Run();
-        $("#test").click( function(){
-            if($("#test").hasClass("checked")){
-                $("#test").removeClass("checked");
-            }else{
-                $("#test").addClass("checked");
-            }
-        });
-    })
+        var msg='${errorMessage}';
+        var fontErrorId = document.getElementById("fontErrorId");
+        fontErrorId.innerHTML = "";
+        if(msg!=null &&msg!=''){
+            fontErrorId.innerHTML=msg;
+            $("#errorId").css("display","block");
+        }
+    });
+    function submitLogin(){
+        var fontErrorId = document.getElementById("fontErrorId");
+        fontErrorId.innerHTML = "";
+        var username=$("#username").val();
+        var password=$("#password").val();
+        if(username.length==0 ||password.length==0 ||username==''||password==''){
+            fontErrorId.innerHTML ="用户名或密码不能为空";
+            $("#errorId").css("display","block");
+        }else{
+            var searchForm = document.getElementById("searchForm");
+            searchForm.action = "${ctx}/admin/login";
+            searchForm.submit();
+        }
+    }
 </script>
 </html>

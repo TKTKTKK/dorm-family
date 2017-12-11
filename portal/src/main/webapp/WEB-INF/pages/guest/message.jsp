@@ -20,13 +20,26 @@
         .myquestion{text-align: center;display: flex;display: -webkit-flex;align-items: center;margin: 1.5rem 0;}
         .myquestion img{width: 50px;height: 50px;border-radius: 25px;}
         .myquestion>span{color: #fff;font-size: 1.5rem;}
-        .enquiry_words{border-radius: 5px;padding: 5px 12px;font-size: 1.6rem;text-align: left;max-width: 60%;}
+        .enquiry_words{border-radius: 5px;padding: 5px 12px;font-size: 1.4rem;text-align: left;max-width: 60%;}
         .sanjiaol{width: 0;height: 0;border-top: 8px solid transparent;border-right: 8px solid #fff;border-bottom: 8px solid transparent;margin-left: 5px;}
         .sanjiaor{width: 0;height: 0;border-top: 8px solid transparent;border-right: 8px solid #5bbc4e;border-bottom: 8px solid transparent;margin-left: 5px;}
         .rotatey{transform: rotateY(180deg);-webkit-transform: rotateY(180deg);}
         .myquestion:nth-of-type(1){margin-top:0;}
-        .myquestion:nth-of-type(odd) .enquiry_words{background: #fff;color: #333}
-        .myquestion:nth-of-type(even) .enquiry_words{background: #5bbc4e;color: #fff}
+        /*.myquestion:nth-of-type(odd) .enquiry_words{background: #fff;color: #333}*/
+        /*.myquestion:nth-of-type(even) .enquiry_words{background: #5bbc4e;color: #fff}*/
+        /*.myquestion:nth-of-type(odd) .time{color: #999;font-size: 0.12rem;margin-bottom: 0px;}*/
+        /*.myquestion:nth-of-type(even) .time{color: #fff;font-size: 0.12rem;margin-bottom: 0px;}*/
+        .myquestion .left{background: #fff;color: #333}
+        .myquestion .right{background:#5bbc4e;color: #fff}
+        .myquestion .left .time{color: #999;font-size: 0.12rem;margin-bottom: 0px;}
+        .myquestion .right .time{color: #fff;font-size: 0.12rem;margin-bottom: 0px;}
+        .newwords textarea{width: 76%;border: 0;padding-left: 10px;background: #efefef; height: 40px;margin: 0;vertical-align: middle;}
+        .newwords p{font-size: 1.5rem;text-align:center;width: 20%;border: 0;color: #fff;background: #5bbc4e;height: 40px;margin: 0;vertical-align: middle;float:right;line-height: 40px;}
+        .bottom_1{position: absolute;bottom: 0;width: 100%;}
+        .choose_alert{position: fixed;background: rgba(0,0,0,0.5);width: 100%;top: 0;bottom: 0;left: 0;text-align: center;}
+        .choose select{position: relative;top: 30%;width: 80%;font-size: 1.4rem;border-radius: 5px;padding: 1rem;color: #333;}
+        html,body{height: 100%}
+        #searchForm{height: calc(100% - 7.34rem);overflow-y: scroll;}
     </style>
 </head>
 <body>
@@ -44,54 +57,100 @@
         <%--<li><a href="">售后服务</a></li>--%>
     <%--</ul>--%>
 <%--</div>--%>
+<form method="post" action="" id="searchForm">
 <div class="content">
-    <div class="myquestion">
-        <img src="img/actor.jpg" alt="">
-        <div class="sanjiaol"></div>
-        <div class="enquiry_words">
-            <span>关于价格</span>
-        </div>
-    </div>
-    <div class="myquestion rotatey">
-        <img src="img/actor.jpg" alt="" class="rotatey">
-        <div class="sanjiaor"></div>
-        <div class="enquiry_words rotatey">
-            <span>关于价格</span>
-        </div>
-    </div>
-    <div class="myquestion">
-        <img src="img/actor.jpg" alt="">
-        <div class="sanjiaol"></div>
-        <div class="enquiry_words">
-            <span>的惧怕手机端破啊打破啊水晶肚皮圣诞节爬山</span>
-        </div>
-    </div>
+    <c:forEach items="${mtxConsultDetailList}" var="mtxConsultDetail">
+        <c:choose>
+            <c:when test="${mtxConsultDetail.status eq 'SYS'}">
+                <div class="myquestion">
+                    <img src="../../../static/admin/img/qrcode.png" alt="">
+                    <div class="sanjiaol"></div>
+                    <div class="enquiry_words left">
+                        <p class="time">${fn:substring(mtxConsultDetail.createon, 0, 19)}</p>
+                        <span>${mtxConsultDetail.content}</span>
+                    </div>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="myquestion rotatey">
+                    <img src="../../../static/admin/img/qrcode.png" alt="" class="rotatey">
+                    <div class="sanjiaor"></div>
+                    <div class="enquiry_words rotatey right">
+                        <p class="time">${fn:substring(mtxConsultDetail.createon, 0, 19)}</p>
+                        <span>${mtxConsultDetail.content}</span>
+                    </div>
+                </div>
+            </c:otherwise>
+        </c:choose>
+    </c:forEach>
     <!-- <div class="myquestion">
         <div class="enquiry_words">
             关于价格
-
         </div>
         <div class="sanjiaor"></div>
         <img src="img/actor.jpg" alt="">
         <span>我</span>
     </div> -->
 </div>
-<div class="bottom">
-    <span>我要留言</span>
-</div>
 <div class="choose">
-    <select name="" id="identification" onchange="closeTheChose()">
-        <option value="请选择你的身份">请选择你的身份</option>
-        <option value="合作社">合作社</option>
-        <option value="普通用户">普通用户</option>
-        <option value="代理商">代理商</option>
+    <select name="identify" id="identification" onchange="closeTheChose()">
+        <option value="">请选择你的身份</option>identify
+        <option value="COOPERATION" <c:if test="${identify eq 'COOPERATION'}">selected</c:if>>合作社</option>
+        <option value="COMMON_USER" <c:if test="${identify eq 'COMMON_USER'}">selected</c:if>>普通用户</option>
+        <option value="AGENT" <c:if test="${identify eq 'AGENT'}">selected</c:if>>代理商</option>
     </select>
+</div>
+    <input type="text" name="userid" id="userid" value="${userid}" style="display: none">
+<div class="bottom_1">
+    <div class="newwords">
+        <textarea name="content" id="result" placeholder="留言内容......"></textarea>
+        <p onclick="ValidData()">发送</p>
+    </div>
+</div>
+</form>
+
+<%--<div class="bottom">--%>
+    <%--<span onclick="hiddenConsult()">我要留言</span>--%>
+<%--</div>--%>
+<div class="choose_alert" style="display: none">
+    <div class="error">
+        <p id="errorMessage"></p >
+        <button onclick="closeModel()">我知道了</button>
+    </div>
 </div>
 </body>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script type="text/javascript">
-   function closeTheChose(){
+
+    var errorMessage = document.getElementById("errorMessage");
+    errorMessage.innerHTML = "";
+    $(document).ready(function(){
+        var flag='${flag}';
+        if(flag=="1"){
+            $(".choose").css("display","none");
+        }
+        $('#searchForm').scrollTop( $('#searchForm')[0].scrollHeight );
+    });
+    function closeTheChose(){
        $(".choose").css("display","none");
    }
+   function closeModel(){
+       $(".choose_alert").css("display","none");
+   }
+//    function hiddenConsult(){
+//        $(".bottom").css("display","none");
+//        $(".bottom_1").css("display","block");
+//    }
+    function ValidData(){
+        var result=$("#result").val();
+        if(result==''||result==null){
+            errorMessage.innerHTML="留言不能为空！";
+            $(".choose_alert").css("display","block");
+        }else{
+            var searchForm = document.getElementById("searchForm");
+            searchForm.action = "${ctx}/guest/addMessage";
+            searchForm.submit();
+        }
+    }
 </script>
 </html>

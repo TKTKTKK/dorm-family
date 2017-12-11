@@ -10,93 +10,33 @@ import javax.persistence.Table;
 public class MtxConsult extends BaseEntity {
 
     @Column
-    private String productid;
+    private String userid;
     @Column
-    private String name;
+    private String identify;
     @Column
-    private String phone;
-    @Column
-    private String province;
-    @Column
-    private String city;
-    @Column
-    private String district;
-    @Column
-    private String address;
-    @Column
-    private String detail;
+    private String status;
 
-    private String productname;
-
-    public String getProvince() {
-        return province;
+    public String getUserid() {
+        return userid;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public String getIdentify() {
+        return identify;
     }
 
-    public String getDistrict() {
-        return district;
+    public void setIdentify(String identify) {
+        this.identify = identify;
     }
 
-    public void setDistrict(String district) {
-        this.district = district;
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 
-    public String getProductname() {
-        return productname;
+    public String getStatus() {
+        return status;
     }
 
-    public void setProductname(String productname) {
-        this.productname = productname;
-    }
-
-    public String getProductid() {
-        return productid;
-    }
-
-    public void setProductid(String productid) {
-        this.productid = productid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getDetail() {
-        return detail;
-    }
-
-    public void setDetail(String detail) {
-        this.detail = detail;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

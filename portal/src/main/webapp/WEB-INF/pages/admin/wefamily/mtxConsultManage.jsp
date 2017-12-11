@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 咨询管理</span>
+            满田星 / <span class="font-bold  text-shallowred"> 留言管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
@@ -21,22 +21,42 @@
                     <c:if test="${not empty wechatBinding}">
                         <form method="post" action="" class="form-horizontal bg-white padding20 b-t b-b b-l b-r" data-validate="parsley" id="searchForm">
                             <div class="row">
-                                <div class="col-sm-6">
-                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 姓名：</label>
+                                <div class="col-sm-4">
+                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 身份类型：</label>
                                     <div class="col-sm-7  my-display-inline-box">
-                                        <input type="text" class="form-control" name="name" id="name" data-maxlength="90"
-                                               onblur="trimText(this)" value="${mtxConsult.name}">
+                                        <select class="form-control" id="identify" name="identify">
+                                            <option value="">--全部--</option>
+                                            <c:set var="typeList" value="${web:queryCommonCodeList('IDENTITY_CODE')}"></c:set>
+                                            <c:forEach items="${typeList}" var="typeCode">
+                                                <c:if test="${mtxConsult.identify == typeCode.code}">
+                                                    <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
+                                                </c:if>
+                                                <c:if test="${mtxConsult.identify != typeCode.code}">
+                                                    <option value="${typeCode.code}">${typeCode.codevalue}</option>
+                                                </c:if>
+                                            </c:forEach>
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">手机号：</label>
+                                <div class="col-sm-4">
+                                    <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">读取状态：</label>
                                     <div class="col-sm-7  my-display-inline-box">
-                                        <input type="text" class="form-control" name="phone" id="phone" data-maxlength="90"
-                                               onblur="trimText(this)" value="${mtxConsult.phone}">
+                                        <select class="form-control" id="status" name="status">
+                                            <option value="">--全部--</option>
+                                            <c:set var="typeList" value="${web:queryCommonCodeList('ANWSER_OR_NOT')}"></c:set>
+                                            <c:forEach items="${typeList}" var="typeCode">
+                                                <c:if test="${mtxConsult.status == typeCode.code}">
+                                                    <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
+                                                </c:if>
+                                                <c:if test="${mtxConsult.status != typeCode.code}">
+                                                    <option value="${typeCode.code}">${typeCode.codevalue}</option>
+                                                </c:if>
+                                            </c:forEach>
+                                        </select>
                                     </div>
                                 </div>
-                                <div style="clear: both"></div>
-                                <div class="row col-sm-12 text-center text-white" style="margin-top: 20px">
+                                <%--<div style="clear: both"></div>--%>
+                                <div class="col-sm-4 text-center text-white">
                                     <a type="submit"  class="btn btn-submit btn-s-xs"
                                        onclick="searchMtxConsult()"
                                        id="searchBtn" style="color: #fff">查 询</a>
@@ -44,46 +64,47 @@
                             </div>
                         </form>
                         <div style="margin-top: 30px">
+                            <span class="text-success">${successMessage}</span>
                         </div>
-                            <div class="table-responsive" >
-                                <table class="table table-striped b-t b-light  b-l b-r b-b">
-                                    <thead>
+                        <div class="table-responsive" >
+                            <table class="table table-striped b-t b-light  b-l b-r b-b">
+                                <thead>
+                                <tr>
+                                    <th width="25%">身份类型</th>
+                                    <th width="25%">状态</th>
+                                    <th width="25%">提交时间</th>
+                                    <th width="25%">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach items="${mtxConsultList}" var="mtxConsult">
                                     <tr>
-                                        <th width="15%">姓名</th>
-                                        <th width="15%">电话</th>
-                                        <th width="20%">所在地区</th>
-                                        <th width="20%">详细地址</th>
-                                        <th width="20%">详细信息</th>
-                                        <th width="10%">机型</th>
+                                        <td>
+                                                ${web:getCodeDesc("IDENTITY_CODE", mtxConsult.identify)}
+                                        </td>
+                                        <td>
+                                                ${web:getCodeDesc("ANWSER_OR_NOT",mtxConsult.status)}
+                                        </td>
+                                        <td>
+                                                ${fn:substring(mtxConsult.createon, 0, 19)}
+                                        </td>
+                                        <td>
+                                            <c:if test="${mtxConsult.status eq 'NO_ANWSER'}">
+                                            <a href="${ctx}/admin/wefamily/goMtxConsultDetail?uuid=${mtxConsult.uuid}"
+                                               class="btn  btn-infonew btn-sm" style="color: white">
+                                                查看新消息
+                                            </a>
+                                            </c:if>
+                                            <c:if test="${mtxConsult.status eq 'ANWSER_RECENT'}">
+                                                <a href="${ctx}/admin/wefamily/goMtxConsultDetail?uuid=${mtxConsult.uuid}" class="btn  btn-dangernew btn-sm" style="color: white">留言历史</a>
+                                            </c:if>
+                                        </td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                    <c:forEach items="${mtxConsultList}" var="mtxConsult">
-                                        <tr>
-                                            <td>
-                                                    ${mtxConsult.name}
-                                            </td>
-                                            <td>
-                                                    ${mtxConsult.phone}
-                                            </td>
-                                            <td>
-                                                    ${mtxConsult.province}${mtxConsult.city}${mtxConsult.district}
-                                            </td>
-                                            <td>
-                                                    ${mtxConsult.address}
-                                            </td>
-                                            <td>
-                                                    ${mtxConsult.detail}
-                                            </td>
-                                            <td>
-                                                    ${mtxConsult.productname}
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
-                                    </tbody>
-                                </table>
-                                <web:pagination pageList="${mtxConsultList}" postParam="true"/>
-                            </div>
+                                </c:forEach>
+                                </tbody>
+                            </table>
+                            <web:pagination pageList="${mtxConsultList}" postParam="true"/>
+                        </div>
                     </c:if>
                     <c:if test="${empty wechatBinding}">
                         <span>您还没有添加公众号，请先去</span>
@@ -105,12 +126,12 @@
     }
     function searchMtxConsult(){
         var searchForm = document.getElementById("searchForm");
-        searchForm.action = "${ctx}/admin/wefamily/MtxConsultManage";
+        searchForm.action = "${ctx}/admin/wefamily/mtxConsultManage";
         searchForm.submit();
     }
-     function resubmitSearch(page){
+    function resubmitSearch(page){
         var searchForm = document.getElementById("searchForm");
-        searchForm.action = "${ctx}/admin/wefamily/MtxConsultManage?page="+page;
+        searchForm.action = "${ctx}/admin/wefamily/mtxConsultManage?page="+page;
         searchForm.submit();
     }
 </script>

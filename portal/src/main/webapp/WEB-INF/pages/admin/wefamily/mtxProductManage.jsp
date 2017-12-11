@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 商品管理</span>
+            满田星 / <span class="font-bold  text-shallowred"> 产品管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
@@ -66,7 +66,7 @@
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
                                     <tr>
-                                        <th width="15%">商品型号</th>
+                                        <th width="15%">产品型号</th>
                                         <th width="15%">名称</th>
                                         <th width="10%">价格</th>
                                         <th width="10%">状态</th>

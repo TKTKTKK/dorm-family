@@ -4,6 +4,7 @@ import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.base.BaseMapper;
 import com.mtx.family.entity.MtxConsult;
+import com.mtx.family.entity.MtxReserve;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

@@ -65,16 +65,17 @@
                                 </c:if>
                             </div>
                             <div class="table-responsive" >
-                                <table class="table table-striped b-t b-light  b-l b-r b-b">
+                                <table class="table table-striped b-light b-a text-center">
 
                                     <thead>
                                     <tr>
-                                        <th width="25%">订单编号</th>
-                                        <th width="15%">机器型号</th>
-                                        <th width="15%">数量</th>
-                                        <th width="15%">订单状态</th>
-                                        <th width="15%">创建时间</th>
-                                        <th width="15%">操作</th>
+                                        <th class="text-center">订单编号</th>
+                                        <th class="text-center">机器型号</th>
+                                        <th class="text-center">数量</th>
+                                        <th class="text-center">运输</th>
+                                        <th class="text-center">订单状态</th>
+                                        <th class="text-center">创建时间</th>
+                                        <th class="text-center">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -90,6 +91,9 @@
                                                     ${order.quantity}
                                             </td>
                                             <td>
+                                                    ${web:getCodeDesc("ENTRUST_TRANSPORT",order.entrusttransport)}
+                                            </td>
+                                            <td>
                                                 <c:if test="${order.status == 'NEW'}">未发送</c:if>
                                                 <c:if test="${order.status == 'OUT'}">已发送</c:if>
                                             </td>
@@ -99,6 +103,7 @@
                                             <td>
                                                 <a href="${ctx}/admin/wefamily/orderInfo?orderId=${order.uuid}" class="btn  btn-infonew btn-sm" style="color: white" <c:if test="${order.status == 'OUT'}">disabled="disabled" </c:if>>修改</a>
                                                 <a href="javascript:deleteOrder('${order.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white" <c:if test="${order.status == 'OUT'}">disabled="disabled" </c:if>>删除</a>
+                                                <a href="javascript:addMachineForOrder('${order.uuid}')" class="btn btn-sm btn-yellow a-noline" style="color:white">管理订单</a>
                                                 <c:if test="${order.status == 'NEW'}">
                                                     <a href="javascript:sendOrder('${order.uuid}','${order.versionno}')" class="btn  btn-success btn-sm" style="color: white">
                                                         发送订单
@@ -195,9 +200,7 @@
             //确定
             $.get("${ctx}/admin/wefamily/sendOrder?orderId="+orderId+"&versionno="+versionno,function(data,status){
                 if(undefined != data.sendFlag){
-                    var searchForm = document.getElementById("searchForm");
-                    searchForm.action = "${ctx}/admin/wefamily/orderManage?sendFlag=" + data.sendFlag;
-                    searchForm.submit();
+                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId="+orderId+"&sendFlag="+data.sendFlag;
                 }
             });
         },function(){
@@ -222,6 +225,10 @@
 
     function showOrderInfo(){
         window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderInfo";
+    }
+
+    function addMachineForOrder(orderId){
+        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId="+orderId;
     }
 
 </script>

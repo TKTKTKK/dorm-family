@@ -4,18 +4,16 @@
 
     <resultMap id="selectResultMap" type="com.mtx.family.entity.MtxConsult">
     </resultMap>
-
     <select id="selectMtxConsultList" resultMap="selectResultMap">
-        select mc.*,mp.model as productname
+        select mc.*
         from tb_mtx_consult mc
-        left join tb_mtx_product mp on mp.uuid=mc.productid
         where TRUE
-        <if test="mtxConsult.name != null and mtxConsult.name != ''">
-            and mc.name like concat("%",#{mtxConsult.name},"%")
+        <if test="mtxConsult.identify != null and mtxConsult.identify != ''">
+            and mc.identify =#{mtxConsult.identify}
         </if>
-        <if test="mtxConsult.phone != null and mtxConsult.phone != ''">
-            and mc.phone like concat("%",#{mtxConsult.phone},"%")
+        <if test="mtxConsult.status != null and mtxConsult.status != ''">
+            and mc.status =#{mtxConsult.status}
         </if>
-        order by mc.modifyon desc;
+        order by mc.createon desc;
     </select>
 </mapper>

@@ -58,11 +58,12 @@ public class LoginController {
             return "redirect:/admin/home" ;
         }
         model.addAttribute(FormAuthenticationFilter.DEFAULT_USERNAME_PARAM, username);
-        model.addAttribute("isValidateCodeLogin", RequestUtil.isValidateCodeLogin(username, true, false));
+        //model.addAttribute("isValidateCodeLogin", RequestUtil.isValidateCodeLogin(username, true, false));
         String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
-        if("com.mtx.common.security.CaptchaException".equals(error)){
-            model.addAttribute("errorMessage", "验证码不正确！");
-        }else if("com.mtx.common.security.FreezeException".equals(error)){
+//        if("com.mtx.common.security.CaptchaException".equals(error)){
+//            model.addAttribute("errorMessage", "验证码不正确！");
+//        }else
+        if("com.mtx.common.security.FreezeException".equals(error)){
             model.addAttribute("errorMessage", "账号异常！");
         }else{
             model.addAttribute("errorMessage", "用户名或者密码不正确！");

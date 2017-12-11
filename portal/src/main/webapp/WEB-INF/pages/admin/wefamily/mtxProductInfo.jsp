@@ -16,8 +16,8 @@
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
                 满田星 /
-                <a href="${ctx}/admin/wefamily/MtxProduct">商品管理 </a> /
-                <span class="font-bold  text-shallowred"> 商品详情</span>
+                <a href="${ctx}/admin/wefamily/MtxProduct">产品管理 </a> /
+                <span class="font-bold  text-shallowred"> 产品详情</span>
             </header>
             <div class="col-sm-12 pos">
                 <div style="margin-bottom: 5px">
@@ -31,11 +31,11 @@
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
                             <i class="fa fa-gift"></i>
-                            <span class="text-lg">商品详情：</span>
+                            <span class="text-lg">产品详情：</span>
                         </header>
                         <div class="panel-body p-0-15">
                             <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>商品型号：</label>
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>产品型号：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="text" class="form-control" data-required="true" name="model" id="model"
                                            data-maxlength="48"
