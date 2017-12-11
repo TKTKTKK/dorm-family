@@ -9,12 +9,10 @@ import com.mtx.wechat.service.WpUserService;
 import com.mtx.wechat.utils.AdvancedUtil;
 import com.mtx.wechat.utils.WechatBindingUtil;
 import com.mtx.wechat.utils.WechatUtil;
-import org.springframework.web.filter.GenericFilterBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,7 +21,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class WechatOAuthFilter extends GenericFilterBean {
+public class WechatOAuthFilter implements Filter {
+    private Logger logger = LoggerFactory.getLogger(getClass());
     private WpUserService wpUserService = ApplicationContextUtil.getBean(WpUserService.class);
     private WechatBindingService wechatBindingService = ApplicationContextUtil.getBean(WechatBindingService.class);
 
@@ -78,5 +77,15 @@ public class WechatOAuthFilter extends GenericFilterBean {
             }
         }
         filterChain.doFilter(req, resp);
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+
+    }
+
+    @Override
+    public void destroy() {
+
     }
 }
