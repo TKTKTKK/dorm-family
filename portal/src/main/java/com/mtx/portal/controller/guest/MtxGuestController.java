@@ -19,7 +19,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/guest")
-public class MtxGuestController{
+public class MtxGuestController extends BaseGuestController{
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private WechatBindingService wechatBindingService;
