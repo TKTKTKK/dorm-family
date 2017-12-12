@@ -53,25 +53,28 @@
         <span>详细地址</span>
         <input type="text" name="address" id="address" placeholder="请填写详细地址">
     </li>
-    <input type="text" name="machineid" style="display: none" value="3">
+    <%--<input type="text" name="machineid" style="display: none" value="3">--%>
+    <li>
+        <span>机器编号</span>
+        <input type="text" value="3" placeholder="请填写机器编号">
+    </li>
     <li>
         <span>机器型号</span>
-        <span>2ZS-6K型</span>
+        <input type="text"  value="2ZS-6K型" placeholder="请填写机器型号">
     </li>
     <li>
         <span>机器名称</span>
-        <span>手扶式插秧机</span>
+        <input type="text" value="手扶式插秧机" placeholder="请填写机器名称">
     </li>
     <li>
         <span>出场编号</span>
-        <span>EQ00000</span>
+        <input type="text" value="EQ00000" placeholder="请填写出场编号">
     </li>
     <li>
         <span>汽油机出厂编号</span>
-        <span>EQ00000</span>
+        <input type="text" value="EQ00000" placeholder="请填写汽油机出厂编号">
     </li>
 </ul>
-<%--<button class="submit">提交</button>--%>
     <input  class="submit" onclick="submitForm()" value="提交">
 </form>
 <div class="choose" style="display: none">
