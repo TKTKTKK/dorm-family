@@ -17,8 +17,6 @@
         .list li{display: flex;display: -webkit-flex;justify-content: space-between;border-bottom: 1px solid rgba(0,0,0,0.1);padding: 1.17rem 2rem;}
         .list li>span:nth-of-type(1){font-size: 1.6rem;color: #333}
         .list li>input,.list li>span:nth-of-type(2){font-size: 1.4rem;color: #666;text-align: right;}
-        /*.list li>span{font-size: 1.6rem;color: #333}*/
-        /*.list li>input{font-size: 1.4rem;color: #666;text-align: right;}*/
         .list li .address{text-align: right}
         .list li .address>select{font-size: 1.4rem;color: #666;text-align: right;width:30%}
         .head .finish{color: #fff;font-size: 1.4rem;}
@@ -53,26 +51,25 @@
         <span>详细地址</span>
         <input type="text" name="address" id="address" placeholder="请填写详细地址">
     </li>
-    <%--<input type="text" name="machineid" style="display: none" value="3">--%>
     <li>
         <span>机器编号</span>
-        <input type="text" value="3" placeholder="请填写机器编号">
+        <input type="text" id="machineid" value="3" placeholder="请填写机器编号">
     </li>
     <li>
         <span>机器型号</span>
-        <input type="text"  value="2ZS-6K型" placeholder="请填写机器型号">
+        <input type="text" id="machinemodel" value="2ZS-6K型" placeholder="请填写机器型号">
     </li>
     <li>
         <span>机器名称</span>
-        <input type="text" value="手扶式插秧机" placeholder="请填写机器名称">
+        <input type="text" id="machinename" value="手扶式插秧机" placeholder="请填写机器名称">
     </li>
     <li>
         <span>出场编号</span>
-        <input type="text" value="EQ00000" placeholder="请填写出场编号">
+        <input type="text" id="machinProduct" value="EQ00000" placeholder="请填写出场编号">
     </li>
     <li>
         <span>汽油机出厂编号</span>
-        <input type="text" value="EQ00000" placeholder="请填写汽油机出厂编号">
+        <input type="text" id="machinengine" value="EQ00000" placeholder="请填写汽油机出厂编号">
     </li>
 </ul>
     <input  class="submit" onclick="submitForm()" value="提交">
@@ -137,11 +134,49 @@
         var phone=document.getElementById("contactno").value;
         var addressDetailError='';
         var addressDetail=document.getElementById("address").value;
+        var machineidError='';
+        var machineid=document.getElementById("machineid").value;
+        var machinemodelError='';
+        var machinemodel=document.getElementById("machinemodel").value;
+        var machinenameError='';
+        var machinename=document.getElementById("machinename").value;
+        var machinProductError='';
+        var machinProduct=document.getElementById("machinProduct").value;
+        var machinengineError='';
+        var machinengine=document.getElementById("machinengine").value;
         if(name==''||name==null){
             nameError="姓名为必填！"
         }else{
             nameError="";
         }
+        if(machineid==''||machineid==null){
+            machineidError="机器编号为必填！"
+        }else{
+            machineidError="";
+        }
+        if(machinemodel==''||machinemodel==null){
+            machinemodelError="机器型号为必填！"
+        }else{
+            machinemodelError="";
+        }
+        if(machinename==''||machinename==null){
+            machinenameError="机器名称为必填！"
+        }else{
+            machinenameError="";
+        }
+        if(machinProduct==''||machinProduct==null){
+            machinProductError="出场编号为必填！"
+        }else{
+            machinProductError="";
+        }
+        if(machinengine==''||machinengine==null){
+            machinengineError="姓名为必填！"
+        }else{
+            machinengineError="";
+        }
+
+
+
         if(phone==''||phone==null){
             phoneError="手机号为必填！"
         }else{
@@ -162,7 +197,7 @@
         }else{
             contactnoError= "请输入正确的手机号！";
         }
-        if(nameError=='' &&phoneError==''&&addressDetailError==''&&addressError==''&&contactnoError==''){
+        if(nameError=='' &&phoneError==''&&addressDetailError==''&&addressError==''&&contactnoError==''&&machineidError==''&&machinemodelError==''&&machinenameError==''&&machinProductError==''&&machinengineError==''){
             var searchForm = document.getElementById("searchForm");
             searchForm.action = "${ctx}/guest/register";
             searchForm.submit();

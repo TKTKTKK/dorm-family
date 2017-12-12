@@ -116,7 +116,7 @@ public class MtxGuestController extends BaseGuestController{
         wpUser.setOpenid(getOpenid(req));
         String machineid=req.getParameter("machineid");
         mtxMemberService.insertMemberAndPoint(wpUser,machineid,getBindid(req),getOpenid(req));
-        return "guest/product_center";
+        return "redirect:/guest/product_center";
     }
 
     /**
