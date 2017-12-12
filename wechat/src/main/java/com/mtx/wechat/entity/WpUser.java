@@ -26,11 +26,7 @@ public class WpUser extends BaseEntity{
     @Column
     private String type;
     @Column
-    private String defaultcommunityid;
-    @Column
     private String ifauth;
-    @Column
-    private Long phcustomerid;
     @Column
     private String ifsubscribe;
 
@@ -90,28 +86,12 @@ public class WpUser extends BaseEntity{
         this.type = type;
     }
 
-    public String getDefaultcommunityid() {
-        return defaultcommunityid;
-    }
-
-    public void setDefaultcommunityid(String defaultcommunityid) {
-        this.defaultcommunityid = defaultcommunityid;
-    }
-
     public String getIfauth() {
         return ifauth;
     }
 
     public void setIfauth(String ifauth) {
         this.ifauth = ifauth;
-    }
-
-    public Long getPhcustomerid() {
-        return phcustomerid;
-    }
-
-    public void setPhcustomerid(Long phcustomerid) {
-        this.phcustomerid = phcustomerid;
     }
 
     public String getIfsubscribe() {

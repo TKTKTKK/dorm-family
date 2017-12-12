@@ -487,7 +487,7 @@ public class PublicAccountController {
             if(exchageType.equals("OAuthFilter")){
                 String requestUrl = WechatConstants.WECHAT_OAUTH2_URL.replace(WechatConstants.PARAM_PLACEHOLDER_APPID, appid)
                         .replace(WechatConstants.PARAM_PLACEHOLDER_REDIRECT_URI, redirectUri)
-                        .replace(WechatConstants.PARAM_PLACEHOLDER_STATE, "rrm")
+                        .replace(WechatConstants.PARAM_PLACEHOLDER_STATE, "mtx")
                         .replace(WechatConstants.PARAM_PLACEHOLDER_SCOPE, WechatConstants.OAUTH2_SCOPE_BASE);
                 model.addAttribute("tempUrl", requestUrl);
             }

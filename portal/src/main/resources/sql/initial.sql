@@ -411,6 +411,30 @@ CREATE TABLE `tb_wp_menu` (
   PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- ----------------------------
+-- Table structure for tb_wp_user
+-- ----------------------------
+CREATE TABLE `tb_wp_user` (
+  `uuid` varchar(32) NOT NULL,
+  `bindid` varchar(32) NOT NULL,
+  `openid` varchar(32) NOT NULL,
+  `nickname` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `name` varchar(90) DEFAULT NULL,
+  `contactno` varchar(20) DEFAULT NULL,
+  `type` varchar(15) DEFAULT NULL,
+  `ifauth` char(1) DEFAULT NULL,
+  `ifsubscribe` char(1) DEFAULT NULL,
+  `createon` varchar(23) NOT NULL,
+  `createby` varchar(32) NOT NULL,
+  `modifyon` varchar(23) NOT NULL,
+  `modifyby` varchar(32) NOT NULL,
+  `versionno` int(11) NOT NULL,
+  `delind` char(1) NOT NULL,
+  PRIMARY KEY (`uuid`),
+  UNIQUE KEY `ind_wp_user_openid` (`openid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 INSERT INTO `tb_platform_permit` VALUES ('2015050510000001', 'MENU', '公众号', '公众号', null, '1000', 'APP', '2015-05-20 19:31:10', 'sys', '2016-01-21 11:33:31 051', 'e34638d3152c49ecac24467591cc4365', '2', 'N', 'icon-home');
 INSERT INTO `tb_platform_permit` VALUES ('2015050510000002', 'MENU', '公众号管理', 'admin/account/search', '2015050510000001', '1010', 'APP', '2015-05-20 19:37:23', 'sys', '2015-05-20 19:37:23', 'sys', '1', 'N', '');
