@@ -50,13 +50,12 @@
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
                                     <tr>
-                                        <th width="10%">姓名</th>
-                                        <th width="10%">手机号</th>
+                                        <th width="15%">姓名</th>
+                                        <th width="15%">手机号</th>
                                         <th width="15%">详细地址</th>
                                         <th width="10%">微信昵称</th>
-                                        <th width="10%">微信头像</th>
+                                        <th width="15%">微信头像</th>
                                         <th width="10%">积分</th>
-                                        <th width="15%">经销商</th>
                                         <th width="20%">操作</th>
                                     </tr>
                                     </thead>
@@ -80,9 +79,6 @@
                                             </td>
                                             <td>
                                                     ${mtxMember.points}
-                                            </td>
-                                            <td>
-                                                    ${mtxMember.merchantname}
                                             </td>
                                             <td>
                                                 <a href="${ctx}/admin/wefamily/goMtxMember?uuid=${mtxMember.uuid}"

@@ -94,7 +94,7 @@ CREATE TABLE `tb_mtx_good_exchange` (
   `name` varchar(48) NOT NULL,
   `img` varchar(256) DEFAULT NULL,
   `detail` varchar(256) DEFAULT NULL,
-  `points` decimal(10) DEFAULT NULL,
+  `points` int(11) DEFAULT NULL,
   `status` varchar(16) DEFAULT NULL,
   `createon` varchar(23) NOT NULL,
   `createby` varchar(32) NOT NULL,
@@ -116,7 +116,7 @@ CREATE TABLE `tb_mtx_point_record` (
   `userid` varchar(32) NOT NULL,
   `machineid` varchar(32) DEFAULT NULL,
   `goodid` varchar(32) DEFAULT NULL,
-  `points` decimal(10) DEFAULT NULL,
+  `points` int(11) DEFAULT NULL,
   `createon` varchar(23) NOT NULL,
   `createby` varchar(32) NOT NULL,
   `modifyon` varchar(23) NOT NULL,
@@ -130,10 +130,8 @@ CREATE TABLE `tb_mtx_point_record` (
 INSERT INTO `tb_platform_permit` VALUES ('2017120910000001', 'MENU', '积分管理', 'admin/wefamily/mtxPointManage', '2015050510000011', '1107', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
 
 
-alter table tb_wp_user add column `merchantid`  varchar(32) default null AFTER openid;
-alter table tb_wp_user add column `machineid`  varchar(32) default null AFTER merchantid;
 alter table tb_wp_user add column `province`  varchar(60) default null AFTER contactno;
 alter table tb_wp_user add column `city`  varchar(60) default null AFTER province;
 alter table tb_wp_user add column `district`  varchar(60) default null AFTER city;
 alter table tb_wp_user add column `address`  varchar(256) default null AFTER district;
-alter table tb_wp_user add column `points`  decimal(16) default null AFTER address;
+alter table tb_wp_user add column `points`  int(11) default null AFTER address;

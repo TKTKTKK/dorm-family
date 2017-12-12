@@ -14,10 +14,6 @@ public class MtxMember extends BaseEntity {
     @Column
     private String openid;
     @Column
-    private String merchantid;
-    @Column
-    private String machineid;
-    @Column
     private String name;
     @Column
     private String contactno;
@@ -34,15 +30,13 @@ public class MtxMember extends BaseEntity {
     @Column
     private String headimgurl;
     @Column
-    private Double points;
+    private Integer points;
     @Column
     private String type;//用户的类型是普通用户，还是经销商还是。。。。
     @Column
     private String ifsubscribe;//是否关注
     @Column
     private String ifauth;//是否是会员
-
-    private String merchantname;
 
     public String getBindid() {
         return bindid;
@@ -58,22 +52,6 @@ public class MtxMember extends BaseEntity {
 
     public void setOpenid(String openid) {
         this.openid = openid;
-    }
-
-    public String getMerchantid() {
-        return merchantid;
-    }
-
-    public void setMerchantid(String merchantid) {
-        this.merchantid = merchantid;
-    }
-
-    public String getMachineid() {
-        return machineid;
-    }
-
-    public void setMachineid(String machineid) {
-        this.machineid = machineid;
     }
 
     public String getName() {
@@ -140,11 +118,11 @@ public class MtxMember extends BaseEntity {
         this.headimgurl = headimgurl;
     }
 
-    public Double getPoints() {
+    public Integer getPoints() {
         return points;
     }
 
-    public void setPoints(Double points) {
+    public void setPoints(Integer points) {
         this.points = points;
     }
 
@@ -172,11 +150,4 @@ public class MtxMember extends BaseEntity {
         this.ifauth = ifauth;
     }
 
-    public String getMerchantname() {
-        return merchantname;
-    }
-
-    public void setMerchantname(String merchantname) {
-        this.merchantname = merchantname;
-    }
 }

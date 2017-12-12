@@ -6,9 +6,8 @@
     </resultMap>
 
     <select id="selectMtxMemberList" resultMap="selectResultMap">
-        select wu.*,tmm.name as merchantname
+        select wu.*
         from tb_wp_user wu
-        left join tb_mtx_merchant tmm on tmm.uuid=wu.merchantid
         where TRUE
         <if test="mtxMember.name != null and mtxMember.name != ''">
             and wu.name like concat("%",#{mtxMember.name},"%")

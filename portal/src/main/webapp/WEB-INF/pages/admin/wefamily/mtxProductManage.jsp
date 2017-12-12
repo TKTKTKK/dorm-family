@@ -84,10 +84,7 @@
                                                     ${mtxProduct.name}
                                             </td>
                                             <td>
-                                                <c:if test="${mtxProduct.price.value.length > 0}">
-                                                obj.value = (obj.value*1).toFixed(2);
-                                                }
-                                                formatMoney(${mtxProduct.price});
+                                                ${mtxProduct.price}
                                             </td>
                                             <td>
                                                 <c:if test="${mtxProduct.status=='1'}">上架</c:if>
@@ -101,7 +98,6 @@
                                                    class="btn  btn-infonew btn-sm" style="color: white">
                                                     修改
                                                 </a>
-
                                                 <a href="javascript:deleteMtxProduct('${mtxProduct.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
                                             </td>
                                         </tr>

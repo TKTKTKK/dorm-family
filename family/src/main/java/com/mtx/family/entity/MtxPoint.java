@@ -16,7 +16,7 @@ public class MtxPoint extends BaseEntity {
     @Column
     private String goodid;
     @Column
-    private Double points;
+    private Integer points;
 
     private String productname;
 
@@ -64,11 +64,11 @@ public class MtxPoint extends BaseEntity {
         this.userid = userid;
     }
 
-    public Double getPoints() {
+    public Integer getPoints() {
         return points;
     }
 
-    public void setPoints(Double points) {
+    public void setPoints(Integer points) {
         this.points = points;
     }
 

@@ -144,22 +144,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger"></span>经销商编号：</label>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" name="merchantid" id="merchantid" disabled
-                                           onblur="trimText(this)"
-                                           value="${mtxMember.merchantid}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger"></span>机器编号：</label>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" name="machineid" id="machineid" disabled
-                                           onblur="trimText(this)"
-                                           value="${mtxMember.machineid}">
-                                </div>
-                            </div>
                             <div id="extend" style="display: none">
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger"></span>积分：</label>

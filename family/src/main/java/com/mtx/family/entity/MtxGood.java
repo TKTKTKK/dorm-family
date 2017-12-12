@@ -18,7 +18,7 @@ public class MtxGood extends BaseEntity {
     @Column
     private String detail;
     @Column
-    private Double points;
+    private Integer points;
 
     public String getName() {
         return name;
@@ -52,11 +52,11 @@ public class MtxGood extends BaseEntity {
         this.detail = detail;
     }
 
-    public Double getPoints() {
+    public Integer getPoints() {
         return points;
     }
 
-    public void setPoints(Double points) {
+    public void setPoints(Integer points) {
         this.points = points;
     }
 }
