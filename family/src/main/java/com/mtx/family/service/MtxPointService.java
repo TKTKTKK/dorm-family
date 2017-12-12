@@ -26,4 +26,8 @@ public class MtxPointService extends BaseService<MtxPointMapper,MtxPoint> {
     public PageList<MtxPoint> queryForListWithPagination(MtxPoint obj, PageBounds pageBounds) {
         return mapper.selectMtxPointList(obj,pageBounds);
     }
+
+    public List<MtxPoint> findPointIsExist(String machineid, String uuid) {
+        return mapper.findPointIsExist(machineid,uuid);
+    }
 }

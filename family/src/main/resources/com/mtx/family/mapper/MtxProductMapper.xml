@@ -20,4 +20,16 @@
         </if>
         order by modifyon desc;
     </select>
+    <select id="validModelIsExist" resultMap="selectResultMap">
+        select *
+        from tb_mtx_product
+        where TRUE
+        <if test="model != null and model != ''">
+            and model =#{model}
+        </if>
+        <if test="uuid != null and uuid != ''">
+            and uuid != #{uuid}
+        </if>
+;
+    </select>
 </mapper>

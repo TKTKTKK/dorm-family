@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 会员管理</span>
+            满田星 / <span class="font-bold  text-shallowred"> 用户管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
@@ -31,8 +31,8 @@
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 电话：</label>
                                     <div class="col-sm-7  my-display-inline-box">
-                                        <input type="text" class="form-control" name="phone" id="phone" data-maxlength="90"
-                                               onblur="trimText(this)" value="${mtxMember.phone}">
+                                        <input type="text" class="form-control" name="contactno" id="contactno" data-maxlength="90"
+                                               onblur="trimText(this)" value="${mtxMember.contactno}">
                                     </div>
                                 </div>
                                 <div class="col-sm-4 text-center text-white">
@@ -67,16 +67,16 @@
                                                     ${mtxMember.name}
                                             </td>
                                             <td>
-                                                    ${mtxMember.phone}
+                                                    ${mtxMember.contactno}
                                             </td>
                                             <td>
                                                     ${mtxMember.address}
                                             </td>
                                             <td>
-                                                    ${mtxMember.wechatname}
+                                                    ${mtxMember.nickname}
                                             </td>
                                             <td>
-                                                <img src="${mtxMember.wechatimg}" width="50" height="50">
+                                                <img src="${mtxMember.headimgurl}" width="50" height="50">
                                             </td>
                                             <td>
                                                     ${mtxMember.points}
@@ -97,7 +97,7 @@
                                     </tbody>
                                 </table>
                                 <web:pagination pageList="${mtxMemberList}" postParam="true"/>
-                                <button class="btn btn-sm btn-submit" onclick="showMtxMemberInfo()"> 添加</button>
+                                <%--<button class="btn btn-sm btn-submit" onclick="showMtxMemberInfo()"> 添加</button>--%>
                             </div>
                     </c:if>
                     <c:if test="${empty wechatBinding}">

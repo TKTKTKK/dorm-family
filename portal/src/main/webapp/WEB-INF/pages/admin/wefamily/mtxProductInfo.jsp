@@ -25,9 +25,8 @@
                     <span class="text-danger">${errorMessage}</span>
                 </div>
                 <form class="form-horizontal form-bordered" data-validate="parsley"
-                      action="${ctx}/admin/wefamily/updateMtxProduct" method="POST"
-                      enctype="multipart/form-data" id="frm"
-                onsubmit="return validateMoney(document.getElementById('price'),'priceError')">
+                      action="" method="POST"
+                      enctype="multipart/form-data" id="frm">
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
                             <i class="fa fa-gift"></i>
@@ -41,6 +40,7 @@
                                            data-maxlength="48"
                                            onblur="trimText(this)"
                                            value="${mtxProduct.model}">
+                                    <sapn id="modelError" class="text-danger"></sapn>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -132,9 +132,10 @@
                             </div>
                         </div>
                         <div class="panel-footer text-left bg-light lter">
-                            <button type="submit" class="btn btn-submit btn-s-xs ">
-                                <i class="fa fa-check"></i>&nbsp;提&nbsp;交
-                            </button>
+                            <a onclick="validDate()"
+                               class="btn  btn-infonew btn-sm" style="color: white">
+                                提&nbsp;&nbsp;&nbsp;&nbsp;交
+                            </a>
                         </div>
                     </section>
                     <div>
@@ -176,6 +177,29 @@
         });
 
     });
+    function validModelIsExist(){
+        var modelError=document.getElementById("modelError");
+        var uuid='${mtxProduct.uuid}';
+        modelError.innerHTML="";
+        var model=$("#model").val();
+        if(model.length>0){
+            $.post("${ctx}/admin/wefamily/validModelIsExist?model="+model+"&uuid="+uuid,function(data){
+                if(data){
+                    var searchForm = document.getElementById("frm");
+                    searchForm.action = "${ctx}/admin/wefamily/updateMtxProduct";
+                    searchForm.submit();
+                }else{
+                    modelError.innerHTML="此型号已存在，请换一个试试！"
+                }
+            });
+        }
+    }
+    function validDate(){
+        $("#frm").parsley("validate");
+        if(validateMoney(document.getElementById('price'),'priceError') && $('#frm').parsley().isValid()){
+            validModelIsExist();
+        }
+    }
 </script>
 
 </body>
