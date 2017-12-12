@@ -57,21 +57,21 @@
                             <div id="flow_id" class="content" style="height: 600px;overflow-y: scroll;">
                                 <c:forEach items="${mtxConsultDetailList}" var="mtxConsultDetail">
                                     <c:choose>
-                                        <c:when test="${mtxConsultDetail.status eq 'SYS'}">
-                                            <div class="myquestion rotatey">
-                                                <img src="../../../static/admin/img/qrcode.png" alt="" class="rotatey">
-                                                <div class="sanjiaor"></div>
-                                                <div class="enquiry_words rotatey right">
+                                        <c:when test="${mtxConsultDetail.createby eq 'guest'}">
+                                            <div class="myquestion">
+                                                <img src="../../../static/admin/img/qrcode.png" alt="">
+                                                <div class="sanjiaol"></div>
+                                                <div class="enquiry_words left">
                                                     <p class="time">${fn:substring(mtxConsultDetail.createon, 0, 19)}</p>
                                                     <span>${mtxConsultDetail.content}</span>
                                                 </div>
                                             </div>
                                         </c:when>
                                         <c:otherwise>
-                                            <div class="myquestion">
-                                                <img src="../../../static/admin/img/qrcode.png" alt="">
-                                                <div class="sanjiaol"></div>
-                                                <div class="enquiry_words left">
+                                            <div class="myquestion rotatey">
+                                                <img src="../../../static/admin/img/qrcode.png" alt="" class="rotatey">
+                                                <div class="sanjiaor"></div>
+                                                <div class="enquiry_words rotatey right">
                                                     <p class="time">${fn:substring(mtxConsultDetail.createon, 0, 19)}</p>
                                                     <span>${mtxConsultDetail.content}</span>
                                                 </div>

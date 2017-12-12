@@ -7,7 +7,7 @@
 
     <select id="selectMtxGoodList" resultMap="selectResultMap">
         select *
-        from tb_mtx_good
+        from tb_mtx_good_exchange
         where TRUE
         <if test="mtxGood.name != null and mtxGood.name != ''">
             and name like concat("%",#{mtxGood.name},"%")

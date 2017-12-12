@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Table;
 
 
-@Table(name = "tb_mtx_point")
+@Table(name = "tb_mtx_point_record")
 public class MtxPoint extends BaseEntity {
 
     @Column

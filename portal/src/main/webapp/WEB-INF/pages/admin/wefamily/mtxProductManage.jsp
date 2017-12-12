@@ -84,7 +84,10 @@
                                                     ${mtxProduct.name}
                                             </td>
                                             <td>
-                                                    ${mtxProduct.price}
+                                                <c:if test="${mtxProduct.price.value.length > 0}">
+                                                obj.value = (obj.value*1).toFixed(2);
+                                                }
+                                                formatMoney(${mtxProduct.price});
                                             </td>
                                             <td>
                                                 <c:if test="${mtxProduct.status=='1'}">上架</c:if>

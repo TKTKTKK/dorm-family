@@ -16,8 +16,8 @@
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
                 满田星 /
-                <a href="${ctx}/admin/wefamily/mtxMemberManage">用户管理 </a> /
-                <span class="font-bold  text-shallowred"> 用户详情</span>
+                <a href="${ctx}/admin/wefamily/mtxMemberManage">会员管理 </a> /
+                <span class="font-bold  text-shallowred"> 会员详情</span>
             </header>
             <div class="col-sm-12 pos">
                 <div style="margin-bottom: 5px">
@@ -84,22 +84,6 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger"></span>经销商编号：</label>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" name="merchantid" id="merchantid" disabled
-                                           onblur="trimText(this)"
-                                           value="${mtxMember.merchantid}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger"></span>机器编号：</label>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" name="machineid" id="machineid" disabled
-                                           onblur="trimText(this)"
-                                           value="${mtxMember.machineid}">
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger"></span>微信昵称：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="text" class="form-control" name="nickname" id="nickname"
@@ -158,6 +142,22 @@
                                             >${commonCode.codevalue}</option>
                                         </c:forEach>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger"></span>经销商编号：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <input type="text" class="form-control" name="merchantid" id="merchantid" disabled
+                                           onblur="trimText(this)"
+                                           value="${mtxMember.merchantid}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger"></span>机器编号：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <input type="text" class="form-control" name="machineid" id="machineid" disabled
+                                           onblur="trimText(this)"
+                                           value="${mtxMember.machineid}">
                                 </div>
                             </div>
                             <div id="extend" style="display: none">

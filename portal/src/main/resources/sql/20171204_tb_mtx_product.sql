@@ -20,7 +20,7 @@ CREATE TABLE `tb_mtx_product` (
 -- 产品管理
 INSERT INTO `tb_platform_permit` VALUES ('2017120410000002', 'MENU', '产品管理', 'admin/wefamily/MtxProduct', '2015050510000011', '1102', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
 
--- 创建咨询表
+-- 创建预订表
 CREATE TABLE `tb_mtx_reserve` (
   `uuid` varchar(32) NOT NULL,
   `productid` varchar(32) default null,
@@ -66,7 +66,6 @@ CREATE TABLE `tb_mtx_consult_detail` (
   `uuid` varchar(32) NOT NULL,
   `consultid` varchar(32) NOT NULL,
   `content` varchar(256) default null,
-  `status` varchar(16) default null,
   `createon` varchar(23) NOT NULL,
   `createby` varchar(32) NOT NULL,
   `modifyon` varchar(23) NOT NULL,
@@ -87,10 +86,10 @@ INSERT INTO tb_common_code VALUES ('2017120700000008', null, null, 'ANWSER_OR_NO
 
 
 -- 会员管理
-INSERT INTO `tb_platform_permit` VALUES ('2017120810000001', 'MENU', '用户管理', 'admin/wefamily/mtxMemberManage', '2015050510000011', '1106', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
+INSERT INTO `tb_platform_permit` VALUES ('2017120810000001', 'MENU', '会员管理', 'admin/wefamily/mtxMemberManage', '2015050510000011', '1106', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
 
 -- 商品兑换表
-CREATE TABLE `tb_mtx_good` (
+CREATE TABLE `tb_mtx_good_exchange` (
   `uuid` varchar(32) NOT NULL,
   `name` varchar(48) NOT NULL,
   `img` varchar(256) DEFAULT NULL,
@@ -112,7 +111,7 @@ INSERT INTO `tb_platform_permit` VALUES ('2017120910000002', 'MENU', '商品管�
 
 
 -- 积分消费记录表
-CREATE TABLE `tb_mtx_point` (
+CREATE TABLE `tb_mtx_point_record` (
   `uuid` varchar(32) NOT NULL,
   `userid` varchar(32) NOT NULL,
   `machineid` varchar(32) DEFAULT NULL,

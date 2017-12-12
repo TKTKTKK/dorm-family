@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 用户管理</span>
+            满田星 / <span class="font-bold  text-shallowred"> 会员管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">

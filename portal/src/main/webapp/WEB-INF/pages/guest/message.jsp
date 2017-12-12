@@ -33,7 +33,7 @@
         .newwords p{font-size: 1.5rem;text-align:center;width: 20%;border: 0;color: #fff;background: #5bbc4e;height: 40px;margin: 0;vertical-align: middle;float:right;line-height: 40px;}
         .bottom_1{position: absolute;bottom: 0;width: 100%;}
         .choose_alert{position: fixed;background: rgba(0,0,0,0.5);width: 100%;top: 0;bottom: 0;left: 0;text-align: center;}
-        .choose select{position: relative;top: 30%;width: 80%;font-size: 1.4rem;border-radius: 5px;padding: 1rem;color: #333;}
+        .choose select{position: relative;top: 20rem;width: 80%;font-size: 1.4rem;border-radius: 5px;padding: 1rem;color: #333;}
         html,body{height: 100%}
         #searchForm{height: calc(100% - 7.34rem);overflow-y: scroll;}
     </style>
@@ -57,21 +57,21 @@
 <div class="content">
     <c:forEach items="${mtxConsultDetailList}" var="mtxConsultDetail">
         <c:choose>
-            <c:when test="${mtxConsultDetail.status eq 'SYS'}">
-                <div class="myquestion">
-                    <img src="../../../static/admin/img/qrcode.png" alt="">
-                    <div class="sanjiaol"></div>
-                    <div class="enquiry_words left">
+            <c:when test="${mtxConsultDetail.createby eq 'guest'}">
+                <div class="myquestion rotatey">
+                    <img src="../../../static/admin/img/qrcode.png" alt="" class="rotatey">
+                    <div class="sanjiaor"></div>
+                    <div class="enquiry_words rotatey right">
                         <p class="time">${fn:substring(mtxConsultDetail.createon, 0, 19)}</p>
                         <span>${mtxConsultDetail.content}</span>
                     </div>
                 </div>
             </c:when>
             <c:otherwise>
-                <div class="myquestion rotatey">
-                    <img src="../../../static/admin/img/qrcode.png" alt="" class="rotatey">
-                    <div class="sanjiaor"></div>
-                    <div class="enquiry_words rotatey right">
+                <div class="myquestion">
+                    <img src="../../../static/admin/img/qrcode.png" alt="">
+                    <div class="sanjiaol"></div>
+                    <div class="enquiry_words left">
                         <p class="time">${fn:substring(mtxConsultDetail.createon, 0, 19)}</p>
                         <span>${mtxConsultDetail.content}</span>
                     </div>

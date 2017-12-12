@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Table;
 
 
-@Table(name = "tb_mtx_good")
+@Table(name = "tb_mtx_good_exchange")
 public class MtxGood extends BaseEntity {
 
     @Column

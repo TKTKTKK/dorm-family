@@ -36,7 +36,6 @@ public class MtxConsultService extends BaseService<MtxConsultMapper,MtxConsult> 
         }
         MtxConsult mtxConsultTemp=this.queryForObjectByPk(mtxConsult);
         if(mtxConsultTemp!=null){
-            mtxConsultDetail.setStatus("SYS");
             mtxConsultDetailService.insert(mtxConsultDetail);
             if(StringUtils.isNotBlank(mtxConsultTemp.getStatus())&& !"ANWSER_RECENT".equals(mtxConsultTemp.getStatus())){
                 mtxConsultTemp.setStatus("ANWSER_RECENT");
@@ -57,14 +56,12 @@ public class MtxConsultService extends BaseService<MtxConsultMapper,MtxConsult> 
                 this.insert(mtxConsult);
                 mtxConsultDetailTemp.setConsultid(mtxConsult.getUuid());
                 mtxConsultDetailTemp.setContent(content);
-                mtxConsultDetailTemp.setStatus(mtxConsult.getIdentify());
                 mtxConsultDetailService.insert(mtxConsultDetailTemp);
                 return mtxConsult.getUserid();
             }else{
                 MtxConsult consult=mtxConsultTempList.get(0);
                 mtxConsultDetailTemp.setConsultid(consult.getUuid());
                 mtxConsultDetailTemp.setContent(content);
-                mtxConsultDetailTemp.setStatus(mtxConsult.getIdentify());
                 mtxConsultDetailService.insert(mtxConsultDetailTemp);
                 if(StringUtils.isNotBlank(consult.getStatus())&&"ANWSER_RECENT".equals(consult.getStatus())){
                     consult.setStatus("NO_ANWSER");
