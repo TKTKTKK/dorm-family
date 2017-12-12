@@ -637,7 +637,7 @@ public class WeFamilyController extends BaseAdminController {
             machine.setUuid(machineId);
             List<Machine> machineList = machineService.queryMachineForNoRepeat(machine);
             if(null != machineList && machineList.size() > 0){
-                resultMap.put("returnMsg","机器号或发动机号重复！");
+                resultMap.put("returnMsg","机器号重复！");
             }else{
                 machineService.updatePartial(machine);
                 resultMap.put("successMessage", "修改成功");

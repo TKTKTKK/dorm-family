@@ -25,7 +25,7 @@ public class MachineService extends BaseService<MachineMapper,Machine> {
     }
 
     public List<Machine> queryMachineForNoRepeat(Machine machine) {
-        return this.mapper.selectMachineForNoRepeat(machine);
+        return this.mapper.selectMachineForMachineNoRepeat(machine);
     }
 
     public PageList<Machine> queryMachineList(Machine machine, String startDateTimeStr, String endDateTimeStr, PageBounds pageBounds) {
