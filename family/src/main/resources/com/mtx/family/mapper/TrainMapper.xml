@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.family.mapper.TrainMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.family.entity.Train">
+    </resultMap>
+
+    <select id="selectTrainList" resultMap="selectResultMap">
+        select mt.*
+        from tb_mtx_train mt
+        where
+        1=1
+        <if test="train.machineno != null and train.machineno != ''">
+            and mt.machineno like concat("%",#{train.machineno},"%")
+        </if>
+        <if test="train.personphone != null and train.personphone != ''">
+            and mt.personphone like concat("%",#{train.personphone},"%")
+        </if>
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+                              and mt.traindt >= #{startTime}
+                            ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+                              and mt.traindt <= #{endTime}
+                            ]]>
+        </if>
+        order by mt.modifyon desc
+    </select>
+
+    <select id="selectTrainListForPhone" resultMap="selectResultMap">
+        select mt.*
+        from tb_mtx_train mt
+        order by mt.modifyon desc
+    </select>
+
+</mapper>

@@ -24,6 +24,9 @@ public class Logistics extends BaseEntity {
     private String platenumber;
     @Column
     private double freight;
+    @Column
+    private String remarks;
+
 
     public String getBindid() {
         return bindid;
@@ -73,4 +76,11 @@ public class Logistics extends BaseEntity {
         this.freight = freight;
     }
 
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 }

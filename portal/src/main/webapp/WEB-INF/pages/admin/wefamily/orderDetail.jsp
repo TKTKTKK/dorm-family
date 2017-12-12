@@ -339,7 +339,7 @@
                                                         </div>
                                                     </div>
                                                 <!--物流信息-->
-                                                <c:if test="${order.status == 'OUT'}">
+                                                <c:if test="${order.status ne 'NEW'}">
                                                     <div class="portlet red-sunglo box">
                                                         <div class="portlet-title">
                                                             <div class="caption"><i class="fa fa-cogs"></i>物流信息</div>
@@ -365,6 +365,13 @@
                                                                                                         司机号码：${logistics.driverphone} 车牌号：${logistics.platenumber}
                                                                                                 </span>
                                                                                         </div>
+                                                                                        <c:if test="${not empty logistics.remarks}">
+                                                                                            <div>
+                                                                                                <span style="color: #000000">
+                                                                                                    备注：${logistics.remarks}
+                                                                                                </span>
+                                                                                            </div>
+                                                                                        </c:if>
                                                                                         <div class="time">
                                                                                             <div class="pull-left">
                                                                                                     ${fn:substring(logistics.createon, 0, 19)}
@@ -384,8 +391,66 @@
                                                                     </c:if>
                                                                 </div>
                                                             </div>
-                                                            <a class="btn btn-sm btn-danger" href="javascript:addLogistics()" style="color: white;margin-left: 10px;margin-bottom: 10px">添加物流信息</a>
-                                                            <button class="hidden" data-toggle="modal" data-target=".bs-example-modal-tj-logistics" style="color: white" id="addLogistics">添加物流信息</button>
+                                                            <c:if test="${order.status == 'OUT'}">
+                                                                <a class="btn btn-sm btn-danger" href="javascript:addLogistics()" style="color: white;margin-left: 10px;margin-bottom: 10px">添加物流信息</a>
+                                                                <button class="hidden" data-toggle="modal" data-target=".bs-example-modal-tj-logistics" style="color: white" id="addLogistics">添加物流信息</button>
+                                                            </c:if>
+                                                        </div>
+                                                    </div>
+                                                </c:if>
+                                                <!--回执信息-->
+                                                <c:if test="${order.status ne 'NEW'}">
+                                                    <div class="portlet blue-hoki box">
+                                                        <div class="portlet-title">
+                                                            <div class="caption"><i class="fa fa-cogs"></i>回执信息</div>
+                                                        </div>
+                                                        <div class="portlet-body">
+                                                            <c:if test="${fn:length(receiptList) > 0}">
+                                                                <div class="row static-info" style="margin-bottom: 0px">
+                                                                    <div class="col-md-2 col-xs-4 name detail-div">回执日期:</div>
+                                                                    <div class="col-md-4 col-xs-8 value detail-div" >${receiptList[0].receiptdt}</div>
+
+                                                                    <div class="col-md-2 col-xs-4 name detail-div">满意度:</div>
+                                                                    <div class="col-md-4 col-xs-8 value detail-div" >${web:getCodeDesc("SATISFACTION", receiptList[0].satisfaction)}</div>
+                                                                </div>
+                                                                <c:if test="${not empty receiptList[0].question}">
+                                                                    <div class="row static-info" style="margin-bottom: 0px">
+                                                                        <div class="col-md-2 col-xs-4 name detail-div">问题反馈:</div>
+                                                                        <div class="col-md-10 col-xs-8 value detail-div" >${receiptList[0].question}</div>
+                                                                    </div>
+                                                                </c:if>
+                                                                <div class="row static-info" style="margin-bottom: 0px">
+                                                                    <div class="col-md-2 col-xs-4 name detail-div">回执图片:</div>
+                                                                    <div class="col-md-10 col-xs-8 value detail-div" >
+                                                                            <c:if test="${fn:length(attachmentList) > 0}">
+                                                                                <c:forEach var="receiptImg" items="${attachmentList}">
+                                                                                    <img src="${receiptImg.name}"
+                                                                                         onclick="viewBigImage(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image"
+                                                                                    />
+                                                                                </c:forEach>
+                                                                            </c:if>
+                                                                    </div>
+                                                                </div>
+                                                            </c:if>
+                                                            <c:if test="${fn:length(receiptList) == 0}">
+                                                                <div class="row static-info">
+                                                                    <div class="col-md-12 col-xs-12 value">
+                                                                        <span>暂无回执信息</span>
+                                                                    </div>
+                                                                </div>
+                                                            </c:if>
+                                                            <c:if test="${order.status == 'OUT'}">
+                                                                <a class="btn btn-sm" href="javascript:addReceipt()" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
+                                                                    <c:if test="${fn:length(receiptList) == 0}">添加回执信息</c:if>
+                                                                    <c:if test="${fn:length(receiptList) == 1}">修改回执信息</c:if>
+                                                                </a>
+                                                                <button class="hidden" data-toggle="modal" data-target=".bs-example-modal-tj-receipt" style="color: white" id="addReceipt">添加回执信息</button>
+                                                                <c:if test="${fn:length(receiptList) > 0}">
+                                                                    <a class="btn btn-sm" href="javascript:finishOrder()" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
+                                                                        <i class="fa fa-check"></i> 订单完成
+                                                                    </a>
+                                                                </c:if>
+                                                            </c:if>
                                                         </div>
                                                     </div>
                                                 </c:if>
@@ -405,7 +470,10 @@
                                                                         <th class="text-center">机器号</th>
                                                                         <th class="text-center">发动机号</th>
                                                                         <th class="text-center">生产日期</th>
-                                                                        <th class="text-center">操作</th>
+                                                                        <c:if test="${order.status == 'NEW'}">
+                                                                            <th class="text-center">操作</th>
+                                                                        </c:if>
+
                                                                     </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -423,12 +491,14 @@
                                                                             <td>
                                                                                     ${machine.productiondate}
                                                                             </td>
-                                                                            <td>
-                                                                                <a href="javascript:showMachineInfo('${machine.machinename}','${machine.machinemodel}','${machine.machineno}','${machine.engineno}','${machine.productiondate}','${machine.uuid}','${machine.versionno}')"
-                                                                                   class="btn btn-sm btn-infonew a-noline" style="color: #fff">修改</a>
-                                                                                <a href="javascript:deleteMachineForOrder('${machine.uuid}')"
-                                                                                   class="btn btn-sm btn-danger a-noline" style="color: #fff">删除</a>
-                                                                            </td>
+                                                                            <c:if test="${order.status == 'NEW'}">
+                                                                                <td>
+                                                                                    <a href="javascript:showMachineInfo('${machine.machinename}','${machine.machinemodel}','${machine.machineno}','${machine.engineno}','${machine.productiondate}','${machine.uuid}','${machine.versionno}')"
+                                                                                       class="btn btn-sm btn-infonew a-noline" style="color: #fff">修改</a>
+                                                                                    <a href="javascript:deleteMachineForOrder('${machine.uuid}')"
+                                                                                       class="btn btn-sm btn-danger a-noline" style="color: #fff">删除</a>
+                                                                                </td>
+                                                                            </c:if>
                                                                         </tr>
                                                                     </c:forEach>
                                                                     </tbody>
@@ -449,7 +519,6 @@
                                     </div>
                                 </section>
                             </form>
-
                         </div>
                     </div>
                 </div>
@@ -476,7 +545,7 @@
                                             </div>
                                             <div class="portlet-body">
                                                 <div class="row static-info">
-                                                    <div class="col-md-3 col-xs-4 name"><span class="text-danger">*</span>机器型号:</div>
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">机器型号:<span class="text-danger">*</span></div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
                                                             <input type="text" class="form-control" name="machinemodelAdd"
@@ -489,7 +558,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row static-info">
-                                                    <div class="col-md-3 col-xs-4 name"><span class="text-danger">*</span>机器名称:</div>
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">机器名称:<span class="text-danger">*</span></div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
                                                             <input type="text" class="form-control" name="machinenameAdd"
@@ -500,7 +569,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row static-info">
-                                                    <div class="col-md-3 col-xs-4 name"><span class="text-danger">*</span>机器号:</div>
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">机器号:<span class="text-danger">*</span></div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
                                                             <input type="text" class="form-control" name="machinenoAdd"
@@ -512,7 +581,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row static-info">
-                                                    <div class="col-md-3 col-xs-4 name"><span class="text-danger">*</span>发动机号:</div>
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">发动机号:<span class="text-danger">*</span></div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
                                                             <input type="text" class="form-control" name="enginenoAdd"
@@ -523,7 +592,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row static-info">
-                                                    <div class="col-md-3 col-xs-4 name"><span class="text-danger">*</span>生产日期:</div>
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">生产日期:<span class="text-danger">*</span></div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
                                                             <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
@@ -571,7 +640,7 @@
                                             </div>
                                             <div class="portlet-body">
                                                 <div class="row static-info">
-                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left"><span class="text-danger">*</span>司机电话:</div>
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">司机电话:<span class="text-danger">*</span></div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
                                                             <input type="text" class="form-control" name="driverphoneAdd"
@@ -585,7 +654,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row static-info">
-                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left"><span class="text-danger">*</span>车牌号:</div>
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">车牌号:<span class="text-danger">*</span></div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
                                                             <input type="text" class="form-control" name="platenumberAdd"
@@ -595,13 +664,24 @@
                                                     </div>
                                                 </div>
                                                 <div class="row static-info">
-                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left"><span class="text-danger">*</span>现在位置:</div>
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">现在位置:<span class="text-danger">*</span></div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
                                                             <input type="text" class="form-control" name="locationAdd"
                                                                    id="locationAdd" data-maxlength="32" data-required="true"
                                                                    onblur="trimText(this)"
                                                             >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row static-info">
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">备注:</div>
+                                                    <div class="col-md-9 col-xs-12 value">
+                                                        <div class="my-display-inline-box">
+                                                            <textarea class="form-control" rows="5" name="remarksAdd" id="remarksAdd"
+                                                                      data-maxlength="100"
+                                                                      onblur="trimText(this)"></textarea>
+                                                            <span id="remarksError" class="text-danger"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -623,6 +703,126 @@
                 <!-- /.modal-dialog -->
             </div>
             <!-- /.modal -->
+
+            <!-- 回执信息modal添加 -->
+            <div class="modal fade bs-example-modal-tj-receipt " tabindex="-1" role="dialog"
+                 aria-labelledby="myLargeModalLabelTj" aria-hidden="false">
+                <div class="modal-dialog modal-lg" style="margin-top: 15%">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" id="modelCloseBtnAddReceipt"><span
+                                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myLargeModalLabelAddReceipt">回执</h4>
+                        </div>
+                        <form action="${ctx}/admin/wefamily/addReceiptForOrder" method="POST" id="addReceiptFrm" data-validate="parsley">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="portlet green box">
+                                            <div class="portlet-title">
+                                                <div class="caption"><i class="fa fa-cogs"></i>回执信息</div>
+                                            </div>
+                                            <div class="portlet-body">
+                                                <div class="row static-info">
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">回执日期:<span class="text-danger">*</span></div>
+                                                    <div class="col-md-9 col-xs-12 value">
+                                                        <div class="my-display-inline-box">
+                                                            <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
+                                                                   name="receiptdtAdd" data-required="true"
+                                                                   data-date-format="yyyy-mm-dd" id="receiptdtAdd" >
+                                                        </div>
+                                                        <input type="hidden" id="receiptId" name="receiptId">
+                                                        <input type="hidden" id="receiptVersionno" name="receiptVersionno">
+                                                    </div>
+                                                </div>
+                                                <div class="row static-info">
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">满意度:<span class="text-danger">*</span></div>
+                                                    <div class="col-md-9 col-xs-12 value">
+                                                        <div class="my-display-inline-box">
+                                                            <select  class="form-control" name="satisfactionAdd" id="satisfactionAdd"
+                                                                     data-required="true">
+                                                                <c:set var="commonCodeList" value="${web:queryCommonCodeList('SATISFACTION')}"></c:set>
+                                                                <option value="">--请选择--</option>
+                                                                <c:forEach items="${commonCodeList}" var="commonCode">
+                                                                    <option value="${commonCode.code}" <c:if test="${receipt.satisfaction == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                                                </c:forEach>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row static-info">
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">问题反馈:</div>
+                                                    <div class="col-md-9 col-xs-12 value">
+                                                        <div class="my-display-inline-box">
+                                                            <textarea class="form-control" rows="5" name="questionAdd" id="questionAdd"
+                                                                      data-maxlength="100"
+                                                                      onblur="trimText(this)"></textarea>
+                                                            <span id="questionError" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row static-info">
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">回执照片:</div>
+                                                    <div class="col-md-9 col-xs-12 value">
+                                                        <div class="my-display-inline-box">
+                                                            <div id="receiptImgUrlContainer">
+                                                                <input type="file" id="receiptImg" name="picUrl" class="filestyle"
+                                                                       data-icon="false" data-classButton="btn btn-default"
+                                                                       data-classInput="form-control inline v-middle input-xs"
+                                                                       onchange="compressUploadPicture(this)" accept="image/*"
+                                                                <%--data-max_size="2000000" --%>
+                                                                       style="display: none"
+                                                                       data-max-count="4">
+                                                                <div id="picUrlError" class="text-danger"></div>
+                                                            </div>
+                                                            <div id="receiptImgContainer" class="row value">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="text-align: center;border: 0;margin: 0;padding: 0 20px 20px 20px;">
+                                    <a href="javascript:submitReceiptInfo()"
+                                       class="btn btn-submit btn-s-md a-noline" style="color: #fff"
+                                       id="submitAddReceiptBtn"
+                                    >提交</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+
+            <!-- /.modal 大图 start -->
+            <div class="modal fade bs-example-modal-lg-image" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" id="modelCloseBtn"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myLargeModalLabel">大图</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="bs-example" data-example-id="simple-carousel">
+                                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal 大图 end -->
 
         </section>
     </section>
@@ -750,6 +950,56 @@
                 success: function(data) {
                     $('#modelCloseBtnAdd').click();
                     window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&successMessage="+data.successMessage;
+                }
+            });
+        }
+    }
+
+    function addReceipt(){
+        if('${fn:length(receiptList) > 0}'){
+            $('#receiptdtAdd').val("${receiptList[0].receiptdt}");
+            $('#satisfactionAdd').val("${receiptList[0].satisfaction}");
+            $('#questionAdd').val("${receiptList[0].question}");
+            $('#receiptId').val("${receiptList[0].uuid}");
+            $('#receiptVersionno').val("${receiptList[0].versionno}");
+        }else{
+            $('#receiptdtAdd').val("");
+            $('#satisfactionAdd').val("");
+            $('#questionAdd').val("");
+        }
+
+        $('#addReceipt').click();
+    }
+
+    //订单添加回执
+    function submitReceiptInfo(){
+        $("#addReceiptFrm").parsley("validate");
+        if($('#addReceiptFrm').parsley().isValid() && validateContactno()){
+            $('#submitAddReceiptBtn').attr('disabled', true);
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url:"${ctx}/admin/wefamily/addReceiptForOrder?orderId=${order.uuid}",
+                data:$('#addReceiptFrm').serialize(),// 你的formid
+                async: false,
+                error: function(request) {
+                    $('#submitAddReceiptBtn').removeAttr('disabled');
+                    qikoo.dialog.alert("系统忙，稍候再试");
+                },
+                success: function(data) {
+                    $('#modelCloseBtnAddReceipt').click();
+                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&successMessage="+data.successMessage;
+                }
+            });
+        }
+    }
+
+    function finishOrder(){
+        if(confirm('确定完成订单？')){
+            //确定
+            $.get("${ctx}/admin/wefamily/finishOrder?orderId=${order.uuid}&versionno=${order.versionno}",function(data,status){
+                if(undefined != data.finishFlag){
+                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&finishFlag="+data.finishFlag;
                 }
             });
         }

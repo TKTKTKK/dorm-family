@@ -53,23 +53,48 @@ public class OrderService extends BaseService<OrderMapper,Order> {
      */
     public String addMachineForOrder(String orderId, Machine machine) {
         String returnMsg = "";
-        List<Machine> machineList = machineMapper.selectMachineForNoRepeat(machine);
-        //机器已存在
+        Machine tempMachine = new Machine();
+        tempMachine.setMachinemodel(machine.getMachinemodel());
+        tempMachine.setMachineno(machine.getMachineno());
+        tempMachine.setEngineno(machine.getEngineno());
+
+        List<Machine> machineList = machineMapper.select(tempMachine);
         if(null != machineList && machineList.size() > 0){
-            Machine tempMachine = machineList.get(0);
-            if(machineList.size() == 2){
-                returnMsg = "机器号与发动机号不匹配！";
-            }else if(StringUtils.isNotBlank(tempMachine.getOrderid())){
-                returnMsg = "机器"+tempMachine.getMachineno()+"已在订单内！";
+            if(StringUtils.isNotBlank(machineList.get(0).getOrderid())){
+                Order tempOrder = new Order();
+                tempOrder.setUuid(machineList.get(0).getOrderid());
+                tempOrder = this.mapper.retrieveByPk(tempOrder);
+                returnMsg = "机器已在订单"+tempOrder.getSnno()+"内！";
             }else{
-                tempMachine.setOrderid(orderId);
-                machineMapper.updatePartial(tempMachine);
+                machine.setOrderid(orderId);
+                machineMapper.updatePartial(machine);
             }
         }else{
             machine.setOrderid(orderId);
             machineMapper.insert(machine);
         }
+
         return returnMsg;
+
+        /*List<Machine> machineNoRepeatList = machineMapper.selectMachineForMachineNoRepeat(machine);
+        List<Machine> engineNoRepeatList = machineMapper.selectMachineForEngineNoRepeat(machine);
+        if(null!=machineNoRepeatList && null!=engineNoRepeatList && machineNoRepeatList.size()>0 && engineNoRepeatList.size()>0){
+            Machine noRepeatMachine = machineNoRepeatList.get(0);
+            Machine engineNoRepeatMachine = engineNoRepeatList.get(0);
+            if(noRepeatMachine.getUuid().equals(engineNoRepeatMachine.getUuid())){
+                if(StringUtils.isNotBlank(noRepeatMachine.getOrderid())){
+                    returnMsg = "机器"+noRepeatMachine.getMachineno()+"已在订单内！";
+                }else{
+                    noRepeatMachine.setOrderid(orderId);
+                    machineMapper.updatePartial(noRepeatMachine);
+                }
+            }
+        }else if(machineNoRepeatList.size() == 0 && engineNoRepeatList.size()==0){
+            machine.setOrderid(orderId);
+            machineMapper.insert(machine);
+        }else{
+            returnMsg = "机器号与发动机号不匹配！";
+        }*/
     }
 
     public int deleteMachineForOrder(String machineId) {
@@ -78,6 +103,12 @@ public class OrderService extends BaseService<OrderMapper,Order> {
         Machine machine = machineMapper.retrieveByPk(tempMachine);
         machine.setOrderid(null);
         machineMapper.update(machine);
+        return 1;
+    }
+
+    public int finishOrder(Order order) {
+        order.setStatus("FINISH");
+        this.mapper.updatePartial(order);
         return 1;
     }
 }

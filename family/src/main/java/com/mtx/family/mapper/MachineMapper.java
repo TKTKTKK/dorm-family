@@ -14,9 +14,13 @@ import java.util.List;
 public interface MachineMapper extends BaseMapper<Machine> {
 
 
-    List<Machine> selectMachineForNoRepeat(@Param("machine") Machine machine);
+    List<Machine> selectMachineForMachineNoRepeat(@Param("machine") Machine machine);
 
     PageList<Machine> selectMachineList(@Param("machine") Machine machine,@Param("startTime") String startDateTimeStr,@Param("endTime") String endDateTimeStr, PageBounds pageBounds);
 
     List<Machine> selectMachineByOrderId(@Param("orderId") String orderId, @Param("bindid") String userBindId, PageBounds pageBounds);
+
+    List<Machine> selectMachineListForAuto(@Param("machineno") String machineno,@Param("bindid") String userBindId);
+
+    List<Machine> selectMachineForEngineNoRepeat(@Param("machine") Machine machine);
 }

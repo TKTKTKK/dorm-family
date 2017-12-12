@@ -2,7 +2,11 @@ package com.mtx.portal.controller.admin;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
+import com.mtx.common.entity.Attachment;
+import com.mtx.common.entity.CommonCode;
 import com.mtx.common.exception.ServiceException;
+import com.mtx.common.service.AttachmentService;
+import com.mtx.common.service.CommonCodeService;
 import com.mtx.common.service.SequenceService;
 import com.mtx.common.utils.DateUtils;
 import com.mtx.common.utils.StringUtils;
@@ -26,11 +30,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Member;
+import java.util.*;
 import java.util.HashMap;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 微物业
@@ -62,6 +64,14 @@ public class WeFamilyController extends BaseAdminController {
     private MtxConsultDetailService mtxConsultDetailService;
     @Autowired
     private MtxMemberService mtxMemberService;
+    @Autowired
+    private ReceiptService receiptService;
+    @Autowired
+    private AttachmentService attachmentService;
+    @Autowired
+    private TrainService trainService;
+    @Autowired
+    private CommonCodeService commonCodeService;
 
     /**
      * 经销商管理界面
@@ -554,6 +564,17 @@ public class WeFamilyController extends BaseAdminController {
             logistics.setOrderby("createon desc");
             List<Logistics> logisticsList = logisticsService.queryForList(logistics);
             model.addAttribute("logisticsList",logisticsList);
+
+            Receipt receipt = new Receipt();
+            receipt.setOrderid(orderId);
+            List<Receipt> receiptList = receiptService.queryForList(receipt);
+            model.addAttribute("receiptList",receiptList);
+
+            Attachment attachment = new Attachment();
+            attachment.setRefid(orderId);
+            attachment.setOrderby("createon");
+            List<Attachment> attachmentList = attachmentService.queryForList(attachment);
+            model.addAttribute("attachmentList", attachmentList);
         }
         model.addAttribute("successMessage",request.getParameter("successMessage"));
 
@@ -571,6 +592,14 @@ public class WeFamilyController extends BaseAdminController {
             model.addAttribute("successMessage", "发送成功");
         }else if("0".equals(sendFlag)){
             model.addAttribute("errorMessage", "发送失败");
+        }
+
+        //订单发送结果
+        String finishFlag = request.getParameter("finishFlag");
+        if("1".equals(finishFlag)){
+            model.addAttribute("successMessage", "订单已完成");
+        }else if("0".equals(finishFlag)){
+            model.addAttribute("errorMessage", "操作失败");
         }
 
         return "admin/wefamily/orderDetail";
@@ -611,6 +640,7 @@ public class WeFamilyController extends BaseAdminController {
         }else{
             if(StringUtils.isNotBlank(orderId)){
                 try {
+
                     String returnMsg = orderService.addMachineForOrder(orderId,machine);
                     if(StringUtils.isNotBlank(returnMsg)){
                         resultMap.put("returnMsg",returnMsg);
@@ -658,6 +688,10 @@ public class WeFamilyController extends BaseAdminController {
         logistics.setDriverphone(request.getParameter("driverphoneAdd"));
         logistics.setPlatenumber(request.getParameter("platenumberAdd"));
         logistics.setLocation(request.getParameter("locationAdd"));
+        String remarks = request.getParameter("remarksAdd");
+        if(StringUtils.isNotBlank(remarks)){
+            logistics.setRemarks(remarks);
+        }
 
         try {
             logisticsService.insert(logistics);
@@ -671,6 +705,66 @@ public class WeFamilyController extends BaseAdminController {
         return resultMap;
     }
 
+    /**
+     *订单添加回执
+     */
+    @RequestMapping(value = "/addReceiptForOrder",method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> addReceiptForOrder(HttpServletRequest request){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        String orderId = request.getParameter("orderId");
+
+        Receipt receipt = new Receipt();
+        receipt.setOrderid(orderId);
+        receipt.setReceiptdt(request.getParameter("receiptdtAdd"));
+        receipt.setSatisfaction(request.getParameter("satisfactionAdd"));
+        String question = request.getParameter("questionAdd");
+        if(StringUtils.isNotBlank(question)){
+            receipt.setQuestion(question);
+        }
+        String[] receiptImg = request.getParameterValues("receiptImg");
+
+        String receiptId = request.getParameter("receiptId");
+        try {
+            if(StringUtils.isNotBlank(receiptId)){
+                receipt.setUuid(receiptId);
+                String receiptVersionno = request.getParameter("receiptVersionno");
+                receipt.setVersionno(Integer.valueOf(receiptVersionno));
+                receiptService.updateReceipt(receipt,receiptImg);
+                resultMap.put("successMessage", "修改成功");
+            }else{
+                receiptService.saveReceipt(receipt,receiptImg);
+                resultMap.put("successMessage", "添加成功");
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            resultMap.put("errorMessage", "系统忙，稍候再试");
+        }
+
+
+        return resultMap;
+    }
+
+    /**
+     * 订单结束
+     */
+    @RequestMapping("/finishOrder")
+    @ResponseBody
+    public Map<String, Object> finishOrder(HttpServletRequest request){
+        int finishFlag = 0;
+        String orderId = request.getParameter("orderId");
+        String versionno = request.getParameter("versionno");
+        if(StringUtils.isNotBlank(orderId)){
+            Order order = new Order();
+            order.setUuid(orderId);
+            order.setVersionno(Integer.valueOf(versionno));
+            finishFlag = orderService. finishOrder(order);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("finishFlag", finishFlag);
+        return resultMap;
+    }
 
     /**
      * 咨询管理
@@ -798,4 +892,308 @@ public class WeFamilyController extends BaseAdminController {
         resultMap.put("deleteFlag", deleteFlag);
         return resultMap;
     }
+
+    /**
+     *培训管理
+     */
+    @RequestMapping(value = "/trainManage",method = RequestMethod.GET)
+    public String trainManage(Model model,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        model.addAttribute("successMessage",request.getParameter("successMessage"));
+        return "admin/wefamily/trainManage";
+    }
+
+    /**
+     * 培训管理
+     * @param train
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/trainManage",method = RequestMethod.POST)
+    public String trainManage(@RequestParam(required = false,defaultValue = "1") int page,Train train,Model model,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        model.addAttribute("train",train);
+        if(null != wechatBinding){
+            String startDateStr = request.getParameter("startDateStr");
+            model.addAttribute("startDateStr", startDateStr);
+            String endDateStr = request.getParameter("endDateStr");
+            model.addAttribute("endDateStr", endDateStr);
+            Date startDate = DateUtils.parseDate(startDateStr);
+            Date endDate = DateUtils.parseDate(endDateStr);
+            startDate = DateUtils.getDateStart(startDate);
+            endDate = DateUtils.getDateEnd(endDate);
+            String startDateTimeStr = "";
+            if(null != startDate){
+                startDateTimeStr = DateUtils.formatDate(startDate, "yyyy-MM-dd HH:mm:ss");
+            }
+            String endDateTimeStr = "";
+            if(null != endDate){
+                endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
+            }
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<Train> trainList = trainService.queryTrainList(train, startDateTimeStr, endDateTimeStr, pageBounds);
+            model.addAttribute("trainList", trainList);
+
+            //删除结果
+            String deleteFlag = request.getParameter("deleteFlag");
+            if("1".equals(deleteFlag)){
+                model.addAttribute("successMessage", "删除成功");
+            }else if("0".equals(deleteFlag)){
+                model.addAttribute("errorMessage", "删除失败");
+            }
+        }
+
+        return "admin/wefamily/trainManage";
+    }
+
+    /**
+     * 培训信息（界面）
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/trainInfo",method = RequestMethod.GET)
+    public String trainInfo(HttpServletRequest request,Model model){
+
+        List<CommonCode> programCodeList = commonCodeService.queryCodeList("TRAIN_PROGRAM");
+        model.addAttribute("programCodeList",programCodeList);
+
+        String trainId = request.getParameter("trainId");
+        if(StringUtils.isNotBlank(trainId)){
+            Train train = new Train();
+            train.setUuid(trainId);
+            train = trainService.queryForObjectByPk(train);
+            model.addAttribute("train", train);
+
+            if(null != train){
+
+                if(StringUtils.isNotBlank(train.getProgram())){
+                    String[] trainPrograms= train.getProgram().split(",");
+                    if(null != trainPrograms){
+                        List<String> trainProgramList = new ArrayList<>();
+                        for(String program : trainPrograms){
+                            trainProgramList.add(program);
+                        }
+                        model.addAttribute("trainProgramList",trainProgramList);
+                    }
+                }
+            }
+
+
+            Attachment attachment = new Attachment();
+            attachment.setRefid(trainId);
+            List<Attachment> attachmentList = attachmentService.queryForList(attachment);
+            model.addAttribute("attachmentList",attachmentList);
+        }
+
+        //培训结果
+        String finishFlag = request.getParameter("finishFlag");
+        if("1".equals(finishFlag)){
+            model.addAttribute("successMessage", "培训已完成");
+        }else if("0".equals(finishFlag)){
+            model.addAttribute("errorMessage", "操作失败");
+        }
+        return "admin/wefamily/trainInfo";
+    }
+
+    /**
+     * 培训信息
+     * @param train
+     * @param redirectAttributes
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/trainInfo",method = RequestMethod.POST)
+    public String trainInfo(Train train, RedirectAttributes redirectAttributes, Model model,HttpServletRequest request){
+
+        //培训项目
+        String trainProgramStr = "";
+        String[] trainPrograms = request.getParameterValues("programs");
+        if(null != trainPrograms){
+            for(String program : trainPrograms){
+                trainProgramStr += program + ",";
+            }
+            if(StringUtils.isNotBlank(trainProgramStr)){
+                train.setProgram(trainProgramStr);
+            }
+        }
+
+        String[] trainImgs = request.getParameterValues("trainImg");
+
+        //修改
+        if(StringUtils.isNotBlank(train.getUuid())){
+            try {
+                trainService.updateTrain(train,trainImgs);
+                redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");
+            }
+        }else{
+            trainService.saveTrain(train,trainImgs);
+            redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+        }
+
+        return "redirect:trainInfo?trainId=" + train.getUuid();
+    }
+
+    //自动查询机器列表
+    @RequestMapping(value = "/queryMachineList")
+    @ResponseBody
+    public Map<String, Object> queryMachineList(HttpServletRequest request){
+        String machineno = request.getParameter("machineno");
+        if(StringUtils.isNotBlank(machineno)){
+            if(machineno.indexOf("%") > -1){
+                machineno = machineno.replace("%","\\%");
+            }
+            if(machineno.indexOf("_") > -1){
+                machineno = machineno.replace("_","\\_");
+            }
+        }
+
+        List<Machine> autoQueryMachineList = machineService.queryMachineListForAuto(machineno);
+
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("autoQueryMachineList", autoQueryMachineList);
+        return resultMap;
+    }
+
+    /**
+     * 根据id查询机器
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/queryMachineById", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> queryMachineById(HttpServletRequest request){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        String machineId = request.getParameter("machineId");
+        Machine machine = new Machine();
+        machine.setUuid(machineId);
+        machine = machineService.queryForObjectByPk(machine);
+        resultMap.put("machine", machine);
+        return resultMap;
+    }
+
+    /**
+     * 培训结束
+     */
+    @RequestMapping("/finishTrain")
+    @ResponseBody
+    public Map<String, Object> finishTrain(HttpServletRequest request){
+        int finishFlag = 0;
+        String trainId = request.getParameter("trainId");
+        String versionno = request.getParameter("versionno");
+        if(StringUtils.isNotBlank(trainId)){
+            Train train = new Train();
+            train.setUuid(trainId);
+            train.setVersionno(Integer.valueOf(versionno));
+            finishFlag = trainService. finishTrain(train);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("finishFlag", finishFlag);
+        return resultMap;
+    }
+
+    /**
+     * 删除培训
+     * @param request
+     * @return
+     */
+    @RequestMapping("/deleteTrain")
+    @ResponseBody
+    public Map<String, Object> deleteTrain(HttpServletRequest request){
+        int deleteFlag = 0;
+        String trainId = request.getParameter("trainId");
+        if(StringUtils.isNotBlank(trainId)){
+            Train train = new Train();
+            train.setUuid(trainId);
+            deleteFlag = trainService.delete(train);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
+    }
+
+    /**
+     * 培训列表
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/trainManageForPhone")
+    public String trainManageForPhone(Model model) {
+        Train train = new Train();
+        List<Train> trainList = trainService.queryTrainListForPhone(train);
+        model.addAttribute("trainList",trainList);
+        return "admin/wefamily/trainManageForPhone";
+    }
+
+    @RequestMapping(value = "/trainInfoForPhone",method = RequestMethod.GET)
+    public String trainInfoForPhone(Model model,HttpServletRequest request){
+        String trainId= request.getParameter("trainId");
+        if(StringUtils.isNotBlank(trainId)){
+            Train train = new Train();
+            train.setUuid(trainId);
+            train = trainService.queryForObjectByPk(train);
+            model.addAttribute("train", train);
+
+            if(null != train){
+
+                if(StringUtils.isNotBlank(train.getProgram())){
+                    String[] trainPrograms= train.getProgram().split(",");
+                    if(null != trainPrograms){
+                        List<String> trainProgramList = new ArrayList<>();
+                        for(String program : trainPrograms){
+                            trainProgramList.add(program);
+                        }
+                        model.addAttribute("trainProgramList",trainProgramList);
+                    }
+                }
+            }
+
+            Attachment attachment = new Attachment();
+            attachment.setRefid(trainId);
+            List<Attachment> attachmentList = attachmentService.queryForList(attachment);
+            model.addAttribute("attachmentList",attachmentList);
+        }
+
+        return "admin/wefamily/trainInfoForPhone";
+    }
+
+    @RequestMapping(value = "/trainInfoForPhone",method = RequestMethod.POST)
+    public String trainInfoForPhone(Model model,HttpServletRequest request,Train train, RedirectAttributes redirectAttributes){
+        //培训项目
+        String trainProgramStr = "";
+        String[] trainPrograms = request.getParameterValues("trainPrograms");
+        if(null != trainPrograms){
+            for(String program : trainPrograms){
+                trainProgramStr += program + ",";
+            }
+            if(StringUtils.isNotBlank(trainProgramStr)){
+                train.setProgram(trainProgramStr);
+            }
+        }
+
+        String[] trainImgs = request.getParameterValues("trainImg");
+
+        //修改
+        if(StringUtils.isNotBlank(train.getUuid())){
+            try {
+                trainService.updateTrain(train,trainImgs);
+                redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");
+            }
+        }else{
+            trainService.saveTrain(train,trainImgs);
+            redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+        }
+
+        return "redirect:trainInfoForPhone?trainId=" + train.getUuid();
+    }
+
 }

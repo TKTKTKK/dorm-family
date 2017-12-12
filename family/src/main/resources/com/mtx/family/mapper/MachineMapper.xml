@@ -5,7 +5,7 @@
     <resultMap id="selectResultMap" type="com.mtx.family.entity.Machine">
     </resultMap>
 
-    <select id="selectMachineForNoRepeat" resultMap="selectResultMap">
+    <select id="selectMachineForMachineNoRepeat" resultMap="selectResultMap">
         select mm.* from tb_mtx_machine mm
         where mm.bindid = #{machine.bindid}
         <if test="machine.machineno != null and machine.machineno != ''">
@@ -14,7 +14,9 @@
         <if test="machine.uuid != null and machine.uuid != ''">
             and mm.uuid != #{machine.uuid}
         </if>
-        UNION
+    </select>
+
+    <select id="selectMachineForEngineNoRepeat" resultMap="selectResultMap">
         select mm.* from tb_mtx_machine mm
         where mm.bindid = #{machine.bindid}
         <if test="machine.engineno != null and machine.engineno != ''">
@@ -23,7 +25,6 @@
         <if test="machine.uuid != null and machine.uuid != ''">
             and mm.uuid != #{machine.uuid}
         </if>
-
     </select>
 
     <select id="selectMachineList" resultMap="selectResultMap">
@@ -56,6 +57,15 @@
         where mm.bindid = #{bindid}
         and mm.orderid = #{orderId}
         order by mm.modifyon desc
+    </select>
+
+    <select id="selectMachineListForAuto" resultMap="selectResultMap">
+        select mm.* from tb_mtx_machine mm
+        where mm.bindid = #{bindid}
+        <if test="machineno != null and machineno != ''">
+            and mm.machineno like CONCAT('%',#{machineno},'%')
+        </if>
+        order by mm.createon desc;
     </select>
 
 </mapper>

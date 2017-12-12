@@ -35,4 +35,9 @@ public class MachineService extends BaseService<MachineMapper,Machine> {
     public List<Machine> queryMachineByOrderId(String orderId, PageBounds pageBounds) {
         return this.mapper.selectMachineByOrderId(orderId, UserUtils.getUserBindId(),pageBounds);
     }
+
+    public List<Machine> queryMachineListForAuto(String machineno) {
+
+        return this.mapper.selectMachineListForAuto(machineno,UserUtils.getUserBindId());
+    }
 }

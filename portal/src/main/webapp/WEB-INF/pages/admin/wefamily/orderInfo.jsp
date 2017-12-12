@@ -127,7 +127,7 @@
                                     <div class="radio col-sm-2">
                                         <label>
                                             <input type="radio" name="electricstart" id="electricstart2" value="N"
-                                                   <c:if test="${'N' eq order.electricstart}">checked</c:if>
+                                                   <c:if test="${empty order.electricstart || 'N' eq order.electricstart}">checked</c:if>
                                             >否
                                         </label>
                                     </div>
@@ -146,7 +146,7 @@
                                     <div class="radio col-sm-2">
                                         <label>
                                             <input type="radio" name="coverall" id="coverall2" value="N"
-                                                   <c:if test="${'N' eq order.coverall}">checked</c:if>
+                                                   <c:if test="${empty order.coverall || 'N' eq order.coverall}">checked</c:if>
                                             >否
                                         </label>
                                     </div>
@@ -165,7 +165,7 @@
                                     <div class="radio col-sm-2">
                                         <label>
                                             <input type="radio" name="plasticcover" id="plasticcover2" value="N"
-                                                   <c:if test="${'N' eq order.plasticcover}">checked</c:if>
+                                                   <c:if test="${empty order.plasticcover || 'N' eq order.plasticcover}">checked</c:if>
                                             >否
                                         </label>
                                     </div>
@@ -184,7 +184,7 @@
                                     <div class="radio col-sm-2">
                                         <label>
                                             <input type="radio" name="fueltank" id="fueltank2" value="N"
-                                                   <c:if test="${'N' eq order.fueltank}">checked</c:if>
+                                                   <c:if test="${empty order.fueltank || 'N' eq order.fueltank}">checked</c:if>
                                             >否
                                         </label>
                                     </div>
