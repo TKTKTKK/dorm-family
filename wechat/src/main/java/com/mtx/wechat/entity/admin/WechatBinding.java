@@ -44,6 +44,8 @@ public class WechatBinding extends BaseEntity {
     private String authorizerrefreshtoken;
     @Column
     private String authorized;
+    @Column
+    private String staffqrcode;
 
     public String getWechatname() {
         return wechatname;
@@ -167,5 +169,13 @@ public class WechatBinding extends BaseEntity {
 
     public void setAuthorized(String authorized) {
         this.authorized = authorized;
+    }
+
+    public String getStaffqrcode() {
+        return staffqrcode;
+    }
+
+    public void setStaffqrcode(String staffqrcode) {
+        this.staffqrcode = staffqrcode;
     }
 }

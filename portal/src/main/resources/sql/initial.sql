@@ -285,6 +285,7 @@ CREATE TABLE `tb_wechat_binding` (
   `phpayapikey` varchar(64) DEFAULT NULL,
   `authorizerrefreshtoken` varchar(128) DEFAULT NULL,
   `authorized` char(1) DEFAULT NULL,
+  `staffqrcode` varchar(256) DEFAULT NULL,
   `createon` varchar(23) NOT NULL,
   `createby` varchar(32) NOT NULL,
   `modifyon` varchar(23) NOT NULL,

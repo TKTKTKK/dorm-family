@@ -5,13 +5,13 @@ import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.entity.*;
 import com.mtx.common.exception.ServiceException;
 import com.mtx.common.service.*;
-import com.mtx.common.utils.StringUtils;
-import com.mtx.common.utils.UserUtils;
+import com.mtx.common.utils.*;
 import com.mtx.family.entity.Merchant;
 import com.mtx.family.entity.UserMerchant;
 import com.mtx.family.service.MerchantService;
 import com.mtx.family.service.UserMerchantService;
 import com.mtx.portal.PortalContants;
+import com.mtx.wechat.WechatConstants;
 import com.mtx.wechat.entity.WechatGroup;
 import com.mtx.wechat.entity.WechatUser;
 import com.mtx.wechat.entity.WechatUserInfo;
@@ -19,6 +19,7 @@ import com.mtx.wechat.entity.admin.WechatBinding;
 import com.mtx.wechat.service.WechatBindingService;
 import com.mtx.wechat.service.WechatUserInfoService;
 import com.mtx.wechat.utils.WechatBindingUtil;
+import com.mtx.wechat.utils.WechatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -306,6 +307,20 @@ public class UserManageController extends BaseAdminController {
 
             String currentUserId = UserUtils.getUserId();
             model.addAttribute("currentUserId", currentUserId);
+
+            String staffqrcode = wechatBinding.getStaffqrcode();
+
+            if (StringUtils.isNotBlank(wechatBinding.getAppid())) {
+                if(StringUtils.isBlank(staffqrcode)){
+                    String domainUrl = RequestUtil.getDomainUrl();
+                    String qrCodeUrl = domainUrl + "/guest/staff/bind";
+                    staffqrcode = QRCodeUtil.generateQRCode(qrCodeUrl);
+                    wechatBinding.setStaffqrcode(staffqrcode);
+                    wechatBindingService.updatePartial(wechatBinding);
+                    CacheUtils.remove(WechatConstants.BIND_DETAILS_CACHE,wechatBinding.getUuid());
+                }
+                model.addAttribute("staffqrcode", staffqrcode);
+            }
         }
         return "admin/usermanage/roleDistribute";
     }
