@@ -105,8 +105,8 @@ CREATE TABLE `tb_mtx_good_exchange` (
   PRIMARY KEY (`uuid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 商品管理
-INSERT INTO `tb_platform_permit` VALUES ('2017120910000002', 'MENU', '商品管理', 'admin/wefamily/mtxGoodManage', '2015050510000011', '1108', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
+-- 商品兑换管理
+INSERT INTO `tb_platform_permit` VALUES ('2017120910000002', 'MENU', '商品兑换管理', 'admin/wefamily/mtxGoodManage', '2015050510000011', '1108', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
 
 
 
