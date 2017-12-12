@@ -2,7 +2,7 @@
 <!DOCTYPE xml>
 <ehcache updateCheck="false" name="defaultCache">
 
-    <diskStore path="java.io.tmpdir/mtx/ehcache" />
+    <diskStore path="/mydata/mtx/ehcache" />
 
     <!-- DefaultCache setting. -->
     <defaultCache maxEntriesLocalHeap="100" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"

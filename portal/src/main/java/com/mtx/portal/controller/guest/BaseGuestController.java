@@ -1,9 +1,9 @@
 package com.mtx.portal.controller.guest;
 
-import com.mtx.wechat.service.WpUserService;
+import com.mtx.common.utils.UserUtils;
+import com.mtx.portal.PortalContants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -16,28 +16,21 @@ import java.io.IOException;
 public class BaseGuestController {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private WpUserService wpUserService;
-
-
-    /**
-     * 判断是否是微信访问
-     * @param request
-     * @return
-     */
-    public static boolean isWeChat(HttpServletRequest request) {
-        String userAgent = request.getHeader("user-agent").toLowerCase();
-        return userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
+    protected String getOpenid(HttpServletRequest req){
+        return (String)req.getSession().getAttribute(PortalContants.PARAM_OPENID);
     }
 
+    protected String getBindid(HttpServletRequest req){
+        return (String)req.getSession().getAttribute(PortalContants.PARAM_BINDID);
+    }
 
-
-    /**
-     * 获取微信网页授权code
-     * 换取openid
-     */
     @ModelAttribute
     protected void preHandleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        StringBuffer requestUrl = req.getRequestURL();
+        if(requestUrl != null){
+            logger.info("requestUrl : " + requestUrl.toString());
+        }
+        logger.info("bind : " + getBindid(req));
+        logger.info("openid : " + getOpenid(req));
     }
 }

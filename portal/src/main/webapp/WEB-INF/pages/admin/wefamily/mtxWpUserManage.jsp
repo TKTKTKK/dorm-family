@@ -21,24 +21,23 @@
                     <c:if test="${not empty wechatBinding}">
                         <form method="post" action="" class="form-horizontal bg-white padding20 b-t b-b b-l b-r" data-validate="parsley" id="searchForm">
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 姓名：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <input type="text" class="form-control" name="name" id="name" data-maxlength="90"
-                                               onblur="trimText(this)" value="${mtxMember.name}">
+                                               onblur="trimText(this)" value="${wpUser.name}">
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 电话：</label>
                                     <div class="col-sm-7  my-display-inline-box">
-                                        <input type="text" class="form-control" name="phone" id="phone" data-maxlength="90"
-                                               onblur="trimText(this)" value="${mtxMember.phone}">
+                                        <input type="text" class="form-control" name="contactno" id="contactno" data-maxlength="90"
+                                               onblur="trimText(this)" value="${wpUser.contactno}">
                                     </div>
                                 </div>
-                                <div style="clear: both"></div>
-                                <div class="row col-sm-12 text-center text-white" style="margin-top: 20px">
+                                <div class="col-sm-4 text-center text-white">
                                     <a type="submit"  class="btn btn-submit btn-s-xs"
-                                       onclick="searchMtxMember()"
+                                       onclick="searchWpUser()"
                                        id="searchBtn" style="color: #fff">查 询</a>
                                 </div>
                             </div>
@@ -51,54 +50,50 @@
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
                                     <tr>
-                                        <th width="10%">姓名</th>
-                                        <th width="10%">手机号</th>
+                                        <th width="15%">姓名</th>
+                                        <th width="15%">手机号</th>
                                         <th width="15%">详细地址</th>
                                         <th width="10%">微信昵称</th>
-                                        <th width="10%">微信头像</th>
+                                        <th width="15%">微信头像</th>
                                         <th width="10%">积分</th>
-                                        <th width="15%">经销商</th>
                                         <th width="20%">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach items="${mtxMemberList}" var="mtxMember">
+                                    <c:forEach items="${wpUserList}" var="wpUser">
                                         <tr>
                                             <td>
-                                                    ${mtxMember.name}
+                                                    ${wpUser.name}
                                             </td>
                                             <td>
-                                                    ${mtxMember.phone}
+                                                    ${wpUser.contactno}
                                             </td>
                                             <td>
-                                                    ${mtxMember.address}
+                                                    ${wpUser.address}
                                             </td>
                                             <td>
-                                                    ${mtxMember.wechatname}
+                                                    ${wpUser.nickname}
                                             </td>
                                             <td>
-                                                <img src="${mtxMember.wechatimg}" width="50" height="50">
+                                                <img src="${wpUser.headimgurl}" width="50" height="50">
                                             </td>
                                             <td>
-                                                    ${mtxMember.points}
+                                                    ${wpUser.points}
                                             </td>
                                             <td>
-                                                    ${mtxMember.merchantname}
-                                            </td>
-                                            <td>
-                                                <a href="${ctx}/admin/wefamily/goMtxMember?uuid=${mtxMember.uuid}"
+                                                <a href="${ctx}/admin/wefamily/goWpUser?uuid=${wpUser.uuid}"
                                                    class="btn  btn-infonew btn-sm" style="color: white">
                                                     修改
                                                 </a>
 
-                                                <a href="javascript:deleteMtxMember('${mtxMember.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
+                                                <a href="javascript:deleteWpUser('${wpUser.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
                                     </tbody>
                                 </table>
-                                <web:pagination pageList="${mtxMemberList}" postParam="true"/>
-                                <button class="btn btn-sm btn-submit" onclick="showMtxMemberInfo()"> 添加</button>
+                                <web:pagination pageList="${wpUserList}" postParam="true"/>
+                                <%--<button class="btn btn-sm btn-submit" onclick="showWpUserInfo()"> 添加</button>--%>
                             </div>
                     </c:if>
                     <c:if test="${empty wechatBinding}">
@@ -119,14 +114,14 @@
         //显示父菜单
         showParentMenu('满田星');
     }
-    function deleteMtxMember(uuid){
+    function deleteWpUser(uuid){
         qikoo.dialog.confirm('确定要删除吗？',function(){
             //确定删除
-            $.post("${ctx}/admin/wefamily/deleteMtxMember?uuid="+uuid,function(data){
+            $.post("${ctx}/admin/wefamily/deleteWpUser?uuid="+uuid,function(data){
                 //删除成功
                 if(data.deleteFlag){
                     var searchForm = document.getElementById("searchForm");
-                    searchForm.action = "${ctx}/admin/wefamily/mtxMemberManage?deleteFlag=1";
+                    searchForm.action = "${ctx}/admin/wefamily/mtxWpUserManage?deleteFlag=1";
                     searchForm.submit();
                 }
             });
@@ -136,17 +131,17 @@
     }
     function resubmitSearch(page){
         var searchForm = document.getElementById("searchForm");
-        searchForm.action = "${ctx}/admin/wefamily/mtxMemberManage?page="+page;
+        searchForm.action = "${ctx}/admin/wefamily/mtxWpUserManage?page="+page;
         searchForm.submit();
     }
 
 
-    function showMtxMemberInfo(){
-        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/goMtxMember";
+    function showWpUserInfo(){
+        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/goWpUser";
     }
-    function searchMtxMember(){
+    function searchWpUser(){
         var searchForm = document.getElementById("searchForm");
-        searchForm.action = "${ctx}/admin/wefamily/mtxMemberManage";
+        searchForm.action = "${ctx}/admin/wefamily/mtxWpUserManage";
         searchForm.submit();
     }
 </script>

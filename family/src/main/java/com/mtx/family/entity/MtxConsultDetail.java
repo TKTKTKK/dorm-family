@@ -13,9 +13,6 @@ public class MtxConsultDetail extends BaseEntity {
     private String consultid;
     @Column
     private String content;
-    @Column
-    private String status;
-
     public String getConsultid() {
         return consultid;
     }
@@ -32,11 +29,4 @@ public class MtxConsultDetail extends BaseEntity {
         this.content = content;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }

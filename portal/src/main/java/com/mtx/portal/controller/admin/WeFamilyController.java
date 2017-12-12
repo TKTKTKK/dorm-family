@@ -15,8 +15,10 @@ import com.mtx.common.utils.UserUtils;
 import com.mtx.family.entity.*;
 import com.mtx.family.service.*;
 import com.mtx.portal.PortalContants;
+import com.mtx.wechat.entity.WpUser;
 import com.mtx.wechat.entity.admin.WechatBinding;
 import com.mtx.wechat.service.WechatBindingService;
+import com.mtx.wechat.service.WpUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Member;
 import java.util.*;
 import java.util.HashMap;
 
@@ -63,7 +64,11 @@ public class WeFamilyController extends BaseAdminController {
     @Autowired
     private MtxConsultDetailService mtxConsultDetailService;
     @Autowired
-    private MtxMemberService mtxMemberService;
+    private MtxGoodService mtxGoodService;
+    @Autowired
+    private MtxPointService mtxPointService;
+    @Autowired
+    private WpUserService wpUserService;
     @Autowired
     private ReceiptService receiptService;
     @Autowired
@@ -640,7 +645,6 @@ public class WeFamilyController extends BaseAdminController {
         }else{
             if(StringUtils.isNotBlank(orderId)){
                 try {
-
                     String returnMsg = orderService.addMachineForOrder(orderId,machine);
                     if(StringUtils.isNotBlank(returnMsg)){
                         resultMap.put("returnMsg",returnMsg);
@@ -832,65 +836,157 @@ public class WeFamilyController extends BaseAdminController {
     /**
      * 会员管理
      */
-    @RequestMapping(value = "/mtxMemberManage")
-    public String mtxMemberManage(@RequestParam(required = false, defaultValue = "1") int page, MtxMember mtxMember, Model model, HttpServletRequest request) {
+    @RequestMapping(value = "/mtxWpUserManage")
+    public String mtxWpUserManage(@RequestParam(required = false, defaultValue = "1") int page, WpUser wpUser, Model model, HttpServletRequest request) {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         if (null != wechatBinding) {
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-            PageList<MtxMember> mtxMemberList = mtxMemberService.queryForListWithPagination(mtxMember, pageBounds);
-            model.addAttribute("mtxMemberList", mtxMemberList);
-            model.addAttribute("mtxMember",mtxMember);
+            PageList<WpUser> wpUserList = wpUserService.queryForListWithPagination(wpUser, pageBounds);
+            model.addAttribute("wpUserList", wpUserList);
+            model.addAttribute("wpUser",wpUser);
         }
         String successFlag=request.getParameter("deleteFlag");
         if("1".equals(successFlag)){
             model.addAttribute("successFlag","删除成功");
         }
-        return "admin/wefamily/mtxMemberManage";
+        return "admin/wefamily/mtxWpUserManage";
     }
-    @RequestMapping(value = "/goMtxMember", method = RequestMethod.GET)
-    public String goMtxMember(Model model,MtxMember mtxMember){
+    @RequestMapping(value = "/goWpUser", method = RequestMethod.GET)
+    public String goWpUser(Model model,WpUser wpUser){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
-        MtxMember mtxMemberTemp=mtxMemberService.queryForObjectByPk(mtxMember);
-        model.addAttribute("mtxMember",mtxMemberTemp);
-        return "admin/wefamily/mtxMemberInfo";
+        WpUser wpUserTemp=wpUserService.queryForObjectByPk(wpUser);
+        model.addAttribute("wpUser",wpUserTemp);
+        return "admin/wefamily/wpUserInfo";
     }
-    @RequestMapping(value = "/updateMtxMember",method = RequestMethod.POST)
-    public String updateMtxMember(@RequestParam(value = "imgfile", required = false)MultipartFile multipartFile, MtxMember mtxMember, RedirectAttributes redirectAttributes, Model model){
+    @RequestMapping(value = "/updateWpUser",method = RequestMethod.POST)
+    public String updateWpUser(@RequestParam(value = "imgfile", required = false)MultipartFile multipartFile, WpUser wpUser, RedirectAttributes redirectAttributes, Model model){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         if(null != multipartFile && !multipartFile.isEmpty()){
             String foldername = "member";
             String filename = UploadUtils.uploadFile(multipartFile, foldername);
-            mtxMember.setWechatimg(filename);
+            wpUser.setHeadimgurl(filename);
         }
-        if (StringUtils.isBlank(mtxMember.getUuid())) {
-            mtxMemberService.insert(mtxMember);
-            model.addAttribute("mtxMember", mtxMember);
-            model.addAttribute("successMessage", "保存成功！");
-        } else {
+        if (StringUtils.isNotBlank(wpUser.getUuid())) {
             try {
-                mtxMemberService.updatePartial(mtxMember);
-                MtxMember mtxMemberTemp = mtxMemberService.queryForObjectByPk(mtxMember);
-                model.addAttribute("mtxMember", mtxMemberTemp);
+                wpUserService.updatePartial(wpUser);
+                WpUser wpUserTemp = wpUserService.queryForObjectByPk(wpUser);
+                model.addAttribute("wpUser", wpUserTemp);
             } catch (ServiceException e) {
                 logger.error(e.getMessage(), e);
                 redirectAttributes.addFlashAttribute("errorMessage", "数据已修改，请重试！");
-                return "redirect:/admin/wefamily/goMtxMember?uuid=" + mtxMember.getUuid();
+                return "redirect:/admin/wefamily/goWpUser?uuid=" + wpUser.getUuid();
 
             }
             model.addAttribute("successMessage", "保存成功！");
         }
-        return "admin/wefamily/mtxMemberInfo";
+        return "admin/wefamily/wpUserInfo";
     }
-    @RequestMapping(value = "/deleteMtxMember", method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteWpUser", method = RequestMethod.POST)
     @ResponseBody
-    public Map deleteMtxMember(MtxMember mtxMember){
-        int deleteFlag=mtxMemberService.delete(mtxMember);
+    public Map deleteWpUser(WpUser wpUser){
+        int deleteFlag=wpUserService.delete(wpUser);
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("deleteFlag", deleteFlag);
         return resultMap;
+    }
+    /**
+     * 商品兑换管理
+     */
+    @RequestMapping(value = "/mtxGoodManage")
+    public String mtxGoodManage(@RequestParam(required = false, defaultValue = "1") int page, MtxGood mtxGood, Model model, HttpServletRequest request) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if (null != wechatBinding) {
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<MtxGood> mtxGoodList = mtxGoodService.queryForListWithPagination(mtxGood, pageBounds);
+            model.addAttribute("mtxGoodList", mtxGoodList);
+            model.addAttribute("mtxGood",mtxGood);
+        }
+        String successFlag=request.getParameter("deleteFlag");
+        if("1".equals(successFlag)){
+            model.addAttribute("successFlag","删除成功");
+        }
+        return "admin/wefamily/mtxGoodManage";
+    }
+    @RequestMapping(value = "/goMtxGood", method = RequestMethod.GET)
+    public String goMtxGood(Model model,MtxGood mtxGood){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        MtxGood mtxGoodTemp=mtxGoodService.queryForObjectByPk(mtxGood);
+        model.addAttribute("mtxGood",mtxGoodTemp);
+        return "admin/wefamily/mtxGoodInfo";
+    }
+    @RequestMapping(value = "/updateMtxGood",method = RequestMethod.POST)
+    public String updateMtxGood(@RequestParam(value = "imgfile", required = false)MultipartFile multipartFile, MtxGood mtxGood, RedirectAttributes redirectAttributes, Model model){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if(null != multipartFile && !multipartFile.isEmpty()){
+            String foldername = "good";
+            String filename = UploadUtils.uploadFile(multipartFile, foldername);
+            mtxGood.setImg(filename);
+        }
+        if (StringUtils.isBlank(mtxGood.getUuid())) {
+            mtxGoodService.insert(mtxGood);
+            model.addAttribute("mtxGood", mtxGood);
+            model.addAttribute("successMessage", "保存成功！");
+        } else {
+            try {
+                mtxGoodService.updatePartial(mtxGood);
+                MtxGood mtxGoodTemp = mtxGoodService.queryForObjectByPk(mtxGood);
+                model.addAttribute("mtxGood", mtxGoodTemp);
+            } catch (ServiceException e) {
+                logger.error(e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("errorMessage", "数据已修改，请重试！");
+                return "redirect:/admin/wefamily/goMtxGood?uuid=" + mtxGood.getUuid();
+
+            }
+            model.addAttribute("successMessage", "保存成功！");
+        }
+        return "admin/wefamily/mtxGoodInfo";
+    }
+    @RequestMapping(value = "/deleteMtxGood", method = RequestMethod.POST)
+    @ResponseBody
+    public Map deleteMtxGood(MtxGood mtxGood){
+        int deleteFlag=mtxGoodService.delete(mtxGood);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
+    }
+    /**
+     * 积分管理
+     */
+    @RequestMapping(value = "/mtxPointManage")
+    public String mtxPointManage(@RequestParam(required = false, defaultValue = "1") int page, MtxPoint mtxPoint, Model model, HttpServletRequest request) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if (null != wechatBinding) {
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<MtxPoint> mtxPointList = mtxPointService.queryForListWithPagination(mtxPoint, pageBounds);
+            model.addAttribute("mtxPointList", mtxPointList);
+            model.addAttribute("mtxPoint",mtxPoint);
+        }
+        return "admin/wefamily/mtxPointManage";
+    }
+
+    /**
+     * 验证产品型号是否存在
+     */
+
+    @RequestMapping(value = "/validModelIsExist", method = RequestMethod.POST)
+    @ResponseBody
+    public Boolean validModelIsExist(String model,String uuid){
+        List<MtxProduct> productList=new ArrayList<MtxProduct>();
+        if(StringUtils.isNotBlank(model)){
+            productList=mxtProductService.validModelIsExist(model,uuid);
+        }
+        if(productList.size()>0){
+            return false;
+        }else{
+            return true;
+        }
     }
 
     /**

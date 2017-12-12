@@ -3,6 +3,7 @@ package com.mtx.portal.controller.guest;
 import com.mtx.common.utils.*;
 import com.mtx.family.entity.*;
 import com.mtx.family.service.*;
+import com.mtx.wechat.entity.WpUser;
 import com.mtx.wechat.service.WechatBindingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/guest")
-public class MtxGuestController{
+public class MtxGuestController extends BaseGuestController{
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private WechatBindingService wechatBindingService;
@@ -102,22 +103,38 @@ public class MtxGuestController{
     }
 
     /**
-     * 登录注册
+     * 注册
      */
-    @RequestMapping(value = "/login")
-    public String login() {
-        return "guest/login";
-    }
     @RequestMapping(value = "/register",method = RequestMethod.GET)
     public String register() {
         return "guest/register";
     }
+
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public String addRegister(MtxMember mtxMember) {
-        if(StringUtils.isBlank(mtxMember.getMerchantid())){
-            mtxMember.setMerchantid("2ae953499da148d89cc3209a00e3b265");
-        }
-        mtxMemberService.insert(mtxMember);
-        return "guest/register";
+    public String addRegister(WpUser wpUser, HttpServletRequest req) {
+        wpUser.setBindid(getBindid(req));
+        wpUser.setOpenid(getOpenid(req));
+        String machineid=req.getParameter("machineid");
+        mtxMemberService.insertMemberAndPoint(wpUser,machineid,getBindid(req),getOpenid(req));
+        return "redirect:/guest/product_center";
+    }
+
+    /**
+     * 会员中心
+     * @return
+     */
+    @RequestMapping(value = "/member_center",method = RequestMethod.GET)
+    public String member_center() {
+        return "guest/member_center";
+    }
+
+    /**
+     * 积分列表
+     * @return
+     */
+
+    @RequestMapping(value = "/point_list",method = RequestMethod.GET)
+    public String point_list() {
+        return "guest/point_list";
     }
 }

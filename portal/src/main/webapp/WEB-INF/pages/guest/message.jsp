@@ -25,10 +25,6 @@
         .sanjiaor{width: 0;height: 0;border-top: 8px solid transparent;border-right: 8px solid #5bbc4e;border-bottom: 8px solid transparent;margin-left: 5px;}
         .rotatey{transform: rotateY(180deg);-webkit-transform: rotateY(180deg);}
         .myquestion:nth-of-type(1){margin-top:0;}
-        /*.myquestion:nth-of-type(odd) .enquiry_words{background: #fff;color: #333}*/
-        /*.myquestion:nth-of-type(even) .enquiry_words{background: #5bbc4e;color: #fff}*/
-        /*.myquestion:nth-of-type(odd) .time{color: #999;font-size: 0.12rem;margin-bottom: 0px;}*/
-        /*.myquestion:nth-of-type(even) .time{color: #fff;font-size: 0.12rem;margin-bottom: 0px;}*/
         .myquestion .left{background: #fff;color: #333}
         .myquestion .right{background:#5bbc4e;color: #fff}
         .myquestion .left .time{color: #999;font-size: 0.12rem;margin-bottom: 0px;}
@@ -37,7 +33,7 @@
         .newwords p{font-size: 1.5rem;text-align:center;width: 20%;border: 0;color: #fff;background: #5bbc4e;height: 40px;margin: 0;vertical-align: middle;float:right;line-height: 40px;}
         .bottom_1{position: absolute;bottom: 0;width: 100%;}
         .choose_alert{position: fixed;background: rgba(0,0,0,0.5);width: 100%;top: 0;bottom: 0;left: 0;text-align: center;}
-        .choose select{position: relative;top: 30%;width: 80%;font-size: 1.4rem;border-radius: 5px;padding: 1rem;color: #333;}
+        .choose select{position: relative;top: 20rem;width: 80%;font-size: 1.4rem;border-radius: 5px;padding: 1rem;color: #333;}
         html,body{height: 100%}
         #searchForm{height: calc(100% - 7.34rem);overflow-y: scroll;}
     </style>
@@ -61,21 +57,21 @@
 <div class="content">
     <c:forEach items="${mtxConsultDetailList}" var="mtxConsultDetail">
         <c:choose>
-            <c:when test="${mtxConsultDetail.status eq 'SYS'}">
-                <div class="myquestion">
-                    <img src="../../../static/admin/img/qrcode.png" alt="">
-                    <div class="sanjiaol"></div>
-                    <div class="enquiry_words left">
+            <c:when test="${mtxConsultDetail.createby eq 'guest'}">
+                <div class="myquestion rotatey">
+                    <img src="../../../static/admin/img/qrcode.png" alt="" class="rotatey">
+                    <div class="sanjiaor"></div>
+                    <div class="enquiry_words rotatey right">
                         <p class="time">${fn:substring(mtxConsultDetail.createon, 0, 19)}</p>
                         <span>${mtxConsultDetail.content}</span>
                     </div>
                 </div>
             </c:when>
             <c:otherwise>
-                <div class="myquestion rotatey">
-                    <img src="../../../static/admin/img/qrcode.png" alt="" class="rotatey">
-                    <div class="sanjiaor"></div>
-                    <div class="enquiry_words rotatey right">
+                <div class="myquestion">
+                    <img src="../../../static/admin/img/qrcode.png" alt="">
+                    <div class="sanjiaol"></div>
+                    <div class="enquiry_words left">
                         <p class="time">${fn:substring(mtxConsultDetail.createon, 0, 19)}</p>
                         <span>${mtxConsultDetail.content}</span>
                     </div>
@@ -93,11 +89,16 @@
     </div> -->
 </div>
 <div class="choose">
+    <c:set var="identifyList" value="${web:queryCommonCodeList('IDENTITY_CODE')}"></c:set>
     <select name="identify" id="identification" onchange="closeTheChose()">
-        <option value="">请选择你的身份</option>identify
-        <option value="COOPERATION" <c:if test="${identify eq 'COOPERATION'}">selected</c:if>>合作社</option>
-        <option value="COMMON_USER" <c:if test="${identify eq 'COMMON_USER'}">selected</c:if>>普通用户</option>
-        <option value="AGENT" <c:if test="${identify eq 'AGENT'}">selected</c:if>>代理商</option>
+        <option value="">请选择你的身份</option>
+        <c:forEach items="${identifyList}" var="commonCode">
+            <option value="${commonCode.code}"
+                    <c:if test="${identify eq commonCode.code}">
+                        selected
+                    </c:if>
+            >${commonCode.codevalue}</option>
+        </c:forEach>
     </select>
 </div>
     <input type="text" name="userid" id="userid" value="${userid}" style="display: none">

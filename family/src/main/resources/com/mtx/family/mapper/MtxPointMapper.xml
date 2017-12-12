@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.family.mapper.MtxPointMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.family.entity.MtxPoint">
+    </resultMap>
+    <select id="selectMtxPointList" resultMap="selectResultMap">
+        select mp.*,if(concat(tmm.machinemodel,tmm.machinename) is not null and concat(tmm.machinemodel,tmm.machinename)!='',concat(tmm.machinemodel,tmm.machinename),mg.name) as productname, wu.name as membername,wu.contactno as phone
+        from tb_mtx_point_record mp
+        inner join tb_wp_user wu on mp.userid=wu.uuid
+        left join tb_mtx_machine tmm on mp.machineid=tmm.uuid
+        left join tb_mtx_good_exchange mg on mp.goodid=mg.uuid
+        where TRUE
+        <if test="mtxPoint.membername != null and mtxPoint.membername != ''">
+            and wu.name like concat("%",#{mtxPoint.membername},"%")
+        </if>
+        <if test="mtxPoint.phone != null and mtxPoint.phone != ''">
+            and wu.contactno like concat("%",#{mtxPoint.phone},"%")
+        </if>
+        order by wu.uuid,date_format(mp.createon,'%Y-%m-%d %H:%i:%s') desc;
+    </select>
+    <select id="findPointIsExist" resultMap="selectResultMap">
+        select mp.*
+        from tb_mtx_point_record mp
+        where TRUE
+        <if test="machineid != null and machineid != ''">
+            and mp.machineid =#{machineid}
+        </if>
+        <if test="userid != null and userid != ''">
+            and mp.userid !=#{userid}
+        </if>
+;
+    </select>
+</mapper>
