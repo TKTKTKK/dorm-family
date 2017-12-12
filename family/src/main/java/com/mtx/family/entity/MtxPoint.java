@@ -10,13 +10,13 @@ import javax.persistence.Table;
 public class MtxPoint extends BaseEntity {
 
     @Column
-    private String memberid;
+    private String userid;
     @Column
-    private String productid;
+    private String machineid;
     @Column
     private String goodid;
     @Column
-    private String points;
+    private Double points;
 
     private String productname;
 
@@ -56,27 +56,27 @@ public class MtxPoint extends BaseEntity {
         this.phone = phone;
     }
 
-    public String getMemberid() {
-        return memberid;
+    public String getUserid() {
+        return userid;
     }
 
-    public void setMemberid(String memberid) {
-        this.memberid = memberid;
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 
-    public String getPoints() {
+    public Double getPoints() {
         return points;
     }
 
-    public void setPoints(String points) {
+    public void setPoints(Double points) {
         this.points = points;
     }
 
-    public String getProductid() {
-        return productid;
+    public String getMachineid() {
+        return machineid;
     }
 
-    public void setProductid(String productid) {
-        this.productid = productid;
+    public void setMachineid(String machineid) {
+        this.machineid = machineid;
     }
 }

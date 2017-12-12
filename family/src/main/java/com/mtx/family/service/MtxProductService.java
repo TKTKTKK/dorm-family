@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @Transactional
@@ -21,5 +23,9 @@ public class MtxProductService extends BaseService<MtxProductMapper,MtxProduct> 
 
     public PageList<MtxProduct> queryForListWithPagination(MtxProduct obj, PageBounds pageBounds) {
         return mapper.selectMxtProductList(obj,pageBounds);
+    }
+
+    public List<MtxProduct> validModelIsExist(String model, String uuid) {
+        return mapper.validModelIsExist(model,uuid);
     }
 }

@@ -5,18 +5,30 @@
     <resultMap id="selectResultMap" type="com.mtx.family.entity.MtxPoint">
     </resultMap>
     <select id="selectMtxPointList" resultMap="selectResultMap">
-        select mp.*,if(concat(tmp.model,tmp.name) is not null and concat(tmp.model,tmp.name)!='',concat(tmp.model,tmp.name),mg.name) as productname, mm.name as membername,mm.phone as phone
+        select mp.*,if(concat(tmm.machinemodel,tmm.machinename) is not null and concat(tmm.machinemodel,tmm.machinename)!='',concat(tmm.machinemodel,tmm.machinename),mg.name) as productname, wu.name as membername,wu.phone as phone
         from tb_mtx_point mp
-        inner join tb_mtx_member mm on mp.memberid=mm.uuid
-        left join tb_mtx_product tmp on mp.productid=tmp.uuid
+        inner join tb_wp_user wu on mp.userid=wu.uuid
+        left join tb_mtx_machine tmm on mp.machineid=tmm.uuid
         left join tb_mtx_good mg on mp.goodid=mg.uuid
         where TRUE
         <if test="mtxPoint.membername != null and mtxPoint.membername != ''">
-            and mm.name like concat("%",#{mtxPoint.membername},"%")
+            and wu.name like concat("%",#{mtxPoint.membername},"%")
         </if>
         <if test="mtxPoint.phone != null and mtxPoint.phone != ''">
-            and mm.phone like concat("%",#{mtxPoint.phone},"%")
+            and wu.phone like concat("%",#{mtxPoint.phone},"%")
         </if>
-        order by mm.uuid,date_format(mp.createon,'%Y-%m-%d %H:%i:%s') desc;
+        order by wu.uuid,date_format(mp.createon,'%Y-%m-%d %H:%i:%s') desc;
+    </select>
+    <select id="findPointIsExist" resultMap="selectResultMap">
+        select mp.*
+        from tb_mtx_point mp
+        where TRUE
+        <if test="machineid != null and machineid != ''">
+            and mp.machineid =#{machineid}
+        </if>
+        <if test="userid != null and userid != ''">
+            and mp.userid !=#{userid}
+        </if>
+;
     </select>
 </mapper>

@@ -25,10 +25,6 @@
         .sanjiaor{width: 0;height: 0;border-top: 8px solid transparent;border-right: 8px solid #5bbc4e;border-bottom: 8px solid transparent;margin-left: 5px;}
         .rotatey{transform: rotateY(180deg);-webkit-transform: rotateY(180deg);}
         .myquestion:nth-of-type(1){margin-top:0;}
-        /*.myquestion:nth-of-type(odd) .enquiry_words{background: #fff;color: #333}*/
-        /*.myquestion:nth-of-type(even) .enquiry_words{background: #5bbc4e;color: #fff}*/
-        /*.myquestion:nth-of-type(odd) .time{color: #999;font-size: 0.12rem;margin-bottom: 0px;}*/
-        /*.myquestion:nth-of-type(even) .time{color: #fff;font-size: 0.12rem;margin-bottom: 0px;}*/
         .myquestion .left{background: #fff;color: #333}
         .myquestion .right{background:#5bbc4e;color: #fff}
         .myquestion .left .time{color: #999;font-size: 0.12rem;margin-bottom: 0px;}
@@ -93,11 +89,16 @@
     </div> -->
 </div>
 <div class="choose">
+    <c:set var="identifyList" value="${web:queryCommonCodeList('IDENTITY_CODE')}"></c:set>
     <select name="identify" id="identification" onchange="closeTheChose()">
-        <option value="">请选择你的身份</option>identify
-        <option value="COOPERATION" <c:if test="${identify eq 'COOPERATION'}">selected</c:if>>合作社</option>
-        <option value="COMMON_USER" <c:if test="${identify eq 'COMMON_USER'}">selected</c:if>>普通用户</option>
-        <option value="AGENT" <c:if test="${identify eq 'AGENT'}">selected</c:if>>代理商</option>
+        <option value="">请选择你的身份</option>
+        <c:forEach items="${identifyList}" var="commonCode">
+            <option value="${commonCode.code}"
+                    <c:if test="${identify eq commonCode.code}">
+                        selected
+                    </c:if>
+            >${commonCode.codevalue}</option>
+        </c:forEach>
     </select>
 </div>
     <input type="text" name="userid" id="userid" value="${userid}" style="display: none">

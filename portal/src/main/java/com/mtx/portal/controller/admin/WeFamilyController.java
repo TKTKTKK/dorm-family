@@ -26,11 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 import java.util.HashMap;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 微物业
@@ -773,10 +770,32 @@ public class WeFamilyController extends BaseAdminController {
         if(null != multipartFile && !multipartFile.isEmpty()){
             String foldername = "member";
             String filename = UploadUtils.uploadFile(multipartFile, foldername);
-            mtxMember.setWechatimg(filename);
+            mtxMember.setHeadimgurl(filename);
         }
         if (StringUtils.isBlank(mtxMember.getUuid())) {
-            mtxMemberService.insert(mtxMember);
+            if(StringUtils.isNotBlank(mtxMember.getMachineid())){
+                String uuid=mtxMember.getUuid();
+                List<MtxPoint> pointList=new ArrayList<MtxPoint>();
+                pointList=mtxPointService.findPointIsExist(mtxMember.getMachineid(),uuid);
+                if(pointList.size()>0){
+                    mtxMember.setPoints(null);
+                }else{
+                    MtxProduct product=new MtxProduct();
+                    Machine machine=new Machine();
+                    machine.setUuid(mtxMember.getMachineid());
+                    machine=machineService.queryForObjectByPk(machine);
+                    if(machine!=null){
+                        product.setModel(machine.getMachinemodel());
+                        List<MtxProduct> productList=new ArrayList<MtxProduct>();
+                        productList=mxtProductService.queryForList(product);
+                        if(productList.size()>0){
+                            double p=productList.get(0).getPrice();
+                            mtxMember.setPoints(p);
+                        }
+                    }
+                }
+            }
+            mtxMemberService.insertMemberAndPoint(mtxMember);
             model.addAttribute("mtxMember", mtxMember);
             model.addAttribute("successMessage", "保存成功！");
         } else {
@@ -879,5 +898,23 @@ public class WeFamilyController extends BaseAdminController {
             model.addAttribute("mtxPoint",mtxPoint);
         }
         return "admin/wefamily/mtxPointManage";
+    }
+
+    /**
+     * 验证产品型号是否存在
+     */
+
+    @RequestMapping(value = "/validModelIsExist", method = RequestMethod.POST)
+    @ResponseBody
+    public Boolean validModelIsExist(String model,String uuid){
+        List<MtxProduct> productList=new ArrayList<MtxProduct>();
+        if(StringUtils.isNotBlank(model)){
+            productList=mxtProductService.validModelIsExist(model,uuid);
+        }
+        if(productList.size()>0){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

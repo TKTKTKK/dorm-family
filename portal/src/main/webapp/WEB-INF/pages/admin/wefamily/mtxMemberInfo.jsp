@@ -16,8 +16,8 @@
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
                 满田星 /
-                <a href="${ctx}/admin/wefamily/mtxMemberManage">会员管理 </a> /
-                <span class="font-bold  text-shallowred"> 会员详情</span>
+                <a href="${ctx}/admin/wefamily/mtxMemberManage">用户管理 </a> /
+                <span class="font-bold  text-shallowred"> 用户详情</span>
             </header>
             <div class="col-sm-12 pos">
                 <div style="margin-bottom: 5px">
@@ -31,7 +31,7 @@
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
                             <i class="fa fa-gift"></i>
-                            <span class="text-lg">会员详情：</span>
+                            <span class="text-lg">用户详情：</span>
                         </header>
                         <div class="panel-body p-0-15">
                             <div class="form-group">
@@ -46,10 +46,10 @@
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>手机号：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" data-required="true" name="phone" id="contactno"
+                                    <input type="text" class="form-control" data-required="true" name="contactno" id="contactno"
                                            data-maxlength="90"
                                            onblur="trimText(this)"
-                                           value="${mtxMember.phone}">
+                                           value="${mtxMember.contactno}">
                                     <span id="phoneError" class="text-danger"></span>
                                 </div>
 
@@ -84,21 +84,28 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>经销商编号：</label>
+                                <label class="col-sm-3  control-label"><span class="text-danger"></span>经销商编号：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" data-required="true" name="merchantid" id="merchantid"
-                                           data-maxlength="32"
+                                    <input type="text" class="form-control" name="merchantid" id="merchantid" disabled
                                            onblur="trimText(this)"
                                            value="${mtxMember.merchantid}">
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger"></span>机器编号：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <input type="text" class="form-control" name="machineid" id="machineid" disabled
+                                           onblur="trimText(this)"
+                                           value="${mtxMember.machineid}">
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger"></span>微信昵称：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" name="wechatname" id="wechatname"
+                                    <input type="text" class="form-control" name="nickname" id="nickname"
                                            data-maxlength="32"
                                            onblur="trimText(this)"
-                                           value="${mtxMember.wechatname}">
+                                           value="${mtxMember.nickname}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -108,9 +115,9 @@
                                            data-classInput="form-control inline v-middle input-s"
                                            id="value"
                                     >
-                                    <input type="text" class="hidden" name="wechatimg" value="${mtxMember.wechatimg}">
+                                    <input type="text" class="hidden" name="headimgurl" value="${mtxMember.headimgurl}">
                                     <div class="hidden" id="imgDiv" style="margin-top: 20px">
-                                        <img src="${mtxMember.wechatimg}" width="100" height="100"
+                                        <img src="${mtxMember.headimgurl}" width="100" height="100"
                                              data-toggle="modal" data-target=".bs-example-modal-lg1"
                                              class="hover-pointer">
                                     </div>
@@ -128,7 +135,7 @@
                                                 <div class="modal-body">
                                                     <div class="row">
                                                         <div class="col-sm-12">
-                                                            <img src="${mtxMember.wechatimg}" width="100%" height="100%" id="showLargePic"/>
+                                                            <img src="${mtxMember.headimgurl}" width="100%" height="100%" id="showLargePic"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -137,14 +144,51 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger"></span>身份类型：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <c:set var="identifyList" value="${web:queryCommonCodeList('IDENTITY_CODE')}"></c:set>
+                                    <select name="type" class="form-control" id="type">
+                                        <option value="">请选择你的身份</option>
+                                        <c:forEach items="${identifyList}" var="commonCode">
+                                            <option value="${commonCode.code}"
+                                                    <c:if test="${mtxMember.type eq commonCode.code}">
+                                                        selected
+                                                    </c:if>
+                                            >${commonCode.codevalue}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="extend" style="display: none">
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger"></span>积分：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="number" class="form-control"  name="points" id="points"
+                                    <input type="number" class="form-control"  name="points" id="points" disabled
                                            onblur="trimText(this)"
                                            value="${mtxMember.points}">
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger"></span>是否关注：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <select name="ifsubscribe" id="ifsubscribe" class="form-control">
+                                        <option value="">请选择</option>identify
+                                        <option value="1" <c:if test="${mtxMember.ifsubscribe eq '1'}">selected</c:if>>已关注</option>
+                                        <option value="0" <c:if test="${mtxMember.ifsubscribe eq '0'}">selected</c:if>>未关注</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger"></span>是否是会员：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <select name="ifauth" id="ifauth" class="form-control">
+                                        <option value="">请选择</option>identify
+                                        <option value="1" <c:if test="${mtxMember.ifauth eq '1'}">selected</c:if>>会员</option>
+                                        <option value="0" <c:if test="${mtxMember.ifauth eq '0'}">selected</c:if>>非会员</option>
+                                    </select>
+                                </div>
+                            </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
@@ -180,8 +224,11 @@
     window.onload = function () {
         //显示父菜单
         showParentMenu('满田星');
-        if(${mtxMember.wechatimg!=null && mtxMember.wechatimg!=''}){
+        if(${mtxMember.headimgurl!=null && mtxMember.headimgurl!=''}){
             $('#imgDiv').removeClass('hidden');
+        }
+        if(${mtxMember.uuid!=null && mtxMember.uuid!=''}){
+            $('#extend').css("display","block");
         }
     }
     function checkValid(){

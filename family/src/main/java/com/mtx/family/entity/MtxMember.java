@@ -6,15 +6,21 @@ import javax.persistence.Column;
 import javax.persistence.Table;
 
 
-@Table(name = "tb_mtx_member")
+@Table(name = "tb_wp_user")
 public class MtxMember extends BaseEntity {
 
     @Column
+    private String bindid;
+    @Column
+    private String openid;
+    @Column
     private String merchantid;
+    @Column
+    private String machineid;
     @Column
     private String name;
     @Column
-    private String phone;
+    private String contactno;
     @Column
     private String province;
     @Column
@@ -24,52 +30,50 @@ public class MtxMember extends BaseEntity {
     @Column
     private String address;
     @Column
-    private String wechatname;
+    private String nickname;
     @Column
-    private String wechatimg;
+    private String headimgurl;
     @Column
     private Double points;
+    @Column
+    private String type;//用户的类型是普通用户，还是经销商还是。。。。
+    @Column
+    private String ifsubscribe;//是否关注
+    @Column
+    private String ifauth;//是否是会员
 
     private String merchantname;
 
-    public String getAddress() {
-        return address;
+    public String getBindid() {
+        return bindid;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setBindid(String bindid) {
+        this.bindid = bindid;
+    }
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
     }
 
     public String getMerchantid() {
         return merchantid;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getWechatimg() {
-        return wechatimg;
-    }
-
-    public void setWechatimg(String wechatimg) {
-        this.wechatimg = wechatimg;
-    }
-
-    public Double getPoints() {
-        return points;
-    }
-
-    public void setPoints(Double points) {
-        this.points = points;
-    }
-
     public void setMerchantid(String merchantid) {
         this.merchantid = merchantid;
+    }
+
+    public String getMachineid() {
+        return machineid;
+    }
+
+    public void setMachineid(String machineid) {
+        this.machineid = machineid;
     }
 
     public String getName() {
@@ -80,12 +84,12 @@ public class MtxMember extends BaseEntity {
         this.name = name;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getContactno() {
+        return contactno;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setContactno(String contactno) {
+        this.contactno = contactno;
     }
 
     public String getProvince() {
@@ -96,6 +100,14 @@ public class MtxMember extends BaseEntity {
         this.province = province;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     public String getDistrict() {
         return district;
     }
@@ -104,12 +116,60 @@ public class MtxMember extends BaseEntity {
         this.district = district;
     }
 
-    public String getWechatname() {
-        return wechatname;
+    public String getAddress() {
+        return address;
     }
 
-    public void setWechatname(String wechatname) {
-        this.wechatname = wechatname;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getHeadimgurl() {
+        return headimgurl;
+    }
+
+    public void setHeadimgurl(String headimgurl) {
+        this.headimgurl = headimgurl;
+    }
+
+    public Double getPoints() {
+        return points;
+    }
+
+    public void setPoints(Double points) {
+        this.points = points;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getIfsubscribe() {
+        return ifsubscribe;
+    }
+
+    public void setIfsubscribe(String ifsubscribe) {
+        this.ifsubscribe = ifsubscribe;
+    }
+
+    public String getIfauth() {
+        return ifauth;
+    }
+
+    public void setIfauth(String ifauth) {
+        this.ifauth = ifauth;
     }
 
     public String getMerchantname() {
