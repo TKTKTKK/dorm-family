@@ -47,7 +47,7 @@
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>名称：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="text" class="form-control" data-required="true" name="name" id="name"
-                                           data-maxlength="256"
+                                           data-maxlength="60"
                                            onblur="trimText(this)"
                                            value="${mtxProduct.name}">
                                 </div>

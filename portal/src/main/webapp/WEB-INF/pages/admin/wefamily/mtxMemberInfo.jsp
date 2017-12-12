@@ -79,7 +79,7 @@
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>详细地址：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="text" class="form-control" data-required="true" name="address" id="address"
-                                           onblur="trimText(this)"
+                                           onblur="trimText(this)" data-maxlength="256"
                                            value="${mtxMember.address}">
                                 </div>
                             </div>

@@ -111,9 +111,6 @@ public class MtxGuestController extends BaseGuestController{
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public String addRegister(MtxMember mtxMember) {
-        if(StringUtils.isBlank(mtxMember.getMerchantid())){
-            mtxMember.setMerchantid("2ae953499da148d89cc3209a00e3b265");
-        }
         mtxMemberService.insert(mtxMember);
         return "guest/product_center";
     }

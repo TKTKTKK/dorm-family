@@ -55,8 +55,6 @@
     </li>
     <input type="text" name="wechatname" style="display: none" value="">
     <input type="text" name="wechatimg" style="display: none" value="">
-    <input type="text" name="merchantid" style="display: none" value="">
-    <input type="text" name="machineid" style="display: none" value="">
     <li>
         <span>机器型号</span>
         <span>2ZS-6K型</span>

@@ -37,7 +37,7 @@
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>名称：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="text" class="form-control" data-required="true" name="name" id="name"
-                                           data-maxlength="256"
+                                           data-maxlength="48"
                                            onblur="trimText(this)"
                                            value="${mtxGood.name}">
                                 </div>
@@ -46,7 +46,7 @@
                                 <div class="col-sm-3 control-label"><span class="text-danger">*</span>积分：</div>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input class="form-control" type="number" name="points" value="${mtxGood.points}"
-                                           id="points"
+                                           id="points" data-maxlength="11"
                                            data-required="true">
                                 </div>
                             </div>
@@ -102,7 +102,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><span class="text-danger"></span>商品详情：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" name="detail" value="${mtxGood.detail}">
+                                    <input type="text" class="form-control" name="detail" value="${mtxGood.detail}" data-maxlength="256">
                                 </div>
                             </div>
 
