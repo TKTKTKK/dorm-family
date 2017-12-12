@@ -31,4 +31,16 @@
         where bindid = #{bindid}
         order by createon;
     </select>
+    <select id="selectWpUserList" resultMap="selectResultMap">
+        select wu.*
+        from tb_wp_user wu
+        where TRUE
+        <if test="wpUser.name != null and wpUser.name != ''">
+            and wu.name like concat("%",#{wpUser.name},"%")
+        </if>
+        <if test="wpUser.contactno != null and wpUser.contactno != ''">
+            and wu.contactno like concat("%",#{wpUser.contactno},"%")
+        </if>
+        order by modifyon desc;
+    </select>
 </mapper>

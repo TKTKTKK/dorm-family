@@ -12,6 +12,7 @@ import com.mtx.wechat.entity.WpUser;
 import com.mtx.wechat.entity.admin.WechatBinding;
 import com.mtx.wechat.mapper.WpUserMapper;
 import com.mtx.wechat.utils.WechatBindingUtil;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -148,5 +149,8 @@ public class WpUserService extends BaseService<WpUserMapper,WpUser> {
      */
     public PageList<WpUser> queryAllWpUsersByBindid(String bindid, PageBounds pageBounds){
         return this.mapper.selectAllWpUsersByBindid(bindid, pageBounds);
+    }
+    public PageList<WpUser> queryForListWithPagination(WpUser obj, PageBounds pageBounds) {
+        return mapper.selectWpUserList(obj,pageBounds);
     }
 }

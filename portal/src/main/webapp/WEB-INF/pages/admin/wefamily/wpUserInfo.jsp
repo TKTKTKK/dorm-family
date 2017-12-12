@@ -16,7 +16,7 @@
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
                 满田星 /
-                <a href="${ctx}/admin/wefamily/mtxMemberManage">会员管理 </a> /
+                <a href="${ctx}/admin/wefamily/mtxWpUserManage">会员管理 </a> /
                 <span class="font-bold  text-shallowred"> 会员详情</span>
             </header>
             <div class="col-sm-12 pos">
@@ -40,7 +40,7 @@
                                     <input type="text" class="form-control" data-required="true" name="name" id="name"
                                            data-maxlength="48"
                                            onblur="trimText(this)"
-                                           value="${mtxMember.name}">
+                                           value="${wpUser.name}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -49,7 +49,7 @@
                                     <input type="text" class="form-control" data-required="true" name="contactno" id="contactno"
                                            data-maxlength="90"
                                            onblur="trimText(this)"
-                                           value="${mtxMember.contactno}">
+                                           value="${wpUser.contactno}">
                                     <span id="phoneError" class="text-danger"></span>
                                 </div>
 
@@ -80,7 +80,7 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="text" class="form-control" data-required="true" name="address" id="address"
                                            onblur="trimText(this)" data-maxlength="256"
-                                           value="${mtxMember.address}">
+                                           value="${wpUser.address}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -89,7 +89,7 @@
                                     <input type="text" class="form-control" name="nickname" id="nickname"
                                            data-maxlength="32"
                                            onblur="trimText(this)"
-                                           value="${mtxMember.nickname}">
+                                           value="${wpUser.nickname}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -99,9 +99,9 @@
                                            data-classInput="form-control inline v-middle input-s"
                                            id="value"
                                     >
-                                    <input type="text" class="hidden" name="headimgurl" value="${mtxMember.headimgurl}">
+                                    <input type="text" class="hidden" name="headimgurl" value="${wpUser.headimgurl}">
                                     <div class="hidden" id="imgDiv" style="margin-top: 20px">
-                                        <img src="${mtxMember.headimgurl}" width="100" height="100"
+                                        <img src="${wpUser.headimgurl}" width="100" height="100"
                                              data-toggle="modal" data-target=".bs-example-modal-lg1"
                                              class="hover-pointer">
                                     </div>
@@ -119,7 +119,7 @@
                                                 <div class="modal-body">
                                                     <div class="row">
                                                         <div class="col-sm-12">
-                                                            <img src="${mtxMember.headimgurl}" width="100%" height="100%" id="showLargePic"/>
+                                                            <img src="${wpUser.headimgurl}" width="100%" height="100%" id="showLargePic"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -136,7 +136,7 @@
                                         <option value="">请选择你的身份</option>
                                         <c:forEach items="${identifyList}" var="commonCode">
                                             <option value="${commonCode.code}"
-                                                    <c:if test="${mtxMember.type eq commonCode.code}">
+                                                    <c:if test="${wpUser.type eq commonCode.code}">
                                                         selected
                                                     </c:if>
                                             >${commonCode.codevalue}</option>
@@ -150,7 +150,7 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="number" class="form-control"  name="points" id="points" disabled
                                            onblur="trimText(this)"
-                                           value="${mtxMember.points}">
+                                           value="${wpUser.points}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -158,8 +158,8 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <select name="ifsubscribe" id="ifsubscribe" class="form-control">
                                         <option value="">请选择</option>identify
-                                        <option value="1" <c:if test="${mtxMember.ifsubscribe eq '1'}">selected</c:if>>已关注</option>
-                                        <option value="0" <c:if test="${mtxMember.ifsubscribe eq '0'}">selected</c:if>>未关注</option>
+                                        <option value="1" <c:if test="${wpUser.ifsubscribe eq '1'}">selected</c:if>>已关注</option>
+                                        <option value="0" <c:if test="${wpUser.ifsubscribe eq '0'}">selected</c:if>>未关注</option>
                                     </select>
                                 </div>
                             </div>
@@ -168,17 +168,17 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <select name="ifauth" id="ifauth" class="form-control">
                                         <option value="">请选择</option>identify
-                                        <option value="1" <c:if test="${mtxMember.ifauth eq '1'}">selected</c:if>>会员</option>
-                                        <option value="0" <c:if test="${mtxMember.ifauth eq '0'}">selected</c:if>>非会员</option>
+                                        <option value="Y" <c:if test="${wpUser.ifauth eq 'Y'}">selected</c:if>>会员</option>
+                                        <option value="N" <c:if test="${wpUser.ifauth eq 'N'}">selected</c:if>>非会员</option>
                                     </select>
                                 </div>
                             </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <input type="hidden" name="uuid" class="form-control" value="${mtxMember.uuid}">
+                                    <input type="hidden" name="uuid" class="form-control" value="${wpUser.uuid}">
                                     <input type="hidden" name="versionno" class="form-control"
-                                           value="${mtxMember.versionno}">
+                                           value="${wpUser.versionno}">
                                 </div>
                             </div>
                         </div>
@@ -208,10 +208,10 @@
     window.onload = function () {
         //显示父菜单
         showParentMenu('满田星');
-        if(${mtxMember.headimgurl!=null && mtxMember.headimgurl!=''}){
+        if(${wpUser.headimgurl!=null && wpUser.headimgurl!=''}){
             $('#imgDiv').removeClass('hidden');
         }
-        if(${mtxMember.uuid!=null && mtxMember.uuid!=''}){
+        if(${wpUser.uuid!=null && wpUser.uuid!=''}){
             $('#extend').css("display","block");
         }
     }
@@ -219,7 +219,7 @@
         $("#frm").parsley("validate");
         if(checkIfValid() && $('#frm').parsley().isValid()&&isPoneAvailable()){
             var searchForm = document.getElementById("frm");
-            searchForm.action = "${ctx}/admin/wefamily/updateMtxMember";
+            searchForm.action = "${ctx}/admin/wefamily/updateWpUser";
             searchForm.submit();
         }
     }
@@ -227,27 +227,27 @@
     promptinfo();
 
 
-    if (('${mtxMember.province}'.length > 0 && '${mtxMember.city}'.length > 0 && '${mtxMember.district}'.length > 0)) {
+    if (('${wpUser.province}'.length > 0 && '${wpUser.city}'.length > 0 && '${wpUser.district}'.length > 0)) {
         var s1Slt = document.getElementById('s1');
         var s2Slt = document.getElementById('s2');
         var s3Slt = document.getElementById('s3');
-        s1Slt.value = '${mtxMember.province}';
+        s1Slt.value = '${wpUser.province}';
         change(1);
-        if ('${mtxMember.address}'.length <= 0) {
+        if ('${wpUser.address}'.length <= 0) {
             promptinfo();
         }
-        s2Slt.value = '${mtxMember.city}';
+        s2Slt.value = '${wpUser.city}';
         change(2);
-        if ('${mtxMember.address}'.length <= 0) {
+        if ('${wpUser.address}'.length <= 0) {
             promptinfo();
         }
-        s3Slt.value = '${mtxMember.district}';
-        if ('${mtxMember.address}'.length <= 0) {
+        s3Slt.value = '${wpUser.district}';
+        if ('${wpUser.address}'.length <= 0) {
             promptinfo();
         }
-        if ('${mtxMember.address}'.length > 0) {
+        if ('${wpUser.address}'.length > 0) {
             var address = document.getElementById('address');
-            address.value = '${mtxMember.address}';
+            address.value = '${wpUser.address}';
         }
     }
 

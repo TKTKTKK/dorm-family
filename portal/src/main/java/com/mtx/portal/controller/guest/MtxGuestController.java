@@ -3,6 +3,7 @@ package com.mtx.portal.controller.guest;
 import com.mtx.common.utils.*;
 import com.mtx.family.entity.*;
 import com.mtx.family.service.*;
+import com.mtx.wechat.entity.WpUser;
 import com.mtx.wechat.service.WechatBindingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,8 +111,11 @@ public class MtxGuestController extends BaseGuestController{
     }
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public String addRegister(MtxMember mtxMember) {
-        mtxMemberService.insert(mtxMember);
+    public String addRegister(WpUser wpUser, HttpServletRequest req) {
+        wpUser.setBindid(getBindid(req));
+        wpUser.setOpenid(getOpenid(req));
+        String machineid=req.getParameter("machineid");
+        mtxMemberService.insertMemberAndPoint(wpUser,machineid,getBindid(req),getOpenid(req));
         return "guest/product_center";
     }
 

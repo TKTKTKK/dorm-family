@@ -1,5 +1,6 @@
 package com.mtx.portal.controller.guest;
 
+import com.mtx.common.utils.UserUtils;
 import com.mtx.portal.PortalContants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +17,13 @@ public class BaseGuestController {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     protected String getOpenid(HttpServletRequest req){
-        return (String)req.getSession().getAttribute(PortalContants.PARAM_OPENID);
+//        return (String)req.getSession().getAttribute(PortalContants.PARAM_OPENID);
+        return "123456789";
     }
 
     protected String getBindid(HttpServletRequest req){
-        return (String)req.getSession().getAttribute(PortalContants.PARAM_BINDID);
+//        return (String)req.getSession().getAttribute(PortalContants.PARAM_BINDID);
+        return UserUtils.getUserId();
     }
 
     @ModelAttribute

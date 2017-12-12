@@ -86,7 +86,7 @@ INSERT INTO tb_common_code VALUES ('2017120700000008', null, null, 'ANWSER_OR_NO
 
 
 -- 会员管理
-INSERT INTO `tb_platform_permit` VALUES ('2017120810000001', 'MENU', '会员管理', 'admin/wefamily/mtxMemberManage', '2015050510000011', '1106', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
+INSERT INTO `tb_platform_permit` VALUES ('2017120810000001', 'MENU', '会员管理', 'admin/wefamily/mtxWpUserManage', '2015050510000011', '1106', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
 
 -- 商品兑换表
 CREATE TABLE `tb_mtx_good_exchange` (

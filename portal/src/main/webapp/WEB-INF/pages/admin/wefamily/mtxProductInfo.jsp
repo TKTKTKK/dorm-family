@@ -25,8 +25,9 @@
                     <span class="text-danger">${errorMessage}</span>
                 </div>
                 <form class="form-horizontal form-bordered" data-validate="parsley"
-                      action="" method="POST"
-                      enctype="multipart/form-data" id="frm">
+                      action="${ctx}/admin/wefamily/updateMtxProduct" method="POST"
+                      enctype="multipart/form-data" id="frm"
+                onsubmit="validDate()">
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
                             <i class="fa fa-gift"></i>
@@ -132,10 +133,9 @@
                             </div>
                         </div>
                         <div class="panel-footer text-left bg-light lter">
-                            <a onclick="validDate()"
-                               class="btn  btn-infonew btn-sm" style="color: white">
-                                提&nbsp;&nbsp;&nbsp;&nbsp;交
-                            </a>
+                            <button type="submit" class="btn btn-submit btn-s-xs ">
+                                <i class="fa fa-check"></i>&nbsp;提&nbsp;交
+                            </button>
                         </div>
                     </section>
                     <div>
@@ -185,11 +185,10 @@
         if(model.length>0){
             $.post("${ctx}/admin/wefamily/validModelIsExist?model="+model+"&uuid="+uuid,function(data){
                 if(data){
-                    var searchForm = document.getElementById("frm");
-                    searchForm.action = "${ctx}/admin/wefamily/updateMtxProduct";
-                    searchForm.submit();
+                    return true;
                 }else{
                     modelError.innerHTML="此型号已存在，请换一个试试！"
+                    return false;
                 }
             });
         }

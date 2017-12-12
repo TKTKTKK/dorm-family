@@ -39,7 +39,7 @@
     </li>
     <li>
         <span>电话</span>
-        <input type="text" name="phone" id="contactno" placeholder="请填写真实号码">
+        <input type="text" name="contactno" id="contactno" placeholder="请填写真实号码">
     </li>
     <li>
         <span style="width: 17%">地区</span>
@@ -53,8 +53,7 @@
         <span>详细地址</span>
         <input type="text" name="address" id="address" placeholder="请填写详细地址">
     </li>
-    <input type="text" name="wechatname" style="display: none" value="">
-    <input type="text" name="wechatimg" style="display: none" value="">
+    <input type="text" name="machineid" style="display: none" value="3">
     <li>
         <span>机器型号</span>
         <span>2ZS-6K型</span>
