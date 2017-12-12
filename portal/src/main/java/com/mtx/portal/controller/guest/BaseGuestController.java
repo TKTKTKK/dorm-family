@@ -17,13 +17,11 @@ public class BaseGuestController {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     protected String getOpenid(HttpServletRequest req){
-//        return (String)req.getSession().getAttribute(PortalContants.PARAM_OPENID);
-        return "123456789";
+        return (String)req.getSession().getAttribute(PortalContants.PARAM_OPENID);
     }
 
     protected String getBindid(HttpServletRequest req){
-//        return (String)req.getSession().getAttribute(PortalContants.PARAM_BINDID);
-        return UserUtils.getUserId();
+        return (String)req.getSession().getAttribute(PortalContants.PARAM_BINDID);
     }
 
     @ModelAttribute
