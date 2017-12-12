@@ -422,7 +422,7 @@ CREATE TABLE `tb_wp_user` (
   `headimgurl` varchar(255) DEFAULT NULL,
   `name` varchar(90) DEFAULT NULL,
   `contactno` varchar(20) DEFAULT NULL,
-  `type` varchar(10) DEFAULT NULL,
+  `type` varchar(15) DEFAULT NULL,
   `ifauth` char(1) DEFAULT NULL,
   `ifsubscribe` char(1) DEFAULT NULL,
   `createon` varchar(23) NOT NULL,
