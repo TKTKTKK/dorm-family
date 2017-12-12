@@ -1,10 +1,3 @@
--- 修改菜单
-UPDATE `tb_platform_permit` set permitname='销售服务'  where uuid='2015050510000011';
-
-UPDATE `tb_platform_permit` set permitresource='销售服务'  where uuid='2015050510000011';
-
-UPDATE `tb_platform_permit` set permitname='经销商管理'  where uuid='2015050510000012';
-
 
 INSERT INTO `tb_platform_permit` VALUES ('2017120510000001', 'MENU', '品质服务', '品质服务', null, '1200', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', 'icon-wrench');
 INSERT INTO `tb_platform_permit` VALUES ('2017120510000002', 'MENU', '培训管理', 'admin/wefamily/trainManage', '2017120510000001', '1201', 'APP', now(), 'sys', now(), 'sys', '1', 'N', '');
