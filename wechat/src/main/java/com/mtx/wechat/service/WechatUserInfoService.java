@@ -103,10 +103,13 @@ public class WechatUserInfoService extends BaseService<WechatUserInfoMapper,Wech
         WechatUserInfo wechatUserInfoTemp = this.queryForObjectByUniqueKey(wechat_userInfo);
         WechatUser wechatUser = WechatBindingUtil.getWechatUser(wechatUserInfo.getBindid(), wechatUserInfo.getOpenid());
         if(wechatUser!=null){
-            wechatUserInfo.setNickname(wechatUser.getNickname());
-            wechatUserInfo.setHeadimgurl(wechatUser.getHeadimgurl());
-            wechatUserInfoTemp.setNickname(wechatUser.getNickname());
-            wechatUserInfoTemp.setHeadimgurl(wechatUser.getHeadimgurl());
+            if(wechatUserInfoTemp!=null){
+                wechatUserInfoTemp.setNickname(wechatUser.getNickname());
+                wechatUserInfoTemp.setHeadimgurl(wechatUser.getHeadimgurl());
+            }else{
+                wechatUserInfo.setNickname(wechatUser.getNickname());
+                wechatUserInfo.setHeadimgurl(wechatUser.getHeadimgurl());
+            }
         }
         if (wechatUserInfoTemp == null || StringUtils.isBlank(wechatUserInfoTemp.getUuid())) {
             this.insert(wechatUserInfo);
