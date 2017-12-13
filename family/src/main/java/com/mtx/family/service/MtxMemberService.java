@@ -37,8 +37,10 @@ public class MtxMemberService {
             MtxPoint point = new MtxPoint();
             List<MtxProduct> productList = new ArrayList<MtxProduct>();
             WechatUser wechatUser = WechatBindingUtil.getWechatUser(bindid, openid);
-            wpUser.setNickname(wechatUser.getNickname());
-            wpUser.setHeadimgurl(wechatUser.getHeadimgurl());
+            if(wechatUser!=null){
+                wpUser.setNickname(wechatUser.getNickname());
+                wpUser.setHeadimgurl(wechatUser.getHeadimgurl());
+            }
             wpUser.setIfauth("Y");
             wpUserService.insert(wpUser);
             if (StringUtils.isNotBlank(machineid)) {

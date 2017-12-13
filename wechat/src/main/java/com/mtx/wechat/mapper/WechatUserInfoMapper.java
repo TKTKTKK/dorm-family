@@ -20,4 +20,6 @@ public interface WechatUserInfoMapper extends BaseMapper<WechatUserInfo> {
     public PageList<WechatUserInfo> selectWechatUserInfoForPageList(@Param("wechatUserInfo")WechatUserInfo wechatUserInfo,@Param("ifsubscribe") String ifsubscribe,@Param("ifCreateAccount") String ifCreateAccount, PageBounds pageBounds);
 
     public List<WechatUserInfo> selectUserInfoAndStatus(@Param("wechatUserInfo") WechatUserInfo wechatUserInfo);
+
+    public WechatUserInfo getWechatUserInfo(@Param("openid")String openid);
 }

@@ -71,5 +71,14 @@
                 where wui.bindid = #{wechatUserInfo.bindid}
                 and wui.uuid = #{wechatUserInfo.uuid}
     </select>
+    <select id="getWechatUserInfo" resultMap="selectResultMap">
+        select wui.*
+        from tb_wechat_userinfo wui
+        where wui.delind='N'
+        <if test="openid != null and openid != ''">
+            and wui.openid =#{openid}
+        </if>
+        ;
+    </select>
 
 </mapper>

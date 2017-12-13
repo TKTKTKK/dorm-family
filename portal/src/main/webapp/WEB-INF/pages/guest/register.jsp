@@ -53,7 +53,7 @@
     </li>
     <li>
         <span>机器编号</span>
-        <input type="text" id="machineid" value="3" placeholder="请填写机器编号">
+        <input type="text" id="machineid" name="machineid" value="3" placeholder="请填写机器编号">
     </li>
     <li>
         <span>机器型号</span>

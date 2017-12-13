@@ -3,8 +3,10 @@ package com.mtx.portal.controller.guest;
 import com.mtx.common.utils.*;
 import com.mtx.family.entity.*;
 import com.mtx.family.service.*;
+import com.mtx.wechat.entity.WechatUserInfo;
 import com.mtx.wechat.entity.WpUser;
 import com.mtx.wechat.service.WechatBindingService;
+import com.mtx.wechat.service.WechatUserInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +36,8 @@ public class MtxGuestController extends BaseGuestController{
     private MtxConsultDetailService mtxConsultDetailService;
     @Autowired
     private MtxMemberService mtxMemberService;
+    @Autowired
+    WechatUserInfoService wechatUserInfoService;
 
 
     @RequestMapping(value = "/product_center")
@@ -132,9 +136,26 @@ public class MtxGuestController extends BaseGuestController{
      * 积分列表
      * @return
      */
-
     @RequestMapping(value = "/point_list",method = RequestMethod.GET)
     public String point_list() {
         return "guest/point_list";
+    }
+
+
+    /**
+     * 员工信息
+     */
+    @RequestMapping(value = "/staff/bind",method = RequestMethod.GET)
+    public String staffInfo() {
+        return "guest/staff_center";
+    }
+
+    @RequestMapping(value = "/staff/bind",method = RequestMethod.POST)
+    public String staffInfo(WechatUserInfo wechatUserInfo,HttpServletRequest req,Model model) {
+        wechatUserInfo.setBindid(getBindid(req));
+        wechatUserInfo.setOpenid(getOpenid(req));
+        wechatUserInfoService.addStaffInfo(wechatUserInfo,getBindid(req),getOpenid(req));
+        model.addAttribute("success","保存成功!");
+        return "guest/staff_center";
     }
 }

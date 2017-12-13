@@ -5,8 +5,11 @@ import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.base.BaseService;
 import com.mtx.common.entity.PlatformUser;
 import com.mtx.common.service.PlatformUserService;
+import com.mtx.common.utils.StringUtils;
+import com.mtx.wechat.entity.WechatUser;
 import com.mtx.wechat.entity.WechatUserInfo;
 import com.mtx.wechat.mapper.WechatUserInfoMapper;
+import com.mtx.wechat.utils.WechatBindingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,5 +93,23 @@ public class WechatUserInfoService extends BaseService<WechatUserInfoMapper,Wech
             }
         }
         return resultStr;
+    }
+    public WechatUserInfo getWechatUserInfo(String openid){
+        return mapper.getWechatUserInfo(openid);
+    }
+    public void addStaffInfo(WechatUserInfo wechatUserInfo,String bindid,String openid) {
+        WechatUserInfo wechatUserInfoTemp = this.getWechatUserInfo(openid);
+        if (wechatUserInfoTemp == null || StringUtils.isBlank(wechatUserInfoTemp.getUuid())) {
+            WechatUser wechatUser = WechatBindingUtil.getWechatUser(bindid, openid);
+            if(wechatUser!=null){
+                wechatUserInfo.setNickname(wechatUser.getNickname());
+                wechatUserInfo.setHeadimgurl(wechatUser.getHeadimgurl());
+            }
+            this.insert(wechatUserInfo);
+        }else{
+            wechatUserInfoTemp.setName(wechatUserInfo.getName());
+            wechatUserInfoTemp.setContactno(wechatUserInfo.getContactno());
+            this.updatePartial(wechatUserInfoTemp);
+        }
     }
 }
