@@ -39,13 +39,13 @@
                                     <input type="text" class="form-control" data-required="true" name="name" id="name"
                                            data-maxlength="48"
                                            onblur="trimText(this)"
-                                           value="${mtxGood.name}">
+                                           value="${mtxProduct.name}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-3 control-label"><span class="text-danger">*</span>积分：</div>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input class="form-control" type="number" name="points" value="${mtxGood.points}"
+                                    <input class="form-control" type="number" name="points" value="${mtxProduct.points}"
                                            id="points" data-maxlength="11"
                                            data-required="true">
                                 </div>
@@ -55,10 +55,10 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <select class="form-control" id="status" name="status">
                                         <option value="1"
-                                                <c:if test="${mtxGood.status=='1'}">selected</c:if>
+                                                <c:if test="${mtxProduct.status=='1'}">selected</c:if>
                                         >上架</option>
                                         <option value="0"
-                                                <c:if test="${mtxGood.status=='0'}">selected</c:if>
+                                                <c:if test="${mtxProduct.status=='0'}">selected</c:if>
                                         >下架</option>
                                     </select>
                                 </div>
@@ -70,9 +70,9 @@
                                            data-classInput="form-control inline v-middle input-s"
                                            id="value"
                                     >
-                                    <input type="text" class="hidden" name="img" value="${mtxGood.img}">
+                                    <input type="text" class="hidden" name="img" value="${mtxProduct.img}">
                                     <div class="hidden" id="imgDiv" style="margin-top: 20px">
-                                        <img src="${mtxGood.img}" width="100" height="100"
+                                        <img src="${mtxProduct.img}" width="100" height="100"
                                              data-toggle="modal" data-target=".bs-example-modal-lg1"
                                              class="hover-pointer">
                                     </div>
@@ -90,7 +90,7 @@
                                                 <div class="modal-body">
                                                     <div class="row">
                                                         <div class="col-sm-12">
-                                                            <img src="${mtxGood.img}" width="100%" height="100%" id="showLargePic"/>
+                                                            <img src="${mtxProduct.img}" width="100%" height="100%" id="showLargePic"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -102,15 +102,15 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><span class="text-danger"></span>商品详情：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" name="detail" value="${mtxGood.detail}" data-maxlength="256">
+                                    <input type="text" class="form-control" name="detail" value="${mtxProduct.detail}" data-maxlength="256">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <input type="hidden" name="uuid" class="form-control" value="${mtxGood.uuid}">
+                                    <input type="hidden" name="uuid" class="form-control" value="${mtxProduct.uuid}">
                                     <input type="hidden" name="versionno" class="form-control"
-                                           value="${mtxGood.versionno}">
+                                           value="${mtxProduct.versionno}">
                                 </div>
                             </div>
                         </div>
@@ -139,7 +139,7 @@
     window.onload = function () {
         //显示父菜单
         showParentMenu('满田星');
-        if(${mtxGood.img!=null && mtxGood.img!=''}){
+        if(${mtxProduct.img!=null && mtxProduct.img!=''}){
             $('#imgDiv').removeClass('hidden');
         }
     }

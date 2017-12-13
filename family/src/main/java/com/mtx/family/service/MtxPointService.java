@@ -27,7 +27,11 @@ public class MtxPointService extends BaseService<MtxPointMapper,MtxPoint> {
         return mapper.selectMtxPointList(obj,pageBounds);
     }
 
-    public List<MtxPoint> findPointIsExist(String machineid, String uuid) {
-        return mapper.findPointIsExist(machineid,uuid);
+    public List<MtxPoint> queryPointForList(MtxPoint point) {
+        return mapper.queryPointForList(point);
+    }
+
+    public int queryCountConsumePoint(String userid) {
+        return mapper.queryCountConsumePoint(userid);
     }
 }

@@ -20,6 +20,26 @@ public class MtxProduct extends BaseEntity {
     private Double price;
     @Column
     private String detail;
+    @Column
+    private Integer points;
+    @Column
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
 
     public Double getPrice() {
         return price;

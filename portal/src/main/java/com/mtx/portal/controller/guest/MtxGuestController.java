@@ -7,6 +7,7 @@ import com.mtx.wechat.entity.WechatUserInfo;
 import com.mtx.wechat.entity.WpUser;
 import com.mtx.wechat.service.WechatBindingService;
 import com.mtx.wechat.service.WechatUserInfoService;
+import com.mtx.wechat.service.WpUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,11 @@ public class MtxGuestController extends BaseGuestController{
     @Autowired
     private MtxMemberService mtxMemberService;
     @Autowired
-    WechatUserInfoService wechatUserInfoService;
+    private WechatUserInfoService wechatUserInfoService;
+    @Autowired
+    private MtxPointService mtxPointService;
+    @Autowired
+    private WpUserService wpUserService;
 
 
     @RequestMapping(value = "/product_center")
@@ -128,7 +133,14 @@ public class MtxGuestController extends BaseGuestController{
      * @return
      */
     @RequestMapping(value = "/member_center",method = RequestMethod.GET)
-    public String member_center() {
+    public String member_center(String userid,Model model) {
+        if(StringUtils.isNotBlank(userid)){
+            WpUser user =new WpUser();
+            user.setUuid(userid);
+            user=wpUserService.queryForObjectByPk(user);
+            model.addAttribute("user",user);
+        }
+        model.addAttribute("userid",userid);
         return "guest/member_center";
     }
 
@@ -137,7 +149,23 @@ public class MtxGuestController extends BaseGuestController{
      * @return
      */
     @RequestMapping(value = "/point_list",method = RequestMethod.GET)
-    public String point_list() {
+    public String point_list(String userid,Model model) {
+        if(StringUtils.isNotBlank(userid)){
+            WpUser user=new WpUser();
+            user.setUuid(userid);
+            user=wpUserService.queryForObjectByPk(user);
+            MtxPoint point=new MtxPoint();
+            point.setUserid(userid);
+            List<MtxPoint> pointList=mtxPointService.queryPointForList(point);
+            int surplusPoint=0,consumePoint=0;
+            if(user!=null){
+                surplusPoint=user.getPoints();
+            }
+            consumePoint=mtxPointService.queryCountConsumePoint(userid);
+            model.addAttribute("surplusPoint",surplusPoint);
+            model.addAttribute("consumePoint",Math.abs(consumePoint));
+            model.addAttribute("pointList",pointList);
+        }
         return "guest/point_list";
     }
 

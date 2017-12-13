@@ -64,8 +64,6 @@ public class WeFamilyController extends BaseAdminController {
     @Autowired
     private MtxConsultDetailService mtxConsultDetailService;
     @Autowired
-    private MtxGoodService mtxGoodService;
-    @Autowired
     private MtxPointService mtxPointService;
     @Autowired
     private WpUserService wpUserService;
@@ -200,9 +198,10 @@ public class WeFamilyController extends BaseAdminController {
     public String MtxProduct(@RequestParam(required = false, defaultValue = "1") int page, MtxProduct mtxProduct, Model model, HttpServletRequest request) {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
+        String flag="1";
         if (null != wechatBinding) {
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-            PageList<MtxProduct> mtxProductList = mxtProductService.queryForListWithPagination(mtxProduct, pageBounds);
+            PageList<MtxProduct> mtxProductList = mxtProductService.queryForListWithPagination(mtxProduct, pageBounds,flag);
             model.addAttribute("mtxProductList", mtxProductList);
             model.addAttribute("mtxProduct",mtxProduct);
         }
@@ -230,6 +229,11 @@ public class WeFamilyController extends BaseAdminController {
             mtxProduct.setImg(filename);
         }
         if (StringUtils.isBlank(mtxProduct.getUuid())) {
+            mtxProduct.setType("PRODUCT");
+            int p;
+            double price = mtxProduct.getPrice();
+            p = (int) price;
+            mtxProduct.setPoints(p);
             mxtProductService.insert(mtxProduct);
             model.addAttribute("mtxProduct", mtxProduct);
             model.addAttribute("successMessage", "保存成功！");
@@ -896,14 +900,15 @@ public class WeFamilyController extends BaseAdminController {
      * 商品兑换管理
      */
     @RequestMapping(value = "/mtxGoodManage")
-    public String mtxGoodManage(@RequestParam(required = false, defaultValue = "1") int page, MtxGood mtxGood, Model model, HttpServletRequest request) {
+    public String mtxGoodManage(@RequestParam(required = false, defaultValue = "1") int page, MtxProduct mtxProduct, Model model, HttpServletRequest request) {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
+        String flag="0";
         if (null != wechatBinding) {
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-            PageList<MtxGood> mtxGoodList = mtxGoodService.queryForListWithPagination(mtxGood, pageBounds);
-            model.addAttribute("mtxGoodList", mtxGoodList);
-            model.addAttribute("mtxGood",mtxGood);
+            PageList<MtxProduct> mtxProductList = mxtProductService.queryForListWithPagination(mtxProduct, pageBounds,flag);
+            model.addAttribute("mtxProductList", mtxProductList);
+            model.addAttribute("mtxProduct",mtxProduct);
         }
         String successFlag=request.getParameter("deleteFlag");
         if("1".equals(successFlag)){
@@ -912,35 +917,36 @@ public class WeFamilyController extends BaseAdminController {
         return "admin/wefamily/mtxGoodManage";
     }
     @RequestMapping(value = "/goMtxGood", method = RequestMethod.GET)
-    public String goMtxGood(Model model,MtxGood mtxGood){
+    public String goMtxGood(Model model,MtxProduct mtxProduct){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
-        MtxGood mtxGoodTemp=mtxGoodService.queryForObjectByPk(mtxGood);
-        model.addAttribute("mtxGood",mtxGoodTemp);
+        MtxProduct mtxProductTemp=mxtProductService.queryForObjectByPk(mtxProduct);
+        model.addAttribute("mtxProduct",mtxProductTemp);
         return "admin/wefamily/mtxGoodInfo";
     }
     @RequestMapping(value = "/updateMtxGood",method = RequestMethod.POST)
-    public String updateMtxGood(@RequestParam(value = "imgfile", required = false)MultipartFile multipartFile, MtxGood mtxGood, RedirectAttributes redirectAttributes, Model model){
+    public String updateMtxGood(@RequestParam(value = "imgfile", required = false)MultipartFile multipartFile, MtxProduct mtxProduct, RedirectAttributes redirectAttributes, Model model){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         if(null != multipartFile && !multipartFile.isEmpty()){
-            String foldername = "good";
+            String foldername = "product";
             String filename = UploadUtils.uploadFile(multipartFile, foldername);
-            mtxGood.setImg(filename);
+            mtxProduct.setImg(filename);
         }
-        if (StringUtils.isBlank(mtxGood.getUuid())) {
-            mtxGoodService.insert(mtxGood);
-            model.addAttribute("mtxGood", mtxGood);
+        if (StringUtils.isBlank(mtxProduct.getUuid())) {
+            mtxProduct.setType("EXCHANGE_GOOD");
+            mxtProductService.insert(mtxProduct);
+            model.addAttribute("mtxProduct", mtxProduct);
             model.addAttribute("successMessage", "保存成功！");
         } else {
             try {
-                mtxGoodService.updatePartial(mtxGood);
-                MtxGood mtxGoodTemp = mtxGoodService.queryForObjectByPk(mtxGood);
-                model.addAttribute("mtxGood", mtxGoodTemp);
+                mxtProductService.updatePartial(mtxProduct);
+                MtxProduct mtxProductTemp = mxtProductService.queryForObjectByPk(mtxProduct);
+                model.addAttribute("mtxProduct", mtxProductTemp);
             } catch (ServiceException e) {
                 logger.error(e.getMessage(), e);
                 redirectAttributes.addFlashAttribute("errorMessage", "数据已修改，请重试！");
-                return "redirect:/admin/wefamily/goMtxGood?uuid=" + mtxGood.getUuid();
+                return "redirect:/admin/wefamily/goMtxGood?uuid=" + mtxProduct.getUuid();
 
             }
             model.addAttribute("successMessage", "保存成功！");
@@ -949,8 +955,8 @@ public class WeFamilyController extends BaseAdminController {
     }
     @RequestMapping(value = "/deleteMtxGood", method = RequestMethod.POST)
     @ResponseBody
-    public Map deleteMtxGood(MtxGood mtxGood){
-        int deleteFlag=mtxGoodService.delete(mtxGood);
+    public Map deleteMtxGood(MtxProduct mtxProduct){
+        int deleteFlag=mxtProductService.delete(mtxProduct);
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("deleteFlag", deleteFlag);
         return resultMap;

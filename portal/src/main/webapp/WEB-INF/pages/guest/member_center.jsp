@@ -46,8 +46,9 @@
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
 </ul>
+<input type="text" value="20171212" id="userid" style="display: none">
 <ul class="list">
-    <li>
+    <li onclick="goMyPointRecord()">
         <span>我的积分</span>
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
@@ -73,4 +74,11 @@
     </li>
 </ul>
 </body>
+<script src="${ctx}/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    function goMyPointRecord(){
+        var userid=$("#userid").val();
+        window.location.href="${ctx}/guest/point_list?userid="+userid;
+    }
+</script>
 </html>

@@ -24,38 +24,32 @@
 </head>
 <body>
 <div class="head">
-    <a href="" class="back"></a>
+    <a class="back" onclick="goBack()"></a>
     <span>积分记录</span>
 </div>
 <div class="goal_total">
-    <span>剩余积分：5000</span>
-    <span>已用：670</span>
+    <span>剩余积分：${surplusPoint}</span>
+    <span>已用：${consumePoint}</span>
 </div>
 <ul class="list">
+    <c:forEach items="${pointList}" var="point">
     <li>
-        <p><span>购买2ZS-6K型手扶式插秧机</span><span>+1000</span></p>
-        <p><span class="time">2017-12-5</span></p>
+        <p><span>
+            <c:if test="${point.points>0}">购买</c:if>
+            <c:if test="${point.points<0}">兑换</c:if>
+                ${point.name}</span>
+            <span><c:if test="${point.points>0}">+</c:if>${point.points}</span></p>
+        <p><span class="time">${fn:substring(point.createon, 0, 19)}</span></p>
     </li>
-    <li>
-        <p><span>购买2ZS-6K型手扶式插秧机</span><span>+1000</span></p>
-        <p><span class="time">2017-12-5</span></p>
-    </li>
-    <li>
-        <p><span>购买2ZS-6K型手扶式插秧机</span><span>+1000</span></p>
-        <p><span class="time">2017-12-5</span></p>
-    </li>
-    <li>
-        <p><span>购买2ZS-6K型手扶式插秧机</span><span>+1000</span></p>
-        <p><span class="time">2017-12-5</span></p>
-    </li>
-    <li>
-        <p><span>购买2ZS-6K型手扶式插秧机</span><span>+1000</span></p>
-        <p><span class="time">2017-12-5</span></p>
-    </li>
-    <li>
-        <p><span>购买2ZS-6K型手扶式插秧机</span><span>+1000</span></p>
-        <p><span class="time">2017-12-5</span></p>
-    </li>
+    </c:forEach>
 </ul>
+<input type="text" value="20171212" id="userid" style="display: none">
 </body>
+<script src="${ctx}/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    function goBack(){
+        var userid=$("#userid").val();
+        window.location.href="${ctx}/guest/member_center?userid="+userid;
+    }
+</script>
 </html>
