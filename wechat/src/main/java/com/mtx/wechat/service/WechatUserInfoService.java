@@ -94,13 +94,11 @@ public class WechatUserInfoService extends BaseService<WechatUserInfoMapper,Wech
         }
         return resultStr;
     }
-    public WechatUserInfo getWechatUserInfo(String openid){
-        return mapper.getWechatUserInfo(openid);
-    }
-    public void addStaffInfo(WechatUserInfo wechatUserInfo,String bindid,String openid) {
-        WechatUserInfo wechatUserInfoTemp = this.getWechatUserInfo(openid);
+
+    public void addStaffInfo(WechatUserInfo wechatUserInfo) {
+        WechatUserInfo wechatUserInfoTemp = this.queryForObjectByUniqueKey(wechatUserInfo);
         if (wechatUserInfoTemp == null || StringUtils.isBlank(wechatUserInfoTemp.getUuid())) {
-            WechatUser wechatUser = WechatBindingUtil.getWechatUser(bindid, openid);
+            WechatUser wechatUser = WechatBindingUtil.getWechatUser(wechatUserInfo.getBindid(), wechatUserInfo.getOpenid());
             if(wechatUser!=null){
                 wechatUserInfo.setNickname(wechatUser.getNickname());
                 wechatUserInfo.setHeadimgurl(wechatUser.getHeadimgurl());

@@ -29,14 +29,14 @@ public class MtxMemberService {
     @Autowired
     private WpUserService wpUserService;
 
-    public void insertMemberAndPoint(WpUser wpUser, String machineid,String bindid,String openid) {
-        WpUser wpUserTemp = wpUserService.getWpUser(openid);
+    public void insertMemberAndPoint(WpUser wpUser, String machineid) {
+        WpUser wpUserTemp = wpUserService.getWpUser(wpUser.getOpenid());
         if (wpUserTemp == null || StringUtils.isBlank(wpUserTemp.getUuid())) {
             Machine machine = new Machine();
             MtxProduct product = new MtxProduct();
             MtxPoint point = new MtxPoint();
             List<MtxProduct> productList = new ArrayList<MtxProduct>();
-            WechatUser wechatUser = WechatBindingUtil.getWechatUser(bindid, openid);
+            WechatUser wechatUser = WechatBindingUtil.getWechatUser(wpUser.getBindid(), wpUser.getOpenid());
             if(wechatUser!=null){
                 wpUser.setNickname(wechatUser.getNickname());
                 wpUser.setHeadimgurl(wechatUser.getHeadimgurl());

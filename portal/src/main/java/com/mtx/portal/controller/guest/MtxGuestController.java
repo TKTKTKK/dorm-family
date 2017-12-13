@@ -119,7 +119,7 @@ public class MtxGuestController extends BaseGuestController{
         wpUser.setBindid(getBindid(req));
         wpUser.setOpenid(getOpenid(req));
         String machineid=req.getParameter("machineid");
-        mtxMemberService.insertMemberAndPoint(wpUser,machineid,getBindid(req),getOpenid(req));
+        mtxMemberService.insertMemberAndPoint(wpUser,machineid);
         return "redirect:/guest/product_center";
     }
 
@@ -154,7 +154,7 @@ public class MtxGuestController extends BaseGuestController{
     public String staffInfo(WechatUserInfo wechatUserInfo,HttpServletRequest req,Model model) {
         wechatUserInfo.setBindid(getBindid(req));
         wechatUserInfo.setOpenid(getOpenid(req));
-        wechatUserInfoService.addStaffInfo(wechatUserInfo,getBindid(req),getOpenid(req));
+        wechatUserInfoService.addStaffInfo(wechatUserInfo);
         model.addAttribute("success","保存成功!");
         return "guest/staff_center";
     }
