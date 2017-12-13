@@ -134,6 +134,12 @@ public class MtxGuestController extends BaseGuestController{
      */
     @RequestMapping(value = "/member_center",method = RequestMethod.GET)
     public String member_center(String userid,Model model) {
+        if(StringUtils.isNotBlank(userid)){
+            WpUser user =new WpUser();
+            user.setUuid(userid);
+            user=wpUserService.queryForObjectByPk(user);
+            model.addAttribute("user",user);
+        }
         model.addAttribute("userid",userid);
         return "guest/member_center";
     }

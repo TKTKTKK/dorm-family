@@ -139,7 +139,7 @@
     window.onload = function () {
         //显示父菜单
         showParentMenu('满田星');
-        if(${mtxGood.img!=null && mtxGood.img!=''}){
+        if(${mtxProduct.img!=null && mtxProduct.img!=''}){
             $('#imgDiv').removeClass('hidden');
         }
     }

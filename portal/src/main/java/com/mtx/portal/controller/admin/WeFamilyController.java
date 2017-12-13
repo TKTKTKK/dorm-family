@@ -929,7 +929,7 @@ public class WeFamilyController extends BaseAdminController {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         if(null != multipartFile && !multipartFile.isEmpty()){
-            String foldername = "good";
+            String foldername = "product";
             String filename = UploadUtils.uploadFile(multipartFile, foldername);
             mtxProduct.setImg(filename);
         }
