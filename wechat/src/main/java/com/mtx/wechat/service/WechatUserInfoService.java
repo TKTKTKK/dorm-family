@@ -105,6 +105,8 @@ public class WechatUserInfoService extends BaseService<WechatUserInfoMapper,Wech
         if(wechatUser!=null){
             wechatUserInfo.setNickname(wechatUser.getNickname());
             wechatUserInfo.setHeadimgurl(wechatUser.getHeadimgurl());
+            wechatUserInfoTemp.setNickname(wechatUser.getNickname());
+            wechatUserInfoTemp.setHeadimgurl(wechatUser.getHeadimgurl());
         }
         if (wechatUserInfoTemp == null || StringUtils.isBlank(wechatUserInfoTemp.getUuid())) {
             this.insert(wechatUserInfo);
