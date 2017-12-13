@@ -2,11 +2,13 @@
 -- 创建产品表
 CREATE TABLE `tb_mtx_product` (
   `uuid` varchar(32) NOT NULL,
-  `model` varchar(32) NOT NULL,
-  `name` varchar(64) NOT NULL,
+  `model` varchar(32) DEFAULT NULL,
+  `name` varchar(64) DEFAULT NULL,
   `img` varchar(256) DEFAULT NULL,
   `status` varchar(8) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
+  `points` int(11) DEFAULT NULL,
+  `type` varchar(15) DEFAULT NULL,
   `detail` text(0) DEFAULT NULL,
   `createon` varchar(23) NOT NULL,
   `createby` varchar(32) NOT NULL,
@@ -75,30 +77,12 @@ INSERT INTO tb_common_code VALUES ('2017120700000005', null, null, 'IDENTITY_COD
 INSERT INTO tb_common_code VALUES ('2017120700000007', null, null, 'ANWSER_OR_NOT', 'ANWSER_RECENT', '已回复', null,'', '7', '2014-11-30 21:44:31', 'sys', '2014-11-30 21:44:31', 'sys', '1', '0');
 INSERT INTO tb_common_code VALUES ('2017120700000008', null, null, 'ANWSER_OR_NOT', 'NO_ANWSER', '未回复', null,'', '8', '2014-11-30 21:44:31', 'sys', '2014-11-30 21:44:31', 'sys', '1', '0');
 
--- 商品兑换表
-CREATE TABLE `tb_mtx_good_exchange` (
-  `uuid` varchar(32) NOT NULL,
-  `name` varchar(48) NOT NULL,
-  `img` varchar(256) DEFAULT NULL,
-  `detail` varchar(256) DEFAULT NULL,
-  `points` int(11) DEFAULT NULL,
-  `status` varchar(16) DEFAULT NULL,
-  `createon` varchar(23) NOT NULL,
-  `createby` varchar(32) NOT NULL,
-  `modifyon` varchar(23) NOT NULL,
-  `modifyby` varchar(32) NOT NULL,
-  `versionno` int(11) NOT NULL,
-  `delind` char(1) NOT NULL,
-  PRIMARY KEY (`uuid`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 -- 积分消费记录表
 CREATE TABLE `tb_mtx_point_record` (
   `uuid` varchar(32) NOT NULL,
   `userid` varchar(32) NOT NULL,
-  `machineid` varchar(32) DEFAULT NULL,
-  `goodid` varchar(32) DEFAULT NULL,
-  `points` int(11) DEFAULT NULL,
+  `productid` varchar(32) DEFAULT NULL,
+   `points` int(11) DEFAULT NULL,
   `createon` varchar(23) NOT NULL,
   `createby` varchar(32) NOT NULL,
   `modifyon` varchar(23) NOT NULL,
@@ -113,3 +97,10 @@ alter table tb_wp_user add column `city`  varchar(60) default null AFTER provinc
 alter table tb_wp_user add column `district`  varchar(60) default null AFTER city;
 alter table tb_wp_user add column `address`  varchar(256) default null AFTER district;
 alter table tb_wp_user add column `points`  int(11) default null AFTER address;
+
+-- 产品还是兑换商品
+INSERT INTO tb_common_code VALUES ('2017121300000006', null, null, 'TYPE_CODE', 'PRODUCT', '产品', null,'', '6', '2014-11-30 21:44:31', 'sys', '2014-11-30 21:44:31', 'sys', '1', '0');
+INSERT INTO tb_common_code VALUES ('2017121300000007', null, null, 'TYPE_CODE', 'EXCHANGE_GOOD', '兑换商品', null,'', '7', '2014-11-30 21:44:31', 'sys', '2014-11-30 21:44:31', 'sys', '1', '0');
+
+
+

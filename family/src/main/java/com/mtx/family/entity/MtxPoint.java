@@ -12,32 +12,38 @@ public class MtxPoint extends BaseEntity {
     @Column
     private String userid;
     @Column
-    private String machineid;
-    @Column
-    private String goodid;
+    private String productid;
     @Column
     private Integer points;
 
-    private String productname;
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+
+    private String name;
 
     private String membername;
 
     private String phone;
 
-    public String getGoodid() {
-        return goodid;
+    public String getProductid() {
+        return productid;
     }
 
-    public void setGoodid(String goodid) {
-        this.goodid = goodid;
+    public void setProductid(String productid) {
+        this.productid = productid;
     }
 
-    public String getProductname() {
-        return productname;
+    public String getName() {
+        return name;
     }
 
-    public void setProductname(String productname) {
-        this.productname = productname;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getMembername() {
@@ -64,19 +70,4 @@ public class MtxPoint extends BaseEntity {
         this.userid = userid;
     }
 
-    public Integer getPoints() {
-        return points;
-    }
-
-    public void setPoints(Integer points) {
-        this.points = points;
-    }
-
-    public String getMachineid() {
-        return machineid;
-    }
-
-    public void setMachineid(String machineid) {
-        this.machineid = machineid;
-    }
 }

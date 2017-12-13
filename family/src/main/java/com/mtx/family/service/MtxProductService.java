@@ -21,8 +21,8 @@ public class MtxProductService extends BaseService<MtxProductMapper,MtxProduct> 
         super.setMapper(mapper);
     }
 
-    public PageList<MtxProduct> queryForListWithPagination(MtxProduct obj, PageBounds pageBounds) {
-        return mapper.selectMxtProductList(obj,pageBounds);
+    public PageList<MtxProduct> queryForListWithPagination(MtxProduct obj, PageBounds pageBounds,String flag) {
+        return mapper.selectMxtProductList(obj,pageBounds,flag);
     }
 
     public List<MtxProduct> validModelIsExist(String model, String uuid) {

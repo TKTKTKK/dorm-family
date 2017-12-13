@@ -25,7 +25,7 @@
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 名称：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <input type="text" class="form-control" name="name" id="name" data-maxlength="90"
-                                               onblur="trimText(this)" value="${mtxGood.name}">
+                                               onblur="trimText(this)" value="${mtxProduct.name}">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
@@ -35,10 +35,10 @@
                                             <option value=""
                                             >全部</option>
                                             <option value="1"
-                                                    <c:if test="${mtxGood.status=='1'}">selected</c:if>
+                                                    <c:if test="${mtxProduct.status=='1'}">selected</c:if>
                                             >上架</option>
                                             <option value="0"
-                                                    <c:if test="${mtxGood.status=='0'}">selected</c:if>
+                                                    <c:if test="${mtxProduct.status=='0'}">selected</c:if>
                                             >下架</option>
                                         </select>
                                     </div>
@@ -67,37 +67,37 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach items="${mtxGoodList}" var="mtxGood">
+                                    <c:forEach items="${mtxProductList}" var="mtxProduct">
                                         <tr>
                                             <td>
-                                                    ${mtxGood.name}
+                                                    ${mtxProduct.name}
                                             </td>
                                             <td>
-                                                    ${mtxGood.points}
+                                                    ${mtxProduct.points}
                                             </td>
                                             <td>
-                                                <c:if test="${mtxGood.status=='1'}">上架</c:if>
-                                                <c:if test="${mtxGood.status=='0'}">下架</c:if>
+                                                <c:if test="${mtxProduct.status=='1'}">上架</c:if>
+                                                <c:if test="${mtxProduct.status=='0'}">下架</c:if>
                                             </td>
                                             <td>
-                                                <img src="${mtxGood.img}" width="50" height="50">
+                                                <img src="${mtxProduct.img}" width="50" height="50">
                                             </td>
                                             <td>
-                                                    ${mtxGood.detail}
+                                                    ${mtxProduct.detail}
                                             </td>
                                             <td>
-                                                <a href="${ctx}/admin/wefamily/goMtxGood?uuid=${mtxGood.uuid}"
+                                                <a href="${ctx}/admin/wefamily/goMtxGood?uuid=${mtxProduct.uuid}"
                                                    class="btn  btn-infonew btn-sm" style="color: white">
                                                     修改
                                                 </a>
 
-                                                <a href="javascript:deleteMtxGood('${mtxGood.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
+                                                <a href="javascript:deleteMtxGood('${mtxProduct.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
                                     </tbody>
                                 </table>
-                                <web:pagination pageList="${mtxGoodList}" postParam="true"/>
+                                <web:pagination pageList="${mtxProductList}" postParam="true"/>
                                 <button class="btn btn-sm btn-submit" onclick="showMtxGoodInfo()"> 添加</button>
                             </div>
                     </c:if>

@@ -35,7 +35,6 @@ public class MtxMemberService {
             Machine machine = new Machine();
             MtxProduct product = new MtxProduct();
             MtxPoint point = new MtxPoint();
-            List<MtxProduct> productList = new ArrayList<MtxProduct>();
             WechatUser wechatUser = WechatBindingUtil.getWechatUser(wpUser.getBindid(), wpUser.getOpenid());
             if(wechatUser!=null){
                 wpUser.setNickname(wechatUser.getNickname());
@@ -44,20 +43,17 @@ public class MtxMemberService {
             wpUser.setIfauth("Y");
             wpUserService.insert(wpUser);
             if (StringUtils.isNotBlank(machineid)) {
-                point.setMachineid(machineid);
                 machine.setUuid(machineid);
             }
             point.setUserid(wpUser.getUuid());
             machine = machineService.queryForObjectByPk(machine);
             if (machine != null) {
                 product.setModel(machine.getMachinemodel());
-                productList = mtxProductService.queryForList(product);
-                if (productList.size() > 0) {
-                    int p;
-                    double price = productList.get(0).getPrice();
-                    p = (int) price;
-                    point.setPoints(p);
-                    wpUser.setPoints(p);
+                product = mtxProductService.queryForObjectByUniqueKey(product);
+                if (product!=null) {
+                    wpUser.setPoints(product.getPoints());
+                    point.setPoints(product.getPoints());
+                    point.setProductid(product.getUuid());
                     mtxPointService.insert(point);
                     wpUserService.updatePartial(wpUser);
                 }

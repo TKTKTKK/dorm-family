@@ -14,5 +14,7 @@ import java.util.List;
 public interface MtxPointMapper extends BaseMapper<MtxPoint> {
     public PageList<MtxPoint> selectMtxPointList(@Param("mtxPoint") MtxPoint mtxPoint, PageBounds pageBounds);
 
-    List<MtxPoint> findPointIsExist(@Param("machineid")String machineid, @Param("userid")String userid);
+    List<MtxPoint> queryPointForList(@Param("mtxPoint")MtxPoint point);
+
+    public int queryCountConsumePoint(@Param("userid")String userid);
 }

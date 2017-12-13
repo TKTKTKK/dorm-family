@@ -50,10 +50,11 @@
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
                                     <tr>
-                                        <th width="25%">姓名</th>
-                                        <th width="25%">手机号</th>
-                                        <th width="25%">商品名</th>
-                                        <th width="25%">积分</th>
+                                        <th width="20%">姓名</th>
+                                        <th width="20%">手机号</th>
+                                        <th width="20%">商品名</th>
+                                        <th width="20%">积分</th>
+                                        <th width="20%">时间</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -66,10 +67,13 @@
                                                     ${mtxPoint.phone}
                                             </td>
                                             <td>
-                                                    ${mtxPoint.productname}
+                                                    ${mtxPoint.name}
                                             </td>
                                             <td>
                                                     ${mtxPoint.points}
+                                            </td>
+                                            <td>
+                                                    ${fn:substring(mtxPoint.createon, 0, 19)}
                                             </td>
                                         </tr>
                                     </c:forEach>
