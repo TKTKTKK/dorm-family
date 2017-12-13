@@ -96,13 +96,17 @@ public class WechatUserInfoService extends BaseService<WechatUserInfoMapper,Wech
     }
 
     public void addStaffInfo(WechatUserInfo wechatUserInfo) {
-        WechatUserInfo wechatUserInfoTemp = this.queryForObjectByUniqueKey(wechatUserInfo);
+        WechatUserInfo wechat_userInfo=new WechatUserInfo();
+        if(StringUtils.isNotBlank(wechatUserInfo.getOpenid())){
+            wechat_userInfo.setOpenid(wechatUserInfo.getOpenid());
+        }
+        WechatUserInfo wechatUserInfoTemp = this.queryForObjectByUniqueKey(wechat_userInfo);
+        WechatUser wechatUser = WechatBindingUtil.getWechatUser(wechatUserInfo.getBindid(), wechatUserInfo.getOpenid());
+        if(wechatUser!=null){
+            wechatUserInfo.setNickname(wechatUser.getNickname());
+            wechatUserInfo.setHeadimgurl(wechatUser.getHeadimgurl());
+        }
         if (wechatUserInfoTemp == null || StringUtils.isBlank(wechatUserInfoTemp.getUuid())) {
-            WechatUser wechatUser = WechatBindingUtil.getWechatUser(wechatUserInfo.getBindid(), wechatUserInfo.getOpenid());
-            if(wechatUser!=null){
-                wechatUserInfo.setNickname(wechatUser.getNickname());
-                wechatUserInfo.setHeadimgurl(wechatUser.getHeadimgurl());
-            }
             this.insert(wechatUserInfo);
         }else{
             wechatUserInfoTemp.setName(wechatUserInfo.getName());
