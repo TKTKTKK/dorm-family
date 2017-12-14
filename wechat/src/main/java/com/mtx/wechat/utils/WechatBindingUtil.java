@@ -152,7 +152,7 @@ public class WechatBindingUtil {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByBindId(bindId);
         JsApiTicket jsApiTicket = JsSdkUtil.getTicket(accessToken, wechatBinding.getAppid());
         Map<String, String> ret = SignUtil.getJssdkSignature(jsApiTicket.getTicket(), url);
-        ret.put("appId", wechatBinding.getAppid());
+        ret.put("appid", wechatBinding.getAppid());
         return ret;
     }
 

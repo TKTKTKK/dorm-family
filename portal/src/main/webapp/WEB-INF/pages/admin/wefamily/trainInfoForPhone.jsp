@@ -259,10 +259,10 @@
     <!-- /.modal 大图 end -->
 
 <script src="${ctx}/static/admin/js/lrz/dist/lrz.bundle.js"></script>
-<script type="text/javascript" src="${ctx}/static/admin/geo.js"></script>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
-<script src="${ctx}/static/admin/js/qikoo/qikoo.js"></script>
-<script language="javascript" type="text/javascript" src="${ctx}/static/admin/js/calendar/WdatePicker.js"></script>
+<script src="${ctx}/static/admin/js/calendar/WdatePicker.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="${ctx}/static/js/wechatUtil.js?20171201"></script>
 <script type="text/javascript">
 
     function submitTrainInfo(){
@@ -318,7 +318,13 @@
             });
     }
 
-    </script>
+    wechatUtil.getLocation({
+        success : function(res){
+            alert("latitude : " + res.latitude + " longitude " + res.longitude);
+        }
+    });
+
+</script>
 
 </body>
 </html>
