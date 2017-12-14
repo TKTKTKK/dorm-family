@@ -465,6 +465,35 @@ var wechatUtil = (function ($) {
         };
     }
 
+    if (typeof scanQRCode == "undefined") {
+        var scanQRCode = function (options) {
+            var opts = $.extend(scanQRCode.defaults, options);
+            initWechat(location.href, ["scanQRCode"], function () {
+                wx.scanQRCode({
+                    needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                    scanType: ["qrCode","barCode"],
+                    success:opts.success,
+                    fail:opts.fail// 可以指定扫二维码还是一维码，默认二者都有
+                });
+            }, opts.error)
+        };
+
+        scanQRCode.defaults = {
+            success: function (resp) {
+                console.info(JSON.stringify(resp));
+            },
+            fail: function (resp) {
+                console.info(JSON.stringify(resp))
+            },
+            cancel: function (resp) {
+                console.info(JSON.stringify(resp))
+            },
+            error: function (resp) {
+                console.info(JSON.stringify(resp))
+            }
+        };
+    }
+
     return {
         isWechatBrowser: isWechatBrowser,
         initWechat: initWechat,
@@ -482,6 +511,7 @@ var wechatUtil = (function ($) {
         getLocalImgData:getLocalImgData,
         downloadImage:downloadImage,
         onMenuShareAppMessage:onMenuShareAppMessage,
-        showNonBaseMenu:showNonBaseMenu
+        showNonBaseMenu:showNonBaseMenu,
+        scanQRCode:scanQRCode
     }
 })($);
