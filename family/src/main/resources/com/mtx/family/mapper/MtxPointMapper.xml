@@ -26,7 +26,7 @@
         ;
     </select>
     <select id="queryCountConsumePoint" resultType="java.lang.Integer">
-        select sum(mp.points)
+        select ifnull(sum(ifnull(mp.points,0)),0)
         from tb_mtx_point_record mp
         where TRUE
         and mp.userid =#{userid}

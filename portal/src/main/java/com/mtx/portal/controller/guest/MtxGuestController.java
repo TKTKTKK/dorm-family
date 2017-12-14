@@ -53,7 +53,7 @@ public class MtxGuestController extends BaseGuestController{
     @RequestMapping(value = "/product_center")
     public String product_center(Model model) {
         MtxProduct mtxProduct = new MtxProduct();
-        mtxProduct.setStatus("1");
+        mtxProduct.setStatus("ON_SALE");
         List<MtxProduct> mtxProductList= mxtProductService.queryForList(mtxProduct);
         model.addAttribute("mtxProductList",mtxProductList);
         return "guest/product_center";
@@ -171,12 +171,15 @@ public class MtxGuestController extends BaseGuestController{
             List<MtxPoint> pointList=mtxPointService.queryPointForList(point);
             int surplusPoint=0,consumePoint=0;
             if(user!=null){
-                surplusPoint=user.getPoints();
+                if(user.getPoints()>0){
+                    surplusPoint=user.getPoints();
+                }
             }
             consumePoint=mtxPointService.queryCountConsumePoint(userid);
             model.addAttribute("surplusPoint",surplusPoint);
             model.addAttribute("consumePoint",Math.abs(consumePoint));
             model.addAttribute("pointList",pointList);
+            model.addAttribute("userid",userid);
         }
         return "guest/point_list";
     }
@@ -225,6 +228,7 @@ public class MtxGuestController extends BaseGuestController{
             List<MtxUserMachine> machineList=new ArrayList<MtxUserMachine>();
             machineList=mtxUserMachineService.queryMachineList(userid);
             model.addAttribute("machineList",machineList);
+            model.addAttribute("userid",userid);
         }
         return "guest/product_list";
     }

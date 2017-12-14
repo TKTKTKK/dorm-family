@@ -51,7 +51,7 @@
             <span>${user.points}</span>
         </li>
     </ul>
-<input type="text" value="${userid}" id="userid" style="display: none">
+<input type="text" value="${user.uuid}" id="userid" style="display: none">
 </body>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script type="text/javascript">
