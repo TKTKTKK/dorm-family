@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -43,6 +44,10 @@ public class MtxGuestController extends BaseGuestController{
     private MtxPointService mtxPointService;
     @Autowired
     private WpUserService wpUserService;
+    @Autowired
+    private MtxUserMachineService mtxUserMachineService;
+    @Autowired
+    private MachineService machineService;
 
 
     @RequestMapping(value = "/product_center")
@@ -133,7 +138,14 @@ public class MtxGuestController extends BaseGuestController{
      * @return
      */
     @RequestMapping(value = "/member_center",method = RequestMethod.GET)
-    public String member_center(String userid,Model model) {
+    public String member_center(String userid,Model model,HttpServletRequest req) {
+        if(StringUtils.isBlank(userid)){
+            WpUser user =new WpUser();
+            user=getWechatMemberInfo(req);
+            if(user!=null){
+                userid=user.getUuid();
+            }
+        }
         if(StringUtils.isNotBlank(userid)){
             WpUser user =new WpUser();
             user.setUuid(userid);
@@ -185,5 +197,62 @@ public class MtxGuestController extends BaseGuestController{
         wechatUserInfoService.addStaffInfo(wechatUserInfo);
         model.addAttribute("success","保存成功!");
         return "guest/staff_center";
+    }
+
+    /**
+     * 个人中心
+     */
+    @RequestMapping(value = "/userInfo",method = RequestMethod.GET)
+    public String userInfo(String userid,Model model) {
+        if(StringUtils.isNotBlank(userid)){
+            WpUser user=new WpUser();
+            user.setUuid(userid);
+            user=wpUserService.queryForObjectByPk(user);
+            if(user!=null){
+                model.addAttribute("user",user);
+            }
+        }
+        return "guest/userInfo";
+    }
+    /**
+     * 我的配件
+     */
+    @RequestMapping(value = "/product_list",method = RequestMethod.GET)
+    public String product_list(String userid,Model model) {
+        if(StringUtils.isNotBlank(userid)){
+            MtxUserMachine machine=new MtxUserMachine();
+            machine.setUserid(userid);
+            List<MtxUserMachine> machineList=new ArrayList<MtxUserMachine>();
+            machineList=mtxUserMachineService.queryMachineList(userid);
+            model.addAttribute("machineList",machineList);
+        }
+        return "guest/product_list";
+    }
+    /**
+     * 添加我的配件
+     */
+    @RequestMapping(value = "/productInfo",method = RequestMethod.GET)
+    public String productInfo(String userid,Model model) {
+        model.addAttribute("userid",userid);
+        return "guest/productInfo";
+    }
+
+    @RequestMapping(value = "/productInfo",method = RequestMethod.POST)
+    public String productInfo(Machine machine,String userid,Model model) {
+        String message=null;
+        if(StringUtils.isNotBlank(machine.getMachineno())){
+            Machine machineTemp=new Machine();
+            machineTemp.setMachineno(machine.getMachineno());
+            machineTemp=machineService.queryForObjectByUniqueKey(machineTemp);
+            if(machineTemp!=null){
+                message=mxtProductService.addUserMachine(machine,userid);
+            }else{
+                model.addAttribute("machine",machine);
+                message="该机器不存在！请重试！";
+            }
+        }
+        model.addAttribute("message",message);
+        model.addAttribute("userid",userid);
+        return "guest/productInfo";
     }
 }

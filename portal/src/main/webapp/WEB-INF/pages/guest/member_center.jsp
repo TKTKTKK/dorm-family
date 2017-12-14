@@ -33,26 +33,26 @@
 </div>
 <div class="center_top">
     <div>
-        <img src="../../../static/admin/img/qrcode.png" alt="">
+        <img src="${user.headimgurl}" alt="">
         <div class="personal_info">
-            <p class="name">陈一一</p>
-            <p class="goal">当前积分：3600</p>
+            <p class="name">${user.nickname}</p>
+            <p class="goal">当前积分：${user.points}</p>
         </div>
     </div>
 </div>
 <ul class="list">
-    <li>
+    <li onclick="goUserInfo()">
         <span>个人信息</span>
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
 </ul>
-<input type="text" value="20171212" id="userid" style="display: none">
+<input type="text" value="${userid}" id="userid" style="display: none">
 <ul class="list">
     <li onclick="goMyPointRecord()">
         <span>我的积分</span>
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
-    <li>
+    <li onclick="goMyProductRecord()">
         <span>我的产品</span>
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
@@ -76,9 +76,15 @@
 </body>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script type="text/javascript">
+    var userid=$("#userid").val();
     function goMyPointRecord(){
-        var userid=$("#userid").val();
         window.location.href="${ctx}/guest/point_list?userid="+userid;
+    }
+    function goUserInfo(){
+        window.location.href="${ctx}/guest/userInfo?userid="+userid;
+    }
+    function goMyProductRecord(){
+        window.location.href="${ctx}/guest/product_list?userid="+userid;
     }
 </script>
 </html>

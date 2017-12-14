@@ -5,10 +5,9 @@
     <resultMap id="selectResultMap" type="com.mtx.family.entity.MtxPoint">
     </resultMap>
     <select id="selectMtxPointList" resultMap="selectResultMap">
-        select mp.*,if(m.type='PRODUCT',concat(m.model,m.name),m.name) as name, wu.name as membername,wu.contactno as phone
+        select mp.*,wu.name as membername ,wu.contactno as phone
         from tb_mtx_point_record mp
         inner join tb_wp_user wu on mp.userid=wu.uuid
-        left join tb_mtx_product m on m.uuid=mp.productid
         where TRUE
         <if test="mtxPoint.membername != null and mtxPoint.membername != ''">
             and wu.name like concat("%",#{mtxPoint.membername},"%")
@@ -19,9 +18,8 @@
         order by wu.uuid,date_format(mp.createon,'%Y-%m-%d %H:%i:%s') desc;
     </select>
     <select id="queryPointForList" resultMap="selectResultMap">
-        select mp.*,if(m.type='PRODUCT',concat(m.model,m.name),m.name) as name
+        select mp.*
         from tb_mtx_point_record mp
-        left join tb_mtx_product m on m.uuid=mp.productid
         where TRUE
         and mp.userid =#{mtxPoint.userid}
         order by date_format(mp.createon,'%Y-%m-%d %H:%i:%s') desc;
@@ -30,10 +28,9 @@
     <select id="queryCountConsumePoint" resultType="java.lang.Integer">
         select sum(mp.points)
         from tb_mtx_point_record mp
-        left join tb_mtx_product m on m.uuid=mp.productid
         where TRUE
         and mp.userid =#{userid}
-        and m.type ='EXCHANGE_GOOD'
+        and mp.points &lt; 0
         ;
     </select>
 </mapper>

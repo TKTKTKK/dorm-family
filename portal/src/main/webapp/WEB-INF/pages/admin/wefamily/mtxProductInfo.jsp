@@ -72,12 +72,16 @@
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>状态：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <select class="form-control" id="status" name="status">
-                                        <option value="1"
-                                                <c:if test="${mtxProduct.status=='1'}">selected</c:if>
-                                        >上架</option>
-                                        <option value="0"
-                                                <c:if test="${mtxProduct.status=='0'}">selected</c:if>
-                                        >下架</option>
+                                        <option value="">--全部--</option>
+                                        <c:set var="typeList" value="${web:queryCommonCodeList('PRODUCT_STATUS')}"></c:set>
+                                        <c:forEach items="${typeList}" var="typeCode">
+                                            <c:if test="${mtxProduct.status == typeCode.code}">
+                                                <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
+                                            </c:if>
+                                            <c:if test="${mtxProduct.status != typeCode.code}">
+                                                <option value="${typeCode.code}">${typeCode.codevalue}</option>
+                                            </c:if>
+                                        </c:forEach>
                                     </select>
                                 </div>
                             </div>
