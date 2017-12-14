@@ -29,7 +29,7 @@
         .myquestion .right{background:#5bbc4e;color: #fff}
         .myquestion .left .time{color: #999;font-size: 0.12rem;margin-bottom: 0px;}
         .myquestion .right .time{color: #fff;font-size: 0.12rem;margin-bottom: 0px;}
-        .newwords textarea{width: 76%;border: 0;padding-left: 10px;background: #efefef; height: 40px;margin: 0;vertical-align: middle;}
+        .newwords textarea{width: 76%;border: 0;padding-left: 10px;background: #efefef; height: 40px;margin: 0;vertical-align: middle;font-size: 1.5rem}
         .newwords p{font-size: 1.5rem;text-align:center;width: 20%;border: 0;color: #fff;background: #5bbc4e;height: 40px;margin: 0;vertical-align: middle;float:right;line-height: 40px;}
         .bottom_1{position: absolute;bottom: 0;width: 100%;}
         .choose_alert{position: fixed;background: rgba(0,0,0,0.5);width: 100%;top: 0;bottom: 0;left: 0;text-align: center;}

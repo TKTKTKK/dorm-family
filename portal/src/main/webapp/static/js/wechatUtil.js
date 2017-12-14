@@ -31,7 +31,7 @@ var wechatUtil = (function ($) {
             }else{
                 requestJssdkSign(url, function (data) {
                     wx.config({
-                        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
                         appId: data.appid, // 必填，公众号的唯一标识
                         timestamp: data.timestamp, // 必填，生成签名的时间戳
                         nonceStr: data.nonceStr, // 必填，生成签名的随机串
@@ -465,6 +465,35 @@ var wechatUtil = (function ($) {
         };
     }
 
+    if (typeof scanQRCode == "undefined") {
+        var scanQRCode = function (options) {
+            var opts = $.extend(scanQRCode.defaults, options);
+            initWechat(location.href, ["scanQRCode"], function () {
+                wx.scanQRCode({
+                    needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                    scanType: ["qrCode","barCode"],
+                    success:opts.success,
+                    fail:opts.fail// 可以指定扫二维码还是一维码，默认二者都有
+                });
+            }, opts.error)
+        };
+
+        scanQRCode.defaults = {
+            success: function (resp) {
+                console.info(JSON.stringify(resp));
+            },
+            fail: function (resp) {
+                console.info(JSON.stringify(resp))
+            },
+            cancel: function (resp) {
+                console.info(JSON.stringify(resp))
+            },
+            error: function (resp) {
+                console.info(JSON.stringify(resp))
+            }
+        };
+    }
+
     return {
         isWechatBrowser: isWechatBrowser,
         initWechat: initWechat,
@@ -482,6 +511,7 @@ var wechatUtil = (function ($) {
         getLocalImgData:getLocalImgData,
         downloadImage:downloadImage,
         onMenuShareAppMessage:onMenuShareAppMessage,
-        showNonBaseMenu:showNonBaseMenu
+        showNonBaseMenu:showNonBaseMenu,
+        scanQRCode:scanQRCode
     }
 })($);

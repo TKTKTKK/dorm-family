@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.family.mapper.MtxUserMachineMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.family.entity.MtxUserMachine">
+    </resultMap>
+    <select id="queryMachineList" resultMap="selectResultMap">
+        select mu.*,concat(mm.machinemodel,mm.machinename) as name
+        from tb_mtx_usermachine mu
+        left join tb_mtx_machine mm on mm.uuid=mu.machineid
+        where mu.userid=#{userid}
+        order by date_format(mu.createon,'%Y-%m-%d %H:%i:%s') desc;
+    </select>
+</mapper>

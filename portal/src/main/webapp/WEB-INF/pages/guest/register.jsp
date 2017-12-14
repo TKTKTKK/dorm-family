@@ -64,8 +64,8 @@
         <input type="text" id="machinename" value="手扶式插秧机" placeholder="请填写机器名称">
     </li>
     <li>
-        <span>出场编号</span>
-        <input type="text" id="machinProduct" value="EQ00000" placeholder="请填写出场编号">
+        <span>出厂编号</span>
+        <input type="text" id="machinProduct" value="EQ00000" placeholder="请填写出厂编号">
     </li>
     <li>
         <span>汽油机出厂编号</span>

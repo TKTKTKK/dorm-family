@@ -39,14 +39,16 @@
                                     <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">状态：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <select class="form-control" id="status" name="status">
-                                            <option value=""
-                                            >全部</option>
-                                            <option value="1"
-                                                    <c:if test="${mtxProduct.status=='1'}">selected</c:if>
-                                            >上架</option>
-                                            <option value="0"
-                                                    <c:if test="${mtxProduct.status=='0'}">selected</c:if>
-                                            >下架</option>
+                                            <option value="">--全部--</option>
+                                            <c:set var="typeList" value="${web:queryCommonCodeList('PRODUCT_STATUS')}"></c:set>
+                                            <c:forEach items="${typeList}" var="typeCode">
+                                                <c:if test="${mtxProduct.status == typeCode.code}">
+                                                    <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
+                                                </c:if>
+                                                <c:if test="${mtxProduct.status != typeCode.code}">
+                                                    <option value="${typeCode.code}">${typeCode.codevalue}</option>
+                                                </c:if>
+                                            </c:forEach>
                                         </select>
                                     </div>
                                 </div>
@@ -87,8 +89,7 @@
                                                 ${mtxProduct.price}
                                             </td>
                                             <td>
-                                                <c:if test="${mtxProduct.status=='1'}">上架</c:if>
-                                                <c:if test="${mtxProduct.status=='0'}">下架</c:if>
+                                                ${web:getCodeDesc("PRODUCT_STATUS", mtxProduct.status)}
                                             </td>
                                             <td>
                                                 <img src="${mtxProduct.img}" width="50" height="50">

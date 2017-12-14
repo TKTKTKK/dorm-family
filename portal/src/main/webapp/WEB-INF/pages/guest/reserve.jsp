@@ -58,7 +58,7 @@
     </li>
     <li>
         <span>补充内容</span>
-        <textarea  type="textarea" id="detail" placeholder="对本次交易的说明" style="height:4rem;text-align:right;color:#666;font-size: 1.4rem;"></textarea>
+        <textarea  type="textarea" id="detail" placeholder="对本次预订的说明" style="height:4rem;text-align:right;color:#666;font-size: 1.4rem;"></textarea>
     </li>
 </ul>
     <input type="text" name="productid" class="hidden" value="${mtxProduct.uuid}" style="display:none">
