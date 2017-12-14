@@ -81,7 +81,7 @@ INSERT INTO tb_common_code VALUES ('2017120700000008', null, null, 'ANWSER_OR_NO
 CREATE TABLE `tb_mtx_point_record` (
   `uuid` varchar(32) NOT NULL,
   `userid` varchar(32) NOT NULL,
-  `productid` varchar(32) DEFAULT NULL,
+  `name` varchar(64) DEFAULT NULL,
    `points` int(11) DEFAULT NULL,
   `createon` varchar(23) NOT NULL,
   `createby` varchar(32) NOT NULL,
@@ -103,4 +103,16 @@ INSERT INTO tb_common_code VALUES ('2017121300000006', null, null, 'TYPE_CODE', 
 INSERT INTO tb_common_code VALUES ('2017121300000007', null, null, 'TYPE_CODE', 'EXCHANGE_GOOD', '兑换商品', null,'', '7', '2014-11-30 21:44:31', 'sys', '2014-11-30 21:44:31', 'sys', '1', '0');
 
 
-
+-- 创建用户产品表
+CREATE TABLE `tb_mtx_usermachine` (
+  `uuid` varchar(32) NOT NULL,
+   `userid` varchar(32) DEFAULT NULL,
+  `machineid` varchar(32) DEFAULT NULL,
+  `createon` varchar(23) NOT NULL,
+  `createby` varchar(32) NOT NULL,
+  `modifyon` varchar(23) NOT NULL,
+  `modifyby` varchar(32) NOT NULL,
+  `versionno` int(11) NOT NULL,
+  `delind` char(1) NOT NULL,
+  PRIMARY KEY (`uuid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
