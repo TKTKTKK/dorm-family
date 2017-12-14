@@ -2,6 +2,7 @@ package com.mtx.family.mapper;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
+import com.mtx.family.entity.Machine;
 import com.mtx.family.entity.Merchant;
 import com.mtx.common.base.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -23,4 +24,5 @@ public interface MerchantMapper extends BaseMapper<Merchant> {
     List<Merchant> selectMerchantListNotInUserMerhantTable(@Param("bindid") String bindid, @Param("userid") String userid);
 
 
+    List<Merchant> selectMerchantByMachineInfo(@Param("machine") Machine machine);
 }

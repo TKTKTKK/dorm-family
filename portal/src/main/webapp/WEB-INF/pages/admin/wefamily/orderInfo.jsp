@@ -21,13 +21,21 @@
                 </div>
                 <form class="form-horizontal form-bordered" data-validate="parsley"
                       action="${ctx}/admin/wefamily/orderInfo" method="POST"
-                      onsubmit="return checkIfValid()" enctype="multipart/form-data" id="frm">
+                      enctype="multipart/form-data" id="frm">
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
                             <i class="fa fa-gift"></i>
                             <span class="text-lg">订单信息：</span>
                         </header>
                         <div class="panel-body p-0-15">
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>机器型号：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <input type="text" class="form-control" data-required="true"
+                                           value="${merchant.name}" readonly>
+                                    <input type="hidden" name="merchantid" value="${merchant.uuid}">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>机器型号：</label>
                                 <div class="col-sm-9 b-l bg-white">
