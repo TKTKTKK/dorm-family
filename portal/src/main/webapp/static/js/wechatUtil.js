@@ -85,7 +85,7 @@ var wechatUtil = (function ($) {
             var opts = $.extend(getLocation.defaults, options);
             initWechat(location.href, ["getLocation"], function () {
                 wx.getLocation({
-                    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                    type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
                     success: opts.success,
                     fail: opts.fail,
                     cancel: opts.cancel
@@ -494,6 +494,38 @@ var wechatUtil = (function ($) {
         };
     }
 
+    if (typeof requestFormattedAddress == "undefined") {
+        var requestFormattedAddress = function (options) {
+            var opts = $.extend(requestFormattedAddress.defaults, options);
+            $.ajax({
+                url: "/api/requestFormattedAddress",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    latitude: opts.latitude,
+                    longitude:opts.longitude
+                },
+                success: opts.success,
+                error: opts.error
+            });
+        };
+
+        requestFormattedAddress.defaults = {
+            success: function (resp) {
+                console.info(JSON.stringify(resp));
+            },
+            fail: function (resp) {
+                console.info(JSON.stringify(resp))
+            },
+            cancel: function (resp) {
+                console.info(JSON.stringify(resp))
+            },
+            error: function (resp) {
+                console.info(JSON.stringify(resp))
+            }
+        };
+    }
+
     return {
         isWechatBrowser: isWechatBrowser,
         initWechat: initWechat,
@@ -512,6 +544,7 @@ var wechatUtil = (function ($) {
         downloadImage:downloadImage,
         onMenuShareAppMessage:onMenuShareAppMessage,
         showNonBaseMenu:showNonBaseMenu,
-        scanQRCode:scanQRCode
+        scanQRCode:scanQRCode,
+        requestFormattedAddress:requestFormattedAddress
     }
 })($);
