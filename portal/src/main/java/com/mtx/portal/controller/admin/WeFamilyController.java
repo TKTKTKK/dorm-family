@@ -76,6 +76,10 @@ public class WeFamilyController extends BaseAdminController {
     @Autowired
     private CommonCodeService commonCodeService;
     @Autowired
+    private MtxVideoService mtxVideoService;
+    @Autowired
+    private MtxPartsCenterService mtxPartsCenterService;
+    @Autowired
     private RepairService repairService;
     @Autowired
     private RepairWorkerService repairWorkerService;
@@ -1009,6 +1013,23 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     /**
+     * 验证物料编码是否存在
+     */
+    @RequestMapping(value = "/ifMaterialCodeExist", method = RequestMethod.POST)
+    @ResponseBody
+    public Boolean ifMaterialCodeExist(String code,String uuid){
+        List<MtxPartsCenter> partsCenterList=new ArrayList<MtxPartsCenter>();
+        if(StringUtils.isNotBlank(code)){
+            partsCenterList=mtxPartsCenterService.ifMaterialCodeExist(code,uuid);
+        }
+        if(partsCenterList.size()>0){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    /**
      *培训管理
      */
     @RequestMapping(value = "/trainManage",method = RequestMethod.GET)
@@ -1309,6 +1330,25 @@ public class WeFamilyController extends BaseAdminController {
         }
 
         return "redirect:trainInfoForPhone?trainId=" + train.getUuid();
+    }
+    /**
+     * 视频管理
+     */
+    @RequestMapping(value = "/mtxVideoManage")
+    public String mtxVideoManage(@RequestParam(required = false, defaultValue = "1") int page, MtxVideo mtxVideo, Model model, HttpServletRequest request) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if (null != wechatBinding) {
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<MtxVideo> mtxVideoList = mtxVideoService.queryForListWithPagination(mtxVideo, pageBounds);
+            model.addAttribute("mtxVideoList", mtxVideoList);
+            model.addAttribute("mtxVideo",mtxVideo);
+        }
+        String successFlag=request.getParameter("deleteFlag");
+        if("1".equals(successFlag)){
+            model.addAttribute("successFlag","删除成功");
+        }
+        return "admin/wefamily/mtxVideoManage";
     }
 
     /**
@@ -1621,4 +1661,143 @@ public class WeFamilyController extends BaseAdminController {
         return "redirect:repairInfoForPhone?repairId=" + repair.getUuid();
     }
 
+    @RequestMapping(value = "/goMtxVideo", method = RequestMethod.GET)
+    public String goMtxVideo(Model model,MtxVideo mtxVideo){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        MtxVideo mtxVideoTemp=mtxVideoService.queryForObjectByPk(mtxVideo);
+        model.addAttribute("mtxVideo",mtxVideoTemp);
+        return "admin/wefamily/mtxVideoInfo";
+    }
+
+    @RequestMapping(value = "/updateMtxVideo",method = RequestMethod.POST)
+    public String updateMtxVideo(MtxVideo mtxVideo, RedirectAttributes redirectAttributes, Model model){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if (StringUtils.isBlank(mtxVideo.getUuid())) {
+            mtxVideoService.insert(mtxVideo);
+            model.addAttribute("mtxVideo", mtxVideo);
+            model.addAttribute("successMessage", "保存成功！");
+        } else {
+            try {
+                mtxVideoService.updatePartial(mtxVideo);
+                MtxVideo mtxVideoTemp = mtxVideoService.queryForObjectByPk(mtxVideo);
+                model.addAttribute("mtxVideo", mtxVideoTemp);
+            } catch (ServiceException e) {
+                logger.error(e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("errorMessage", "数据已修改，请重试！");
+                return "redirect:/admin/wefamily/goMtxVideo?uuid=" + mtxVideo.getUuid();
+
+            }
+            model.addAttribute("successMessage", "保存成功！");
+        }
+        return "admin/wefamily/mtxVideoInfo";
+    }
+
+    @RequestMapping(value = "/deleteMtxVideo", method = RequestMethod.POST)
+    @ResponseBody
+    public Map deleteMtxVideo(MtxVideo mtxVideo){
+        int deleteFlag=mtxVideoService.delete(mtxVideo);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
+    }
+    public List<Attachment> getAttachmentByRefid(String refid){
+        Attachment attachment=new Attachment();
+        List<Attachment> attachmentList=new ArrayList<Attachment>();
+        if(StringUtils.isNotBlank(refid)){
+            attachment.setRefid(refid);
+            attachmentList = attachmentService.queryForList(attachment);
+        }
+        return attachmentList;
+    }
+    /**
+     * 配件管理
+     */
+    @RequestMapping(value = "/mtxPartsCenterManage")
+    public String mtxPartsCenterManage(@RequestParam(required = false, defaultValue = "1") int page, MtxPartsCenter mtxPartsCenter, Model model, HttpServletRequest request) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if (null != wechatBinding) {
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<MtxPartsCenter> mtxPartsCenterList = mtxPartsCenterService.queryForListWithPagination(mtxPartsCenter, pageBounds);
+            model.addAttribute("mtxPartsCenterList", mtxPartsCenterList);
+            model.addAttribute("mtxPartsCenter",mtxPartsCenter);
+        }
+        String successFlag=request.getParameter("deleteFlag");
+        if("1".equals(successFlag)){
+            model.addAttribute("successFlag","删除成功");
+        }
+        return "admin/wefamily/mtxPartsCenterManage";
+    }
+
+    @RequestMapping(value = "/goMtxPartsCenter", method = RequestMethod.GET)
+    public String goMtxPartsCenter(Model model,MtxPartsCenter mtxPartsCenter){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        MtxPartsCenter mtxPartsCenterTemp=mtxPartsCenterService.queryForObjectByPk(mtxPartsCenter);
+        model.addAttribute("mtxPartsCenter",mtxPartsCenterTemp);
+        List<Attachment> attachmentList=new ArrayList<Attachment>();
+        if(StringUtils.isNotBlank(mtxPartsCenter.getUuid())){
+            attachmentList=getAttachmentByRefid(mtxPartsCenter.getUuid());
+        }
+        model.addAttribute("attachmentList",attachmentList);
+        return "admin/wefamily/mtxPartsCenterInfo";
+    }
+
+    @RequestMapping(value = "/updateMtxPartsCenter",method = RequestMethod.POST)
+    public String updateMtxPartsCenter(MtxPartsCenter mtxPartsCenter, RedirectAttributes redirectAttributes, Model model,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        String[] detailImgs = request.getParameterValues("detailImg");
+        if (StringUtils.isBlank(mtxPartsCenter.getUuid())) {
+            mtxPartsCenterService.insert(mtxPartsCenter);
+            model.addAttribute("mtxPartsCenter", mtxPartsCenter);
+            if(detailImgs!=null&&detailImgs.length>0){
+                for(int i=0;i<detailImgs.length;i++){
+                    Attachment attachment=new Attachment();
+                    attachment.setRefid(mtxPartsCenter.getUuid());
+                    attachment.setName(detailImgs[i]);
+                    attachmentService.insert(attachment);
+                }
+            }
+            List<Attachment> attachmentList=new ArrayList<Attachment>();
+            attachmentList=getAttachmentByRefid(mtxPartsCenter.getUuid());
+            model.addAttribute("attachmentList",attachmentList);
+            model.addAttribute("successMessage", "保存成功！");
+        } else {
+            try {
+                mtxPartsCenterService.updatePartial(mtxPartsCenter);
+                MtxPartsCenter mtxPartsCenterTemp = mtxPartsCenterService.queryForObjectByPk(mtxPartsCenter);
+                model.addAttribute("mtxPartsCenter", mtxPartsCenterTemp);
+                if(detailImgs!=null&&detailImgs.length>0){
+                    for(int i=0;i<detailImgs.length;i++){
+                        Attachment attachment=new Attachment();
+                        attachment.setRefid(mtxPartsCenter.getUuid());
+                        attachment.setName(detailImgs[i]);
+                        attachmentService.insert(attachment);
+                    }
+                }
+                List<Attachment> attachmentList=new ArrayList<Attachment>();
+                attachmentList=getAttachmentByRefid(mtxPartsCenterTemp.getUuid());
+                model.addAttribute("attachmentList",attachmentList);
+            } catch (ServiceException e) {
+                logger.error(e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("errorMessage", "数据已修改，请重试！");
+                return "redirect:/admin/wefamily/goMtxPartsCenter?uuid=" + mtxPartsCenter.getUuid();
+
+            }
+            model.addAttribute("successMessage", "保存成功！");
+        }
+        return "admin/wefamily/mtxPartsCenterInfo";
+    }
+
+    @RequestMapping(value = "/deleteMtxPartsCenter", method = RequestMethod.POST)
+    @ResponseBody
+    public Map deleteMtxPartsCenter(MtxPartsCenter mtxPartsCenter){
+        int deleteFlag=mtxPartsCenterService.delete(mtxPartsCenter);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
+    }
 }

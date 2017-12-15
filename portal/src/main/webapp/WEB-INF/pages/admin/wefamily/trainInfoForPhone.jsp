@@ -263,6 +263,7 @@
 <script src="${ctx}/static/admin/js/calendar/WdatePicker.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script src="${ctx}/static/js/wechatUtil.js?20171201"></script>
+<script src="${ctx}/static/js/coordtransform.js"></script>
 <script type="text/javascript">
 
     function submitTrainInfo(){
@@ -320,7 +321,15 @@
 
     wechatUtil.getLocation({
         success : function(res){
-            alert("latitude : " + res.latitude + " longitude " + res.longitude);
+            var gcj02tobd09 = coordtransform.gcj02tobd09(res.longitude,res.latitude);
+            wechatUtil.requestFormattedAddress({
+                latitude:gcj02tobd09[1],
+                longitude:gcj02tobd09[0],
+                success:function(data){
+                    alert(data.address);
+                }
+
+            })
         }
     });
 
