@@ -15,6 +15,8 @@ public class Order extends BaseEntity {
     @Column
     private String bindid;
     @Column
+    private String merchantid;
+    @Column
     private String snno;
     @Column
     private String machinemodel;
@@ -48,6 +50,14 @@ public class Order extends BaseEntity {
 
     public void setBindid(String bindid) {
         this.bindid = bindid;
+    }
+
+    public String getMerchantid() {
+        return merchantid;
+    }
+
+    public void setMerchantid(String merchantid) {
+        this.merchantid = merchantid;
     }
 
     public String getSnno() {

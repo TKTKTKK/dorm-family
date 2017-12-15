@@ -1,5 +1,8 @@
 package com.mtx.portal.controller.guest;
 
+import com.mtx.common.entity.Attachment;
+import com.mtx.common.service.AttachmentService;
+import com.mtx.common.service.SequenceService;
 import com.mtx.common.utils.*;
 import com.mtx.family.entity.*;
 import com.mtx.family.service.*;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,12 +52,18 @@ public class MtxGuestController extends BaseGuestController{
     private MtxUserMachineService mtxUserMachineService;
     @Autowired
     private MachineService machineService;
+    @Autowired
+    private RepairService repairService;
+    @Autowired
+    private SequenceService sequenceService;
+    @Autowired
+    private AttachmentService attachmentService;
 
 
     @RequestMapping(value = "/product_center")
     public String product_center(Model model) {
         MtxProduct mtxProduct = new MtxProduct();
-        mtxProduct.setStatus("1");
+        mtxProduct.setStatus("ON_SALE");
         List<MtxProduct> mtxProductList= mxtProductService.queryForList(mtxProduct);
         model.addAttribute("mtxProductList",mtxProductList);
         return "guest/product_center";
@@ -171,12 +181,15 @@ public class MtxGuestController extends BaseGuestController{
             List<MtxPoint> pointList=mtxPointService.queryPointForList(point);
             int surplusPoint=0,consumePoint=0;
             if(user!=null){
-                surplusPoint=user.getPoints();
+                if(user.getPoints()>0){
+                    surplusPoint=user.getPoints();
+                }
             }
             consumePoint=mtxPointService.queryCountConsumePoint(userid);
             model.addAttribute("surplusPoint",surplusPoint);
             model.addAttribute("consumePoint",Math.abs(consumePoint));
             model.addAttribute("pointList",pointList);
+            model.addAttribute("userid",userid);
         }
         return "guest/point_list";
     }
@@ -225,6 +238,7 @@ public class MtxGuestController extends BaseGuestController{
             List<MtxUserMachine> machineList=new ArrayList<MtxUserMachine>();
             machineList=mtxUserMachineService.queryMachineList(userid);
             model.addAttribute("machineList",machineList);
+            model.addAttribute("userid",userid);
         }
         return "guest/product_list";
     }
@@ -254,5 +268,73 @@ public class MtxGuestController extends BaseGuestController{
         model.addAttribute("message",message);
         model.addAttribute("userid",userid);
         return "guest/productInfo";
+    }
+
+    /**
+     * 报修列表
+     */
+    @RequestMapping(value = "/repair_list",method = RequestMethod.GET)
+    public String repair_list(HttpServletRequest request,Model model){
+
+        WpUser wpUser = getWechatMemberInfo(request);
+        model.addAttribute("wpUser",wpUser);
+        Repair repair = new Repair();
+        repair.setReporter(wpUser.getUuid());
+        repair.setOrderby("createon desc");
+        List<Repair> repairList = repairService.queryForList(repair);
+        model.addAttribute("repairList",repairList);
+        return "guest/repair_list";
+    }
+
+    /**
+     * 报修信息
+     */
+    @RequestMapping(value = "/repair_info",method = RequestMethod.GET)
+    public String repair_info(HttpServletRequest request,Model model){
+
+        String repairId = request.getParameter("repairId");
+        if(StringUtils.isNotBlank(repairId)){
+            Repair repair = new Repair();
+            repair.setUuid(repairId);
+            repair = repairService.queryForObjectByPk(repair);
+            model.addAttribute("repair",repair);
+
+            Attachment attachment = new Attachment();
+            attachment.setRefid(repairId);
+            attachment.setType("REPORTER");
+            List<Attachment> attachmentList = attachmentService.queryForList(attachment);
+            model.addAttribute("attachmentList",attachmentList);
+        }
+        return "guest/repair_info";
+    }
+
+    /**
+     * 报修信息
+     */
+    @RequestMapping(value = "/repair_info",method = RequestMethod.POST)
+    public String repair_info(Repair repair, RedirectAttributes redirectAttributes, HttpServletRequest request){
+
+        String[] repairImgs = request.getParameterValues("repairImg");
+
+        if(StringUtils.isNotBlank(repair.getUuid())){
+            try {
+                repairService.updateRepair(repair,repairImgs);
+                redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");
+            }
+        }else{
+            //添加
+            WpUser wpUser = getWechatMemberInfo(request);
+            repair.setReporter(wpUser.getUuid());
+            repair.setReportername(wpUser.getName());
+            repair.setReporterphone(wpUser.getContactno());
+            repair.setStatus("NEW");
+            repair.setSnno(sequenceService.getRepairSeqNo());
+            repairService.saveRepair(repair,repairImgs);
+            redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+        }
+        return "redirect:repair_info?repairId=" + repair.getUuid();
     }
 }

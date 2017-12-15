@@ -45,6 +45,7 @@ public class MtxMemberService {
                 wpUser.setHeadimgurl(wechatUser.getHeadimgurl());
             }
             wpUser.setIfauth("Y");
+            wpUser.setPoints(0);
             wpUserService.insert(wpUser);
             if (StringUtils.isNotBlank(machineid)) {
                 machine.setUuid(machineid);

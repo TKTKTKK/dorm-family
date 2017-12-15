@@ -5,6 +5,7 @@ import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.base.BaseService;
 import com.mtx.common.utils.StringUtils;
 import com.mtx.common.utils.UserUtils;
+import com.mtx.family.entity.Machine;
 import com.mtx.family.entity.Merchant;
 import com.mtx.family.mapper.MerchantMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,5 +67,15 @@ public class MerchantService extends BaseService<MerchantMapper,Merchant> {
 
     public List<Merchant> queryMerchantListNotInUserMerhantTable(String bindid, String userId){
         return mapper.selectMerchantListNotInUserMerhantTable(bindid,userId);
+    }
+
+    public Merchant queryMerchantByMachineInfo(Machine machine) {
+        List<Merchant> merchantList = mapper.selectMerchantByMachineInfo(machine);
+        if(null != merchantList && merchantList.size() > 0){
+            return merchantList.get(0);
+        }else{
+            return null;
+        }
+
     }
 }

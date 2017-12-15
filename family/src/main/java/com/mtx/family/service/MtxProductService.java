@@ -9,6 +9,7 @@ import com.mtx.family.entity.MtxPoint;
 import com.mtx.family.entity.MtxProduct;
 import com.mtx.family.entity.MtxUserMachine;
 import com.mtx.family.mapper.MtxProductMapper;
+import com.mtx.wechat.entity.WpUser;
 import com.mtx.wechat.service.WpUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class MtxProductService extends BaseService<MtxProductMapper,MtxProduct> 
     private MtxPointService mtxPointService;
     @Autowired
     private MtxUserMachineService mtxUserMachineService;
+    @Autowired
+    private WpUserService wpUserService;
 
     public PageList<MtxProduct> queryForListWithPagination(MtxProduct obj, PageBounds pageBounds,String flag) {
         return mapper.selectMxtProductList(obj,pageBounds,flag);
@@ -55,7 +58,6 @@ public class MtxProductService extends BaseService<MtxProductMapper,MtxProduct> 
                     message="产品已存在！";
                     return message;
                 }else{
-                    mtxUserMachineService.insert(mtxUserMachine);
                     MtxUserMachine mtxUserMachineTemp=new MtxUserMachine();
                     mtxUserMachineTemp.setMachineid(machine.getUuid());
                     List<MtxUserMachine> mtxUserMachineTempList=mtxUserMachineService.queryForList(mtxUserMachineTemp);
@@ -68,9 +70,17 @@ public class MtxProductService extends BaseService<MtxProductMapper,MtxProduct> 
                         product=this.queryForObjectByUniqueKey(product);
                         if(product!=null){
                             point.setPoints(product.getPoints());
+                            WpUser user=new WpUser();
+                            user.setUuid(userid);
+                            user=wpUserService.queryForObjectByPk(user);
+                            if(user!=null){
+                                user.setPoints(user.getPoints()+product.getPoints());
+                            }
+                            wpUserService.updatePartial(user);
                         }
                         mtxPointService.insert(point);
                     }
+                    mtxUserMachineService.insert(mtxUserMachine);
                     message="添加成功！";
                     return message;
                 }

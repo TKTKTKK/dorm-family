@@ -13,34 +13,23 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 订单管理</span>
+            满田星 / <span class="font-bold  text-shallowred"> 报修管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
                 <div class="bg-white closel">
                     <div class="col-sm-12 no-padder">
-                        <form method="post" action="${ctx}/admin/wefamily/orderManage" class="form-horizontal b-l b-r b-b padding20"
+                        <form method="post" action="${ctx}/admin/wefamily/repairManage" class="form-horizontal b-l b-r b-b padding20"
                               data-validate="parsley"
                               id="searchForm">
                             <div class="row">
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
-                                    <select class="form-control" name="merchantid" id="merchantid" data-required="true">
-                                        <c:if test="${fn:length(merchantList) > 1}">
-                                            <option value="">经销商</option>
-                                        </c:if>
-                                        <c:forEach items="${merchantList}" var="merchant">
-                                            <option value="${merchant.uuid}" <c:if test="${order.merchantid == merchant.uuid}">selected="selected"</c:if>>${merchant.name}</option>
-                                        </c:forEach>
-                                    </select>
+                                    <input type="text" class="form-control" id="snno" name="snno" onblur="trimText(this)" value="${repair.snno}"  placeholder="报修编号"/>
                                 </div>
 
-                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
-                                    <input type="text" class="form-control" id="snno" name="snno" onblur="trimText(this)" value="${order.snno}"  placeholder="订单编号"/>
-                                </div>
-
-                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
-                                    <input type="text" class="form-control" id="machinemodel" name="machinemodel" onblur="trimText(this)" value="${order.machinemodel}"  placeholder="机器型号"/>
-                                </div>
+                                <%--<div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <input type="text" class="form-control" id="personphone" name="personphone" onblur="trimText(this)" value="${train.personphone}"  placeholder="用户电话"/>
+                                </div>--%>
 
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
@@ -70,7 +59,6 @@
                             <div>
                                 <span class="text-success">${successMessage}</span>
                                 <span class="text-success" id="synSuccessMsg"></span>
-                                <span class="text-danger" id="synFailureMsg"></span>
                                 <c:if test="${successFlag == 1}">
                                     <span class="text-success">删除成功！</span>
                                 </c:if>
@@ -80,57 +68,42 @@
 
                                     <thead>
                                     <tr>
-                                        <th class="text-center">订单编号</th>
-                                        <th class="text-center">机器型号</th>
-                                        <th class="text-center">数量</th>
-                                        <th class="text-center">运输</th>
-                                        <th class="text-center">订单状态</th>
-                                        <th class="text-center">创建时间</th>
+                                        <th class="text-center">报修编号</th>
+                                        <th class="text-center">报修人姓名</th>
+                                        <th class="text-center">报修人电话</th>
+                                        <th class="text-center">报修状态</th>
                                         <th class="text-center">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach items="${orderList}" var="order">
+                                    <c:forEach items="${repairList}" var="repair">
                                         <tr>
                                             <td>
-                                                    ${order.snno}
+                                                    ${repair.snno}
                                             </td>
                                             <td>
-                                                    ${order.machinemodel}
+                                                    ${repair.reportername}
                                             </td>
                                             <td>
-                                                    ${order.quantity}
+                                                    ${repair.reporterphone}
                                             </td>
                                             <td>
-                                                    ${web:getCodeDesc("ENTRUST_TRANSPORT",order.entrusttransport)}
+                                                    ${web:getCodeDesc("REPAIR_STATUS",repair.status)}
                                             </td>
                                             <td>
-                                                    ${web:getCodeDesc("ORDER_STATUS",order.status)}
-                                            </td>
-                                            <td>
-                                                    ${order.createon}
-                                            </td>
-                                            <td>
-                                                <a href="${ctx}/admin/wefamily/orderInfo?orderId=${order.uuid}" class="btn  btn-infonew btn-sm" style="color: white" <c:if test="${order.status == 'OUT'}">disabled="disabled" </c:if>>修改</a>
-                                                <a href="javascript:deleteOrder('${order.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white" <c:if test="${order.status ne 'NEW'}">disabled="disabled" </c:if>>删除</a>
-                                                <a href="javascript:addMachineForOrder('${order.uuid}')" class="btn btn-sm btn-yellow a-noline" style="color:white">管理订单</a>
-                                                <c:if test="${order.status == 'NEW'}">
-                                                    <a href="javascript:sendOrder('${order.uuid}','${order.versionno}')" class="btn  btn-success btn-sm" style="color: white">
-                                                        发送订单
-                                                    </a>
-                                                </c:if>
+                                                <a href="${ctx}/admin/wefamily/repairInfo?repairId=${repair.uuid}" class="btn  btn-infonew btn-sm" style="color: white" >处理</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
                                     </tbody>
                                 </table>
-                                <c:if test="${not empty orderList}">
-                                    <web:pagination pageList="${orderList}" postParam="true"/>
+                                <c:if test="${not empty repairList}">
+                                    <web:pagination pageList="${repairList}" postParam="true"/>
                                 </c:if>
                             </div>
                         <div class="navbar-left">
-                            <a class="btn btn-sm btn-info" href="javascript:showOrderInfo()"
-                               style="color:white">添加订单</a>
+                            <a class="btn btn-sm btn-info" href="javascript:showTrainInfo()"
+                               style="color:white">添加报修</a>
                         </div>
                         <div style="clear: both"></div>
                     </c:if>
@@ -150,7 +123,7 @@
 
     window.onload = function(){
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('品质服务');
     }
 
     //提交查询
@@ -190,34 +163,6 @@
     }
 
 
-    function deleteOrder(orderId){
-        qikoo.dialog.confirm('确定删除该仓库？',function(){
-            //确定
-            $.get("${ctx}/admin/wefamily/deleteOrder?orderId="+orderId+"&version="+Math.random(),function(data,status){
-                if(undefined != data.deleteFlag){
-                    var searchForm = document.getElementById("searchForm");
-                    searchForm.action = "${ctx}/admin/wefamily/orderManage?deleteFlag=" + data.deleteFlag;
-                    searchForm.submit();
-                }
-            });
-        },function(){
-            //取消
-        });
-    }
-
-    function sendOrder(orderId,versionno){
-        qikoo.dialog.confirm('确定发送订单？',function(){
-            //确定
-            $.get("${ctx}/admin/wefamily/sendOrder?orderId="+orderId+"&versionno="+versionno,function(data,status){
-                if(undefined != data.sendFlag){
-                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId="+orderId+"&sendFlag="+data.sendFlag;
-                }
-            });
-        },function(){
-            //取消
-        });
-    }
-
     function resubmitSearch(page){
         $("#searchForm").parsley("validate");
         //比较起始日期和截止日期 且 表单合法
@@ -227,21 +172,9 @@
             //ui block
             pleaseWait();
             var searchForm = document.getElementById("searchForm");
-            searchForm.action = "${ctx}/admin/wefamily/orderManage?page=" + page;
+            searchForm.action = "${ctx}/admin/wefamily/repairManage?page=" + page;
             searchForm.submit();
         }
-    }
-
-
-    function showOrderInfo(){
-        $("#searchForm").parsley("validate");
-        if($('#searchForm').parsley().isValid()) {
-            window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderInfo?merchantId="+$("#merchantid").val();
-        }
-    }
-
-    function addMachineForOrder(orderId){
-        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId="+orderId;
     }
 
 </script>
