@@ -526,6 +526,23 @@ var wechatUtil = (function ($) {
         };
     }
 
+    String.prototype.replaceAll = function(s1,s2){
+        return this.replace(new RegExp(s1,"gm"),s2);
+    };
+
+    if (typeof handleScanResult == "undefined") {
+        var handleScanResult = function (resultStr) {
+            var result = resultStr.replaceAll("；",";");
+            var resultArr = result.split(";");
+            var paramArr = [];
+            for(i = 0; i < resultArr.length; i++){
+                var paramStr = resultArr[i].replace("：",":");
+                paramArr[i] = paramStr.split(":")[1];
+            }
+            return paramArr;
+        };
+    }
+
     return {
         isWechatBrowser: isWechatBrowser,
         initWechat: initWechat,
@@ -545,6 +562,7 @@ var wechatUtil = (function ($) {
         onMenuShareAppMessage:onMenuShareAppMessage,
         showNonBaseMenu:showNonBaseMenu,
         scanQRCode:scanQRCode,
-        requestFormattedAddress:requestFormattedAddress
+        requestFormattedAddress:requestFormattedAddress,
+        handleScanResult:handleScanResult
     }
 })($);
