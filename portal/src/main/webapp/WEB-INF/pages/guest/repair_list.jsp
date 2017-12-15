@@ -34,7 +34,7 @@
                 <li>
                     <p>
                         <span>${repair.machineno}</span>
-                        <img src="../../../../static/guest/img/${repair.status}.png" alt="">
+                        <img src="../../../../static/guest/img/${fn:toLowerCase(repair.status)}.png" alt="">
                     </p>
                     <p><span class="time">${fn:substring(repair.createon, 0, 16)}</span></p>
                 </li>
