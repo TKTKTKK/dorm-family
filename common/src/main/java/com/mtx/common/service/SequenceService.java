@@ -17,7 +17,7 @@ public class SequenceService {
      * @return
      */
     public String getRepairSeqNo(){
-        Integer seq = sequenceMapper.selectNextVal("S_REPAIR");
+        Integer seq = sequenceMapper.selectNextVal("MTX_REPAIR");
         String formatSeq = StringUtils.leftPad(seq.toString(),8,"0");
         String prefix = DateUtils.getDate("yyMMdd");
         return prefix + formatSeq;

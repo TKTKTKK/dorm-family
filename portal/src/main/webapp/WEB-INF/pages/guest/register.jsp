@@ -27,7 +27,7 @@
 <div class="head">
     <a class="back" href="" ></a>
     <span>注册</span>
-    <img src="../../../static/guest/img/sao.png" alt="">
+    <img src="../../../static/guest/img/sao.png" alt="" onclick="scan()">
 </div>
 <form method="post" action="" id="searchForm">
 <ul class="list">
@@ -83,6 +83,8 @@
 </body>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script type="text/javascript" src="${ctx}/static/admin/geo.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="${ctx}/static/js/wechatUtil.js?20171201"></script>
 <script type="text/javascript">
     var errorMessage = document.getElementById("errorMessage");
     errorMessage.innerHTML = "";
@@ -212,6 +214,18 @@
     }
     function closeImg(){
         $("#imgDiv").css("display","none");
+    }
+
+    function scan(){
+        wechatUtil.scanQRCode({
+                    success : function(res){
+                        var paramArr = wechatUtil.handleScanResult(res.resultStr);
+                        for(i = 0; i < paramArr.length; i++){
+                            alert(paramArr[i]);
+                        }
+                    }
+                }
+        );
     }
 </script>
 </html>

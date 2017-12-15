@@ -53,4 +53,14 @@
         order by c.createon;
     </select>
 
+    <select id="selectMerchantByMachineInfo" resultMap="selectResultMap">
+        select mt.*
+        from tb_mtx_merchant mt
+        inner join tb_mtx_order mo on mo.merchantid = mt.uuid
+        inner join tb_mtx_machine me on me.orderid = mo.uuid
+        where me.machinemodel = #{machine.machinemodel}
+        and me.machineno = #{machine.machineno}
+        and me.engineno = #{machine.engineno}
+    </select>
+
 </mapper>

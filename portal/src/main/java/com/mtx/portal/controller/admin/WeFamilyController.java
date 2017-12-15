@@ -79,6 +79,10 @@ public class WeFamilyController extends BaseAdminController {
     private MtxVideoService mtxVideoService;
     @Autowired
     private MtxPartsCenterService mtxPartsCenterService;
+    @Autowired
+    private RepairService repairService;
+    @Autowired
+    private RepairWorkerService repairWorkerService;
 
     /**
      * 经销商管理界面
@@ -274,6 +278,8 @@ public class WeFamilyController extends BaseAdminController {
     public String orderManage(Model model,HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
         model.addAttribute("successMessage",request.getParameter("successMessage"));
         return "admin/wefamily/orderManage";
     }
@@ -288,6 +294,8 @@ public class WeFamilyController extends BaseAdminController {
     public String orderManage(@RequestParam(required = false,defaultValue = "1") int page,Order order,Model model,HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
         model.addAttribute("order",order);
         if(null != wechatBinding){
             String startDateStr = request.getParameter("startDateStr");
@@ -380,6 +388,11 @@ public class WeFamilyController extends BaseAdminController {
      */
     @RequestMapping(value = "/orderInfo",method = RequestMethod.GET)
     public String orderInfo(HttpServletRequest request,Model model){
+        String merchantId = request.getParameter("merchantId");
+        Merchant merchant = new Merchant();
+        merchant.setUuid(merchantId);
+        merchant = merchantService.queryForObjectByPk(merchant);
+        model.addAttribute("merchant",merchant);
         String orderId = request.getParameter("orderId");
         if(StringUtils.isNotBlank(orderId)){
             Order order = new Order();
@@ -1336,6 +1349,238 @@ public class WeFamilyController extends BaseAdminController {
             model.addAttribute("successFlag","删除成功");
         }
         return "admin/wefamily/mtxVideoManage";
+    }
+
+    /**
+     * 报修管理
+     */
+    @RequestMapping(value = "/repairManage",method = RequestMethod.GET)
+    public String repairManage(Model model){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        return "admin/wefamily/repairManage";
+    }
+
+    /**
+     * 报修管理
+     * @param repair
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/repairManage",method = RequestMethod.POST)
+    public String repairManage(@RequestParam(required = false,defaultValue = "1") int page,Repair repair,Model model,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        model.addAttribute("train",repair);
+        if(null != wechatBinding){
+            String startDateStr = request.getParameter("startDateStr");
+            model.addAttribute("startDateStr", startDateStr);
+            String endDateStr = request.getParameter("endDateStr");
+            model.addAttribute("endDateStr", endDateStr);
+            Date startDate = DateUtils.parseDate(startDateStr);
+            Date endDate = DateUtils.parseDate(endDateStr);
+            startDate = DateUtils.getDateStart(startDate);
+            endDate = DateUtils.getDateEnd(endDate);
+            String startDateTimeStr = "";
+            if(null != startDate){
+                startDateTimeStr = DateUtils.formatDate(startDate, "yyyy-MM-dd HH:mm:ss");
+            }
+            String endDateTimeStr = "";
+            if(null != endDate){
+                endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
+            }
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<Repair> repairList = repairService.queryRepairList(repair, startDateTimeStr, endDateTimeStr, pageBounds);
+            model.addAttribute("repairList", repairList);
+
+            //删除结果
+            String deleteFlag = request.getParameter("deleteFlag");
+            if("1".equals(deleteFlag)){
+                model.addAttribute("successMessage", "删除成功");
+            }else if("0".equals(deleteFlag)){
+                model.addAttribute("errorMessage", "删除失败");
+            }
+        }
+
+        return "admin/wefamily/repairManage";
+    }
+
+    /**
+     * 报修信息
+     */
+    @RequestMapping(value = "/repairInfo",method = RequestMethod.GET)
+    public String repairInfo(HttpServletRequest request,Model model){
+
+        String repairId= request.getParameter("repairId");
+        if(StringUtils.isNotBlank(repairId)){
+            Repair repair = new Repair();
+            repair.setUuid(repairId);
+            repair = repairService.queryForObjectByPk(repair);
+            model.addAttribute("repair",repair);
+
+            if(StringUtils.isNotBlank(repair.getMerchantid())){
+                Merchant merchant = new Merchant();
+                merchant.setUuid(repair.getMerchantid());
+                merchant = merchantService.queryForObjectByPk(merchant);
+                model.addAttribute("merchant",merchant);
+            }
+
+            Attachment reporterAttachment = new Attachment();
+            reporterAttachment.setRefid(repairId);
+            reporterAttachment.setType("reporter");
+            List<Attachment> reporterAttachmentList = attachmentService.queryForList(reporterAttachment);
+            model.addAttribute("reporterAttachmentList",reporterAttachmentList);
+
+            Attachment workerAttachment = new Attachment();
+            workerAttachment.setRefid(repairId);
+            workerAttachment.setType("worker");
+            List<Attachment> workerAttachmentList = attachmentService.queryForList(workerAttachment);
+            model.addAttribute("workerAttachmentList",workerAttachmentList);
+
+            RepairWorker repairWorker = new RepairWorker();
+            repairWorker.setRepairid(repairId);
+            List<RepairWorker> repairWorkerList = repairWorkerService.queryForList(repairWorker);
+            model.addAttribute("repairWorkerList",repairWorkerList);
+        }
+
+        model.addAttribute("successMessage",request.getParameter("successMessage"));
+
+        //分配报修结果
+        String distributeFlag = request.getParameter("distributeFlag");
+        if("1".equals(distributeFlag)){
+            model.addAttribute("successMessage", "分配成功");
+        }else if("0".equals(distributeFlag)){
+            model.addAttribute("errorMessage", "分配失败");
+        }
+
+        //维修完成结果
+        String finishFlag = request.getParameter("finishFlag");
+        if("1".equals(finishFlag)){
+            model.addAttribute("successMessage", "维修已完成");
+        }else if("0".equals(finishFlag)){
+            model.addAttribute("errorMessage", "操作失败");
+        }
+
+        return "admin/wefamily/repairInfo";
+    }
+
+    /**
+     *报修保存机器信息
+     */
+    @RequestMapping(value = "/saveMachineInfoForRepair",method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> saveMachineInfoForRepair(Machine machine,HttpServletRequest request){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        String repairId = request.getParameter("repairId");
+
+        String returnMsg = repairService.saveMachineInfoForRepair(repairId,machine);
+        if(StringUtils.isNotBlank(returnMsg)){
+            resultMap.put("returnMsg",returnMsg);
+        }else{
+            resultMap.put("successMessage", "保存成功");
+        }
+        return resultMap;
+    }
+
+    /**
+     * 分配报修
+     */
+    @RequestMapping("/distributeRepair")
+    @ResponseBody
+    public Map<String, Object> distributeRepair(HttpServletRequest request){
+        int distributeFlag = 0;
+        String repairId = request.getParameter("repairId");
+        String versionno = request.getParameter("versionno");
+        if(StringUtils.isNotBlank(repairId)){
+            Repair repair = new Repair();
+            repair.setUuid(repairId);
+            repair.setVersionno(Integer.valueOf(versionno));
+            distributeFlag = repairService.distributeRepair(repair);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("distributeFlag", distributeFlag);
+        return resultMap;
+    }
+
+    /**
+     * 开始维修
+     */
+    @RequestMapping("/startRepair")
+    @ResponseBody
+    public Map<String, Object> startRepair(HttpServletRequest request){
+        int startFlag = 0;
+        String repairId = request.getParameter("repairId");
+        String versionno = request.getParameter("versionno");
+        if(StringUtils.isNotBlank(repairId)){
+            Repair repair = new Repair();
+            repair.setUuid(repairId);
+            repair.setVersionno(Integer.valueOf(versionno));
+            startFlag = repairService.startRepair(repair);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("startFlag", startFlag);
+        return resultMap;
+    }
+
+    /**
+     *保存维修信息
+     */
+    @RequestMapping(value = "/saveRepairInfo",method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> saveRepairInfo(Repair repair,HttpServletRequest request){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        String repairId = request.getParameter("repairId");
+        String versionno = request.getParameter("versionno");
+        repair.setUuid(repairId);
+        repair.setVersionno(Integer.valueOf(versionno));
+
+        String workername = request.getParameter("workername");
+        String workerphone = request.getParameter("workerphone");
+
+        RepairWorker repairWorker = new RepairWorker();
+        repairWorker.setRepairid(repairId);
+        List<RepairWorker> repairWorkerList = repairWorkerService.queryForList(repairWorker);
+        if(null != repairWorkerList && repairWorkerList.size() > 0){
+            repairWorker = repairWorkerList.get(0);
+        }
+        repairWorker.setName(workername);
+        repairWorker.setPhone(workerphone);
+
+        String[] repairImgs = request.getParameterValues("repairImg");
+
+        repairService.saveRepairInfo(repair,repairWorker,repairImgs);
+
+        String saveType = request.getParameter("saveType");
+        if("FINISH".equals(saveType)){
+            Repair tempRepair = new Repair();
+            tempRepair.setUuid(repairId);
+            tempRepair = repairService.queryForObjectByPk(tempRepair);
+            repairService.finishRepair(tempRepair);
+        }
+        resultMap.put("successMessage", "保存成功");
+        return resultMap;
+    }
+
+    /**
+     * 维修结束
+     */
+    @RequestMapping("/finishRepair")
+    @ResponseBody
+    public Map<String, Object> finishRepair(HttpServletRequest request){
+        int finishFlag = 0;
+        String repairId = request.getParameter("repairId");
+        String versionno = request.getParameter("versionno");
+        if(StringUtils.isNotBlank(repairId)){
+            Repair repair = new Repair();
+            repair.setUuid(repairId);
+            repair.setVersionno(Integer.valueOf(versionno));
+            finishFlag = repairService.finishRepair(repair);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("finishFlag", finishFlag);
+        return resultMap;
     }
 
     @RequestMapping(value = "/goMtxVideo", method = RequestMethod.GET)
