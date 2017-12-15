@@ -65,7 +65,7 @@
         }
         #repairImgContainer{display: inline-block;vertical-align: middle}
         #repairImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 2rem}
-        #repairImgContainer img{width: 5rem;height: 5rem;margin:1rem}
+        #repairImgContainer img{width: 4.5rem;height: 4.5rem;margin:1rem}
         .my-display-inline-box{width: auto}
         .required{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
         .maxlength{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}

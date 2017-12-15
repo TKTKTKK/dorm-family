@@ -102,7 +102,7 @@
                                 </c:if>
                             </div>
                         <div class="navbar-left">
-                            <a class="btn btn-sm btn-info" href="javascript:showTrainInfo()"
+                            <a class="btn btn-sm btn-info" href="javascript:showRepairInfo()"
                                style="color:white">添加报修</a>
                         </div>
                         <div style="clear: both"></div>
@@ -175,6 +175,10 @@
             searchForm.action = "${ctx}/admin/wefamily/repairManage?page=" + page;
             searchForm.submit();
         }
+    }
+
+    function showRepairInfo(){
+        window.location.href = "${ctx}/admin/wefamily/repairInfo";
     }
 
 </script>

@@ -290,37 +290,103 @@
                                                             <div class="caption"><i class="fa fa-cogs"></i>报修详情</div>
                                                         </div>
                                                         <div class="portlet-body">
-                                                            <div class="row static-info" style="margin-bottom: 0px">
-                                                                <div class="col-md-2 col-xs-4 name detail-div">报修人:</div>
-                                                                <div class="col-md-4 col-xs-8 value detail-div" >${repair.reportername}</div>
-
-                                                                <div class="col-md-2 col-xs-4 name detail-div">电话:</div>
-                                                                <div class="col-md-4 col-xs-8 value detail-div" >${repair.reporterphone}</div>
-                                                            </div>
-                                                            <c:if test="${not empty reporter}">
-                                                                <div class="row static-info" style="margin-bottom: 0px">
-                                                                    <div class="col-md-2 col-xs-4 name detail-div">地址:</div>
-                                                                    <div class="col-md-8 col-xs-8 value detail-div" >${repair.reporteraddress}</div>
-                                                                </div>
-                                                            </c:if>
-                                                            <div class="row static-info" style="margin-bottom: 0px">
-                                                                <div class="col-md-2 col-xs-4 name detail-div">问题描述:</div>
-                                                                <div class="col-md-8 col-xs-8 value detail-div" >${repair.content}</div>
-                                                            </div>
-                                                            <div class="row static-info" style="margin-bottom: 0px">
-                                                                <div class="col-md-2 col-xs-4 name detail-div">报修照片:</div>
-                                                                <div class="col-md-10 col-xs-8 value detail-div" >
+                                                            <form class="form-horizontal form-bordered" data-validate="parsley"
+                                                                  action="${ctx}/admin/wefamily/saveReportRepairInfo" method="POST"
+                                                                  enctype="multipart/form-data" id="reportRepairInfoFrm" style="border: 0px">
+                                                                <div class="panel-body p-0-15">
+                                                                    <span id="machineError" class="text-danger"></span>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>报修人：</label>
+                                                                        <div class="col-sm-9  b-l bg-white">
+                                                                            <input type="text" class="form-control"  name="reportername" id="reportername"
+                                                                                   value="${repair.reportername}" data-required="true" onblur="trimText(this)"
+                                                                                   placeholder="请输入报修人姓名" data-maxlength="32"
+                                                                            >
+                                                                            <input type="hidden" name="uuid" value="${repair.uuid}">
+                                                                            <input type="hidden" name="versionno" value="${repair.versionno}">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>联系电话：</label>
+                                                                        <div class="col-sm-9  b-l bg-white">
+                                                                            <input type="text" class="form-control"  name="reporterphone" id="reporterphone"
+                                                                                   value="${repair.reporterphone}" data-required="true" onblur="trimText(this),validateContactno('reporter')"
+                                                                                   placeholder="请输入报修人号码" data-maxlength="11"
+                                                                            >
+                                                                            <span id="reporterPhoneError" class="text-danger"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>机器型号：</label>
+                                                                        <div class="col-sm-9  b-l bg-white">
+                                                                            <input type="text" class="form-control"  name="machinemodel" id="machinemodel"
+                                                                                   value="${repair.machinemodel}" data-required="true" onblur="trimText(this)"
+                                                                                   placeholder="请输入机器型号" data-maxlength="32"
+                                                                            >
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>机器号：</label>
+                                                                        <div class="col-sm-9  b-l bg-white">
+                                                                            <div class="" style="position: relative">
+                                                                                <input type="text" class="form-control my-feetype-ul"  name="machineno" id="machineno"
+                                                                                       value="${repair.machineno}" data-required="true" onblur="trimText(this)"
+                                                                                       placeholder="请输入机器号" data-maxlength="32"
+                                                                                >
+                                                                                <input type="hidden" name="machineid" id="machineid" value="${machine.uuid}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>发动机号：</label>
+                                                                        <div class="col-sm-9  b-l bg-white">
+                                                                            <input type="text" class="form-control"  name="engineno" id="engineno"
+                                                                                   value="${repair.engineno}" data-required="true" onblur="trimText(this)"
+                                                                                   placeholder="请输入发动机号" data-maxlength="32"
+                                                                            >
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>生产日期：</label>
+                                                                        <div class="col-sm-9  b-l bg-white">
+                                                                            <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
+                                                                                   name="productiondt" value="${repair.productiondt}" data-maxlength="23" onblur="trimText(this)"
+                                                                                   data-date-format="yyyy-mm-dd" id="productiondt" placeholder="请选择生产日期" data-required="true">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-3  control-label">问题描述：</label>
+                                                                        <div class="col-sm-9 b-l bg-white">
+                                                                                <textarea class="form-control" rows="4" name="content"
+                                                                                          id="content" data-maxlength="256" onblur="trimText(this)"
+                                                                                >${repair.content}</textarea>
+                                                                        </div>
+                                                                    </div>
                                                                     <c:if test="${fn:length(reporterAttachmentList) > 0}">
-                                                                        <c:forEach var="reporterImg" items="${reporterAttachmentList}">
-                                                                            <img src="${reporterImg.name}"
-                                                                                 onclick="viewBigImage(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image"
-                                                                            />
-                                                                        </c:forEach>
+                                                                        <div class="form-group" >
+                                                                            <label class="col-sm-3 control-label">报修照片：</label>
+                                                                            <div class="col-sm-9  b-l bg-white">
+                                                                                <c:forEach items="${reporterAttachmentList}" var="attachment">
+                                                                                    <img src="${attachment.name}" width="50" height="50"
+                                                                                         onclick="viewBigImage(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image"/>
+                                                                                </c:forEach>
+                                                                            </div>
+                                                                        </div>
                                                                     </c:if>
+
+                                                                    <div class="panel-footer text-left bg-light lter">
+                                                                        <a class="btn btn-primary btn-info" href="javascript:saveReportRepairInfo()" style="color: white;margin-left: 10px;margin-bottom: 10px">保存</a>
+                                                                    </div>
+
                                                                 </div>
-                                                            </div>
+                                                            </form>
                                                         </div>
                                                     </div>
+
+
+                                            </div>
+
+                                            <div class="col-md-6">
                                                 <!--经销商信息-->
                                                 <c:if test="${not empty merchant}">
                                                     <div class="portlet red-sunglo box">
@@ -357,38 +423,38 @@
                                                                       action="${ctx}/admin/wefamily/saveRepairInfo" method="POST"
                                                                       enctype="multipart/form-data" id="repairInfoFrm" style="border: 0px">
                                                                     <div class="panel-body p-0-15">
-                                                                            <div class="form-group">
-                                                                                <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>维修人员：</label>
-                                                                                <div class="col-sm-9  b-l bg-white">
-                                                                                    <input type="text" class="form-control"  name="workername" id="workername"
-                                                                                           value="${repairWorkerList[0].name}" data-required="true" onblur="trimText(this)"
-                                                                                           placeholder="请输入维修工姓名" data-maxlength="20"
-                                                                                    >
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>联系号码：</label>
-                                                                                <div class="col-sm-9  b-l bg-white">
-                                                                                    <input type="text" class="form-control"  name="workerphone" id="workerphone"
-                                                                                           value="${repairWorkerList[0].phone}" data-required="true" onblur="trimText(this),validateContactno()"
-                                                                                           placeholder="请输入联系号码" data-maxlength="11"
-                                                                                    >
-                                                                                    <span id="contactnoError" class="text-danger"></span>
-                                                                                </div>
-                                                                            </div>
                                                                         <div class="form-group">
-                                                                            <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>维修日期：</label>
+                                                                            <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>维修人员：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
-                                                                                <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
-                                                                                       name="repairdt" value="${repair.repairdt}" data-maxlength="23" onblur="trimText(this)"
-                                                                                       data-date-format="yyyy-mm-dd" id="repairdt" placeholder="请选择维修日期" data-required="true">
+                                                                                <input type="text" class="form-control"  name="workername" id="workername"
+                                                                                       value="${repairWorkerList[0].name}" data-required="true" onblur="trimText(this)"
+                                                                                       placeholder="请输入维修工姓名" data-maxlength="20"
+                                                                                >
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>现场地点：</label>
+                                                                            <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>联系号码：</label>
+                                                                            <div class="col-sm-9  b-l bg-white">
+                                                                                <input type="text" class="form-control"  name="workerphone" id="workerphone"
+                                                                                       value="${repairWorkerList[0].phone}" data-required="true" onblur="trimText(this),validateContactno('worker')"
+                                                                                       placeholder="请输入联系号码" data-maxlength="11"
+                                                                                >
+                                                                                <span id="workerPhoneError" class="text-danger"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-3 control-label" style="margin-top: 7px">维修日期：</label>
+                                                                            <div class="col-sm-9  b-l bg-white">
+                                                                                <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
+                                                                                       name="repairdt" value="${repair.repairdt}" data-maxlength="23" onblur="trimText(this)"
+                                                                                       data-date-format="yyyy-mm-dd" id="repairdt" placeholder="请选择维修日期">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-3 control-label" style="margin-top: 7px">现场地点：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
                                                                                 <input type="text" class="form-control"  name="location" id="location"
-                                                                                       value="${repair.location}" data-required="true" onblur="trimText(this)"
+                                                                                       value="${repair.location}" onblur="trimText(this)"
                                                                                        placeholder="请输入现场地点" data-maxlength="32"
                                                                                 >
                                                                             </div>
@@ -437,13 +503,13 @@
                                                                 </form>
                                                             </c:if>
 
-                                                            <c:if test="${repair.status eq 'NEW' or repair.status eq 'DISTRIBUTED'}">
+                                                            <c:if test="${empty repair.status or repair.status eq 'NEW' or repair.status eq 'DISTRIBUTED'}">
                                                                 <div class="row static-info">
                                                                     <div class="col-md-12 col-xs-12 value">
                                                                         <span>暂无维修信息</span>
                                                                     </div>
                                                                 </div>
-                                                                <c:if test="${not empty repair.machinemodel}">
+                                                                <c:if test="${repair.status eq 'DISTRIBUTED'}">
                                                                     <a class="btn btn-sm" href="javascript:startRepair()" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
                                                                         开始维修
                                                                     </a>
@@ -463,66 +529,6 @@
                                                         </div>
                                                     </div>
                                                 </c:if>
-                                            </div>
-                                            <!--机器信息-->
-                                            <div class="col-md-6">
-                                                <div class="portlet green box">
-                                                        <div class="portlet-title">
-                                                            <div class="caption"><i class="fa fa-cogs"></i>机器信息</div>
-                                                        </div>
-                                                        <div class="portlet-body">
-                                                            <form class="form-horizontal form-bordered" data-validate="parsley"
-                                                                  action="${ctx}/admin/wefamily/saveMachineInfoForRepair" method="POST"
-                                                                  enctype="multipart/form-data" id="machineInfoFrm" style="border: 0px">
-                                                                <div class="panel-body p-0-15">
-                                                                    <span id="machineError" class="text-danger"></span>
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>机器型号：</label>
-                                                                        <div class="col-sm-9  b-l bg-white">
-                                                                            <input type="text" class="form-control"  name="machinemodel" id="machinemodel"
-                                                                                   value="${repair.machinemodel}" data-required="true" onblur="trimText(this)"
-                                                                                   placeholder="请输入机器型号" data-maxlength="32"
-                                                                            >
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>机器号：</label>
-                                                                        <div class="col-sm-9  b-l bg-white">
-                                                                            <div class="" style="position: relative">
-                                                                                <input type="text" class="form-control my-feetype-ul"  name="machineno" id="machineno"
-                                                                                       value="${repair.machineno}" data-required="true" onblur="trimText(this)"
-                                                                                       placeholder="请输入机器号" data-maxlength="32"
-                                                                                >
-                                                                                <input type="hidden" name="machineid" id="machineid" value="${machine.uuid}">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>发动机号：</label>
-                                                                        <div class="col-sm-9  b-l bg-white">
-                                                                            <input type="text" class="form-control"  name="engineno" id="engineno"
-                                                                                   value="${repair.engineno}" data-required="true" onblur="trimText(this)"
-                                                                                   placeholder="请输入发动机号" data-maxlength="32"
-                                                                            >
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>生产日期：</label>
-                                                                        <div class="col-sm-9  b-l bg-white">
-                                                                            <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
-                                                                                   name="productiondate" value="${repair.productiondt}" data-maxlength="23" onblur="trimText(this)"
-                                                                                   data-date-format="yyyy-mm-dd" id="productiondate" placeholder="请选择生产日期" data-required="true">
-                                                                        </div>
-                                                                    </div>
-                                                                    <c:if test="${empty repair.machinemodel}">
-                                                                        <div class="panel-footer text-left bg-light lter">
-                                                                            <a class="btn btn-primary btn-info" href="javascript:saveMachineInfoForRepair()" style="color: white;margin-left: 10px;margin-bottom: 10px">保存</a>
-                                                                        </div>
-                                                                    </c:if>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
                                             </div>
                                         </div>
                                     </div>
@@ -574,16 +580,16 @@
         }
     }
 
-    function saveMachineInfoForRepair(){
+    function saveReportRepairInfo(){
         var machineError = document.getElementById('machineError');
         machineError.innerHTML = "";
-        $("#machineInfoFrm").parsley("validate");
-        if($('#machineInfoFrm').parsley().isValid()){
+        $("#reportRepairInfoFrm").parsley("validate");
+        if($('#reportRepairInfoFrm').parsley().isValid()){
             $.ajax({
                 cache: true,
                 type: "POST",
-                url:"${ctx}/admin/wefamily/saveMachineInfoForRepair?repairId=${repair.uuid}",
-                data:$('#machineInfoFrm').serialize(),// 你的formid
+                url:"${ctx}/admin/wefamily/saveReportRepairInfo",
+                data:$('#reportRepairInfoFrm').serialize(),// 你的formid
                 async: false,
                 error: function(request) {
                     qikoo.dialog.alert("系统忙，稍候再试");
@@ -592,7 +598,7 @@
                     if(undefined != data.returnMsg){
                         machineError.innerHTML = data.returnMsg;
                     }else{
-                        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/repairInfo?repairId=${repair.uuid}&successMessage="+data.successMessage;
+                        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/repairInfo?repairId="+data.repairId+"&successMessage="+data.successMessage;
                     }
                 }
             });
@@ -654,12 +660,21 @@
 
 
     //验证联系号码
-    function validateContactno(){
-        document.getElementById("contactnoError").innerHTML = "";
-        var phoneno = $('#workerphone').val();
+    function validateContactno(type){
+        if(type == 'reporter'){
+            var phoneno = $('#reporterphone').val();
+            document.getElementById("reporterPhoneError").innerHTML = "";
+        }else{
+            var phoneno = $('#workerphone').val();
+            document.getElementById("workerPhoneError").innerHTML = "";
+        }
         var rule = /^\d*-?\d*$/;
         if(!rule.test(phoneno) || phoneno.length > 11){
-            document.getElementById("contactnoError").innerHTML = "号码格式不正确";
+            if(type == 'reporter'){
+                document.getElementById("reporterPhoneError").innerHTML = "号码格式不正确";
+            }else{
+                document.getElementById("workerPhoneError").innerHTML = "号码格式不正确";
+            }
             return false;
         }
         return true;

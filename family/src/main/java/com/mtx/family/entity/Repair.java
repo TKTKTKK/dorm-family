@@ -28,6 +28,20 @@ public class Repair extends BaseEntity {
     @Column
     private String reporterphone;
     @Column
+    private String program;
+    @Column
+    private String parts;
+    @Column
+    private Double price;
+    @Column
+    private Double workarea;
+    @Column
+    private String effect;
+    @Column
+    private String damagecategory;
+    @Column
+    private Integer arrivetime;
+    @Column
     private String merchantid;
     @Column
     private String repairdt;
@@ -105,6 +119,62 @@ public class Repair extends BaseEntity {
 
     public void setReporterphone(String reporterphone) {
         this.reporterphone = reporterphone;
+    }
+
+    public String getProgram() {
+        return program;
+    }
+
+    public void setProgram(String program) {
+        this.program = program;
+    }
+
+    public String getParts() {
+        return parts;
+    }
+
+    public void setParts(String parts) {
+        this.parts = parts;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Double getWorkarea() {
+        return workarea;
+    }
+
+    public void setWorkarea(Double workarea) {
+        this.workarea = workarea;
+    }
+
+    public String getEffect() {
+        return effect;
+    }
+
+    public void setEffect(String effect) {
+        this.effect = effect;
+    }
+
+    public String getDamagecategory() {
+        return damagecategory;
+    }
+
+    public void setDamagecategory(String damagecategory) {
+        this.damagecategory = damagecategory;
+    }
+
+    public Integer getArrivetime() {
+        return arrivetime;
+    }
+
+    public void setArrivetime(Integer arrivetime) {
+        this.arrivetime = arrivetime;
     }
 
     public String getMerchantid() {

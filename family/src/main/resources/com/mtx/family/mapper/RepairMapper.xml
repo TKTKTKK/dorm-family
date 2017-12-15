@@ -40,4 +40,10 @@
         order by mr.modifyon desc
     </select>
 
+    <select id="selectRepairListForPhone" resultMap="selectResultMap">
+        select mr.*
+        from tb_mtx_repair mr
+        order by mr.modifyon desc
+    </select>
+
 </mapper>

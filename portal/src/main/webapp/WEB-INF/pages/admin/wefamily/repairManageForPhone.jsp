@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"><!-- 控制状态栏显示样式 -->
     <meta name="format-detection" content="telephone=no"><!-- 禁止了把数字转化为拨号链接 -->
     <meta http-equiv="x-dns-prefetch-control" content="on"><!-- 浏览器开启预解析功能 -->
-    <title>报修列表</title>
+    <title>维修列表</title>
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
     <style>
         .list{background-color: #fff;color: #333;margin-bottom: 3.67rem;}
@@ -24,16 +24,16 @@
 </head>
 <body>
 <div class="head">
-    <a class="back" href="${ctx}/guest/member_center"></a>
-    <span>报修列表</span>
+    <span>维修列表</span>
 </div>
 <div class="content">
     <ul class="list">
         <c:forEach items="${repairList}" var="repair">
-            <a href="${ctx}/guest/repair_info?repairId=${repair.uuid}">
+            <a href="${ctx}/admin/wefamily/repairInfoForPhone?repairId=${repair.uuid}">
                 <li>
                     <p>
-                        <span>${repair.machineno}</span>
+                        <span>${repair.machinemodel}</span>
+                        <span>${web:getCodeDesc("REPAIR_STATUS",repair.status)}</span>
                         <img src="../../../../static/guest/img/${repair.status}.png" alt="">
                     </p>
                     <p><span class="time">${fn:substring(repair.createon, 0, 16)}</span></p>
@@ -42,8 +42,8 @@
         </c:forEach>
         <div class="clearfix"></div>
     </ul>
-    <a href="${ctx}/guest/repair_info">
-        <div class="fixsubmit">添加报修</div>
+    <a href="${ctx}/admin/wefamily/repairInfoForPhone">
+        <div class="fixsubmit">添加维修</div>
     </a>
 </div>
 </body>

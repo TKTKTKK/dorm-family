@@ -1427,18 +1427,17 @@ public class WeFamilyController extends BaseAdminController {
     /**
      *报修保存机器信息
      */
-    @RequestMapping(value = "/saveMachineInfoForRepair",method= RequestMethod.POST)
+    @RequestMapping(value = "/saveReportRepairInfo",method= RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> saveMachineInfoForRepair(Machine machine,HttpServletRequest request){
+    public Map<String,Object> saveReportRepairInfo(Repair repair,HttpServletRequest request){
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        String repairId = request.getParameter("repairId");
-
-        String returnMsg = repairService.saveMachineInfoForRepair(repairId,machine);
+        String returnMsg = repairService.saveReportRepairInfo(repair);
         if(StringUtils.isNotBlank(returnMsg)){
             resultMap.put("returnMsg",returnMsg);
         }else{
             resultMap.put("successMessage", "保存成功");
+            resultMap.put("repairId",repair.getUuid());
         }
         return resultMap;
     }
@@ -1541,6 +1540,85 @@ public class WeFamilyController extends BaseAdminController {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("finishFlag", finishFlag);
         return resultMap;
+    }
+
+    /**
+     * 维修列表
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/repairManageForPhone")
+    public String repairManageForPhone(Model model) {
+        Repair repair = new Repair();
+        List<Repair> repairList = repairService.queryRepairListForPhone(repair);
+        model.addAttribute("repairList",repairList);
+        return "admin/wefamily/repairManageForPhone";
+    }
+
+    @RequestMapping(value = "/repairInfoForPhone",method = RequestMethod.GET)
+    public String repairInfoForPhone(Model model,HttpServletRequest request){
+        String repairId= request.getParameter("repairId");
+        if(StringUtils.isNotBlank(repairId)){
+            Repair repair = new Repair();
+            repair.setUuid(repairId);
+            repair = repairService.queryForObjectByPk(repair);
+            model.addAttribute("repair", repair);
+
+            if(StringUtils.isNotBlank(repair.getMerchantid())){
+                Merchant merchant = new Merchant();
+                merchant.setUuid(repair.getMerchantid());
+                merchant = merchantService.queryForObjectByPk(merchant);
+                model.addAttribute("merchant",merchant);
+            }
+
+            Attachment reporterAttachment = new Attachment();
+            reporterAttachment.setRefid(repairId);
+            reporterAttachment.setType("reporter");
+            List<Attachment> reporterAttachmentList = attachmentService.queryForList(reporterAttachment);
+            model.addAttribute("reporterAttachmentList",reporterAttachmentList);
+
+            Attachment workerAttachment = new Attachment();
+            workerAttachment.setRefid(repairId);
+            workerAttachment.setType("worker");
+            List<Attachment> workerAttachmentList = attachmentService.queryForList(workerAttachment);
+            model.addAttribute("workerAttachmentList",workerAttachmentList);
+
+            RepairWorker repairWorker = new RepairWorker();
+            repairWorker.setRepairid(repairId);
+            List<RepairWorker> repairWorkerList = repairWorkerService.queryForList(repairWorker);
+            model.addAttribute("repairWorkerList",repairWorkerList);
+        }
+
+
+        return "admin/wefamily/repairInfoForPhone";
+    }
+
+    @RequestMapping(value = "/repairInfoForPhone",method = RequestMethod.POST)
+    public String repairInfoForPhone(Model model,HttpServletRequest request,Repair repair,RepairWorker repairWorker, RedirectAttributes redirectAttributes){
+
+        String repairWorkerId = request.getParameter("repairworkerid");
+        String repairWorkerVersionno = request.getParameter("repairworkerversionno");
+
+        if(StringUtils.isNotBlank(repairWorkerId)){
+            repairWorker.setUuid(repairWorkerId);
+            repairWorker.setVersionno(Integer.valueOf(repairWorkerVersionno));
+        }
+
+
+        String[] repairImgs = request.getParameterValues("repairImg");
+
+        //修改
+        if(StringUtils.isNotBlank(repair.getUuid())){
+            try {
+                repairService.saveRepairInfo(repair,repairWorker,repairImgs);
+                redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");
+            }
+        }
+
+        return "redirect:repairInfoForPhone?repairId=" + repair.getUuid();
     }
 
 }

@@ -17,4 +17,5 @@ public interface RepairMapper extends BaseMapper<Repair> {
 
     PageList<Repair> selectRepairList(@Param("repair") Repair repair,@Param("startTime") String startDateTimeStr,@Param("endTime") String endDateTimeStr, PageBounds pageBounds);
 
+    List<Repair> selectRepairListForPhone(@Param("repair") Repair repair);
 }

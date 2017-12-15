@@ -16,9 +16,15 @@ INSERT INTO tb_common_code VALUES ('2017121300000009', null, null, 'REPAIR_EVALU
 INSERT INTO tb_common_code VALUES ('2017121300000010', null, null, 'REPAIR_EVALUATE', 'BAD', '差', null,'', '3', '2014-11-30 21:44:31', 'sys', '2014-11-30 21:44:31', 'sys', '1', '0');
 
 
+-- 损坏分类
+INSERT INTO tb_common_code VALUES ('2017121500000001', null, null, 'DAMAGE_CATEGORY', 'VULNERABLE_PARTS', '易损件', null,'', '1', '2014-11-30 21:44:31', 'sys', '2014-11-30 21:44:31', 'sys', '1', '0');
+INSERT INTO tb_common_code VALUES ('2017121500000002', null, null, 'DAMAGE_CATEGORY', 'CAUSE_USE', '使用原因', null,'', '2', '2014-11-30 21:44:31', 'sys', '2014-11-30 21:44:31', 'sys', '1', '0');
+INSERT INTO tb_common_code VALUES ('2017121500000003', null, null, 'DAMAGE_CATEGORY', 'USE_ADJUST', '使用调整', null,'', '3', '2014-11-30 21:44:31', 'sys', '2014-11-30 21:44:31', 'sys', '1', '0');
+INSERT INTO tb_common_code VALUES ('2017121500000004', null, null, 'DAMAGE_CATEGORY', 'PARTS_DAMAGE', '配件损坏', null,'', '4', '2014-11-30 21:44:31', 'sys', '2014-11-30 21:44:31', 'sys', '1', '0');
+INSERT INTO tb_common_code VALUES ('2017121500000005', null, null, 'DAMAGE_CATEGORY', 'OTHER_REASON', '其它原因', null,'', '5', '2014-11-30 21:44:31', 'sys', '2014-11-30 21:44:31', 'sys', '1', '0');
+
 -- Table structure for tb_mtx_repair
 -- ----------------------------
-DROP TABLE IF EXISTS `tb_mtx_repair`;
 CREATE TABLE `tb_mtx_repair` (
   `uuid` varchar(32) NOT NULL,
   `snno` varchar(32) NOT NULL ,
@@ -29,6 +35,13 @@ CREATE TABLE `tb_mtx_repair` (
   `reporter` varchar(32) DEFAULT NULL,
   `reportername` varchar(20) NOT NULL,
   `reporterphone` varchar(20) NOT NULL,
+  `program` varchar(50) DEFAULT NULL,
+  `parts` varchar(32) DEFAULT NULL,
+  `price` decimal(10,2) DEFAULT NULL,
+  `workarea` decimal(10,2) DEFAULT NULL,
+  `effect` varchar(32) DEFAULT NULL,
+  `damagecategory` varchar(20) DEFAULT NULL,
+  `arrivetime` int(5) DEFAULT NULL,
   `merchantid` varchar(32) DEFAULT NULL,
   `repairdt` varchar(23) DEFAULT NULL,
   `evaluate` varchar(10) DEFAULT NULL,

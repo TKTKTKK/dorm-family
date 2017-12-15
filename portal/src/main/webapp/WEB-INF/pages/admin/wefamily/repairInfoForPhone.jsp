@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
     <meta http-equiv="x-dns-prefetch-control" content="on">
-    <title>培训详情</title>
+    <title>维修详情</title>
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
     <style>
         .goal_total{padding-left: 1.25rem;border-bottom: 1px solid rgba(0,0,0,0.1);font-size: 1.6rem;color: #333;background-color: #fff;position: relative;padding: 1.17rem 2rem 1.17rem 1.25rem;margin-top: 1rem;}
@@ -63,9 +63,11 @@
         .dataRequired{
             color: red;
         }
-        #trainImgContainer{display: inline-block;vertical-align: middle}
-        #trainImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 2rem}
-        #trainImgContainer img{width: 5rem;height: 5rem;margin:1rem}
+        #reporterImgContainer{display: inline-block;vertical-align: middle}
+        #reporterImgContainer img{width: 5rem;height: 5rem;margin:1rem}
+        #repairImgContainer{display: inline-block;vertical-align: middle}
+        #repairImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 2rem}
+        #repairImgContainer img{width: 5rem;height: 5rem;margin:1rem}
         .my-display-inline-box{width: auto}
         .required{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
         .maxlength{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
@@ -76,15 +78,19 @@
 </head>
 <body>
     <div class="head">
-        <a class="back" href="${ctx}/admin/wefamily/trainManageForPhone"></a>
-        <span>培训详情</span>
+        <a class="back" href="${ctx}/admin/wefamily/repairManageForPhone"></a>
+        <span>维修详情</span>
         <img src="../../../static/guest/img/sao.png" alt="">
+    </div>
+    <div class="b-l b-r" style="padding-left: 1.25rem">
+        <span class="text-success">${successMessage}</span>
+        <span class="text-danger">${errorMessage}</span>
     </div>
 
         <form class="form-horizontal" data-validate="parsley"
-              action="${ctx}/admin/wefamily/trainInfoForPhone" method="POST"
+              action="${ctx}/admin/wefamily/repairInfoForPhone" method="POST"
               enctype="multipart/form-data" id="frm">
-            <div class="goal_total">
+            <div class="goal_total" style="margin-top: 0px">
                 <a href="javaScript:enableUl('machineUl','machineListImg')">
                     <span>主机信息</span>
                     <img src="../../../../static/guest/img/list.png" alt="" id="machineListImg" class="up">
@@ -93,23 +99,37 @@
             <ul class="list" id="machineUl">
                 <li>
                     <span>机器型号<a class="dataRequired">*</a></span>
-                    <input type="text" id="machinemodel" name="machinemodel" value="${train.machinemodel}"
+                    <input type="text" id="machinemodel" name="machinemodel" value="${repair.machinemodel}"
                            data-required="true" placeholder="请填写机器型号" data-maxlength="32"/>
                 </li>
                 <li>
                     <span>发动机号<a class="dataRequired">*</a></span>
-                    <input type="text" id="engineno" name="engineno" value="${train.engineno}"
+                    <input type="text" id="engineno" name="engineno" value="${repair.engineno}"
                            data-required="true" placeholder="请填写发动机号" data-maxlength="32"/>
                 </li>
                 <li>
                     <span>机器号<a class="dataRequired">*</a></span>
-                    <input type="text" id="machineno" name="machineno" value="${train.machineno}"
+                    <input type="text" id="machineno" name="machineno" value="${repair.machineno}"
                            data-required="true" placeholder="请填写机器号" data-maxlength="32"/>
                 </li>
                 <li>
                     <span>生产日期<a class="dataRequired">*</a></span>
-                    <input class="Wdate" type="text" name="productiondt" id="productiondt" value="${train.productiondt}" onClick="WdatePicker()"
+                    <input class="Wdate" type="text" name="productiondt" id="productiondt" value="${repair.productiondt}" onClick="WdatePicker()"
                            data-required="true" placeholder="请选择生产日期" data-maxlength="23">
+                </li>
+                <%--<li>
+                    <span>问题描述</span>
+                    <textarea rows="4" name="content" id="content" data-maxlength="256"
+                              style=" width: 18rem;float: right;margin-bottom: 10px;" readonly>${repair.content}</textarea>
+                </li>--%>
+                <li>
+                    <div class="my-display-inline-box">
+                        <div id="reporterImgContainer" class="row value">
+                            <c:forEach items="${reporterAttachmentList}" var="attachment">
+                                <img src="${attachment.name}" alt="" style="margin-top: 3px;margin-left: 10px" onclick="viewBigImageForUpload(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image">
+                            </c:forEach>
+                        </div>
+                    </div>
                 </li>
             </ul>
             <div class="goal_total">
@@ -121,44 +141,57 @@
             <ul class="list" id="personUl">
                 <li>
                     <span>姓名<a class="dataRequired">*</a></span>
-                    <input type="text" placeholder="请填写真实姓名" value="${train.personname}" name="personname" id="personname"
+                    <input type="text" placeholder="请填写真实姓名" value="${repair.reportername}" name="reportername" id="reportername"
                            data-required="true" data-maxlength="32">
                 </li>
                 <li>
                     <span>手机号码<a class="dataRequired">*</a></span>
-                    <input type="text" placeholder="请填写手机号码" value="${train.personphone}" name="personphone" id="personphone"
+                    <input type="text" placeholder="请填写手机号码" value="${repair.reporterphone}" name="reporterphone" id="reporterphone"
                            data-required="true" data-maxlength="11">
                 </li>
             </ul>
             <div class="goal_total">
-                <a href="javaScript:enableUl('programUl','programListImg')">
-                    <span>培训项目</span>
-                    <img src="../../../../static/guest/img/list.png" alt="" id="programListImg" class="up">
+                <a href="javaScript:enableUl('merchantUl','merchantListImg')">
+                    <span>经销商信息</span>
+                    <img src="../../../../static/guest/img/list.png" alt="" id="merchantListImg" class="up">
                 </a>
             </div>
-            <ul class="list" id="programUl">
-                <c:forEach items="${web:queryCommonCodeList('TRAIN_PROGRAM')}" var="programCode">
-                    <c:set var="showFlag" value="0" scope="page"></c:set>
-                    <c:forEach items="${trainProgramList}" var="program">
-                        <c:if test="${program == programCode.code}">
-                            <c:set var="showFlag" value="1" scope="page"></c:set>
-                        </c:if>
-                    </c:forEach>
-                    <c:if test="${showFlag == 1}">
-                        <li>
-                            <input type="checkbox" class="chk" id="${programCode.code}" name="trainPrograms" onchange="checkProgram('${programCode.code}')" style="display: none;" checked value="${programCode.code}">
-                            <label for="${programCode.code}"></label>
-                            <span>${programCode.codevalue}</span>
-                        </li>
-                    </c:if>
-                    <c:if test="${showFlag == 0}">
-                        <li>
-                            <input type="checkbox" class="chk" id="${programCode.code}" name="trainPrograms" onchange="checkProgram('${programCode.code}')" style="display: none;" value="${programCode.code}">
-                            <label for="${programCode.code}"></label>
-                            <span>${programCode.codevalue}</span>
-                        </li>
-                    </c:if>
-                </c:forEach>
+            <ul class="list" id="merchantUl">
+                <li>
+                    <span>经销商</span>
+                    <input type="text"  value="${merchant.name}"
+                           data-required="true" data-maxlength="32" readonly>
+                </li>
+                <li>
+                    <span>联系电话</span>
+                    <input type="text"  value="${merchant.contactno}"
+                           data-required="true" data-maxlength="32" readonly>
+                </li>
+                <li>
+                    <span>地址</span>
+                    <input type="text"  value="${merchant.address}"
+                           data-required="true" data-maxlength="32" readonly>
+                </li>
+            </ul>
+            <div class="goal_total">
+                <a href="javaScript:enableUl('workerUl','workerListImg')">
+                    <span>维修工信息</span>
+                    <img src="../../../../static/guest/img/list.png" alt="" id="workerListImg" class="up">
+                </a>
+            </div>
+            <ul class="list" id="workerUl">
+                <li>
+                    <span>姓名<a class="dataRequired">*</a></span>
+                    <input type="text" placeholder="请填写真实姓名" value="${repairWorkerList[0].name}" name="name" id="name"
+                           data-required="true" data-maxlength="32">
+                    <input type="hidden" name="repairworkerid" value="${repairWorkerList[0].uuid}">
+                    <input type="hidden" name="repairworkerversionno" value="${repairWorkerList[0].versionno}">
+                </li>
+                <li>
+                    <span>手机号码<a class="dataRequired">*</a></span>
+                    <input type="text" placeholder="请填写手机号码" value="${repairWorkerList[0].phone}" name="phone" id="phone"
+                           data-required="true" data-maxlength="11">
+                </li>
             </ul>
             <div class="goal_total">
                 <a href="javaScript:enableUl('situationUl','situationListImg')">
@@ -168,47 +201,81 @@
             </div>
             <ul class="list" id="situationUl">
                 <li>
-                    <span>培训类型<a class="dataRequired">*</a></span>
-                    <select name="type" id="type" data-required="true">
-                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_TYPE')}"></c:set>
-                        <c:forEach items="${commonCodeList}" var="commonCode">
-                            <option value="${commonCode.code}" <c:if test="${train.type == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                        </c:forEach>
-                    </select>
+                    <span>损坏项目<a class="dataRequired">*</a></span>
+                    <input type="text" placeholder="请填写损坏项目" value="${repair.program}" name="program" id="program"
+                           data-required="true" data-maxlength="50">
                 </li>
                 <li>
-                    <span>培训日期<a class="dataRequired">*</a></span>
-                    <input class="Wdate" type="text" name="traindt" id="traindt" onClick="WdatePicker()"
-                           value="${train.traindt}" placeholder="请选择培训日期" data-required="true" data-maxlength="23">
+                    <span>处理配件<a class="dataRequired">*</a></span>
+                    <input type="text" placeholder="请填写处理的配件" value="${repair.parts}" name="parts" id="parts"
+                           data-required="true" data-maxlength="32">
                 </li>
                 <li>
-                    <span>培训情况</span>
-                    <select name="situation" id="situation">
-                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_SITUATION')}"></c:set>
+                    <span>用户地址</span>
+                    <input type="text" placeholder="请填写用户地址" name="location" id="location" value="${repair.location}" data-maxlength="32">
+                    <%--<img src="../../../../static/admin/img/location.png" alt="" style="width: 2rem;height: 2rem">--%>
+                </li>
+                <li>
+                    <span>已作业面积</span>
+                    <input name="workarea" id="workarea" value="${repair.workarea}"
+                           data-maxlength="10" onblur="validateNum(this,'workareaError')" placeholder="请填写已作业面积">
+                    <span id="workareaError" class="text-danger" style="float: right;color: red;font-size: 1.2rem;"></span>
+                </li>
+                <li>
+                    <span>效果如何</span>
+                    <input type="text" placeholder="请填写作业效果" value="${repair.effect}" name="effect" id="effect"
+                            data-maxlength="32">
+                </li>
+                <li>
+                    <span>损坏分类</span>
+                    <select name="damagecategory" id="damagecategory">
+                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('DAMAGE_CATEGORY')}"></c:set>
                         <option>请选择</option>
                         <c:forEach items="${commonCodeList}" var="commonCode">
-                            <option value="${commonCode.code}" <c:if test="${train.situation == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                            <option value="${commonCode.code}" <c:if test="${repair.damagecategory == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                         </c:forEach>
                     </select>
                 </li>
                 <li>
-                    <span>现场定位</span>
-                    <input type="text" placeholder="请填写位置" name="location" id="location" value="${train.location}" data-maxlength="32">
-                    <%--<img src="../../../../static/admin/img/location.png" alt="" style="width: 2rem;height: 2rem">--%>
+                    <span>到达所用时间</span>
+                    <input data-type="digits" name="arrivetime" value="${repair.arrivetime}"
+                           data-maxlength="5" data-min="1" id="arrivetime" placeholder="请填写到达所用时间"
+                    >
+                </li>
+                <li>
+                    <span>维修日期<a class="dataRequired">*</a></span>
+                    <input class="Wdate" type="text" name="repairdt" id="repairdt" onClick="WdatePicker()"
+                           value="${repair.repairdt}" placeholder="请选择维修日期" data-required="true" data-maxlength="23">
+                </li>
+                <li>
+                    <span>收费金额</span>
+                    <input name="price" id="price" value="${repair.price}" size="22"
+                           data-maxlength="10" onblur="validateNum(this,'priceError')" placeholder="请填写收费金额">
+                    <span id="priceError" class="text-danger" style="float: right;color: red;font-size: 1.2rem;"></span>
+                </li>
+                <li>
+                    <span>用户评价</span>
+                    <select name="evaluate" id="evaluate">
+                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
+                        <option>请选择</option>
+                        <c:forEach items="${commonCodeList}" var="commonCode">
+                            <option value="${commonCode.code}" <c:if test="${repair.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                        </c:forEach>
+                    </select>
                 </li>
                 <li style="border: 0">
                     <span>上传图片</span>
                 </li>
                 <li>
                     <div class="my-display-inline-box">
-                        <div id="trainImgContainer" class="row value">
-                            <c:forEach items="${attachmentList}" var="attachment">
+                        <div id="repairImgContainer" class="row value">
+                            <c:forEach items="${workerAttachmentList}" var="attachment">
                                 <img src="${attachment.name}" alt="" style="margin-top: 3px;margin-left: 10px" onclick="viewBigImageForUpload(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image">
                             </c:forEach>
                         </div>
-                        <c:if test="${fn:length(attachmentList) < 4}">
-                            <div id="trainImgUrlContainer" class="upload-btn-box" style="display: inline-block">
-                                <input type="file" id="trainImg" name="picUrl" class="upload-btn pageUpload"
+                        <c:if test="${fn:length(workerAttachmentList) < 4}">
+                            <div id="repairImgUrlContainer" class="upload-btn-box" style="display: inline-block">
+                                <input type="file" id="repairImg" name="picUrl" class="upload-btn pageUpload"
                                        data-icon="false" data-classButton="btn btn-default"
                                        data-classInput="form-control inline v-middle input-xs"
                                        accept="image/*"
@@ -220,14 +287,14 @@
                     </div>
                 </li>
             </ul>
-            <input type="hidden" name="uuid" class="form-control" value="${train.uuid}">
+            <input type="hidden" name="uuid" class="form-control" value="${repair.uuid}">
             <input type="hidden" name="versionno" class="form-control"
-                   value="${train.versionno}">
+                   value="${repair.versionno}">
         </form>
 
-        <c:if test="${train.status ne 'FINISH'}">
+        <c:if test="${repair.status ne 'FINISH'}">
             <div class="fixsubmit">
-                <a href="javascript:submitTrainInfo()">保存</a>
+                <a href="javascript:submitRepairInfo()">保存</a>
                 <a href="javascript:finishTrain()">提交</a>
             </div>
         </c:if>
@@ -265,7 +332,7 @@
 <script src="${ctx}/static/js/wechatUtil.js?20171201"></script>
 <script type="text/javascript">
 
-    function submitTrainInfo(){
+    function submitRepairInfo(){
         $("#frm").parsley("validate");
         //表单合法 单价合法性
         if ($('#frm').parsley().isValid()){
@@ -274,13 +341,36 @@
         }
     }
 
+    //检查数字合法性
+    function validateNum(obj, errorId){
+        var errorObj = document.getElementById(errorId);
+        errorObj.innerHTML = "";
+
+        trimText(obj);
+        if(obj.value.length > 0){
+            var numRule = /^\d+(\.\d+)?$/;
+            console.log(obj.value.length > 0 && (!(numRule.test(obj.value)) || obj.value*1 < 0));
+            if(obj.value.length > 0 && (!(numRule.test(obj.value)) || obj.value*1 < 0)){
+                if(obj.id == "workarea"){
+                    errorObj.innerText = "输入面积非法";
+                }else if(obj.id == "price"){
+                    errorObj.innerText = "输入金额非法";
+                }
+                return false;
+            }
+            formatMoney(obj);
+        }
+        return true;
+    }
+
+
     $('.pageUpload').change(function () {
         if ($(".pageUpload").attr("readonly") == "readonly") {
             $("#notification_bar").css("width", "60%");
             $("#notification_bar").css("left", "20%");
             HC.showNotification("网络较慢，请耐心等待！", 2000);
         } else {
-            compressUploadPicture(document.getElementById("trainImg"));
+            compressUploadPicture(document.getElementById("repairImg"));
         }
     });
 
