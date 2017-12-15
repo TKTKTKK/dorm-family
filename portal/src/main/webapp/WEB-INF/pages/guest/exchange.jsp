@@ -10,59 +10,66 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
     <meta http-equiv="x-dns-prefetch-control" content="on">
-    <title>预订</title>
+    <title>兑换</title>
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
     <style>
-        .goods{ display: flex;display: -webkit-flex;justify-content: space-between;align-items: center;margin: 0 0 1.25rem 0;height: 8rem;background: #fff;padding: 1rem 2rem;box-sizing: border-box;color: #333}
         .goods>img{width: 5rem;height:5rem;}
         .goods>span{font-size: 1.6rem;}
         .list{background: #fff;}
         .list li{display: flex;display: -webkit-flex;justify-content: space-between;border-bottom: 1px solid rgba(0,0,0,0.1);padding: 1.17rem 2rem;}
         .list li>span{font-size: 1.6rem;color: #333}
         .list li>input{font-size: 1.4rem;color: #666;text-align: right;}
-        .list li .address{text-align: right}
         .list li .address>select{font-size: 1.4rem;color: #666;text-align: right;width:30%}
+        .goods_parm{display: flex;display: -webkit-flex;justify-content: space-around;align-items: center;}
+        .goods_parm img{width: 10rem;height:10rem;display: inline-block;vertical-align: middle;}
+        .goods_parm	.parm_list{display: inline-block;vertical-align: middle;}
+        .goods_parm	.parm_list li{margin:1rem 0;}
+        .goods_parm	.parm_list li:nth-last-child{margin-bottom:0;}
+        .parm{background: #fff;padding:1.25rem;color: #333;font-size: 1.4rem;}
+        .parm>p{border-bottom: 1px solid rgba(0,0,0,0.1);font-size: 1.4rem;display: block;height: 3.35rem;line-height: 3.35rem;margin-bottom: 1rem;}
+        .parm p span{border-bottom:2px solid #faa83d;padding-bottom: 0.7rem;color: #faa83d;font-size: 1.5rem;}
+        .parm .detail>img{width: 100%}
+
     </style>
 </head>
 <body>
 <div class="head">
-    <a href="${ctx}/guest/product_center" class="back"></a>
-    <span>预订</span>
+    <a href="${ctx}/guest/good_exchange" class="back"></a>
+    <span>兑换</span>
 </div>
-<div class="goods">
-    <img src="${mtxProduct.img}" alt="">
-    <span>${mtxProduct.model}${mtxProduct.name}</span>
+<div class="parm">
+    <p>
+        <span>商品详情</span>
+    </p>
+    <div class="goods_parm">
+        <img src="${mtxProduct.img}" alt="">
+        <ul class="parm_list">
+            <li><span>名称:</span><span>${mtxProduct.name}</span></li>
+            <li><span>所需积分:</span><span>${mtxProduct.points}</span></li>
+        </ul>
+    </div>
 </div>
 <form method="post" action="" id="searchForm">
-
 <ul class="list">
     <li>
         <span>姓名</span>
-        <input type="text" id="name" name="name" placeholder="请填写真实姓名">
+        <input type="text" id="name" name="name" placeholder="请填写真实姓名(必填)">
     </li>
     <li>
         <span>电话</span>
-        <input id="contactno" type="text" name="phone" placeholder="请填写真实号码">
-    </li>
-    <li>
-        <span style="width: 17%">地区</span>
-        <div class="address">
-            <select name="province" id="s1"><option></option></select><!--插件-->
-            <select name="city" id="s2"><option></option></select>
-            <select name="district" id="s3"><option></option></select>
-        </div>
+        <input id="contactno" type="text" name="phone" placeholder="请填写真实号码(必填)">
     </li>
     <li>
         <span>详细地址</span>
-        <input type="text" name="address" id="address" placeholder="请填写详细地址">
+        <input type="text" name="address" id="address" placeholder="请填写详细地址(必填)">
     </li>
     <li>
         <span>补充内容</span>
-        <textarea  type="textarea" name="detail" id="detail" placeholder="对本次预订的说明" style="height:4rem;text-align:right;color:#666;font-size: 1.4rem;"></textarea>
+        <textarea  type="textarea" name="detail" id="detail" placeholder="对本次兑换的说明(选填)" style="height:4rem;text-align:right;color:#666;font-size: 1.4rem;"></textarea>
     </li>
 </ul>
     <input type="text" name="productid" class="hidden" value="${mtxProduct.uuid}" style="display:none">
-    <input  class="submit" onclick="submitForm()" value="提交">
+    <input  class="fixsubmit" onclick="submitForm()" value="兑换">
 </form>
 <div class="choose" style="display: none">
     <div class="error">

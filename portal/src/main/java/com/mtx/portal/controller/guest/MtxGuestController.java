@@ -1,5 +1,7 @@
 package com.mtx.portal.controller.guest;
 
+import com.mtx.common.entity.Attachment;
+import com.mtx.common.service.AttachmentService;
 import com.mtx.common.utils.*;
 import com.mtx.family.entity.*;
 import com.mtx.family.service.*;
@@ -16,11 +18,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/guest")
@@ -48,6 +53,12 @@ public class MtxGuestController extends BaseGuestController{
     private MtxUserMachineService mtxUserMachineService;
     @Autowired
     private MachineService machineService;
+    @Autowired
+    private MtxVideoService mtxVideoService;
+    @Autowired
+    private MtxPartsCenterService mtxPartsCenterService;
+    @Autowired
+    private AttachmentService attachmentService;
 
 
     @RequestMapping(value = "/product_center")
@@ -258,5 +269,78 @@ public class MtxGuestController extends BaseGuestController{
         model.addAttribute("message",message);
         model.addAttribute("userid",userid);
         return "guest/productInfo";
+    }
+    /**
+     * 保养小视屏
+     */
+    @RequestMapping(value = "/maintain",method = RequestMethod.GET)
+    public String maintain(Model model) {
+        MtxVideo video=new MtxVideo();
+        List<MtxVideo> videoList=mtxVideoService.queryForList(video);
+        model.addAttribute("videoList",videoList);
+        return "guest/maintain_video";
+    }
+    @RequestMapping(value = "/getVideoUrl", method = RequestMethod.POST)
+    @ResponseBody
+    public Map getVideoUrl(String uuid){
+        MtxVideo video=new MtxVideo();
+        if(StringUtils.isNotBlank(uuid)){
+            video.setUuid(uuid);
+            video=mtxVideoService.queryForObjectByPk(video);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("video", video);
+        return resultMap;
+    }
+
+    /**
+     * 配件中心
+     */
+    @RequestMapping(value = "/parts_center",method = RequestMethod.GET)
+    public String parts_center(String code,Model model) {
+        MtxPartsCenter partsCenter=new MtxPartsCenter();
+        if(StringUtils.isNotBlank(code)){
+            partsCenter.setMaterial_code(code);
+            partsCenter=mtxPartsCenterService.queryForObjectByUniqueKey(partsCenter);
+            if(partsCenter!=null){
+                Attachment attachment=new Attachment();
+                attachment.setRefid(partsCenter.getUuid());
+                List<Attachment> attachmentList=attachmentService.queryForList(attachment);
+                model.addAttribute("attachmentList",attachmentList);
+            }
+        }
+        model.addAttribute("partsCenter",partsCenter);
+        return "guest/parts_center";
+    }
+
+    /**
+     * 积分兑换中心
+     */
+    @RequestMapping(value = "/good_exchange",method = RequestMethod.GET)
+    public String good_exchange(Model model) {
+        MtxProduct product=new MtxProduct();
+        product.setType("EXCHANGE_GOOD");
+        product.setStatus("ON_SALE");
+        List<MtxProduct> productList=mxtProductService.queryForList(product);
+        model.addAttribute("productList",productList);
+        return "guest/good_exchange_center";
+    }
+    /**
+     * 商品详情
+     */
+    @RequestMapping(value = "/good_detail",method = RequestMethod.GET)
+    public String good_detail(Model model,MtxProduct mtxProduct) {
+        MtxProduct mtxProductTemp= mxtProductService.queryForObjectByPk(mtxProduct);
+        model.addAttribute("mtxProduct",mtxProductTemp);
+        return "guest/good_detail";
+    }
+    /**
+     * 商品兑换
+     */
+    @RequestMapping(value = "/exchange",method = RequestMethod.GET)
+    public String exchange(Model model,MtxProduct mtxProduct) {
+        MtxProduct mtxProductTemp= mxtProductService.queryForObjectByPk(mtxProduct);
+        model.addAttribute("mtxProduct",mtxProductTemp);
+        return "guest/exchange";
     }
 }

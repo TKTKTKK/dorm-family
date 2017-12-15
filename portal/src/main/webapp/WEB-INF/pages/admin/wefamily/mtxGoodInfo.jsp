@@ -53,7 +53,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>状态：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <select class="form-control" id="status" name="status">
+                                    <select class="form-control" id="status" name="status" data-required="true">
                                         <option value="">--全部--</option>
                                         <c:set var="typeList" value="${web:queryCommonCodeList('PRODUCT_STATUS')}"></c:set>
                                         <c:forEach items="${typeList}" var="typeCode">

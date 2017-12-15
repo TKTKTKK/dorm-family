@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.family.mapper.MtxPartsCenterMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.family.entity.MtxPartsCenter">
+    </resultMap>
+    <select id="selectMtxPartsCenterList" resultMap="selectResultMap">
+        select mp.*
+        from tb_mtx_parts mp
+        where TRUE
+        <if test="mtxPartsCenter.fitmodel != null and mtxPartsCenter.fitmodel != ''">
+            and mp.fitmodel like concat("%",#{mtxPartsCenter.fitmodel},"%")
+        </if>
+        <if test="mtxPartsCenter.name != null and mtxPartsCenter.name != ''">
+            and mp.name like concat("%",#{mtxPartsCenter.name},"%")
+        </if>
+        <if test="mtxPartsCenter.material_code != null and mtxPartsCenter.material_code != ''">
+            and mp.material_code like concat("%",#{mtxPartsCenter.material_code},"%")
+        </if>
+        order by mp.createon desc;
+    </select>
+    <select id="ifMaterialCodeExist" resultMap="selectResultMap">
+        select mp.*
+        from tb_mtx_parts mp
+        where TRUE
+        <if test="code != null and code != ''">
+            and mp.material_code =#{code}
+        </if>
+        <if test="uuid != null and uuid != ''">
+            and mp.uuid !=#{uuid}
+        </if>
+        order by mp.createon desc;
+    </select>
+</mapper>

@@ -25,9 +25,8 @@
                     <span class="text-danger">${errorMessage}</span>
                 </div>
                 <form class="form-horizontal form-bordered" data-validate="parsley"
-                      action="${ctx}/admin/wefamily/updateMtxProduct" method="POST"
-                      enctype="multipart/form-data" id="frm"
-                onsubmit="validDate()">
+                      action="" method="POST"
+                      enctype="multipart/form-data" id="frm">
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
                             <i class="fa fa-gift"></i>
@@ -71,7 +70,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>状态：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <select class="form-control" id="status" name="status">
+                                    <select class="form-control" id="status" name="status" data-required="true">
                                         <option value="">--全部--</option>
                                         <c:set var="typeList" value="${web:queryCommonCodeList('PRODUCT_STATUS')}"></c:set>
                                         <c:forEach items="${typeList}" var="typeCode">
@@ -137,9 +136,10 @@
                             </div>
                         </div>
                         <div class="panel-footer text-left bg-light lter">
-                            <button type="submit" class="btn btn-submit btn-s-xs ">
-                                <i class="fa fa-check"></i>&nbsp;提&nbsp;交
-                            </button>
+                            <a onclick="submitForm()"
+                               class="btn  btn-submit btn-s-xs " style="color: white">
+                                提交
+                            </a>
                         </div>
                     </section>
                     <div>
@@ -189,15 +189,16 @@
         if(model.length>0){
             $.post("${ctx}/admin/wefamily/validModelIsExist?model="+model+"&uuid="+uuid,function(data){
                 if(data){
-                    return true;
+                    var searchForm = document.getElementById("frm");
+                    searchForm.action = "${ctx}/admin/wefamily/updateMtxProduct";
+                    searchForm.submit();
                 }else{
                     modelError.innerHTML="此型号已存在，请换一个试试！"
-                    return false;
                 }
             });
         }
     }
-    function validDate(){
+    function submitForm(){
         $("#frm").parsley("validate");
         if(validateMoney(document.getElementById('price'),'priceError') && $('#frm').parsley().isValid()){
             validModelIsExist();
