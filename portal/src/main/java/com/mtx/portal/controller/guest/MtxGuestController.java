@@ -60,8 +60,6 @@ public class MtxGuestController extends BaseGuestController{
     @Autowired
     private MtxPartsCenterService mtxPartsCenterService;
     @Autowired
-    private AttachmentService attachmentService;
-    @Autowired
     private RepairService repairService;
     @Autowired
     private SequenceService sequenceService;
