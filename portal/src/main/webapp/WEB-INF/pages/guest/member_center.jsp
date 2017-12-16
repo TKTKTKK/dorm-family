@@ -56,16 +56,12 @@
         <span>我的产品</span>
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
-    <li>
+    <li onclick="goMyPartRecord()">
         <span>我的配件</span>
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
     <li>
         <span>我的保养</span>
-        <img src="../../../static/guest/img/list.png" alt="">
-    </li>
-    <li>
-        <span onclick="goMyTrainRecord()">我的培训</span>
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
     <li onclick="goMyRepairRecord()">
@@ -89,8 +85,8 @@
     function goMyRepairRecord(){
         window.location.href="${ctx}/guest/repair_list";
     }
-    function goMyTrainRecord(){
-        window.location.href="${ctx}/guest/train_list";
+    function goMyPartRecord(){
+        window.location.href="${ctx}/guest/parts_list?userid="+userid;
     }
 </script>
 </html>

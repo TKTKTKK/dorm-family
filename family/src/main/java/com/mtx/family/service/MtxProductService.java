@@ -80,6 +80,7 @@ public class MtxProductService extends BaseService<MtxProductMapper,MtxProduct> 
                         }
                         mtxPointService.insert(point);
                     }
+                    mtxUserMachine.setType("MACHINE");
                     mtxUserMachineService.insert(mtxUserMachine);
                     message="添加成功！";
                     return message;

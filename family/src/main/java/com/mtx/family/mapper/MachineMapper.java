@@ -23,4 +23,6 @@ public interface MachineMapper extends BaseMapper<Machine> {
     List<Machine> selectMachineListForAuto(@Param("machineno") String machineno,@Param("bindid") String userBindId);
 
     List<Machine> selectMachineForEngineNoRepeat(@Param("machine") Machine machine);
+
+    PageList<Machine> queryForListWithPagination(@Param("machine")Machine machine, PageBounds pageBounds);
 }

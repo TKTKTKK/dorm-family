@@ -40,28 +40,28 @@
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>名称：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" data-required="true" name="name" id="name"
+                                    <input type="text" class="form-control" data-required="true" name="machinename" id="machinename"
                                            data-maxlength="48"
                                            onblur="trimText(this)"
-                                           value="${mtxPartsCenter.name}">
+                                           value="${machine.machinename}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>适用机型：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" data-required="true" name="fitmodel" id="fitmodel"
+                                    <input type="text" class="form-control" data-required="true" name="machinemodel" id="machinemodel"
                                            data-maxlength="48"
                                            onblur="trimText(this)"
-                                           value="${mtxPartsCenter.fitmodel}">
+                                           value="${machine.machinemodel}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>物料编码：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" data-required="true" name="material_code" id="material_code"
+                                    <input type="text" class="form-control" data-required="true" name="machineno" id="machineno"
                                            data-maxlength="64"
                                            onblur="trimText(this)"
-                                           value="${mtxPartsCenter.material_code}">
+                                           value="${machine.machineno}">
                                     <sapn id="codeError" class="text-danger"></sapn>
                                 </div>
                             </div>
@@ -71,8 +71,16 @@
                                     <input type="text" class="form-control" data-required="true" name="price" id="price"
                                            data-maxlength="11"
                                            onblur="validateMoney(this,'priceError')"
-                                           value="${mtxPartsCenter.price}">
+                                           value="${machine.price}">
                                     <div class="text-danger" id="priceError"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>规格：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <input type="text" class="form-control" data-required="true" name="format" id="format"
+                                           data-maxlength="15"
+                                           value="${machine.format}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -81,24 +89,7 @@
                                     <input type="text" class="form-control" data-required="true" name="address" id="address"
                                            data-maxlength="256"
                                            onblur="trimText(this)"
-                                           value="${mtxPartsCenter.address}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>状态：</label>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <select class="form-control" id="status" name="status" data-required="true">
-                                        <option value="">--全部--</option>
-                                        <c:set var="typeList" value="${web:queryCommonCodeList('PRODUCT_STATUS')}"></c:set>
-                                        <c:forEach items="${typeList}" var="typeCode">
-                                            <c:if test="${mtxPartsCenter.status == typeCode.code}">
-                                                <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
-                                            </c:if>
-                                            <c:if test="${mtxPartsCenter.status != typeCode.code}">
-                                                <option value="${typeCode.code}">${typeCode.codevalue}</option>
-                                            </c:if>
-                                        </c:forEach>
-                                    </select>
+                                           value="${machine.address}">
                                 </div>
                             </div>
                             <c:if test="${fn:length(attachmentList) < 4}">
@@ -135,9 +126,9 @@
                             </c:if>
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <input type="hidden" name="uuid" class="form-control" value="${mtxPartsCenter.uuid}">
+                                    <input type="hidden" name="uuid" class="form-control" value="${machine.uuid}">
                                     <input type="hidden" name="versionno" class="form-control"
-                                           value="${mtxPartsCenter.versionno}">
+                                           value="${machine.versionno}">
                                 </div>
                             </div>
                         </div>
@@ -188,7 +179,7 @@
     window.onload = function () {
         //显示父菜单
         showParentMenu('满田星');
-        if('${mtxPartsCenter.price}'.length > 0){
+        if('${machine.price}'.length > 0){
             formatMoney(document.getElementById('price'));
         }
     }
@@ -196,8 +187,8 @@
     function ifMaterialCodeExist(){
         var codeError=document.getElementById("codeError");
         codeError.innerHTML="";
-        var code=document.getElementById("material_code").value;
-        var uuid='${mtxPartsCenter.uuid}';
+        var code=document.getElementById("machineno").value;
+        var uuid='${machine.uuid}';
         $.post("${ctx}/admin/wefamily/ifMaterialCodeExist?code="+code+"&uuid="+uuid,function(data){
             if(data){
                 var searchForm = document.getElementById("frm");

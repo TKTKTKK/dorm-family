@@ -15,6 +15,22 @@
             and mm.uuid != #{machine.uuid}
         </if>
     </select>
+    <select id="queryForListWithPagination" resultMap="selectResultMap">
+        select mm.* from tb_mtx_machine mm
+        where mm.bindid = #{machine.bindid}
+        and mm.type=#{machine.type}
+        <if test="machine.machineno != null and machine.machineno != ''">
+            and mm.machineno like CONCAT('%', #{machine.machineno},'%')
+        </if>
+        <if test="machine.machinemodel != null and machine.machinemodel != ''">
+            and mm.machinemodel like CONCAT('%', #{machine.machinemodel},'%')
+        </if>
+        <if test="machine.machinename != null and machine.machinename != ''">
+            and mm.machinename like CONCAT('%',#{machine.machinename},'%')
+        </if>
+        order by mm.createon desc
+        ;
+    </select>
 
     <select id="selectMachineForEngineNoRepeat" resultMap="selectResultMap">
         select mm.* from tb_mtx_machine mm

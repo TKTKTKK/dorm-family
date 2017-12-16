@@ -23,23 +23,6 @@ INSERT INTO tb_common_code VALUES ('2017121400000003', null, null, 'VIDEO_TYPE',
 INSERT INTO tb_common_code VALUES ('2017121400000004', null, null, 'VIDEO_TYPE', 'R_VIDEO', '维修小视屏', null,'', '4', '2014-11-30 21:44:31', 'sys', '2014-11-30 21:44:31', 'sys', '1', '0');
 
 
--- 配件中心表     物料编码、名称、零售价、适用机型、产地
-CREATE TABLE `tb_mtx_parts` (
-  `uuid` varchar(32) NOT NULL,
-  `name` varchar(48) DEFAULT NULL,
-  `material_code` varchar(64) DEFAULT NULL unique key,
-  `price` decimal(10,2) DEFAULT NULL,
-  `fitmodel` varchar(48) DEFAULT NULL,
-  `address` varchar(256) DEFAULT NULL,
-  `status` varchar(15) DEFAULT NULL,
-  `createon` varchar(23) NOT NULL,
-  `createby` varchar(32) NOT NULL,
-  `modifyon` varchar(23) NOT NULL,
-  `modifyby` varchar(32) NOT NULL,
-  `versionno` int(11) NOT NULL,
-  `delind` char(1) NOT NULL,
-  PRIMARY KEY (`uuid`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `tb_platform_permit` VALUES ('2017121510000001', 'MENU', '配件管理', 'admin/wefamily/mtxPartsCenterManage', '2015050510000011', '1110', 'APP', now(), 'sys', now(), 'sys', '1', 'N', '');
 

@@ -62,7 +62,7 @@
     </li>
 </ul>
     <input type="text" name="productid" class="hidden" value="${mtxProduct.uuid}" style="display:none">
-    <input  class="submit" onclick="submitForm()" value="提交">
+    <input  class="fixsubmit" onclick="submitForm()" value="提交">
 </form>
 <div class="choose" style="display: none">
     <div class="error">
@@ -145,7 +145,7 @@
         }
         if(nameError=='' &&phoneError==''&&addressDetailError==''&&addressError==''&&contactnoError==''){
             var searchForm = document.getElementById("searchForm");
-            searchForm.action = "${ctx}/guest/reserve";
+            searchForm.action = "${ctx}/guest/reserve?type=MACHINE";
             searchForm.submit();
         }else{
             errorMessage.innerHTML="信息不完整或输入有误，请确认后重试！";

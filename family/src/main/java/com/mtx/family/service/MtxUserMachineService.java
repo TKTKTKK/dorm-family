@@ -19,7 +19,7 @@ public class MtxUserMachineService extends BaseService<MtxUserMachineMapper,MtxU
         super.setMapper(mapper);
     }
 
-    public List<MtxUserMachine> queryMachineList(String userid) {
-        return mapper.queryMachineList(userid);
+    public List<MtxUserMachine> queryMachineList(String userid,String type) {
+        return mapper.queryMachineList(userid,type);
     }
 }

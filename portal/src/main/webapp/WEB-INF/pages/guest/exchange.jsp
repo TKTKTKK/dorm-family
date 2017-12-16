@@ -52,15 +52,11 @@
 <form method="post" action="" id="searchForm">
 <ul class="list">
     <li>
-        <span>姓名</span>
-        <input type="text" id="name" name="name" placeholder="请填写真实姓名(必填)">
+        <span>购买数量</span>
+        <input type="number" id="count" name="count" placeholder="请输入数量(必填)">
     </li>
     <li>
-        <span>电话</span>
-        <input id="contactno" type="text" name="phone" placeholder="请填写真实号码(必填)">
-    </li>
-    <li>
-        <span>详细地址</span>
+        <span>送货地址</span>
         <input type="text" name="address" id="address" placeholder="请填写详细地址(必填)">
     </li>
     <li>

@@ -27,7 +27,7 @@
         .list li>input{font-size: 1.6rem;color: #666;text-align: right;float: right;}
         .list li .address{display: table;}
         .list li .address>select{font-size: 1.4rem;color: #666;}
-        .list li>.focus{height: 4rem;color: #666;font-size: 0.14rem;}
+        .list li>.focus{height:4rem;color:#666;font-size:0.14rem;}
         .list:nth-of-type(3) li span{color: #666}
         .list li select{font-size: 1.4rem;color: #666;float: right}
         /*箭头朝下*/

@@ -13,8 +13,18 @@ public class MtxUserMachine extends BaseEntity {
     private String userid;
     @Column
     private String machineid;
+    @Column
+    private String type;
 
     private String name;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getName() {
         return name;

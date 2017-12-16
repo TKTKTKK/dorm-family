@@ -24,6 +24,7 @@
         .parts_img li{width: 30%;display: inline-block;margin: 1%;}
         .parts_img li img{width: 100%}
         .spanid{background:#5bbc4e;border-radius: 0.5rem ;width: 5rem;text-align: center;}
+        p input{font-size: 1.5rem;}
     </style>
 </head>
 <body>
@@ -32,20 +33,23 @@
     <span>配件中心</span>
     <img src="../../../static/guest/img/sao.png" alt="" onclick="scan()">
 </div>
+<form action="" method="post" id="frm">
 <div class="parts_num">
     <span>手动输入配件号</span>
-    <input type="text" id="code" value="${partsCenter.material_code}">
+    <input type="text" id="code" name="code" value="${code}">
     <span class="spanid" onclick="searchParts()">查询</span>
 </div>
+</form>
 <div class="content">
     <div class="goods_info">
         <div class="info_name">
-            <p style="text-align: center;">${partsCenter.name}</p>
+            <p style="text-align: center;"><input id="machinename" style="text-align: center;" type="text" value="${partsCenter.machinename}"/></p>
             <hr>
-            <p>物料编码：${partsCenter.material_code}</p>
-            <p>零售价：${partsCenter.price}元</p>
-            <p>适用机型：${partsCenter.fitmodel}</p>
-            <p>产地：${partsCenter.address}</p>
+            <p>物料编码：<input type="text" id="material_code" value="${partsCenter.machineno}"/></p>
+            <p>零售价：<input type="text" id="price" value="${partsCenter.price}${partsCenter.format}"/></p>
+            <p>适用机型：<input type="text" id="fitmodel" value="${partsCenter.machinemodel}"/></p>
+            <p>产地：<input type="text" id="address" value="${partsCenter.address}"/> </p>
+            <input type="text" id="uuid" value="${partsCenter.uuid}" style="display: none"/>
             <hr>
             <p>配件图片</p>
             <ul class="parts_img">
@@ -56,7 +60,8 @@
         </div>
     </div>
 </div>
-<div class="choose_alert" style="display: none">
+<a  class="fixsubmit" onclick="validDate()">购买</a>
+<div class="choose" id="chooseClose" style="display: none">
     <div class="error">
         <p id="errorMessage"></p >
         <button onclick="closeModel()">我知道了</button>
@@ -70,7 +75,7 @@
     var errorMessage = document.getElementById("errorMessage");
     errorMessage.innerHTML = "";
     window.onload=function (){
-        if('${partsCenter}'!=null){
+        if('${Flag}'=='1'){
             closeImg();
         }
     }
@@ -80,14 +85,44 @@
     function searchParts(){
         var code=$("#code").val();
         if(code!=null&&code!=''){
-            window.location.href="${ctx}/guest/parts_center?code="+code;
+            var searchForm = document.getElementById("frm");
+            searchForm.action = "${ctx}/guest/parts_center";
+            searchForm.submit();
         }else{
             errorMessage.innerHTML="配件号不能为空！";
-            $(".choose_alert").css("display","block");
+            $("#chooseClose").css("display","block");
         }
     }
     function closeModel(){
-        $(".choose_alert").css("display","none");
+        $("#chooseClose").css("display","none");
+    }
+    function scan(){
+        wechatUtil.scanQRCode({
+                    success : function(res){
+                        var paramArr = wechatUtil.handleScanResult(res.resultStr);
+                        $("#code").val(paramArr[0]);
+                        $("#material_code").val(paramArr[0]);
+                        $("#machinename").val(paramArr[1]);
+                        $("#price").val(paramArr[2]);
+                        $("#fitmodel").val(paramArr[3]);
+                        $("#address").val(paramArr[4]);
+                        $.post("${ctx}/admin/wefamily/getMtxParts?code="+$("#material_code").val(),function(data){
+                            if(data.machine){
+                                searchParts();
+                            }
+                        });
+                    }
+                }
+        );
+    }
+    function validDate(){
+        var uuid=$("#uuid").val();
+        if(uuid!=null &&uuid!=''){
+
+        }else{
+            errorMessage.innerHTML="请选择配件！";
+            $("#chooseClose").css("display","block");
+        }
     }
 </script>
 </html>
