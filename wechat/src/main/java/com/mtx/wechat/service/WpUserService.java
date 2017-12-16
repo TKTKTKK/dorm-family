@@ -54,6 +54,7 @@ public class WpUserService extends BaseService<WpUserMapper,WpUser> {
             wpUser.setNickname(wechatUser.getNickname());
             wpUser.setHeadimgurl(wechatUser.getHeadimgurl());
             wpUser.setIfauth("N");
+            wpUser.setIfsubscribe((wechatUser.getSubscribe() == 1?"Y":"N"));
             insert(wpUser);
         }
     }

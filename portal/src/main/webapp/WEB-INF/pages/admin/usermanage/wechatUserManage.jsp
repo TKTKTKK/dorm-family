@@ -71,24 +71,6 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
-                                <label class="control-label my-display-inline-lbl" style="padding-top: 7px">用户类型：</label>
-
-                                <div class="my-display-inline-box" style="margin-bottom: 10px">
-                                    <select class="form-control" name="type" id="type">
-                                        <option value="">--全部--</option>
-                                        <c:set var="wechatUserInfoTypeList" value="${web:queryCommonCodeList('WECAHT_USERINFO_TYPE')}"></c:set>
-                                        <c:forEach items="${wechatUserInfoTypeList}" var="commonCode">
-                                            <c:if test="${wechatUserInfo.type == commonCode.code}">
-                                                <option value="${commonCode.code}" selected>${commonCode.codevalue}</option>
-                                            </c:if>
-                                            <c:if test="${wechatUserInfo.type != commonCode.code}">
-                                                <option value="${commonCode.code}">${commonCode.codevalue}</option>
-                                            </c:if>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
                                 <label class="control-label my-display-inline-lbl" style="padding-top: 7px">是否关注：</label>
 
                                 <div class="my-display-inline-box" style="margin-bottom: 10px">
@@ -138,9 +120,7 @@
                                     <th width="12%">微信openid</th>
                                     <th width="6%">是否关注</th>
                                     <th width="6%">是否创建账号</th>
-                                    <th width="6%">用户类型</th>
                                     <th width="12%">提交时间</th>
-                                    <th width="8%">备注</th>
                                     <th width="10%">操作</th>
                                 </tr>
                                 </thead>
@@ -194,13 +174,7 @@
                                             </c:if>
                                         </td>
                                         <td>
-                                                ${web:getCodeDesc('WECAHT_USERINFO_TYPE', wechatUserInfo.type)}
-                                        </td>
-                                        <td>
                                                 ${wechatUserInfo.createon}
-                                        </td>
-                                        <td>
-                                                ${wechatUserInfo.remarks}
                                         </td>
                                         <td>
                                             <a href="${ctx}/admin/usermanage/wechatUserInfo?wechatUserInfoId=${wechatUserInfo.uuid}"
