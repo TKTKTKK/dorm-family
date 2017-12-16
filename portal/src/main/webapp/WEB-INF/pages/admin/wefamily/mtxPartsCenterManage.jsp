@@ -24,22 +24,22 @@
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span>适用机型：</label>
                                     <div class="col-sm-7  my-display-inline-box">
-                                        <input type="text" class="form-control" name="fitmodel" id="fitmodel" data-maxlength="48"
-                                               onblur="trimText(this)" value="${mtxPartsCenter.fitmodel}">
+                                        <input type="text" class="form-control" name="machinemodel" id="machinemodel" data-maxlength="48"
+                                               onblur="trimText(this)" value="${machine.machinemodel}">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 名称：</label>
                                     <div class="col-sm-7  my-display-inline-box">
-                                        <input type="text" class="form-control" name="name" id="name" data-maxlength="48"
-                                               onblur="trimText(this)" value="${mtxPartsCenter.name}">
+                                        <input type="text" class="form-control" name="machinename" id="machinename" data-maxlength="48"
+                                               onblur="trimText(this)" value="${machine.machinename}">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">物料编码：</label>
                                     <div class="col-sm-7  my-display-inline-box">
-                                        <input type="text" class="form-control" name="material_code" id="material_code" data-maxlength="64"
-                                               onblur="trimText(this)" value="${mtxPartsCenter.material_code}">
+                                        <input type="text" class="form-control" name="machineno" id="machineno" data-maxlength="64"
+                                               onblur="trimText(this)" value="${machine.machineno}">
                                     </div>
                                 </div>
                                 <div style="clear: both"></div>
@@ -62,44 +62,44 @@
                                         <th width="15%">名称</th>
                                         <th width="15%">物料编码</th>
                                         <th width="15%">价格</th>
+                                        <th width="10%">规格</th>
                                         <th width="15%">地址</th>
-                                        <th width="10%">状态</th>
                                         <th width="15%">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach items="${mtxPartsCenterList}" var="mtxPartsCenter">
+                                    <c:forEach items="${machineList}" var="machine">
                                         <tr>
                                             <td>
-                                                    ${mtxPartsCenter.fitmodel}
+                                                    ${machine.machinemodel}
                                             </td>
                                             <td>
-                                                    ${mtxPartsCenter.name}
+                                                    ${machine.machinename}
                                             </td>
                                             <td>
-                                                    ${mtxPartsCenter.material_code}
+                                                    ${machine.machineno}
                                             </td>
                                             <td>
-                                                    ${mtxPartsCenter.price}
+                                                    ${machine.price}
                                             </td>
                                             <td>
-                                                    ${mtxPartsCenter.address}
+                                                    ${machine.format}
                                             </td>
                                             <td>
-                                                    ${web:getCodeDesc("PRODUCT_STATUS", mtxPartsCenter.status)}
+                                                    ${machine.address}
                                             </td>
                                             <td>
-                                                <a href="${ctx}/admin/wefamily/goMtxPartsCenter?uuid=${mtxPartsCenter.uuid}"
+                                                <a href="${ctx}/admin/wefamily/goMtxPartsCenter?uuid=${machine.uuid}"
                                                    class="btn  btn-infonew btn-sm" style="color: white">
                                                     修改
                                                 </a>
-                                                <a href="javascript:deleteMtxPartsCenter('${mtxPartsCenter.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
+                                                <a href="javascript:deleteMtxPartsCenter('${machine.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
                                     </tbody>
                                 </table>
-                                <web:pagination pageList="${mtxPartsCenterList}" postParam="true"/>
+                                <web:pagination pageList="${machineList}" postParam="true"/>
                                 <button class="btn btn-sm btn-submit" onclick="showMtxPartsCenterInfo()"> 添加</button>
                             </div>
                     </c:if>

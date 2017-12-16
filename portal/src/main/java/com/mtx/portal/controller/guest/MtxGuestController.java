@@ -58,8 +58,6 @@ public class MtxGuestController extends BaseGuestController{
     @Autowired
     private MtxVideoService mtxVideoService;
     @Autowired
-    private MtxPartsCenterService mtxPartsCenterService;
-    @Autowired
     private RepairService repairService;
     @Autowired
     private SequenceService sequenceService;
@@ -142,11 +140,22 @@ public class MtxGuestController extends BaseGuestController{
     }
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public String addRegister(WpUser wpUser, HttpServletRequest req) {
+    public String addRegister(WpUser wpUser, String machineno,HttpServletRequest req,Model model) {
         wpUser.setBindid(getBindid(req));
         wpUser.setOpenid(getOpenid(req));
-        String machineid=req.getParameter("machineid");
-        mtxMemberService.insertMemberAndPoint(wpUser,machineid);
+        Machine machine=new Machine();
+        if(StringUtils.isNotBlank(machineno)){
+            machine.setMachineno(machineno);
+            machine=machineService.queryForObjectByUniqueKey(machine);
+            if(machine!=null){
+                String machineid=machine.getUuid();
+                mtxMemberService.insertMemberAndPoint(wpUser,machineid);
+            }else{
+                model.addAttribute("ErrorMessage","机器号有误！该机器不存在！");
+                return "guest/register";
+            }
+        }
+
         return "redirect:/guest/product_center";
     }
 
@@ -234,6 +243,7 @@ public class MtxGuestController extends BaseGuestController{
         }
         return "guest/userInfo";
     }
+
     /**
      * 我的配件
      */
@@ -243,12 +253,13 @@ public class MtxGuestController extends BaseGuestController{
             MtxUserMachine machine=new MtxUserMachine();
             machine.setUserid(userid);
             List<MtxUserMachine> machineList=new ArrayList<MtxUserMachine>();
-            machineList=mtxUserMachineService.queryMachineList(userid);
+            machineList=mtxUserMachineService.queryMachineList(userid,"MACHINE");
             model.addAttribute("machineList",machineList);
             model.addAttribute("userid",userid);
         }
         return "guest/product_list";
     }
+
     /**
      * 添加我的配件
      */
@@ -344,6 +355,7 @@ public class MtxGuestController extends BaseGuestController{
         }
         return "redirect:repair_info?repairId=" + repair.getUuid();
     }
+
     /**
      * 保养小视屏
      */
@@ -354,6 +366,7 @@ public class MtxGuestController extends BaseGuestController{
         model.addAttribute("videoList",videoList);
         return "guest/maintain_video";
     }
+
     @RequestMapping(value = "/getVideoUrl", method = RequestMethod.POST)
     @ResponseBody
     public Map getVideoUrl(String uuid){
@@ -367,15 +380,37 @@ public class MtxGuestController extends BaseGuestController{
         return resultMap;
     }
 
+    @RequestMapping(value = "/getMtxParts", method = RequestMethod.POST)
+    @ResponseBody
+    public Map getMtxParts(String code){
+        Machine machine=new Machine();
+        if(StringUtils.isNotBlank(code)){
+            machine.setMachineno(code);
+            machine=machineService.queryForObjectByUniqueKey(machine);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("machine", machine);
+        return resultMap;
+    }
+
     /**
      * 配件中心
      */
     @RequestMapping(value = "/parts_center",method = RequestMethod.GET)
+    public String parts_center(Model model,HttpServletRequest request) {
+        String Flag=request.getParameter("Flag");
+        if(StringUtils.isNotBlank(Flag)){
+            model.addAttribute("Flag",Flag);
+        }
+        return "guest/parts_center";
+    }
+
+    @RequestMapping(value = "/parts_center",method = RequestMethod.POST)
     public String parts_center(String code,Model model) {
-        MtxPartsCenter partsCenter=new MtxPartsCenter();
+        Machine partsCenter=new Machine();
         if(StringUtils.isNotBlank(code)){
-            partsCenter.setMaterial_code(code);
-            partsCenter=mtxPartsCenterService.queryForObjectByUniqueKey(partsCenter);
+            partsCenter.setMachineno(code);
+            partsCenter=machineService.queryForObjectByUniqueKey(partsCenter);
             if(partsCenter!=null){
                 Attachment attachment=new Attachment();
                 attachment.setRefid(partsCenter.getUuid());
@@ -384,6 +419,8 @@ public class MtxGuestController extends BaseGuestController{
             }
         }
         model.addAttribute("partsCenter",partsCenter);
+        model.addAttribute("Flag","1");
+        model.addAttribute("code",code);
         return "guest/parts_center";
     }
 
@@ -399,6 +436,7 @@ public class MtxGuestController extends BaseGuestController{
         model.addAttribute("productList",productList);
         return "guest/good_exchange_center";
     }
+
     /**
      * 商品详情
      */
@@ -408,6 +446,7 @@ public class MtxGuestController extends BaseGuestController{
         model.addAttribute("mtxProduct",mtxProductTemp);
         return "guest/good_detail";
     }
+
     /**
      * 商品兑换
      */
@@ -416,5 +455,46 @@ public class MtxGuestController extends BaseGuestController{
         MtxProduct mtxProductTemp= mxtProductService.queryForObjectByPk(mtxProduct);
         model.addAttribute("mtxProduct",mtxProductTemp);
         return "guest/exchange";
+    }
+
+    /**
+     * 我的配件
+     */
+    @RequestMapping(value = "/parts_list",method = RequestMethod.GET)
+    public String part_list(String userid,Model model) {
+        if(StringUtils.isNotBlank(userid)){
+            MtxUserMachine machine=new MtxUserMachine();
+            machine.setUserid(userid);
+            List<MtxUserMachine> machineList=new ArrayList<MtxUserMachine>();
+            machineList=mtxUserMachineService.queryMachineList(userid,"PARTS");
+            model.addAttribute("machineList",machineList);
+            model.addAttribute("userid",userid);
+        }
+        return "guest/parts_list";
+    }
+
+    @RequestMapping(value = "/parts_info",method = RequestMethod.GET)
+    public String parts_info(String userid,Model model) {
+        model.addAttribute("userid",userid);
+        return "guest/parts_info";
+    }
+
+    @RequestMapping(value = "/parts_info",method = RequestMethod.POST)
+    public String parts_info(Machine machine,String userid,Model model) {
+        String message=null;
+        if(StringUtils.isNotBlank(machine.getMachineno())){
+            Machine machineTemp=new Machine();
+            machineTemp.setMachineno(machine.getMachineno());
+            machineTemp=machineService.queryForObjectByUniqueKey(machineTemp);
+            if(machineTemp!=null){
+                message=machineService.addUserMachine(machine,userid);
+            }else{
+                model.addAttribute("machine",machine);
+                message="该机器不存在！请重试！";
+            }
+        }
+        model.addAttribute("message",message);
+        model.addAttribute("userid",userid);
+        return "guest/parts_info";
     }
 }

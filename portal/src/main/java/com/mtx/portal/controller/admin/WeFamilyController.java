@@ -78,8 +78,6 @@ public class WeFamilyController extends BaseAdminController {
     @Autowired
     private MtxVideoService mtxVideoService;
     @Autowired
-    private MtxPartsCenterService mtxPartsCenterService;
-    @Autowired
     private RepairService repairService;
     @Autowired
     private RepairWorkerService repairWorkerService;
@@ -219,6 +217,7 @@ public class WeFamilyController extends BaseAdminController {
         }
         return "admin/wefamily/mtxProductManage";
     }
+
     @RequestMapping(value = "/goMtxProduct", method = RequestMethod.GET)
     public String goMtxProduct(Model model,MtxProduct mtxProduct){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
@@ -227,6 +226,7 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("mtxProduct",mtxProductTemp);
         return "admin/wefamily/mtxProductInfo";
     }
+
     @RequestMapping(value = "/updateMtxProduct",method = RequestMethod.POST)
     public String updateMtxProduct(@RequestParam(value = "imgfile", required = false)MultipartFile multipartFile, MtxProduct mtxProduct, RedirectAttributes redirectAttributes, Model model){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
@@ -260,6 +260,7 @@ public class WeFamilyController extends BaseAdminController {
         }
         return "admin/wefamily/mtxProductInfo";
     }
+
     @RequestMapping(value = "/deleteMtxProduct", method = RequestMethod.POST)
     @ResponseBody
     public Map deleteMtxProduct(MtxProduct mtxProduct){
@@ -873,6 +874,7 @@ public class WeFamilyController extends BaseAdminController {
         }
         return "admin/wefamily/mtxWpUserManage";
     }
+
     @RequestMapping(value = "/goWpUser", method = RequestMethod.GET)
     public String goWpUser(Model model,WpUser wpUser){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
@@ -881,6 +883,7 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("wpUser",wpUserTemp);
         return "admin/wefamily/wpUserInfo";
     }
+
     @RequestMapping(value = "/updateWpUser",method = RequestMethod.POST)
     public String updateWpUser(@RequestParam(value = "imgfile", required = false)MultipartFile multipartFile, WpUser wpUser, RedirectAttributes redirectAttributes, Model model){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
@@ -905,6 +908,7 @@ public class WeFamilyController extends BaseAdminController {
         }
         return "admin/wefamily/wpUserInfo";
     }
+
     @RequestMapping(value = "/deleteWpUser", method = RequestMethod.POST)
     @ResponseBody
     public Map deleteWpUser(WpUser wpUser){
@@ -913,6 +917,7 @@ public class WeFamilyController extends BaseAdminController {
         resultMap.put("deleteFlag", deleteFlag);
         return resultMap;
     }
+
     /**
      * 商品兑换管理
      */
@@ -933,6 +938,7 @@ public class WeFamilyController extends BaseAdminController {
         }
         return "admin/wefamily/mtxGoodManage";
     }
+
     @RequestMapping(value = "/goMtxGood", method = RequestMethod.GET)
     public String goMtxGood(Model model,MtxProduct mtxProduct){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
@@ -941,6 +947,7 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("mtxProduct",mtxProductTemp);
         return "admin/wefamily/mtxGoodInfo";
     }
+
     @RequestMapping(value = "/updateMtxGood",method = RequestMethod.POST)
     public String updateMtxGood(@RequestParam(value = "imgfile", required = false)MultipartFile multipartFile, MtxProduct mtxProduct, RedirectAttributes redirectAttributes, Model model){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
@@ -978,6 +985,7 @@ public class WeFamilyController extends BaseAdminController {
         resultMap.put("deleteFlag", deleteFlag);
         return resultMap;
     }
+
     /**
      * 积分管理
      */
@@ -1018,11 +1026,17 @@ public class WeFamilyController extends BaseAdminController {
     @RequestMapping(value = "/ifMaterialCodeExist", method = RequestMethod.POST)
     @ResponseBody
     public Boolean ifMaterialCodeExist(String code,String uuid){
-        List<MtxPartsCenter> partsCenterList=new ArrayList<MtxPartsCenter>();
-        if(StringUtils.isNotBlank(code)){
-            partsCenterList=mtxPartsCenterService.ifMaterialCodeExist(code,uuid);
+        List<Machine> machineList=new ArrayList<Machine>();
+        Machine machineTemp=new Machine();
+        machineTemp.setBindid(UserUtils.getUserBindId());
+        if(StringUtils.isNotBlank(uuid)){
+            machineTemp.setUuid(uuid);
         }
-        if(partsCenterList.size()>0){
+        if(StringUtils.isNotBlank(code)){
+            machineTemp.setMachineno(code);
+            machineList=machineService.queryMachineForNoRepeat(machineTemp);
+        }
+        if(machineList.size()>0){
             return false;
         }else{
             return true;
@@ -1331,6 +1345,7 @@ public class WeFamilyController extends BaseAdminController {
 
         return "redirect:trainInfoForPhone?trainId=" + train.getUuid();
     }
+
     /**
      * 视频管理
      */
@@ -1711,18 +1726,21 @@ public class WeFamilyController extends BaseAdminController {
         }
         return attachmentList;
     }
+
     /**
      * 配件管理
      */
     @RequestMapping(value = "/mtxPartsCenterManage")
-    public String mtxPartsCenterManage(@RequestParam(required = false, defaultValue = "1") int page, MtxPartsCenter mtxPartsCenter, Model model, HttpServletRequest request) {
+    public String mtxPartsCenterManage(@RequestParam(required = false, defaultValue = "1") int page, Machine machine, Model model, HttpServletRequest request) {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         if (null != wechatBinding) {
+            machine.setType("PARTS");
+            machine.setBindid(UserUtils.getUserBindId());
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-            PageList<MtxPartsCenter> mtxPartsCenterList = mtxPartsCenterService.queryForListWithPagination(mtxPartsCenter, pageBounds);
-            model.addAttribute("mtxPartsCenterList", mtxPartsCenterList);
-            model.addAttribute("mtxPartsCenter",mtxPartsCenter);
+            PageList<Machine> machineList = machineService.queryForListWithPagination(machine, pageBounds);
+            model.addAttribute("machineList", machineList);
+            model.addAttribute("machine",machine);
         }
         String successFlag=request.getParameter("deleteFlag");
         if("1".equals(successFlag)){
@@ -1732,59 +1750,61 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     @RequestMapping(value = "/goMtxPartsCenter", method = RequestMethod.GET)
-    public String goMtxPartsCenter(Model model,MtxPartsCenter mtxPartsCenter){
+    public String goMtxPartsCenter(Model model,Machine machine){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
-        MtxPartsCenter mtxPartsCenterTemp=mtxPartsCenterService.queryForObjectByPk(mtxPartsCenter);
-        model.addAttribute("mtxPartsCenter",mtxPartsCenterTemp);
+        Machine machineTemp=machineService.queryForObjectByPk(machine);
+        model.addAttribute("machine",machineTemp);
         List<Attachment> attachmentList=new ArrayList<Attachment>();
-        if(StringUtils.isNotBlank(mtxPartsCenter.getUuid())){
-            attachmentList=getAttachmentByRefid(mtxPartsCenter.getUuid());
+        if(StringUtils.isNotBlank(machine.getUuid())){
+            attachmentList=getAttachmentByRefid(machine.getUuid());
         }
         model.addAttribute("attachmentList",attachmentList);
         return "admin/wefamily/mtxPartsCenterInfo";
     }
 
     @RequestMapping(value = "/updateMtxPartsCenter",method = RequestMethod.POST)
-    public String updateMtxPartsCenter(MtxPartsCenter mtxPartsCenter, RedirectAttributes redirectAttributes, Model model,HttpServletRequest request){
+    public String updateMtxPartsCenter(Machine machine, RedirectAttributes redirectAttributes, Model model,HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         String[] detailImgs = request.getParameterValues("detailImg");
-        if (StringUtils.isBlank(mtxPartsCenter.getUuid())) {
-            mtxPartsCenterService.insert(mtxPartsCenter);
-            model.addAttribute("mtxPartsCenter", mtxPartsCenter);
+        if (StringUtils.isBlank(machine.getUuid())) {
+            machine.setBindid(UserUtils.getUserBindId());
+            machine.setType("PARTS");
+            machineService.insert(machine);
+            model.addAttribute("machine", machine);
             if(detailImgs!=null&&detailImgs.length>0){
                 for(int i=0;i<detailImgs.length;i++){
                     Attachment attachment=new Attachment();
-                    attachment.setRefid(mtxPartsCenter.getUuid());
+                    attachment.setRefid(machine.getUuid());
                     attachment.setName(detailImgs[i]);
                     attachmentService.insert(attachment);
                 }
             }
             List<Attachment> attachmentList=new ArrayList<Attachment>();
-            attachmentList=getAttachmentByRefid(mtxPartsCenter.getUuid());
+            attachmentList=getAttachmentByRefid(machine.getUuid());
             model.addAttribute("attachmentList",attachmentList);
             model.addAttribute("successMessage", "保存成功！");
         } else {
             try {
-                mtxPartsCenterService.updatePartial(mtxPartsCenter);
-                MtxPartsCenter mtxPartsCenterTemp = mtxPartsCenterService.queryForObjectByPk(mtxPartsCenter);
-                model.addAttribute("mtxPartsCenter", mtxPartsCenterTemp);
+                machineService.updatePartial(machine);
+                Machine machineTemp = machineService.queryForObjectByPk(machine);
+                model.addAttribute("machine", machineTemp);
                 if(detailImgs!=null&&detailImgs.length>0){
                     for(int i=0;i<detailImgs.length;i++){
                         Attachment attachment=new Attachment();
-                        attachment.setRefid(mtxPartsCenter.getUuid());
+                        attachment.setRefid(machine.getUuid());
                         attachment.setName(detailImgs[i]);
                         attachmentService.insert(attachment);
                     }
                 }
                 List<Attachment> attachmentList=new ArrayList<Attachment>();
-                attachmentList=getAttachmentByRefid(mtxPartsCenterTemp.getUuid());
+                attachmentList=getAttachmentByRefid(machineTemp.getUuid());
                 model.addAttribute("attachmentList",attachmentList);
             } catch (ServiceException e) {
                 logger.error(e.getMessage(), e);
                 redirectAttributes.addFlashAttribute("errorMessage", "数据已修改，请重试！");
-                return "redirect:/admin/wefamily/goMtxPartsCenter?uuid=" + mtxPartsCenter.getUuid();
+                return "redirect:/admin/wefamily/goMtxPartsCenter?uuid=" + machine.getUuid();
 
             }
             model.addAttribute("successMessage", "保存成功！");
@@ -1794,8 +1814,8 @@ public class WeFamilyController extends BaseAdminController {
 
     @RequestMapping(value = "/deleteMtxPartsCenter", method = RequestMethod.POST)
     @ResponseBody
-    public Map deleteMtxPartsCenter(MtxPartsCenter mtxPartsCenter){
-        int deleteFlag=mtxPartsCenterService.delete(mtxPartsCenter);
+    public Map deleteMtxPartsCenter(Machine machine){
+        int deleteFlag=machineService.delete(machine);
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("deleteFlag", deleteFlag);
         return resultMap;

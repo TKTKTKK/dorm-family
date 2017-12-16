@@ -25,8 +25,18 @@ public class MtxReserve extends BaseEntity {
     private String address;
     @Column
     private String detail;
+    @Column
+    private String type;
 
     private String productname;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getProvince() {
         return province;

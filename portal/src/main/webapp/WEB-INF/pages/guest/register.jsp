@@ -52,27 +52,23 @@
         <input type="text" name="address" id="address" placeholder="请填写详细地址">
     </li>
     <li>
-        <span>机器编号</span>
-        <input type="text" id="machineid" name="machineid" value="3" placeholder="请填写机器编号">
-    </li>
-    <li>
         <span>机器型号</span>
-        <input type="text" id="machinemodel" value="2ZS-6K型" placeholder="请填写机器型号">
+        <input type="text" id="machinemodel" name="machinemodel" placeholder="请填写机器型号">
     </li>
     <li>
         <span>机器名称</span>
-        <input type="text" id="machinename" value="手扶式插秧机" placeholder="请填写机器名称">
+        <input type="text" id="machinename" name="machinename" placeholder="请填写机器名称">
     </li>
     <li>
-        <span>出厂编号</span>
-        <input type="text" id="machinProduct" value="EQ00000" placeholder="请填写出厂编号">
+        <span>机器号</span>
+        <input type="text" id="machineno" name="machineno" placeholder="请填写机器号">
     </li>
     <li>
-        <span>汽油机出厂编号</span>
-        <input type="text" id="machinengine" value="EQ00000" placeholder="请填写汽油机出厂编号">
+        <span>发动机号</span>
+        <input type="text" id="machinengine" name="engineno" placeholder="请填写发动机号">
     </li>
 </ul>
-    <input  class="submit" onclick="submitForm()" value="提交">
+    <input  class="fixsubmit" onclick="submitForm()" value="提交">
 </form>
 <div class="choose" style="display: none">
     <div class="error">
@@ -88,6 +84,15 @@
 <script type="text/javascript">
     var errorMessage = document.getElementById("errorMessage");
     errorMessage.innerHTML = "";
+    window.onload=function (){
+        var message='${ErrorMessage}';
+        if(message.length>0 &&message!=null&& message!='')
+        {
+            errorMessage.innerHTML=message;
+            $(".choose").css("display","block");
+            $("#imgDiv").css("display","none");
+        }
+    }
     //去空格
     function trimText(obj){
         if(obj.value.length > 0){
@@ -136,25 +141,18 @@
         var phone=document.getElementById("contactno").value;
         var addressDetailError='';
         var addressDetail=document.getElementById("address").value;
-        var machineidError='';
-        var machineid=document.getElementById("machineid").value;
         var machinemodelError='';
         var machinemodel=document.getElementById("machinemodel").value;
         var machinenameError='';
         var machinename=document.getElementById("machinename").value;
         var machinProductError='';
-        var machinProduct=document.getElementById("machinProduct").value;
+        var machineno=document.getElementById("machineno").value;
         var machinengineError='';
         var machinengine=document.getElementById("machinengine").value;
         if(name==''||name==null){
             nameError="姓名为必填！"
         }else{
             nameError="";
-        }
-        if(machineid==''||machineid==null){
-            machineidError="机器编号为必填！"
-        }else{
-            machineidError="";
         }
         if(machinemodel==''||machinemodel==null){
             machinemodelError="机器型号为必填！"
@@ -166,19 +164,16 @@
         }else{
             machinenameError="";
         }
-        if(machinProduct==''||machinProduct==null){
-            machinProductError="出场编号为必填！"
+        if(machineno==''||machineno==null){
+            machinProductError="机器号为必填！"
         }else{
             machinProductError="";
         }
         if(machinengine==''||machinengine==null){
-            machinengineError="姓名为必填！"
+            machinengineError="发动机号为必填！"
         }else{
             machinengineError="";
         }
-
-
-
         if(phone==''||phone==null){
             phoneError="手机号为必填！"
         }else{
@@ -199,7 +194,7 @@
         }else{
             contactnoError= "请输入正确的手机号！";
         }
-        if(nameError=='' &&phoneError==''&&addressDetailError==''&&addressError==''&&contactnoError==''&&machineidError==''&&machinemodelError==''&&machinenameError==''&&machinProductError==''&&machinengineError==''){
+        if(nameError=='' &&phoneError==''&&addressDetailError==''&&addressError==''&&contactnoError==''&&machinemodelError==''&&machinenameError==''&&machinProductError==''&&machinengineError==''){
             var searchForm = document.getElementById("searchForm");
             searchForm.action = "${ctx}/guest/register";
             searchForm.submit();
@@ -220,9 +215,10 @@
         wechatUtil.scanQRCode({
                     success : function(res){
                         var paramArr = wechatUtil.handleScanResult(res.resultStr);
-                        for(i = 0; i < paramArr.length; i++){
-                            alert(paramArr[i]);
-                        }
+                        $("#machinemodel").val(paramArr[0]);
+                        $("#machinename").val(paramArr[1]);
+                        $("#machineno").val(paramArr[2]);
+                        $("#engineno").val(paramArr[3]);
                     }
                 }
         );

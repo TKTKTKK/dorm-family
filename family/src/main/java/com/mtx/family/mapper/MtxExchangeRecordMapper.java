@@ -3,14 +3,14 @@ package com.mtx.family.mapper;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.base.BaseMapper;
-import com.mtx.family.entity.MtxPoint;
-import com.mtx.family.entity.MtxUserMachine;
+import com.mtx.family.entity.MtxConsultDetail;
+import com.mtx.family.entity.MtxExchangeRecord;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface MtxUserMachineMapper extends BaseMapper<MtxUserMachine> {
-    List<MtxUserMachine> queryMachineList(@Param("userid")String userid,@Param("type")String type);
+public interface MtxExchangeRecordMapper extends BaseMapper<MtxExchangeRecord> {
+    public PageList<MtxExchangeRecord> selectMtxExchangeRecordList(@Param("mtxExchangeRecord") MtxExchangeRecord mtxExchangeRecord, PageBounds pageBounds);
 }

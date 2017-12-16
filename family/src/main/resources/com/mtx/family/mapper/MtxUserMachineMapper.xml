@@ -9,6 +9,7 @@
         from tb_mtx_usermachine mu
         left join tb_mtx_machine mm on mm.uuid=mu.machineid
         where mu.userid=#{userid}
+        and mu.type=#{type}
         order by date_format(mu.createon,'%Y-%m-%d %H:%i:%s') desc;
     </select>
 </mapper>
