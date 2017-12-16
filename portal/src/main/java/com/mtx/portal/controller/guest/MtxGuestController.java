@@ -214,6 +214,7 @@ public class MtxGuestController extends BaseGuestController{
     public String staffInfo(WechatUserInfo wechatUserInfo,HttpServletRequest req,Model model) {
         wechatUserInfo.setBindid(getBindid(req));
         wechatUserInfo.setOpenid(getOpenid(req));
+        wechatUserInfo.setType("STAFF");
         wechatUserInfoService.addStaffInfo(wechatUserInfo);
         model.addAttribute("success","保存成功!");
         return "guest/staff_center";
