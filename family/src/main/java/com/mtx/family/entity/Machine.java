@@ -27,6 +27,46 @@ public class Machine extends BaseEntity {
     private String productiondate;
     @Column
     private String standardpower;
+    @Column
+    private String type;
+    @Column
+    private String address;
+    @Column
+    private String format;
+    @Column
+    private Double price;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
     public String getBindid() {
         return bindid;
