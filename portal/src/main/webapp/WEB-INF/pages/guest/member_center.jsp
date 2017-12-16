@@ -65,10 +65,10 @@
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
     <li>
-        <span>我的培训</span>
+        <span onclick="goMyTrainRecord()">我的培训</span>
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
-    <li>
+    <li onclick="goMyRepairRecord()">
         <span>我的维修</span>
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
@@ -85,6 +85,12 @@
     }
     function goMyProductRecord(){
         window.location.href="${ctx}/guest/product_list?userid="+userid;
+    }
+    function goMyRepairRecord(){
+        window.location.href="${ctx}/guest/repair_list";
+    }
+    function goMyTrainRecord(){
+        window.location.href="${ctx}/guest/train_list";
     }
 </script>
 </html>
