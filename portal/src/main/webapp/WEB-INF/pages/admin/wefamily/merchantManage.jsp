@@ -84,7 +84,7 @@
 
     window.onload = function(){
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('销售服务');
         var integerFeeTds = $('.integerFee');
         for(var i=0; i<integerFeeTds.length; i++){
             integerFeeTds[i].innerText = (integerFeeTds[i].innerText*1).toFixed(2);
