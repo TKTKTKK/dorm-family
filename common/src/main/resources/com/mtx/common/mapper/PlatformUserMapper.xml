@@ -145,25 +145,22 @@
         and uc.communityid =  #{communityid};
     </select>
 
-    <select id="selectWorkersByCommunityId" resultMap="selectResultMap">
+    <select id="selectWorkersByMerchantId" resultMap="selectResultMap">
         select pu.*
-        from tb_platform_user pu ,tb_platform_user_role ur, tb_platform_role pr,tb_wp_user_com uc
-        where pu.bindid = #{bindid}
-        and   uc.communityid = #{communityid}
-        and   uc.userid = pu.uuid
+        from tb_platform_user pu ,tb_platform_user_role ur, tb_platform_role pr,tb_mtx_user_merchant um
+        where um.merchantid = #{merchantId}
+        and   um.userid = pu.uuid
         and   pu.uuid = ur.userid
         and   ur.roleid = pr.uuid
-        and   ((#{repairbpm} = 'Y' and pr.rolekey in ('WP_REPAIR_WORKER', 'RE_REPAIR_DIRECTOR', 'RE_REPAIR_WORKER', 'WP_REPAIR_DIRECTOR'))
-              or  (#{repairbpm} = 'S' and pr.rolekey in ('WP_REPAIR_WORKER', 'RECEPTION')))
+        and   pr.rolekey = 'MTX_REPAIR_WORKER'
+
         union
         select pu.*
         from tb_platform_user pu ,tb_platform_user_role ur, tb_platform_role pr
-        where pu.bindid = #{bindid}
-        and   pu.uuid = ur.userid
+        where pu.uuid = ur.userid
         and   ur.roleid = pr.uuid
-        and   ((#{repairbpm} = 'Y' and pr.rolekey in ('WP_REPAIR_WORKER', 'RE_REPAIR_DIRECTOR', 'RE_REPAIR_WORKER', 'WP_REPAIR_DIRECTOR'))
-              or  (#{repairbpm} = 'S' and pr.rolekey in ('WP_REPAIR_WORKER', 'RECEPTION')))
-        and   not exists (select uc.userid from tb_wp_user_com uc where uc.userid = pu.uuid);
+        and   pr.rolekey = 'MTX_REPAIR_WORKER'
+        and   not exists (select um.userid from tb_mtx_user_merchant um where um.userid = pu.uuid);
     </select>
 
     <select id="selectNormalRepairWorkersStatistic" resultMap="selectResultMap">

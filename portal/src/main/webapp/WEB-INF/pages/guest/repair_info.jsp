@@ -83,6 +83,26 @@
               action="${ctx}/guest/repair_info" method="POST"
               enctype="multipart/form-data" id="frm">
             <ul class="list">
+                <li>
+                    <span>机器型号<a class="dataRequired">*</a></span>
+                    <input type="text" id="machinemodel" name="machinemodel" value="${repair.machinemodel}"
+                           data-required="true" placeholder="请填写机器型号" data-maxlength="32"/>
+                </li>
+                <li>
+                    <span>机器号<a class="dataRequired">*</a></span>
+                    <input type="text" id="machineno" name="machineno" value="${repair.machineno}"
+                           data-required="true" placeholder="请填写机器号" data-maxlength="32"/>
+                </li>
+                <li>
+                    <span>发动机号<a class="dataRequired">*</a></span>
+                    <input type="text" id="engineno" name="engineno" value="${repair.engineno}"
+                           data-required="true" placeholder="请填写发动机号" data-maxlength="32"/>
+                </li>
+                <li>
+                    <span>生产日期<a class="dataRequired">*</a></span>
+                    <input class="Wdate" type="text" name="productiondt" id="productiondt" value="${repair.productiondt}" onClick="WdatePicker()"
+                           data-required="true" placeholder="请选择生产日期" data-maxlength="23">
+                </li>
                 <li style="display: flex;display: -webkit-flex;">
                     <span style="vertical-align: middle;">问题描述<a class="dataRequired">*</a></span>
                     <textarea rows="4" name="content" id="content" data-maxlength="256"
@@ -95,7 +115,12 @@
                     <div class="my-display-inline-box">
                         <div id="repairImgContainer" class="row value">
                             <c:forEach items="${attachmentList}" var="attachment">
-                                <img src="${attachment.name}" alt="" style="margin-top: 3px;margin-left: 10px" onclick="viewBigImageForUpload(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image">
+                                <%--<img src="${attachment.name}" alt="" style="margin-top: 3px;margin-left: 10px" onclick="viewBigImageForUpload(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image">--%>
+                                <a class="swipebox" href= "${attachment.name}" onclick="reviewMediaShow(this)">
+                                    <img style="width:50px;height: 50px;margin-right:10px;"
+                                    src="${attachment.name}" alt="Bottle Closeup"/>
+                                </a>
+
                             </c:forEach>
                         </div>
                         <c:if test="${fn:length(attachmentList) < 4}">
@@ -148,8 +173,10 @@
 
 <script src="${ctx}/static/admin/js/lrz/dist/lrz.bundle.js"></script>
 <script type="text/javascript" src="${ctx}/static/admin/geo.js"></script>
+    <script src="${ctx}/static/admin/js/calendar/WdatePicker.js"></script>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script type="text/javascript" src="${ctx}/static/admin/js/myScript.js"></script>
+<script type="text/javascript" src="${ctx}/static/js/reviewMediaJquery.swipebox.js"></script>
 <script type="text/javascript">
 
     var errorMessage = document.getElementById("errorMessage");
@@ -190,6 +217,12 @@
             compressUploadPicture(document.getElementById("repairImg"));
         }
     });
+
+    function reviewMediaShow(obj){
+        var reviewMediaClass = $(obj).attr("class");
+        $( '#'+reviewMediaClass+'' ).swipebox();
+    }
+    $( '#swipebox-video' ).swipebox();
 
 
 

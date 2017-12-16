@@ -117,11 +117,11 @@
                     <input class="Wdate" type="text" name="productiondt" id="productiondt" value="${repair.productiondt}" onClick="WdatePicker()"
                            data-required="true" placeholder="请选择生产日期" data-maxlength="23">
                 </li>
-                <%--<li>
-                    <span>问题描述</span>
+                <li style="display: flex;display: -webkit-flex;">
+                    <span style="vertical-align: middle;">问题描述</span>
                     <textarea rows="4" name="content" id="content" data-maxlength="256"
-                              style=" width: 18rem;float: right;margin-bottom: 10px;" readonly>${repair.content}</textarea>
-                </li>--%>
+                              style=" width: 16rem;vertical-align: middle;text-align: right" readonly>${repair.content}</textarea>
+                </li>
                 <li>
                     <div class="my-display-inline-box">
                         <div id="reporterImgContainer" class="row value">
@@ -211,15 +211,14 @@
                            data-required="true" data-maxlength="32">
                 </li>
                 <li>
-                    <span>用户地址</span>
+                    <span>现场地点</span>
                     <input type="text" placeholder="请填写用户地址" name="location" id="location" value="${repair.location}" data-maxlength="32">
                     <%--<img src="../../../../static/admin/img/location.png" alt="" style="width: 2rem;height: 2rem">--%>
                 </li>
                 <li>
                     <span>已作业面积</span>
-                    <input name="workarea" id="workarea" value="${repair.workarea}"
-                           data-maxlength="10" onblur="validateNum(this,'workareaError')" placeholder="请填写已作业面积">
-                    <span id="workareaError" class="text-danger" style="float: right;color: red;font-size: 1.2rem;"></span>
+                    <input type="text" name="workarea" id="workarea" value="${repair.workarea}"
+                           data-maxlength="20" onblur="trimText(this)" placeholder="请填写已作业面积">
                 </li>
                 <li>
                     <span>效果如何</span>
@@ -238,8 +237,8 @@
                 </li>
                 <li>
                     <span>到达所用时间</span>
-                    <input data-type="digits" name="arrivetime" value="${repair.arrivetime}"
-                           data-maxlength="5" data-min="1" id="arrivetime" placeholder="请填写到达所用时间"
+                    <input type="text" name="arrivetime" value="${repair.arrivetime}"
+                           data-maxlength="20"  onblur="trimText(this)" id="arrivetime" placeholder="请填写到达所用时间"
                     >
                 </li>
                 <li>
@@ -249,8 +248,8 @@
                 </li>
                 <li>
                     <span>收费金额</span>
-                    <input name="price" id="price" value="${repair.price}" size="22"
-                           data-maxlength="10" onblur="validateNum(this,'priceError')" placeholder="请填写收费金额">
+                    <input name="price" id="price" value="${repair.price}" size="24"
+                           data-maxlength="10" onblur="validateMoney(this,'priceError')" placeholder="请填写收费金额">
                     <span id="priceError" class="text-danger" style="float: right;color: red;font-size: 1.2rem;"></span>
                 </li>
                 <li>
@@ -262,6 +261,11 @@
                             <option value="${commonCode.code}" <c:if test="${repair.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                         </c:forEach>
                     </select>
+                </li>
+                <li style="display: flex;display: -webkit-flex;">
+                    <span style="vertical-align: middle;">备注</span>
+                    <textarea rows="4" name="remarks" id="remarks" data-maxlength="256"
+                              style=" width: 16rem;vertical-align: middle;text-align: right">${repair.remarks}</textarea>
                 </li>
                 <li style="border: 0">
                     <span>上传图片</span>
@@ -339,28 +343,6 @@
             var searchForm = document.getElementById("frm");
             searchForm.submit();
         }
-    }
-
-    //检查数字合法性
-    function validateNum(obj, errorId){
-        var errorObj = document.getElementById(errorId);
-        errorObj.innerHTML = "";
-
-        trimText(obj);
-        if(obj.value.length > 0){
-            var numRule = /^\d+(\.\d+)?$/;
-            console.log(obj.value.length > 0 && (!(numRule.test(obj.value)) || obj.value*1 < 0));
-            if(obj.value.length > 0 && (!(numRule.test(obj.value)) || obj.value*1 < 0)){
-                if(obj.id == "workarea"){
-                    errorObj.innerText = "输入面积非法";
-                }else if(obj.id == "price"){
-                    errorObj.innerText = "输入金额非法";
-                }
-                return false;
-            }
-            formatMoney(obj);
-        }
-        return true;
     }
 
 

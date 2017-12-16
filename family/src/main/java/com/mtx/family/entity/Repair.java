@@ -34,13 +34,13 @@ public class Repair extends BaseEntity {
     @Column
     private Double price;
     @Column
-    private Double workarea;
+    private String workarea;
     @Column
     private String effect;
     @Column
     private String damagecategory;
     @Column
-    private Integer arrivetime;
+    private String arrivetime;
     @Column
     private String merchantid;
     @Column
@@ -145,11 +145,11 @@ public class Repair extends BaseEntity {
         this.price = price;
     }
 
-    public Double getWorkarea() {
+    public String getWorkarea() {
         return workarea;
     }
 
-    public void setWorkarea(Double workarea) {
+    public void setWorkarea(String workarea) {
         this.workarea = workarea;
     }
 
@@ -169,11 +169,11 @@ public class Repair extends BaseEntity {
         this.damagecategory = damagecategory;
     }
 
-    public Integer getArrivetime() {
+    public String getArrivetime() {
         return arrivetime;
     }
 
-    public void setArrivetime(Integer arrivetime) {
+    public void setArrivetime(String arrivetime) {
         this.arrivetime = arrivetime;
     }
 

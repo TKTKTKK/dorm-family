@@ -14,7 +14,7 @@ public class RepairWorker extends BaseEntity {
     @Column
     private String repairid;
     @Column
-    private String openid;
+    private String userid;
     @Column
     private String name;
     @Column
@@ -28,12 +28,12 @@ public class RepairWorker extends BaseEntity {
         this.repairid = repairid;
     }
 
-    public String getOpenid() {
-        return openid;
+    public String getUserid() {
+        return userid;
     }
 
-    public void setOpenid(String openid) {
-        this.openid = openid;
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 
     public String getName() {

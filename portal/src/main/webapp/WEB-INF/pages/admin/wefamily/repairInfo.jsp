@@ -57,6 +57,10 @@
             padding: 15px;
             margin: 0;
         }
+        .panel-body .form-group .col-sm-9 {
+            padding: 10px;
+            margin: 0;
+        }
 
         .dropdown > .dropdown-menu:after {
             position: absolute;
@@ -296,7 +300,7 @@
                                                                 <div class="panel-body p-0-15">
                                                                     <span id="machineError" class="text-danger"></span>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>报修人：</label>
+                                                                        <label class="col-sm-3 control-label"><span class="text-danger">*</span>报修人：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
                                                                             <input type="text" class="form-control"  name="reportername" id="reportername"
                                                                                    value="${repair.reportername}" data-required="true" onblur="trimText(this)"
@@ -307,7 +311,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>联系电话：</label>
+                                                                        <label class="col-sm-3 control-label"><span class="text-danger">*</span>联系电话：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
                                                                             <input type="text" class="form-control"  name="reporterphone" id="reporterphone"
                                                                                    value="${repair.reporterphone}" data-required="true" onblur="trimText(this),validateContactno('reporter')"
@@ -317,7 +321,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>机器型号：</label>
+                                                                        <label class="col-sm-3 control-label"><span class="text-danger">*</span>机器型号：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
                                                                             <input type="text" class="form-control"  name="machinemodel" id="machinemodel"
                                                                                    value="${repair.machinemodel}" data-required="true" onblur="trimText(this)"
@@ -326,7 +330,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>机器号：</label>
+                                                                        <label class="col-sm-3 control-label"><span class="text-danger">*</span>机器号：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
                                                                             <div class="" style="position: relative">
                                                                                 <input type="text" class="form-control my-feetype-ul"  name="machineno" id="machineno"
@@ -338,7 +342,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>发动机号：</label>
+                                                                        <label class="col-sm-3 control-label"><span class="text-danger">*</span>发动机号：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
                                                                             <input type="text" class="form-control"  name="engineno" id="engineno"
                                                                                    value="${repair.engineno}" data-required="true" onblur="trimText(this)"
@@ -347,11 +351,38 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>生产日期：</label>
+                                                                        <label class="col-sm-3 control-label"><span class="text-danger">*</span>生产日期：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
                                                                             <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
                                                                                    name="productiondt" value="${repair.productiondt}" data-maxlength="23" onblur="trimText(this)"
                                                                                    data-date-format="yyyy-mm-dd" id="productiondt" placeholder="请选择生产日期" data-required="true">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-3 control-label"><span class="text-danger">*</span>经销商：</label>
+                                                                        <div class="col-sm-9  b-l bg-white">
+                                                                            <input type="text" class="form-control" readonly
+                                                                                   value="${merchant.name}" data-required="true"
+                                                                                   data-maxlength="32"
+                                                                            >
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-3 control-label"><span class="text-danger">*</span>联系电话：</label>
+                                                                        <div class="col-sm-9  b-l bg-white">
+                                                                            <input type="text" class="form-control" readonly
+                                                                                   value="${merchant.contactno}" data-required="true" onblur="trimText(this)"
+                                                                                   data-maxlength="32"
+                                                                            >
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-3 control-label"><span class="text-danger">*</span>地址：</label>
+                                                                        <div class="col-sm-9  b-l bg-white">
+                                                                            <input type="text" class="form-control" readonly
+                                                                                   value="${merchant.address}" data-required="true"
+                                                                                   data-maxlength="32"
+                                                                            >
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
@@ -373,9 +404,20 @@
                                                                             </div>
                                                                         </div>
                                                                     </c:if>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-3  control-label">备注：</label>
+                                                                        <div class="col-sm-9 b-l bg-white">
+                                                                                <textarea class="form-control" rows="4" name="remarks"
+                                                                                          id="remarks" data-maxlength="256" onblur="trimText(this)"
+                                                                                >${repair.remarks}</textarea>
+                                                                            <span id="remarksError" class="text-danger"></span>
+                                                                        </div>
+                                                                    </div>
 
                                                                     <div class="panel-footer text-left bg-light lter">
                                                                         <a class="btn btn-primary btn-info" href="javascript:saveReportRepairInfo()" style="color: white;margin-left: 10px;margin-bottom: 10px">保存</a>
+                                                                        <a class="btn btn-primary btn-info" href="javascript:distributeRepair()" style="color: white;margin-left: 10px;margin-bottom: 10px">分配报修</a>
+                                                                        <a class="btn btn-primary btn-info" href="javascript:closeRepair()" style="color: white;margin-left: 10px;margin-bottom: 10px">关闭报修</a>
                                                                     </div>
 
                                                                 </div>
@@ -387,30 +429,6 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <!--经销商信息-->
-                                                <c:if test="${not empty merchant}">
-                                                    <div class="portlet red-sunglo box">
-                                                        <div class="portlet-title">
-                                                            <div class="caption"><i class="fa fa-cogs"></i>经销商信息</div>
-                                                        </div>
-                                                        <div class="portlet-body">
-                                                            <div class="row static-info">
-                                                                <div class="col-md-2 col-xs-4 name detail-div">经销商:</div>
-                                                                <div class="col-md-4 col-xs-8 value detail-div" >${merchant.name}</div>
-
-                                                                <div class="col-md-2 col-xs-4 name detail-div">联系电话:</div>
-                                                                <div class="col-md-4 col-xs-8 value detail-div" >${merchant.contactno}</div>
-                                                            </div>
-                                                            <div class="row static-info">
-                                                                <div class="col-md-2 col-xs-4 name detail-div">地址:</div>
-                                                                <div class="col-md-4 col-xs-8 value detail-div" >${merchant.address}</div>
-                                                            </div>
-                                                            <c:if test="${repair.status == 'NEW'}">
-                                                                <a class="btn btn-sm btn-danger" href="javascript:distributeRepair()" style="color: white;margin-left: 10px;margin-bottom: 10px">分配报修</a>
-                                                            </c:if>
-                                                        </div>
-                                                    </div>
-                                                </c:if>
                                                 <!--维修信息-->
                                                 <c:if test="${order.status ne 'NEW'}">
                                                     <div class="portlet blue-hoki box">
@@ -424,26 +442,20 @@
                                                                       enctype="multipart/form-data" id="repairInfoFrm" style="border: 0px">
                                                                     <div class="panel-body p-0-15">
                                                                         <div class="form-group">
-                                                                            <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>维修人员：</label>
+                                                                            <label class="col-sm-3 control-label"><span class="text-danger">*</span>维修人员：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
-                                                                                <input type="text" class="form-control"  name="workername" id="workername"
-                                                                                       value="${repairWorkerList[0].name}" data-required="true" onblur="trimText(this)"
-                                                                                       placeholder="请输入维修工姓名" data-maxlength="20"
-                                                                                >
+                                                                                <select  class="form-control" name="workerId" id="workerId" data-required="true">
+                                                                                    <c:if test="${fn:length(repairWorkerList) > 1}">
+                                                                                        <option value="">请选择</option>
+                                                                                    </c:if>
+                                                                                    <c:forEach items="${repairWorkerList}" var="repairWorker">
+                                                                                            <option value="${repairWorker.uuid}" <c:if test="${repairWorker.uuid == workerUser.uuid}">selected</c:if>>${repairWorker.name}</option>
+                                                                                    </c:forEach>
+                                                                                </select>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label class="col-sm-3 control-label" style="margin-top: 7px"><span class="text-danger">*</span>联系号码：</label>
-                                                                            <div class="col-sm-9  b-l bg-white">
-                                                                                <input type="text" class="form-control"  name="workerphone" id="workerphone"
-                                                                                       value="${repairWorkerList[0].phone}" data-required="true" onblur="trimText(this),validateContactno('worker')"
-                                                                                       placeholder="请输入联系号码" data-maxlength="11"
-                                                                                >
-                                                                                <span id="workerPhoneError" class="text-danger"></span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label class="col-sm-3 control-label" style="margin-top: 7px">维修日期：</label>
+                                                                            <label class="col-sm-3 control-label">维修日期：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
                                                                                 <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
                                                                                        name="repairdt" value="${repair.repairdt}" data-maxlength="23" onblur="trimText(this)"
@@ -451,20 +463,95 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label class="col-sm-3 control-label" style="margin-top: 7px">现场地点：</label>
+                                                                            <label class="col-sm-3 control-label">现场地点：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
                                                                                 <input type="text" class="form-control"  name="location" id="location"
                                                                                        value="${repair.location}" onblur="trimText(this)"
-                                                                                       placeholder="请输入现场地点" data-maxlength="32"
+                                                                                       data-maxlength="32" readonly
                                                                                 >
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label class="col-sm-3  control-label">备注：</label>
-                                                                            <div class="col-sm-9 b-l bg-white">
-                                                                                <textarea class="form-control" rows="4" name="remarks"
-                                                                                          id="remarks" data-maxlength="256" onblur="trimText(this)"
-                                                                                >${repair.remarks}</textarea>
+                                                                            <label class="col-sm-3 control-label">损坏项目：</label>
+                                                                            <div class="col-sm-9  b-l bg-white">
+                                                                                <input type="text" class="form-control"  name="program" id="program"
+                                                                                       value="${repair.program}" onblur="trimText(this)"
+                                                                                       placeholder="请输入损坏项目" data-maxlength="32"
+                                                                                >
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-3 control-label">处理配件：</label>
+                                                                            <div class="col-sm-9  b-l bg-white">
+                                                                                <input type="text" class="form-control"  name="parts" id="parts"
+                                                                                       value="${repair.parts}" onblur="trimText(this)"
+                                                                                       placeholder="请输入处理配件" data-maxlength="32"
+                                                                                >
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-3 control-label">已作业面积：</label>
+                                                                            <div class="col-sm-9  b-l bg-white">
+                                                                                <input type="text" class="form-control"  name="workarea" id="workarea"
+                                                                                       value="${repair.workarea}" onblur="trimText(this)"
+                                                                                       placeholder="请输入已作业面积" data-maxlength="32"
+                                                                                >
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-3 control-label">效果如何：</label>
+                                                                            <div class="col-sm-9  b-l bg-white">
+                                                                                <input type="text" class="form-control"  name="effect" id="effect"
+                                                                                       value="${repair.effect}" onblur="trimText(this)"
+                                                                                       placeholder="请输入效果" data-maxlength="32"
+                                                                                >
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group" >
+                                                                            <label class="col-sm-3 control-label"><span class="text-danger">*</span>损坏分类：</label>
+                                                                            <div class="col-sm-9  b-l bg-white">
+                                                                                <select  class="form-control" name="damagecategory" id="damagecategory"
+                                                                                         data-required="true">
+                                                                                    <c:set var="commonCodeList" value="${web:queryCommonCodeList('DAMAGE_CATEGORY')}"></c:set>
+                                                                                    <option value="">--请选择--</option>
+                                                                                    <c:forEach items="${commonCodeList}" var="commonCode">
+                                                                                        <option value="${commonCode.code}" <c:if test="${repair.damagecategory == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                                                                    </c:forEach>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-3 control-label">到达所用时间：</label>
+                                                                            <div class="col-sm-9  b-l bg-white">
+                                                                                <input type="text" class="form-control"  name="arrivetime" id="arrivetime"
+                                                                                       value="${repair.arrivetime}" onblur="trimText(this)"
+                                                                                       placeholder="请输入到达所用时间" data-maxlength="32"
+                                                                                >
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-3 control-label"><span class="text-danger">*</span>维修金额：</label>
+                                                                            <div class="col-sm-9  b-l bg-white">
+                                                                                    <input class="form-control myFee" size="4"
+                                                                                           data-required="true"
+                                                                                           name="price"
+                                                                                           value="${repair.price}" id="price"
+                                                                                           data-maxlength="10"
+                                                                                           onblur="validateMoney(this,'priceError')"
+                                                                                    >
+                                                                                    <span id="priceError" class="text-danger"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group" >
+                                                                            <label class="col-sm-3 control-label">用户评价：</label>
+                                                                            <div class="col-sm-9  b-l bg-white">
+                                                                                <select  class="form-control" name="evaluate" id="evaluate">
+                                                                                    <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
+                                                                                    <option value="">--请选择--</option>
+                                                                                    <c:forEach items="${commonCodeList}" var="commonCode">
+                                                                                        <option value="${commonCode.code}" <c:if test="${repair.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                                                                    </c:forEach>
+                                                                                </select>
                                                                             </div>
                                                                         </div>
                                                                         <c:if test="${repair.status ne 'FINISH'}">
@@ -607,7 +694,7 @@
 
     function saveRepairInfo(saveType){
         $("#repairInfoFrm").parsley("validate");
-        if($('#repairInfoFrm').parsley().isValid() && validateContactno()){
+        if($('#repairInfoFrm').parsley().isValid()){
             $.ajax({
                 cache: true,
                 type: "POST",
@@ -629,7 +716,7 @@
     }
 
     function distributeRepair(){
-        $.get("${ctx}/admin/wefamily/distributeRepair?repairId=${repair.uuid}&versionno=${repair.versionno}",function(data,status){
+        $.get("${ctx}/admin/wefamily/distributeRepair?repairId=${repair.uuid}&merchantId=${merchant.uuid}&versionno=${repair.versionno}",function(data,status){
             if(undefined != data.distributeFlag){
                 window.location.href = "<%=request.getContextPath()%>/admin/wefamily/repairInfo?repairId=${repair.uuid}&distributeFlag="+data.distributeFlag;
             }
@@ -658,22 +745,38 @@
         }
     }
 
+    function closeRepair(){
+        var remarksError = document.getElementById('remarksError');
+        remarksError.innerHTML = "";
+        var remarks=document.getElementById("remarks").value;
+        if(null == remarks || remarks == ""){
+            remarksError.innerHTML = "此项关闭时必填";
+        }else{
+            $("#reportRepairInfoFrm").parsley("validate");
+            if($('#reportRepairInfoFrm').parsley().isValid() && validateContactno()){
+                if(confirm('确定关闭维修？')){
+                    //确定
+                    $.get("${ctx}/admin/wefamily/finishRepair?repairId=${repair.uuid}&versionno=${repair.versionno}",function(data,status){
+                        if(undefined != data.finishFlag){
+                            window.location.href = "<%=request.getContextPath()%>/admin/wefamily/repairInfo?repairId=${repair.uuid}&finishFlag="+data.finishFlag;
+                        }
+                    });
+                }
+            }
+        }
+    }
+
 
     //验证联系号码
     function validateContactno(type){
         if(type == 'reporter'){
             var phoneno = $('#reporterphone').val();
             document.getElementById("reporterPhoneError").innerHTML = "";
-        }else{
-            var phoneno = $('#workerphone').val();
-            document.getElementById("workerPhoneError").innerHTML = "";
         }
         var rule = /^\d*-?\d*$/;
         if(!rule.test(phoneno) || phoneno.length > 11){
             if(type == 'reporter'){
                 document.getElementById("reporterPhoneError").innerHTML = "号码格式不正确";
-            }else{
-                document.getElementById("workerPhoneError").innerHTML = "号码格式不正确";
             }
             return false;
         }

@@ -61,6 +61,7 @@
         where me.machinemodel = #{machine.machinemodel}
         and me.machineno = #{machine.machineno}
         and me.engineno = #{machine.engineno}
+        and me.type = 'MACHINE'
     </select>
 
 </mapper>

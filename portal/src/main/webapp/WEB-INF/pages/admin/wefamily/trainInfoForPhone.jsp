@@ -81,10 +81,15 @@
         <img src="../../../static/guest/img/sao.png" alt="">
     </div>
 
+    <div class="b-l b-r" style="padding-left: 1.25rem">
+        <span class="text-success">${successMessage}</span>
+        <span class="text-danger">${errorMessage}</span>
+    </div>
+
         <form class="form-horizontal" data-validate="parsley"
               action="${ctx}/admin/wefamily/trainInfoForPhone" method="POST"
               enctype="multipart/form-data" id="frm">
-            <div class="goal_total">
+            <div class="goal_total" style="margin-top: 0px">
                 <a href="javaScript:enableUl('machineUl','machineListImg')">
                     <span>主机信息</span>
                     <img src="../../../../static/guest/img/list.png" alt="" id="machineListImg" class="up">
@@ -97,14 +102,14 @@
                            data-required="true" placeholder="请填写机器型号" data-maxlength="32"/>
                 </li>
                 <li>
-                    <span>发动机号<a class="dataRequired">*</a></span>
-                    <input type="text" id="engineno" name="engineno" value="${train.engineno}"
-                           data-required="true" placeholder="请填写发动机号" data-maxlength="32"/>
-                </li>
-                <li>
                     <span>机器号<a class="dataRequired">*</a></span>
                     <input type="text" id="machineno" name="machineno" value="${train.machineno}"
                            data-required="true" placeholder="请填写机器号" data-maxlength="32"/>
+                </li>
+                <li>
+                    <span>发动机号<a class="dataRequired">*</a></span>
+                    <input type="text" id="engineno" name="engineno" value="${train.engineno}"
+                           data-required="true" placeholder="请填写发动机号" data-maxlength="32"/>
                 </li>
                 <li>
                     <span>生产日期<a class="dataRequired">*</a></span>

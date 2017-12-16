@@ -30,11 +30,6 @@ public interface PlatformUserMapper extends BaseMapper<PlatformUser> {
 
     List<PlatformUser> selectManagersByCurrentCommunityid(@Param("communityid")String communityid, @Param("bindid")String bindid);
 
-    PageList<PlatformUser> selectWorkersByCommunityId(@Param("communityid")String communityid,
-                                                              @Param("bindid")String bindid,
-                                                              @Param("repairbpm")String repairbpm,
-                                                              PageBounds pageBounds);
-
     PageList<PlatformUser> selectNormalRepairWorkersStatistic(@Param("communityid")String communityid,
                                                               @Param("bindid")String bindid,
                                                               PageBounds pageBounds);
@@ -46,4 +41,6 @@ public interface PlatformUserMapper extends BaseMapper<PlatformUser> {
     List<String> selectPlatformUserTitleDropdownList(@Param("bindId") String bindId,@Param("platformUserTitle") String platformUserTitle);
 
     List<PlatformUser> selectExpressCreatePerson(@Param("bindId") String bindId,@Param("communityId") String communityId);
+
+    List<PlatformUser> selectWorkersByMerchantId(@Param("merchantId") String merchantId);
 }

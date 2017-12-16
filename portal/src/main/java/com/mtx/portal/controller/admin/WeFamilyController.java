@@ -4,9 +4,11 @@ import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.entity.Attachment;
 import com.mtx.common.entity.CommonCode;
+import com.mtx.common.entity.PlatformUser;
 import com.mtx.common.exception.ServiceException;
 import com.mtx.common.service.AttachmentService;
 import com.mtx.common.service.CommonCodeService;
+import com.mtx.common.service.PlatformUserService;
 import com.mtx.common.service.SequenceService;
 import com.mtx.common.utils.DateUtils;
 import com.mtx.common.utils.StringUtils;
@@ -83,6 +85,8 @@ public class WeFamilyController extends BaseAdminController {
     private RepairService repairService;
     @Autowired
     private RepairWorkerService repairWorkerService;
+    @Autowired
+    private PlatformUserService platformUserService;
 
     /**
      * 经销商管理界面
@@ -1262,6 +1266,7 @@ public class WeFamilyController extends BaseAdminController {
     @RequestMapping(value = "/trainManageForPhone")
     public String trainManageForPhone(Model model) {
         Train train = new Train();
+        train.setCreateby(UserUtils.getUserId());
         List<Train> trainList = trainService.queryTrainListForPhone(train);
         model.addAttribute("trainList",trainList);
         return "admin/wefamily/trainManageForPhone";
@@ -1294,6 +1299,14 @@ public class WeFamilyController extends BaseAdminController {
             attachment.setRefid(trainId);
             List<Attachment> attachmentList = attachmentService.queryForList(attachment);
             model.addAttribute("attachmentList",attachmentList);
+
+            //培训完成结果
+            String finishFlag = request.getParameter("finishFlag");
+            if("1".equals(finishFlag)){
+                model.addAttribute("successMessage", "培训已完成");
+            }else if("0".equals(finishFlag)){
+                model.addAttribute("errorMessage", "操作失败");
+            }
         }
 
         return "admin/wefamily/trainInfoForPhone";
@@ -1423,6 +1436,16 @@ public class WeFamilyController extends BaseAdminController {
                 merchant.setUuid(repair.getMerchantid());
                 merchant = merchantService.queryForObjectByPk(merchant);
                 model.addAttribute("merchant",merchant);
+
+                List<PlatformUser> repairWorkerList = platformUserService.queryWorkersByMerchantId(merchant.getUuid());
+                model.addAttribute("repairWorkerList",repairWorkerList);
+            }else{
+                Machine machine = new Machine();
+                machine.setMachinemodel(repair.getMachinemodel());
+                machine.setMachineno(repair.getMachineno());
+                machine.setEngineno(repair.getEngineno());
+                Merchant merchant = merchantService.queryMerchantByMachineInfo(machine);
+                model.addAttribute("merchant",merchant);
             }
 
             Attachment reporterAttachment = new Attachment();
@@ -1437,10 +1460,6 @@ public class WeFamilyController extends BaseAdminController {
             List<Attachment> workerAttachmentList = attachmentService.queryForList(workerAttachment);
             model.addAttribute("workerAttachmentList",workerAttachmentList);
 
-            RepairWorker repairWorker = new RepairWorker();
-            repairWorker.setRepairid(repairId);
-            List<RepairWorker> repairWorkerList = repairWorkerService.queryForList(repairWorker);
-            model.addAttribute("repairWorkerList",repairWorkerList);
         }
 
         model.addAttribute("successMessage",request.getParameter("successMessage"));
@@ -1490,10 +1509,12 @@ public class WeFamilyController extends BaseAdminController {
     public Map<String, Object> distributeRepair(HttpServletRequest request){
         int distributeFlag = 0;
         String repairId = request.getParameter("repairId");
+        String merchantId = request.getParameter("merchantId");
         String versionno = request.getParameter("versionno");
         if(StringUtils.isNotBlank(repairId)){
             Repair repair = new Repair();
             repair.setUuid(repairId);
+            repair.setMerchantid(merchantId);
             repair.setVersionno(Integer.valueOf(versionno));
             distributeFlag = repairService.distributeRepair(repair);
         }
@@ -1527,7 +1548,7 @@ public class WeFamilyController extends BaseAdminController {
      */
     @RequestMapping(value = "/saveRepairInfo",method= RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> saveRepairInfo(Repair repair,HttpServletRequest request){
+    public Map<String,Object> saveRepairInfo(Repair repair,HttpServletRequest request,Model model){
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
         String repairId = request.getParameter("repairId");
@@ -1535,17 +1556,22 @@ public class WeFamilyController extends BaseAdminController {
         repair.setUuid(repairId);
         repair.setVersionno(Integer.valueOf(versionno));
 
-        String workername = request.getParameter("workername");
-        String workerphone = request.getParameter("workerphone");
+        String workerId = request.getParameter("workerId");
+        PlatformUser workerUser = platformUserService.getPlatformUserById(workerId);
+        model.addAttribute("workerUser",workerUser);
 
         RepairWorker repairWorker = new RepairWorker();
         repairWorker.setRepairid(repairId);
+        repairWorker.setUserid(workerUser.getUuid());
+
         List<RepairWorker> repairWorkerList = repairWorkerService.queryForList(repairWorker);
         if(null != repairWorkerList && repairWorkerList.size() > 0){
             repairWorker = repairWorkerList.get(0);
         }
-        repairWorker.setName(workername);
-        repairWorker.setPhone(workerphone);
+
+        repairWorker.setName(workerUser.getName());
+        repairWorker.setPhone(workerUser.getCellphone());
+
 
         String[] repairImgs = request.getParameterValues("repairImg");
 

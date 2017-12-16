@@ -33,8 +33,8 @@
                 <li>
                     <p>
                         <span>${repair.machinemodel}</span>
-                        <span>${web:getCodeDesc("REPAIR_STATUS",repair.status)}</span>
-                        <img src="../../../../static/guest/img/${repair.status}.png" alt="">
+                        <span>${repair.reportername}</span>
+                        <img src="../../../../static/guest/img/${fn:toLowerCase(repair.status)}.png" alt="">
                     </p>
                     <p><span class="time">${fn:substring(repair.createon, 0, 16)}</span></p>
                 </li>

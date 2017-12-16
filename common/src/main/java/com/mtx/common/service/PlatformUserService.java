@@ -195,14 +195,11 @@ public class PlatformUserService  extends BaseService<PlatformUserMapper,Platfor
     }
 
     /**
-     * 根据小区id查询工作人员
-     * @param bindId
-     * @param communityId
-     * @param pageBounds
+     * 根据经销商id查询维修人员
      * @return
      */
-    public PageList<PlatformUser> queryWorkersByCommunityId(String communityId, String bindId, String repairbpm, PageBounds pageBounds){
-        return mapper.selectWorkersByCommunityId(communityId, bindId, repairbpm, pageBounds);
+    public List<PlatformUser> queryWorkersByMerchantId(String merchantId){
+        return mapper.selectWorkersByMerchantId(merchantId);
     }
 
     /**
