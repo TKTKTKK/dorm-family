@@ -433,7 +433,7 @@ public class MtxGuestController extends BaseGuestController{
      * 积分兑换中心
      */
     @RequestMapping(value = "/good_exchange",method = RequestMethod.GET)
-    public String good_exchange(Model model) {
+    public String good_exchange(Model model,HttpServletRequest req) {
         MtxProduct product=new MtxProduct();
         product.setType("EXCHANGE_GOOD");
         product.setStatus("ON_SALE");
@@ -504,7 +504,7 @@ public class MtxGuestController extends BaseGuestController{
     }
 
     @RequestMapping(value = "/exchange",method = RequestMethod.POST)
-    public String exchange(MtxExchangeRecord mMtxExchangeRecord,MtxProduct product,Model model,HttpServletRequest req) {
+    public String exchange(MtxExchangeRecord mMtxExchangeRecord,MtxProduct product,Model model,HttpServletRequest req,RedirectAttributes redirectAttributes) {
         String message=null;
         WpUser user =new WpUser();
         String productid=req.getParameter("productid");
@@ -522,6 +522,7 @@ public class MtxGuestController extends BaseGuestController{
                 }
                 if(user.getPoints()>=allPoint){
                     mtxExchangeRecordService.addExchangeRecord(user.getUuid(),product.getUuid(),mMtxExchangeRecord);
+                    redirectAttributes.addFlashAttribute("successMessage", "恭喜,兑换成功!");
                 }else{
                     model.addAttribute("mMtxExchangeRecord",mMtxExchangeRecord);
                     message="积分不足，请重试！";
@@ -536,6 +537,6 @@ public class MtxGuestController extends BaseGuestController{
             model.addAttribute("message",message);
             return "guest/exchange";
         }
-        return "redirect:/guest/good_exchange_center";
+        return "redirect:/guest/good_exchange";
     }
 }

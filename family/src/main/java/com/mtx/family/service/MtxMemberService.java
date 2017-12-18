@@ -58,15 +58,16 @@ public class MtxMemberService {
                 userMachineTemp.setMachineid(machine.getUuid());
                 List<MtxUserMachine> userMachineTempList=mtxUserMachineService.queryForList(userMachineTemp);
                 if(userMachineTempList.size()<=0){
-                    product.setModel(machine.getMachinemodel());
-                    product = mtxProductService.queryForObjectByUniqueKey(product);
-                    if (product!=null) {
-                        wpUser.setPoints(product.getPoints());
-                        point.setPoints(product.getPoints());
-                        point.setName(machine.getMachinename());
-                        mtxPointService.insert(point);
-                        wpUserService.updatePartial(wpUser);
+                    int p=0;
+                    if(machine.getPrice()!=null){
+                        double price = machine.getPrice();
+                        p = (int) price;
                     }
+                    wpUser.setPoints(p);
+                    point.setPoints(p);
+                    point.setName(machine.getMachinename());
+                    mtxPointService.insert(point);
+                    wpUserService.updatePartial(wpUser);
                 }
                 mtxUserMachineService.insert(userMachine);
             }

@@ -242,7 +242,7 @@ public class WeFamilyController extends BaseAdminController {
         }
         if (StringUtils.isBlank(mtxProduct.getUuid())) {
             mtxProduct.setType("PRODUCT");
-            int p;
+            int p=0;
             if(mtxProduct.getPrice()!=null){
                 double price = mtxProduct.getPrice();
                 p = (int) price;

@@ -78,7 +78,7 @@ public class MachineService extends BaseService<MachineMapper,Machine> {
                         MtxPoint point =new MtxPoint();
                         point.setUserid(userid);
                         point.setName(machine.getMachinename());
-                        int p;
+                        int p=0;
                         double pp=machine.getPrice();
                         p=(int)pp;
                         point.setPoints(p);
