@@ -4,7 +4,7 @@ CREATE TABLE `tb_mtx_exchange_record` (
   `uuid` varchar(32) NOT NULL,
   `userid` varchar(32) NOT NULL,
   `productid` varchar(32) NOT NULL,
-  `count` int(11) DEFAULT NULL,
+  `count` smallint DEFAULT NULL,
   `address` varchar(90) DEFAULT NULL,
   `detail` varchar(256) DEFAULT NULL,
   `createon` varchar(23) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE `tb_mtx_exchange_record` (
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-INSERT INTO `tb_platform_permit` VALUES ('2017121610000001', 'MENU', '兑换记录管理', 'admin/wefamily/mtxExchangeRecordManage', '2015050510000011', '1111', 'APP', now(), 'sys', now(), 'sys', '1', 'N', '');
+INSERT INTO `tb_platform_permit` VALUES ('2017121610000001', 'MENU', '兑换记录', 'admin/wefamily/mtxExchangeRecordManage', '2017121210000002', '1111', 'APP', now(), 'sys', now(), 'sys', '1', 'N', '');
 
 
 alter table `tb_mtx_machine`  add column type varchar(15)  default null AFTER `standardpower`;
