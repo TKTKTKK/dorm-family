@@ -63,6 +63,8 @@ public class MtxGuestController extends BaseGuestController{
     private SequenceService sequenceService;
     @Autowired
     private AttachmentService attachmentService;
+    @Autowired
+    private MtxExchangeRecordService mtxExchangeRecordService;
 
 
     @RequestMapping(value = "/product_center")
@@ -100,21 +102,23 @@ public class MtxGuestController extends BaseGuestController{
         return "redirect:/guest/product_center";
     }
 
-    @RequestMapping(value = "/message")
+    @RequestMapping(value = "/message",method = RequestMethod.GET)
     public String enquiry(MtxConsultDetail mtxConsultDetail, String userid, Model model, HttpServletRequest request) {
-        if(StringUtils.isNotBlank(userid)){
-            MtxConsult mtxConsult=new MtxConsult();
-            mtxConsult.setUserid(userid);
-            List<MtxConsult> consultList=mtxConsultService.queryForList(mtxConsult);
-            if(consultList.size()==0){
-                model.addAttribute("userid",userid);
-            }else{
-                MtxConsult consult=consultList.get(0);
-                model.addAttribute("userid",consult.getUserid());
-                model.addAttribute("identify",consult.getIdentify());
-                model.addAttribute("flag","1");
-                mtxConsultDetail.setConsultid(consult.getUuid());
-            }
+        if(StringUtils.isBlank(userid)){
+            WpUser user=getWechatMemberInfo(request);
+            userid=user.getUuid();
+        }
+        MtxConsult mtxConsult=new MtxConsult();
+        mtxConsult.setUserid(userid);
+        List<MtxConsult> consultList=mtxConsultService.queryForList(mtxConsult);
+        if(consultList.size()==0){
+            model.addAttribute("userid",userid);
+        }else{
+            MtxConsult consult=consultList.get(0);
+            model.addAttribute("userid",consult.getUserid());
+            model.addAttribute("identify",consult.getIdentify());
+            model.addAttribute("flag","1");
+            mtxConsultDetail.setConsultid(consult.getUuid());
         }
         List<MtxConsultDetail> mtxConsultDetailList = mtxConsultDetailService.queryForListWithPagination(mtxConsultDetail);
         model.addAttribute("mtxConsultDetailList", mtxConsultDetailList);
@@ -360,7 +364,7 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 保养小视屏
      */
-    @RequestMapping(value = "/maintain",method = RequestMethod.GET)
+    @RequestMapping(value = "/video",method = RequestMethod.GET)
     public String maintain(Model model) {
         MtxVideo video=new MtxVideo();
         List<MtxVideo> videoList=mtxVideoService.queryForList(video);
@@ -497,5 +501,41 @@ public class MtxGuestController extends BaseGuestController{
         model.addAttribute("message",message);
         model.addAttribute("userid",userid);
         return "guest/parts_info";
+    }
+
+    @RequestMapping(value = "/exchange",method = RequestMethod.POST)
+    public String exchange(MtxExchangeRecord mMtxExchangeRecord,MtxProduct product,Model model,HttpServletRequest req) {
+        String message=null;
+        WpUser user =new WpUser();
+        String productid=req.getParameter("productid");
+        if(StringUtils.isNotBlank(productid)){
+            product.setUuid(productid);
+        }
+        user=getWechatMemberInfo(req);
+        product=mxtProductService.queryForObjectByPk(product);
+        if(product!=null){
+            if(user!=null){
+                int point=product.getPoints();
+                int allPoint=0;
+                if(mMtxExchangeRecord.getCount()>0){
+                    allPoint=mMtxExchangeRecord.getCount()*point;
+                }
+                if(user.getPoints()>=allPoint){
+                    mtxExchangeRecordService.addExchangeRecord(user.getUuid(),product.getUuid(),mMtxExchangeRecord);
+                }else{
+                    model.addAttribute("mMtxExchangeRecord",mMtxExchangeRecord);
+                    message="积分不足，请重试！";
+                    model.addAttribute("mtxProduct",product);
+                    model.addAttribute("message",message);
+                    return "guest/exchange";
+                }
+            }
+        }else{
+            model.addAttribute("mtxProduct",product);
+            message="该商品不存在！";
+            model.addAttribute("message",message);
+            return "guest/exchange";
+        }
+        return "redirect:/guest/good_exchange_center";
     }
 }

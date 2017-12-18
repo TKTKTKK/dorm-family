@@ -243,9 +243,11 @@ public class WeFamilyController extends BaseAdminController {
         if (StringUtils.isBlank(mtxProduct.getUuid())) {
             mtxProduct.setType("PRODUCT");
             int p;
-            double price = mtxProduct.getPrice();
-            p = (int) price;
-            mtxProduct.setPoints(p);
+            if(mtxProduct.getPrice()!=null){
+                double price = mtxProduct.getPrice();
+                p = (int) price;
+                mtxProduct.setPoints(p);
+            }
             mxtProductService.insert(mtxProduct);
             model.addAttribute("mtxProduct", mtxProduct);
             model.addAttribute("successMessage", "保存成功！");

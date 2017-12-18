@@ -25,7 +25,7 @@
                     <span class="text-danger">${errorMessage}</span>
                 </div>
                 <form class="form-horizontal form-bordered" data-validate="parsley"
-                      action="${ctx}/admin/wefamily/updateMtxGood" method="POST"
+                      action="" method="POST"
                       enctype="multipart/form-data" id="frm">
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
@@ -68,13 +68,15 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger"></span>图片：</label>
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>图片：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="file" name="imgfile" class="filestyle"  data-icon="false" data-classButton="btn btn-default"
+                                    <div id="imgStyle" style="width: 265px">
+                                    <input type="file" name="imgfile" class="filestyle" id="imgfile" data-icon="false" data-classButton="btn btn-default"
                                            data-classInput="form-control inline v-middle input-s"
                                            id="value"
-                                    >
-                                    <input type="text" class="hidden" name="img" value="${mtxProduct.img}">
+                                    ></div>
+                                    <span id="imgError" class="text-danger"></span>
+                                    <input type="text" class="hidden" name="img" id="img" value="${mtxProduct.img}">
                                     <div class="hidden" id="imgDiv" style="margin-top: 20px">
                                         <img src="${mtxProduct.img}" width="100" height="100"
                                              data-toggle="modal" data-target=".bs-example-modal-lg1"
@@ -119,9 +121,9 @@
                             </div>
                         </div>
                         <div class="panel-footer text-left bg-light lter">
-                            <button type="submit" class="btn btn-submit btn-s-xs ">
+                            <a onclick="submitForm()" class="btn btn-submit btn-s-xs ">
                                 <i class="fa fa-check"></i>&nbsp;提&nbsp;交
-                            </button>
+                            </a>
                         </div>
                     </section>
                     <div>
@@ -145,6 +147,28 @@
         showParentMenu('满田星');
         if(${mtxProduct.img!=null && mtxProduct.img!=''}){
             $('#imgDiv').removeClass('hidden');
+        }
+    }
+    function validImg(){
+        var imgError=document.getElementById("imgError");
+        imgError.innerHTML="";
+        var imgfile=$("#imgfile").val();
+        var img=$("#img").val();
+        if((imgfile==null||imgfile=='')&&(img==null||img=='')){
+            $("#imgStyle").css("border","1px solid red");
+            imgError.innerHTML="该项为必填项."
+            return false;
+        }else{
+            $("#imgStyle").css("border","none");
+            return true;
+        }
+    }
+    function submitForm(){
+        $("#frm").parsley("validate");
+        if($('#frm').parsley().isValid()&&validImg()){
+            var searchForm = document.getElementById("frm");
+            searchForm.action = "${ctx}/admin/wefamily/updateMtxGood";
+            searchForm.submit();
         }
     }
 </script>

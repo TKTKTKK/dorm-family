@@ -40,7 +40,7 @@
                                            data-maxlength="48"
                                            onblur="trimText(this)"
                                            value="${mtxProduct.model}">
-                                    <sapn id="modelError" class="text-danger"></sapn>
+                                    <span id="modelError" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -52,21 +52,7 @@
                                            value="${mtxProduct.name}">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-3 control-label"><span class="text-danger">*</span>价格：</div>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <div class="col-sm-8 col-xs-11" style="padding-left: 0">
-                                        <input class="form-control" type="text" name="price" value="${mtxProduct.price}"
-                                               id="price"
-                                               data-maxlength="10"
-                                               data-required="true"
-                                               onblur="validateMoney(this,'priceError')">
-                                        <div class="text-danger" id="priceError"></div>
-                                    </div>
-                                    <div class="col-sm-1 col-xs-1 my-unit money">元</div>
-                                    <div style="clear: both"></div>
-                                </div>
-                            </div>
+
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>状态：</label>
                                 <div class="col-sm-9 b-l bg-white">
@@ -85,13 +71,15 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger"></span>图片：</label>
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>图片：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="file" name="imgfile" class="filestyle"  data-icon="false" data-classButton="btn btn-default"
+                                    <div id="imgStyle" style="width: 265px">
+                                    <input type="file" name="imgfile" id="imgfile" class="filestyle"  data-icon="false" data-classButton="btn btn-default"
                                            data-classInput="form-control inline v-middle input-s"
                                            id="value"
-                                    >
-                                    <input type="text" class="hidden" name="img" value="${mtxProduct.img}">
+                                    ></div>
+                                    <span id="imgError" class="text-danger"></span>
+                                    <input type="text" class="hidden" name="img" id="img" value="${mtxProduct.img}">
                                     <div class="hidden" id="imgDiv" style="margin-top: 20px">
                                         <img src="${mtxProduct.img}" width="100" height="100"
                                              data-toggle="modal" data-target=".bs-example-modal-lg1"
@@ -118,6 +106,20 @@
                                             </div><!-- /.modal-content -->
                                         </div><!-- /.modal-dialog -->
                                     </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-3 control-label"><span class="text-danger"></span>价格：</div>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <div class="col-sm-8 col-xs-11" style="padding-left: 0">
+                                        <input class="form-control" type="text" name="price" value="${mtxProduct.price}"
+                                               id="price"
+                                               data-maxlength="10"
+                                               onblur="validateMoney(this,'priceError')">
+                                        <div class="text-danger" id="priceError"></div>
+                                    </div>
+                                    <div class="col-sm-1 col-xs-1 my-unit money">元</div>
+                                    <div style="clear: both"></div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -181,17 +183,34 @@
         });
 
     });
+    function validImg(){
+        var imgError=document.getElementById("imgError");
+        imgError.innerHTML="";
+        var imgfile=$("#imgfile").val();
+        var img=$("#img").val();
+        if((imgfile==null||imgfile=='')&&(img==null||img=='')){
+            imgError.innerHTML="该项为必填项."
+            return false;
+        }else{
+            return true;
+        }
+    }
     function validModelIsExist(){
         var modelError=document.getElementById("modelError");
         var uuid='${mtxProduct.uuid}';
         modelError.innerHTML="";
         var model=$("#model").val();
         if(model.length>0){
+            $("#imgStyle").css("border","none");
             $.post("${ctx}/admin/wefamily/validModelIsExist?model="+model+"&uuid="+uuid,function(data){
                 if(data){
-                    var searchForm = document.getElementById("frm");
-                    searchForm.action = "${ctx}/admin/wefamily/updateMtxProduct";
-                    searchForm.submit();
+                    if(validImg()){
+                        var searchForm = document.getElementById("frm");
+                        searchForm.action = "${ctx}/admin/wefamily/updateMtxProduct";
+                        searchForm.submit();
+                    }else{
+                        $("#imgStyle").css("border","1px solid red");
+                    }
                 }else{
                     modelError.innerHTML="此型号已存在，请换一个试试！"
                 }
