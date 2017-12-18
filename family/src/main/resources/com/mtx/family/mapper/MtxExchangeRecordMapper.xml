@@ -4,7 +4,19 @@
 
     <resultMap id="selectResultMap" type="com.mtx.family.entity.MtxExchangeRecord">
     </resultMap>
-    <select id="selecMtxExchangeRecordList" resultMap="selectResultMap">
 
+    <select id="selectMtxExchangeRecordList" resultMap="selectResultMap">
+        select mer.* ,wu.name as username,mp.name as productname
+        from tb_mtx_exchange_record mer
+        left join tb_wp_user wu on wu.uuid=mer.userid
+        left join tb_mtx_product mp on mp.uuid=mer.productid
+        where TRUE
+        <if test="mtxExchangeRecord.username != null and mtxExchangeRecord.username != ''">
+            and wu.name like concat("%", #{mtxExchangeRecord.username},"%")
+        </if>
+        <if test="mtxExchangeRecord.productname != null and mtxExchangeRecord.productname != ''">
+            and mp.name like concat("%", #{mtxExchangeRecord.productname},"%")
+        </if>
+        order by mer.createon,mer.userid desc;
     </select>
 </mapper>

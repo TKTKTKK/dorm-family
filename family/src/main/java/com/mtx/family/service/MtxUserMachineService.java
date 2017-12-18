@@ -1,5 +1,7 @@
 package com.mtx.family.service;
 
+import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.base.BaseService;
 import com.mtx.family.entity.MtxUserMachine;
 import com.mtx.family.mapper.MtxUserMachineMapper;
@@ -21,5 +23,8 @@ public class MtxUserMachineService extends BaseService<MtxUserMachineMapper,MtxU
 
     public List<MtxUserMachine> queryMachineList(String userid,String type) {
         return mapper.queryMachineList(userid,type);
+    }
+    public PageList<MtxUserMachine> queryForListWithPagination(MtxUserMachine obj, PageBounds pageBounds) {
+        return mapper.selectMtxUserMachineList(obj,pageBounds);
     }
 }

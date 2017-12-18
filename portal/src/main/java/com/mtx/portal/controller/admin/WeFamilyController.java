@@ -85,6 +85,10 @@ public class WeFamilyController extends BaseAdminController {
     private RepairWorkerService repairWorkerService;
     @Autowired
     private PlatformUserService platformUserService;
+    @Autowired
+    private MtxExchangeRecordService mtxExchangeRecordService;
+    @Autowired
+    private MtxUserMachineService mtxUserMachineService;
 
     /**
      * 经销商管理界面
@@ -1847,5 +1851,37 @@ public class WeFamilyController extends BaseAdminController {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("deleteFlag", deleteFlag);
         return resultMap;
+    }
+
+    /**
+     * 兑换记录商品
+     */
+    @RequestMapping(value = "/mtxExchangeRecordManage")
+    public String mtxExchangeRecordManage(@RequestParam(required = false, defaultValue = "1") int page, MtxExchangeRecord mtxExchangeRecord, Model model) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if (null != wechatBinding) {
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<MtxExchangeRecord> mtxExchangeRecordList = mtxExchangeRecordService.queryForListWithPagination(mtxExchangeRecord, pageBounds);
+            model.addAttribute("mtxExchangeRecordList", mtxExchangeRecordList);
+            model.addAttribute("mtxExchangeRecord",mtxExchangeRecord);
+        }
+        return "admin/wefamily/mtxExchangeRecordManage";
+    }
+
+    /**
+     * 购买记录
+     */
+    @RequestMapping(value = "/mtxUserMachineManage")
+    public String mtxUserMachineManage(@RequestParam(required = false, defaultValue = "1") int page, MtxUserMachine mtxUserMachine, Model model) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if (null != wechatBinding) {
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<MtxUserMachine> mtxUserMachineList = mtxUserMachineService.queryForListWithPagination(mtxUserMachine, pageBounds);
+            model.addAttribute("mtxUserMachineList", mtxUserMachineList);
+            model.addAttribute("mtxUserMachine",mtxUserMachine);
+        }
+        return "admin/wefamily/mtxUserMachineManage";
     }
 }

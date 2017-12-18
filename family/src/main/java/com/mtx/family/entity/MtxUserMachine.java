@@ -18,6 +18,16 @@ public class MtxUserMachine extends BaseEntity {
 
     private String name;
 
+    private String machinename;
+
+    public String getMachinename() {
+        return machinename;
+    }
+
+    public void setMachinename(String machinename) {
+        this.machinename = machinename;
+    }
+
     public String getType() {
         return type;
     }

@@ -13,4 +13,6 @@ import java.util.List;
 @Repository
 public interface MtxUserMachineMapper extends BaseMapper<MtxUserMachine> {
     List<MtxUserMachine> queryMachineList(@Param("userid")String userid,@Param("type")String type);
+
+    PageList<MtxUserMachine> selectMtxUserMachineList(@Param("mtxUserMachine")MtxUserMachine mtxUserMachine, PageBounds pageBounds);
 }
