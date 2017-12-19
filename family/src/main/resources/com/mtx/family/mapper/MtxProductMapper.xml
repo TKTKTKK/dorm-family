@@ -13,7 +13,7 @@
             and name like concat("%",#{mxtProduct.name},"%")
         </if>
         <if test="mxtProduct.model != null and mxtProduct.model != ''">
-            and model like concat("%",#{mxtProduct.model},"%")
+            and model =#{mxtProduct.model}
         </if>
         <if test="mxtProduct.status != null and mxtProduct.status != ''">
             and status = #{mxtProduct.status}
@@ -37,5 +37,11 @@
             and uuid != #{uuid}
         </if>
 ;
+    </select>
+    <select id="getAllModel" resultType="java.lang.String">
+        select DISTINCT model
+        from tb_mtx_product
+        where model is not null and model!=''
+        ;
     </select>
 </mapper>

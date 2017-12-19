@@ -5,7 +5,7 @@
     <resultMap id="selectResultMap" type="com.mtx.family.entity.MtxReserve">
     </resultMap>
     <select id="selectMtxReserveList" resultMap="selectResultMap">
-        select mr.*,mp.model as productname
+        select mr.*,mp.model as model
         from tb_mtx_reserve mr
         left join tb_mtx_product mp on mp.uuid=mr.productid
         where TRUE
@@ -14,6 +14,9 @@
         </if>
         <if test="mtxReserve.phone != null and mtxReserve.phone != ''">
             and mr.phone like concat("%",#{mtxReserve.phone},"%")
+        </if>
+        <if test="mtxReserve.status != null and mtxReserve.status != ''">
+            and mr.status =#{mtxReserve.status}
         </if>
         order by mr.modifyon desc;
     </select>

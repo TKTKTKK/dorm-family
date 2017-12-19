@@ -26,7 +26,7 @@
 </head>
 <body>
 <div class="head">
-    <a href="${ctx}/guest/good_exchange" class="back"></a>
+    <a href="${ctx}/guest/member/good_exchange" class="back"></a>
     <span>商品详情</span>
 </div>
 <div class="parm">

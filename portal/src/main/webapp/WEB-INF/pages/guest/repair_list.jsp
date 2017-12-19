@@ -24,7 +24,7 @@
 </head>
 <body>
 <div class="head">
-    <a class="back" href="${ctx}/guest/member_center"></a>
+    <a class="back" href="${ctx}/guest/member/center"></a>
     <span>报修列表</span>
 </div>
 <div class="content">

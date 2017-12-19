@@ -37,10 +37,17 @@
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>型号：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" data-required="true" name="model" id="model"
-                                           data-maxlength="64"
-                                           onblur="trimText(this)"
-                                           value="${mtxVideo.model}">
+                                    <select class="form-control" id="model" name="model" data-required="true">
+                                        <option value="">--全部--</option>
+                                        <c:forEach items="${modelList}" var="modelTemp">
+                                            <c:if test="${mtxVideo.model == modelTemp}">
+                                                <option value="${modelTemp}" selected>${modelTemp}</option>
+                                            </c:if>
+                                            <c:if test="${mtxVideo.model != modelTemp}">
+                                                <option value="${modelTemp}">${modelTemp}</option>
+                                            </c:if>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -61,7 +68,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>种类：</label>
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>分类：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <select class="form-control" id="type" name="type" data-required="true">
                                         <option value="">--全部--</option>

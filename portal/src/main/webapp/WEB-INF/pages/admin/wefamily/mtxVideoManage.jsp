@@ -24,8 +24,17 @@
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 型号：</label>
                                     <div class="col-sm-7  my-display-inline-box">
-                                        <input type="text" class="form-control" name="model" id="model" data-maxlength="64"
-                                               onblur="trimText(this)" value="${mtxVideo.model}">
+                                        <select class="form-control" id="model" name="model">
+                                            <option value="">--全部--</option>
+                                            <c:forEach items="${modelList}" var="modelTemp">
+                                                <c:if test="${mtxVideo.model == modelTemp}">
+                                                    <option value="${modelTemp}" selected>${modelTemp}</option>
+                                                </c:if>
+                                                <c:if test="${mtxVideo.model != modelTemp}">
+                                                    <option value="${modelTemp}">${modelTemp}</option>
+                                                </c:if>
+                                            </c:forEach>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
@@ -46,7 +55,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">种类：</label>
+                                    <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">分类：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <select class="form-control" id="type" name="type">
                                             <option value="">--全部--</option>
@@ -80,7 +89,7 @@
                                     <tr>
                                         <th width="20%">型号</th>
                                         <th width="20%">状态</th>
-                                        <th width="20%">种类</th>
+                                        <th width="20%">分类</th>
                                         <th width="20%">视频连接</th>
                                         <th width="20%">操作</th>
                                     </tr>

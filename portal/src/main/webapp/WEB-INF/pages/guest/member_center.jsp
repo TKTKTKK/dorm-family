@@ -74,19 +74,19 @@
 <script type="text/javascript">
     var userid=$("#userid").val();
     function goMyPointRecord(){
-        window.location.href="${ctx}/guest/point_list?userid="+userid;
+        window.location.href="${ctx}/guest/member/point_list?userid="+userid;
     }
     function goUserInfo(){
-        window.location.href="${ctx}/guest/userInfo?userid="+userid;
+        window.location.href="${ctx}/guest/member/userInfo?userid="+userid;
     }
     function goMyProductRecord(){
-        window.location.href="${ctx}/guest/product_list?userid="+userid;
+        window.location.href="${ctx}/guest/member/product_list?userid="+userid;
     }
     function goMyRepairRecord(){
-        window.location.href="${ctx}/guest/repair_list";
+        window.location.href="${ctx}/guest/member/repair_list";
     }
     function goMyPartRecord(){
-        window.location.href="${ctx}/guest/parts_list?userid="+userid;
+        window.location.href="${ctx}/guest/member/parts_list?userid="+userid;
     }
 </script>
 </html>

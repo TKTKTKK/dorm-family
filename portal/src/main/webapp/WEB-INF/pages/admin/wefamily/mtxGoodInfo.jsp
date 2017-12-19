@@ -108,7 +108,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><span class="text-danger"></span>商品详情：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" name="detail" value="${mtxProduct.detail}" data-maxlength="256">
+                                    <textarea  class="form-control" name="detail" style="width:400px; height:100px;" data-maxlength="256">${mtxProduct.detail}</textarea>
                                 </div>
                             </div>
 

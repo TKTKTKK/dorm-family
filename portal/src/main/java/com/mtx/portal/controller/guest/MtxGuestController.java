@@ -167,7 +167,7 @@ public class MtxGuestController extends BaseGuestController{
      * 会员中心
      * @return
      */
-    @RequestMapping(value = "/member_center",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/center",method = RequestMethod.GET)
     public String member_center(String userid,Model model,HttpServletRequest req) {
         if(StringUtils.isBlank(userid)){
             WpUser user =new WpUser();
@@ -190,7 +190,7 @@ public class MtxGuestController extends BaseGuestController{
      * 积分列表
      * @return
      */
-    @RequestMapping(value = "/point_list",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/point_list",method = RequestMethod.GET)
     public String point_list(String userid,Model model) {
         if(StringUtils.isNotBlank(userid)){
             WpUser user=new WpUser();
@@ -236,7 +236,7 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 个人中心
      */
-    @RequestMapping(value = "/userInfo",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/userInfo",method = RequestMethod.GET)
     public String userInfo(String userid,Model model) {
         if(StringUtils.isNotBlank(userid)){
             WpUser user=new WpUser();
@@ -250,9 +250,9 @@ public class MtxGuestController extends BaseGuestController{
     }
 
     /**
-     * 我的配件
+     * 我的产品
      */
-    @RequestMapping(value = "/product_list",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/product_list",method = RequestMethod.GET)
     public String product_list(String userid,Model model) {
         if(StringUtils.isNotBlank(userid)){
             MtxUserMachine machine=new MtxUserMachine();
@@ -296,7 +296,7 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 报修列表
      */
-    @RequestMapping(value = "/repair_list",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/repair_list",method = RequestMethod.GET)
     public String repair_list(HttpServletRequest request,Model model){
 
         WpUser wpUser = getWechatMemberInfo(request);
@@ -364,7 +364,7 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 保养小视屏
      */
-    @RequestMapping(value = "/video",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/video",method = RequestMethod.GET)
     public String maintain(Model model) {
         MtxVideo video=new MtxVideo();
         List<MtxVideo> videoList=mtxVideoService.queryForList(video);
@@ -432,7 +432,7 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 积分兑换中心
      */
-    @RequestMapping(value = "/good_exchange",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/good_exchange",method = RequestMethod.GET)
     public String good_exchange(Model model,HttpServletRequest req) {
         MtxProduct product=new MtxProduct();
         product.setType("EXCHANGE_GOOD");
@@ -465,7 +465,7 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 我的配件
      */
-    @RequestMapping(value = "/parts_list",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/parts_list",method = RequestMethod.GET)
     public String part_list(String userid,Model model) {
         if(StringUtils.isNotBlank(userid)){
             MtxUserMachine machine=new MtxUserMachine();
@@ -537,6 +537,6 @@ public class MtxGuestController extends BaseGuestController{
             model.addAttribute("message",message);
             return "guest/exchange";
         }
-        return "redirect:/guest/good_exchange";
+        return "redirect:/guest/member/good_exchange";
     }
 }

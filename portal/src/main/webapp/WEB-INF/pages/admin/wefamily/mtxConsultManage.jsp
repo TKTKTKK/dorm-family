@@ -22,6 +22,23 @@
                         <form method="post" action="" class="form-horizontal bg-white padding20 b-t b-b b-l b-r" data-validate="parsley" id="searchForm">
                             <div class="row">
                                 <div class="col-sm-4">
+                                    <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">状态：</label>
+                                    <div class="col-sm-7  my-display-inline-box">
+                                        <select class="form-control" id="status" name="status">
+                                            <option value="">--全部--</option>
+                                            <c:set var="typeList" value="${web:queryCommonCodeList('ANWSER_OR_NOT')}"></c:set>
+                                            <c:forEach items="${typeList}" var="typeCode">
+                                                <c:if test="${mtxConsult.status == typeCode.code}">
+                                                    <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
+                                                </c:if>
+                                                <c:if test="${mtxConsult.status != typeCode.code}">
+                                                    <option value="${typeCode.code}">${typeCode.codevalue}</option>
+                                                </c:if>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 身份类型：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <select class="form-control" id="identify" name="identify">
@@ -32,23 +49,6 @@
                                                     <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
                                                 </c:if>
                                                 <c:if test="${mtxConsult.identify != typeCode.code}">
-                                                    <option value="${typeCode.code}">${typeCode.codevalue}</option>
-                                                </c:if>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">读取状态：</label>
-                                    <div class="col-sm-7  my-display-inline-box">
-                                        <select class="form-control" id="status" name="status">
-                                            <option value="">--全部--</option>
-                                            <c:set var="typeList" value="${web:queryCommonCodeList('ANWSER_OR_NOT')}"></c:set>
-                                            <c:forEach items="${typeList}" var="typeCode">
-                                                <c:if test="${mtxConsult.status == typeCode.code}">
-                                                    <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
-                                                </c:if>
-                                                <c:if test="${mtxConsult.status != typeCode.code}">
                                                     <option value="${typeCode.code}">${typeCode.codevalue}</option>
                                                 </c:if>
                                             </c:forEach>

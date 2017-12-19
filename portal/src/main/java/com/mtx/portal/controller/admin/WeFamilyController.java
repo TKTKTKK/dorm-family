@@ -205,6 +205,11 @@ public class WeFamilyController extends BaseAdminController {
         return "redirect:/admin/wefamily/merchant?successFlag=1";
     }
 
+    public  List<String> getModel(){
+        List<String> modelList=mxtProductService.getAllModel();
+        return modelList;
+    }
+
     /**
      * 产品管理
      */
@@ -216,6 +221,8 @@ public class WeFamilyController extends BaseAdminController {
         if (null != wechatBinding) {
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
             PageList<MtxProduct> mtxProductList = mxtProductService.queryForListWithPagination(mtxProduct, pageBounds,flag);
+            List<String> modelList=getModel();
+            model.addAttribute("modelList",modelList);
             model.addAttribute("mtxProductList", mtxProductList);
             model.addAttribute("mtxProduct",mtxProduct);
         }
@@ -810,12 +817,31 @@ public class WeFamilyController extends BaseAdminController {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         if (null != wechatBinding) {
+            if(StringUtils.isBlank(mtxReserve.getStatus())){
+                mtxReserve.setStatus("N_DEAL");
+            }
+            model.addAttribute("status",mtxReserve.getStatus());
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
             PageList<MtxReserve> mtxReserveList = mtxReserveService.queryForListWithPagination(mtxReserve, pageBounds);
             model.addAttribute("mtxReserveList", mtxReserveList);
             model.addAttribute("mtxReserve",mtxReserve);
         }
         return "admin/wefamily/mtxReserveManage";
+    }
+
+    @RequestMapping(value = "/updateReserve",method = RequestMethod.POST)
+    public String updateReserve(MtxReserve mtxReserve, RedirectAttributes redirectAttributes) {
+        String remarks=mtxReserve.getRemarks();
+        mtxReserve=mtxReserveService.queryForObjectByPk(mtxReserve);
+        if(mtxReserve!=null){
+            mtxReserve.setRemarks(remarks);
+            mtxReserve.setStatus("C_DEAL");
+            mtxReserveService.updatePartial(mtxReserve);
+            redirectAttributes.addFlashAttribute("successMessage","处理成功！");
+        }else{
+            redirectAttributes.addFlashAttribute("errorMessage","处理失败！");
+        }
+        return "redirect:/admin/wefamily/mtxReserveManage";
     }
 
     /**
@@ -1366,26 +1392,6 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     /**
-     * 视频管理
-     */
-    @RequestMapping(value = "/mtxVideoManage")
-    public String mtxVideoManage(@RequestParam(required = false, defaultValue = "1") int page, MtxVideo mtxVideo, Model model, HttpServletRequest request) {
-        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
-        model.addAttribute("wechatBinding", wechatBinding);
-        if (null != wechatBinding) {
-            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-            PageList<MtxVideo> mtxVideoList = mtxVideoService.queryForListWithPagination(mtxVideo, pageBounds);
-            model.addAttribute("mtxVideoList", mtxVideoList);
-            model.addAttribute("mtxVideo",mtxVideo);
-        }
-        String successFlag=request.getParameter("deleteFlag");
-        if("1".equals(successFlag)){
-            model.addAttribute("successFlag","删除成功");
-        }
-        return "admin/wefamily/mtxVideoManage";
-    }
-
-    /**
      * 报修管理
      */
     @RequestMapping(value = "/repairManage",method = RequestMethod.GET)
@@ -1708,8 +1714,33 @@ public class WeFamilyController extends BaseAdminController {
         return "redirect:repairInfoForPhone?repairId=" + repair.getUuid();
     }
 
+
+    /**
+     * 视频管理
+     */
+    @RequestMapping(value = "/mtxVideoManage")
+    public String mtxVideoManage(@RequestParam(required = false, defaultValue = "1") int page, MtxVideo mtxVideo, Model model, HttpServletRequest request) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if (null != wechatBinding) {
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<MtxVideo> mtxVideoList = mtxVideoService.queryForListWithPagination(mtxVideo, pageBounds);
+            List<String> modelList=getModel();
+            model.addAttribute("modelList",modelList);
+            model.addAttribute("mtxVideoList", mtxVideoList);
+            model.addAttribute("mtxVideo",mtxVideo);
+        }
+        String successFlag=request.getParameter("deleteFlag");
+        if("1".equals(successFlag)){
+            model.addAttribute("successFlag","删除成功");
+        }
+        return "admin/wefamily/mtxVideoManage";
+    }
+
     @RequestMapping(value = "/goMtxVideo", method = RequestMethod.GET)
     public String goMtxVideo(Model model,MtxVideo mtxVideo){
+        List<String> modelList=getModel();
+        model.addAttribute("modelList",modelList);
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         MtxVideo mtxVideoTemp=mtxVideoService.queryForObjectByPk(mtxVideo);
@@ -1721,6 +1752,8 @@ public class WeFamilyController extends BaseAdminController {
     public String updateMtxVideo(MtxVideo mtxVideo, RedirectAttributes redirectAttributes, Model model){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
+        List<String> modelList=getModel();
+        model.addAttribute("modelList",modelList);
         if (StringUtils.isBlank(mtxVideo.getUuid())) {
             mtxVideoService.insert(mtxVideo);
             model.addAttribute("mtxVideo", mtxVideo);
@@ -1771,6 +1804,8 @@ public class WeFamilyController extends BaseAdminController {
             machine.setBindid(UserUtils.getUserBindId());
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
             PageList<Machine> machineList = machineService.queryForListWithPagination(machine, pageBounds);
+            List<String> modelList=getModel();
+            model.addAttribute("modelList",modelList);
             model.addAttribute("machineList", machineList);
             model.addAttribute("machine",machine);
         }
@@ -1791,6 +1826,8 @@ public class WeFamilyController extends BaseAdminController {
         if(StringUtils.isNotBlank(machine.getUuid())){
             attachmentList=getAttachmentByRefid(machine.getUuid());
         }
+        List<String> modelList=getModel();
+        model.addAttribute("modelList",modelList);
         model.addAttribute("attachmentList",attachmentList);
         return "admin/wefamily/mtxPartsCenterInfo";
     }
@@ -1799,6 +1836,8 @@ public class WeFamilyController extends BaseAdminController {
     public String updateMtxPartsCenter(Machine machine, RedirectAttributes redirectAttributes, Model model,HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
+        List<String> modelList=getModel();
+        model.addAttribute("modelList",modelList);
         String[] detailImgs = request.getParameterValues("detailImg");
         if (StringUtils.isBlank(machine.getUuid())) {
             machine.setBindid(UserUtils.getUserBindId());

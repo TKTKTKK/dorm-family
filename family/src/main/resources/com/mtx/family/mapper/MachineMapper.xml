@@ -23,7 +23,7 @@
             and mm.machineno like CONCAT('%', #{machine.machineno},'%')
         </if>
         <if test="machine.machinemodel != null and machine.machinemodel != ''">
-            and mm.machinemodel like CONCAT('%', #{machine.machinemodel},'%')
+            and mm.machinemodel = #{machine.machinemodel}
         </if>
         <if test="machine.machinename != null and machine.machinename != ''">
             and mm.machinename like CONCAT('%',#{machine.machinename},'%')

@@ -90,4 +90,8 @@ public class MtxProductService extends BaseService<MtxProductMapper,MtxProduct> 
         message="添加失败！";
         return message;
     }
+
+    public List<String> getAllModel() {
+        return mapper.getAllModel();
+    }
 }

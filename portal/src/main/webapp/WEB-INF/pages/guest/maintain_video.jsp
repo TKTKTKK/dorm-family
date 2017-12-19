@@ -25,9 +25,7 @@
         .list li span:nth-of-type(1){font-size: 1.6rem;color: #333}
         .list li span:nth-of-type(2){font-size: 1.6rem;color: #666}
         .list li>input{font-size: 1.6rem;color: #666;text-align: right;}
-        .list li .address{display: table;}
         .list li .address>select{font-size: 1.4rem;color: #666;}
-        .list li>.focus{height:4rem;color:#666;font-size:0.14rem;}
         .list:nth-of-type(3) li span{color: #666}
         .list li select{font-size: 1.4rem;color: #666;}
         .open {text-align: center;}
@@ -66,11 +64,10 @@
     errorMessage.innerHTML = "";
     function openVideo(){
         var uuid=$("select[name='model'] option:selected").val();
-        if(model!=''&& model.length>0){
+        if(uuid!=''&& uuid.length>0){
             $.post("${ctx}/guest/getVideoUrl?uuid="+uuid,function(data){
                 if(data.video){
                     window.location.href=data.video.videourl;
-//                    window.location.href="http://m.youku.com/video/id_XMjAyODI3Mzc4NA==.html?spm=a2h2a.8293802.0.0&from=singlemessage&isappinstalled=0";
                 }
             });
         }else{

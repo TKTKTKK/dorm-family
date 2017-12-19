@@ -40,7 +40,7 @@
     <span class="spanid" onclick="searchParts()">查询</span>
 </div>
 </form>
-<div class="content">
+<div class="content" style="display: none">
     <div class="goods_info">
         <div class="info_name">
             <p style="text-align: center;"><input id="machinename" style="text-align: center;" type="text" value="${partsCenter.machinename}"/></p>
@@ -49,14 +49,15 @@
             <p>零售价：<input type="text" id="price" value="${partsCenter.price}${partsCenter.format}"/></p>
             <p>适用机型：<input type="text" id="fitmodel" value="${partsCenter.machinemodel}"/></p>
             <p>产地：<input type="text" id="address" value="${partsCenter.address}"/> </p>
-            <input type="text" id="uuid" value="${partsCenter.uuid}" style="display: none"/>
             <hr>
+            <div id="imgid">
             <p>配件图片</p>
             <ul class="parts_img">
                 <c:forEach items="${attachmentList}" var="attachment">
                 <li><img src="${attachment.name}" alt=""></li>
                 </c:forEach>
             </ul>
+            </div>
         </div>
     </div>
 </div>
@@ -78,12 +79,19 @@
         if('${Flag}'=='1'){
             closeImg();
         }
+        if(${partsCenter!=null}){
+            $(".content").css("display","block");
+            $("#imgid").css("display","block");
+        }
     }
     function closeImg(){
         $("#imgDiv").css("display","none");
     }
     function searchParts(){
         var code=$("#code").val();
+        if(code==null||code==''){
+          code= $("#material_code").val();
+        }
         if(code!=null&&code!=''){
             var searchForm = document.getElementById("frm");
             searchForm.action = "${ctx}/guest/parts_center";
@@ -100,7 +108,9 @@
         wechatUtil.scanQRCode({
                     success : function(res){
                         var paramArr = wechatUtil.handleScanResult(res.resultStr);
-                        $("#code").val(paramArr[0]);
+                        $("#imgDiv").css("display","none");
+                        $(".content").css("display","block");
+                        $("#imgid").css("display","none");
                         $("#material_code").val(paramArr[0]);
                         $("#machinename").val(paramArr[1]);
                         $("#price").val(paramArr[2]);
@@ -108,6 +118,8 @@
                         $("#address").val(paramArr[4]);
                         $.post("${ctx}/admin/wefamily/getMtxParts?code="+$("#material_code").val(),function(data){
                             if(data.machine){
+                                $("#imgid").css("display","block");
+                                $("#imgDiv").css("display","none");
                                 searchParts();
                             }
                         });
@@ -116,8 +128,8 @@
         );
     }
     function validDate(){
-        var uuid=$("#uuid").val();
-        if(uuid!=null &&uuid!=''){
+        var material_code=$("#material_code").val();
+        if(material_code!=null &&material_code!=''){
 
         }else{
             errorMessage.innerHTML="请选择配件！";

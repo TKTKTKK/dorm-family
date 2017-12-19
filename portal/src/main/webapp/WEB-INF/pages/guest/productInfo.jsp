@@ -67,7 +67,7 @@
     }
     function goBack(){
         var userid=$("#userid").val();
-        window.location.href="${ctx}/guest/product_list?userid="+userid;
+        window.location.href="${ctx}/guest/member/product_list?userid="+userid;
     }
     function submitForm(){
         var model=document.getElementById("machinemodel").value;

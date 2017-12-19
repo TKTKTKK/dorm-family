@@ -35,7 +35,6 @@ public class MtxMemberService {
         WpUser wpUserTemp = wpUserService.getWpUser(wpUser.getOpenid());
         if (wpUserTemp == null || StringUtils.isBlank(wpUserTemp.getUuid())) {
             Machine machine = new Machine();
-            MtxProduct product = new MtxProduct();
             MtxPoint point = new MtxPoint();
             MtxUserMachine userMachine=new MtxUserMachine();
             MtxUserMachine userMachineTemp=new MtxUserMachine();

@@ -24,8 +24,17 @@
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 型号：</label>
                                     <div class="col-sm-7  my-display-inline-box">
-                                        <input type="text" class="form-control" name="model" id="model" data-maxlength="90"
-                                               onblur="trimText(this)" value="${mtxProduct.model}">
+                                        <select class="form-control" id="model" name="model">
+                                            <option value="">--全部--</option>
+                                            <c:forEach items="${modelList}" var="modelTemp">
+                                                <c:if test="${mtxProduct.model == modelTemp}">
+                                                    <option value="${modelTemp}" selected>${modelTemp}</option>
+                                                </c:if>
+                                                <c:if test="${mtxProduct.model != modelTemp}">
+                                                    <option value="${modelTemp}">${modelTemp}</option>
+                                                </c:if>
+                                            </c:forEach>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
