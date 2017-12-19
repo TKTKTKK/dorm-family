@@ -67,7 +67,7 @@
         <input type="text" id="machinengine" name="engineno" placeholder="请填写发动机号">
     </li>
 </ul>
-    <input  class="fixsubmit" onclick="submitForm()" value="提交">
+    <span  class="fixsubmit" onclick="submitForm()">提交</span>
 </form>
 <div class="choose" style="display: none">
     <div class="error">

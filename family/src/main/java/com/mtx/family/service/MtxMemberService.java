@@ -40,9 +40,11 @@ public class MtxMemberService {
         wpUserTemp.setDistrict(wpUser.getDistrict());
         wpUserTemp.setAddress(wpUser.getAddress());
         wpUserTemp.setIfauth("Y");
+        wpUserTemp.setPoints(0);
         point.setUserid(wpUserTemp.getUuid());
         userMachine.setUserid(wpUserTemp.getUuid());
         userMachine.setMachineid(machine.getUuid());
+        userMachine.setType("MACHINE");
         userMachineTemp.setMachineid(machine.getUuid());
         List<MtxUserMachine> userMachineTempList=mtxUserMachineService.queryForList(userMachineTemp);
         if(userMachineTempList.size()<=0){
