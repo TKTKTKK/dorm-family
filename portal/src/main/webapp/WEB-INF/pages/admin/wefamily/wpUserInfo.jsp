@@ -4,9 +4,6 @@
 <html lang="en" class="app">
 <head>
 <style>
-    .money{
-        margin-top: 10px;
-    }
 </style>
 </head>
 <body class="">
