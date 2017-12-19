@@ -1,5 +1,6 @@
 package com.mtx.portal.controller.guest;
 
+import com.mtx.common.base.CommonConstants;
 import com.mtx.portal.PortalContants;
 import com.mtx.wechat.entity.WpUser;
 import com.mtx.wechat.service.WpUserService;
@@ -42,5 +43,14 @@ public class BaseGuestController {
         }
         logger.info("bind : " + getBindid(req));
         logger.info("openid : " + getOpenid(req));
+        String requestUri = req.getRequestURI();
+
+        if(requestUri.contains("/guest/member")){
+
+            WpUser member = getWechatMemberInfo(req);
+            if(member == null || !CommonConstants.IND_YES.equals(member.getIfauth())){
+                resp.sendRedirect("/guest/register");
+            }
+        }
     }
 }
