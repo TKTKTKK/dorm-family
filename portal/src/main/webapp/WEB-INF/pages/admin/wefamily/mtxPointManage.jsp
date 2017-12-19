@@ -98,7 +98,7 @@
 
     window.onload = function(){
         //显示父菜单
-        showParentMenu('会员管理');
+        showParentMenu('会员中心');
     }
 
     function resubmitSearch(page){
