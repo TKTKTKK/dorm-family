@@ -452,15 +452,21 @@ public class MtxGuestController extends BaseGuestController{
         Machine partsCenter=new Machine();
         if(StringUtils.isNotBlank(code)){
             partsCenter.setMachineno(code);
-            partsCenter=machineService.queryForObjectByUniqueKey(partsCenter);
-            if(partsCenter!=null){
-                Attachment attachment=new Attachment();
-                attachment.setRefid(partsCenter.getUuid());
-                List<Attachment> attachmentList=attachmentService.queryForList(attachment);
-                model.addAttribute("attachmentList",attachmentList);
+            partsCenter.setType("PARTS");
+            List<Machine> partsCenterList=machineService.queryForList(partsCenter);
+            if(partsCenterList.size()>0){
+                partsCenter=partsCenterList.get(0);
+                if(partsCenter!=null){
+                    Attachment attachment=new Attachment();
+                    attachment.setRefid(partsCenter.getUuid());
+                    List<Attachment> attachmentList=attachmentService.queryForList(attachment);
+                    model.addAttribute("attachmentList",attachmentList);
+                }
             }
+        }//为了区分是机器还是配件
+        if(StringUtils.isNotBlank(partsCenter.getUuid())){
+            model.addAttribute("partsCenter",partsCenter);
         }
-        model.addAttribute("partsCenter",partsCenter);
         model.addAttribute("Flag","1");
         model.addAttribute("code",code);
         return "guest/parts_center";
