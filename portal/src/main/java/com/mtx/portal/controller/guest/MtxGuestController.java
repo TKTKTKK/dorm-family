@@ -58,11 +58,15 @@ public class MtxGuestController extends BaseGuestController{
     @Autowired
     private MtxVideoService mtxVideoService;
     @Autowired
-    private RepairService repairService;
+    private QualityMgmtService qualityMgmtService;
     @Autowired
     private SequenceService sequenceService;
     @Autowired
     private AttachmentService attachmentService;
+    @Autowired
+    private MerchantService merchantService;
+    @Autowired
+    private WorkerService workerService;
 
 
     @RequestMapping(value = "/product_center")
@@ -290,6 +294,57 @@ public class MtxGuestController extends BaseGuestController{
     }
 
     /**
+     * 保养列表
+     */
+    @RequestMapping(value = "/member/maintain_list",method = RequestMethod.GET)
+    public String maintain_list(HttpServletRequest request,Model model){
+
+        WpUser wpUser = getWechatMemberInfo(request);
+        model.addAttribute("wpUser",wpUser);
+        QualityMgmt qualityMgmt = new QualityMgmt();
+        qualityMgmt.setReporter(wpUser.getUuid());
+        qualityMgmt.setType("MAINTAIN");
+        model.addAttribute("type","MAINTAIN");
+        qualityMgmt.setOrderby("createon desc");
+        List<QualityMgmt> qualityMgmtList = qualityMgmtService.queryForList(qualityMgmt);
+        model.addAttribute("qualityMgmtList",qualityMgmtList);
+        return "guest/qualityMgmt_list";
+    }
+
+    /**
+     * 保养详情
+     */
+    @RequestMapping(value = "/qualityMgmt_info",method = RequestMethod.GET)
+    public String maintain_info(HttpServletRequest request,Model model){
+        String qualityMgmtId= request.getParameter("qualityMgmtId");
+        if(StringUtils.isNotBlank(qualityMgmtId)){
+            QualityMgmt qualityMgmt = new QualityMgmt();
+            qualityMgmt.setUuid(qualityMgmtId);
+            qualityMgmt = qualityMgmtService.queryForObjectByPk(qualityMgmt);
+            model.addAttribute("qualityMgmt", qualityMgmt);
+
+            if(StringUtils.isNotBlank(qualityMgmt.getMerchantid())){
+                Merchant merchant = new Merchant();
+                merchant.setUuid(qualityMgmt.getMerchantid());
+                merchant = merchantService.queryForObjectByPk(merchant);
+                model.addAttribute("merchant",merchant);
+            }
+
+            Attachment workerAttachment = new Attachment();
+            workerAttachment.setRefid(qualityMgmtId);
+            workerAttachment.setType("worker");
+            List<Attachment> workerAttachmentList = attachmentService.queryForList(workerAttachment);
+            model.addAttribute("workerAttachmentList",workerAttachmentList);
+
+            Worker worker = new Worker();
+            worker.setRefid(qualityMgmtId);
+            List<Worker> workerList = workerService.queryForList(worker);
+            model.addAttribute("workerList",workerList);
+        }
+        return "guest/qualityMgmt_info";
+    }
+
+    /**
      * 报修列表
      */
     @RequestMapping(value = "/repair_list",method = RequestMethod.GET)
@@ -297,33 +352,21 @@ public class MtxGuestController extends BaseGuestController{
 
         WpUser wpUser = getWechatMemberInfo(request);
         model.addAttribute("wpUser",wpUser);
-        Repair repair = new Repair();
-        repair.setReporter(wpUser.getUuid());
-        repair.setOrderby("createon desc");
-        List<Repair> repairList = repairService.queryForList(repair);
-        model.addAttribute("repairList",repairList);
-        return "guest/repair_list";
+        QualityMgmt qualityMgmt = new QualityMgmt();
+        qualityMgmt.setReporter(wpUser.getUuid());
+        qualityMgmt.setType("REPAIR");
+        model.addAttribute("type","REPAIR");
+        qualityMgmt.setOrderby("createon desc");
+        List<QualityMgmt> qualityMgmtList = qualityMgmtService.queryForList(qualityMgmt);
+        model.addAttribute("qualityMgmtList",qualityMgmtList);
+        return "guest/qualityMgmt_list";
     }
 
     /**
      * 报修信息
      */
     @RequestMapping(value = "/repair_info",method = RequestMethod.GET)
-    public String repair_info(HttpServletRequest request,Model model){
-
-        String repairId = request.getParameter("repairId");
-        if(StringUtils.isNotBlank(repairId)){
-            Repair repair = new Repair();
-            repair.setUuid(repairId);
-            repair = repairService.queryForObjectByPk(repair);
-            model.addAttribute("repair",repair);
-
-            Attachment attachment = new Attachment();
-            attachment.setRefid(repairId);
-            attachment.setType("REPORTER");
-            List<Attachment> attachmentList = attachmentService.queryForList(attachment);
-            model.addAttribute("attachmentList",attachmentList);
-        }
+    public String repair_info(){
         return "guest/repair_info";
     }
 
@@ -331,30 +374,22 @@ public class MtxGuestController extends BaseGuestController{
      * 报修信息
      */
     @RequestMapping(value = "/repair_info",method = RequestMethod.POST)
-    public String repair_info(Repair repair, RedirectAttributes redirectAttributes, HttpServletRequest request){
+    public String repair_info(QualityMgmt qualityMgmt, RedirectAttributes redirectAttributes, HttpServletRequest request){
 
-        String[] repairImgs = request.getParameterValues("repairImg");
+        String[] qualityMgmtImgs = request.getParameterValues("qualityMgmtImg");
 
-        if(StringUtils.isNotBlank(repair.getUuid())){
-            try {
-                repairService.updateRepair(repair,repairImgs);
-                redirectAttributes.addFlashAttribute("successMessage", "保存成功");
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
-                redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");
-            }
-        }else{
-            //添加
-            WpUser wpUser = getWechatMemberInfo(request);
-            repair.setReporter(wpUser.getUuid());
-            repair.setReportername(wpUser.getName());
-            repair.setReporterphone(wpUser.getContactno());
-            repair.setStatus("NEW");
-            repair.setSnno(sequenceService.getRepairSeqNo());
-            repairService.saveRepair(repair,repairImgs);
-            redirectAttributes.addFlashAttribute("successMessage", "保存成功");
-        }
-        return "redirect:repair_info?repairId=" + repair.getUuid();
+        //添加
+        WpUser wpUser = getWechatMemberInfo(request);
+        qualityMgmt.setReporter(wpUser.getUuid());
+        qualityMgmt.setReportername(wpUser.getName());
+        qualityMgmt.setReporterphone(wpUser.getContactno());
+        qualityMgmt.setType("REPAIR");
+        qualityMgmt.setStatus("NEW");
+        qualityMgmt.setSnno(sequenceService.getRepairSeqNo());
+        qualityMgmtService.saveQualityMgmt(qualityMgmt,qualityMgmtImgs);
+        redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+
+        return "redirect:repair_list";
     }
 
     /**

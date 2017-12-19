@@ -60,7 +60,7 @@
         <span>我的配件</span>
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
-    <li>
+    <li onclick="goMyMaintainRecord()">
         <span>我的保养</span>
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
@@ -81,6 +81,9 @@
     }
     function goMyProductRecord(){
         window.location.href="${ctx}/guest/product_list?userid="+userid;
+    }
+    function goMyMaintainRecord(){
+        window.location.href="${ctx}/guest/member/maintain_list";
     }
     function goMyRepairRecord(){
         window.location.href="${ctx}/guest/repair_list";

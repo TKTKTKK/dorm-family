@@ -63,9 +63,9 @@
         .dataRequired{
             color: red;
         }
-        #repairImgContainer{display: inline-block;vertical-align: middle}
-        #repairImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 2rem}
-        #repairImgContainer img{width: 4.5rem;height: 4.5rem;margin:1rem}
+        #qualityMgmtImgContainer{display: inline-block;vertical-align: middle}
+        #qualityMgmtImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 2rem}
+        #qualityMgmtImgContainer img{width: 4.5rem;height: 4.5rem;margin:1rem}
         .my-display-inline-box{width: auto}
         .required{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
         .maxlength{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
@@ -85,35 +85,35 @@
             <ul class="list">
                 <li>
                     <span>机器型号<a class="dataRequired">*</a></span>
-                    <input type="text" id="machinemodel" name="machinemodel" value="${repair.machinemodel}"
-                           data-required="true" placeholder="请填写机器型号" data-maxlength="32"/>
+                    <input type="text" id="machinemodel" name="machinemodel" value="${qualityMgmt.machinemodel}"
+                           data-required="true" placeholder="请填写机器型号" data-maxlength="32" onblur="trimText(this)"/>
                 </li>
                 <li>
                     <span>机器号<a class="dataRequired">*</a></span>
-                    <input type="text" id="machineno" name="machineno" value="${repair.machineno}"
-                           data-required="true" placeholder="请填写机器号" data-maxlength="32"/>
+                    <input type="text" id="machineno" name="machineno" value="${qualityMgmt.machineno}"
+                           data-required="true" placeholder="请填写机器号" data-maxlength="32" onblur="trimText(this)"/>
                 </li>
                 <li>
                     <span>发动机号<a class="dataRequired">*</a></span>
-                    <input type="text" id="engineno" name="engineno" value="${repair.engineno}"
-                           data-required="true" placeholder="请填写发动机号" data-maxlength="32"/>
+                    <input type="text" id="engineno" name="engineno" value="${qualityMgmt.engineno}"
+                           data-required="true" placeholder="请填写发动机号" data-maxlength="32" onblur="trimText(this)"/>
                 </li>
                 <li>
                     <span>生产日期<a class="dataRequired">*</a></span>
-                    <input class="Wdate" type="text" name="productiondt" id="productiondt" value="${repair.productiondt}" onClick="WdatePicker()"
-                           data-required="true" placeholder="请选择生产日期" data-maxlength="23">
+                    <input class="Wdate" type="text" name="productiondt" id="productiondt" value="${qualityMgmt.productiondt}" onClick="WdatePicker()"
+                           data-required="true" placeholder="请选择生产日期" data-maxlength="23" onblur="trimText(this)">
                 </li>
                 <li style="display: flex;display: -webkit-flex;">
                     <span style="vertical-align: middle;">问题描述<a class="dataRequired">*</a></span>
                     <textarea rows="4" name="content" id="content" data-maxlength="256"
-                              style=" width: 16rem;vertical-align: middle;">${repair.content}</textarea>
+                              style=" width: 16rem;vertical-align: middle;">${qualityMgmt.content}</textarea>
                 </li>
                 <li style="border: 0">
                     <span>上传图片</span>
                 </li>
                 <li>
                     <div class="my-display-inline-box">
-                        <div id="repairImgContainer" class="row value">
+                        <div id="qualityMgmtImgContainer" class="row value">
                             <c:forEach items="${attachmentList}" var="attachment">
                                 <%--<img src="${attachment.name}" alt="" style="margin-top: 3px;margin-left: 10px" onclick="viewBigImageForUpload(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image">--%>
                                 <a class="swipebox" href= "${attachment.name}" onclick="reviewMediaShow(this)">
@@ -124,8 +124,8 @@
                             </c:forEach>
                         </div>
                         <c:if test="${fn:length(attachmentList) < 4}">
-                            <div id="repairImgUrlContainer" class="upload-btn-box" style="display: inline-block">
-                                <input type="file" id="repairImg" name="picUrl" class="upload-btn pageUpload"
+                            <div id="qualityMgmtImgUrlContainer" class="upload-btn-box" style="display: inline-block">
+                                <input type="file" id="qualityMgmtImg" name="picUrl" class="upload-btn pageUpload"
                                        data-icon="false" data-classButton="btn btn-default"
                                        data-classInput="form-control inline v-middle input-xs"
                                        accept="image/*"
@@ -137,23 +137,23 @@
                     </div>
                 </li>
 
-                <c:if test="${repair.status eq 'FINISH'}">
+                <c:if test="${qualityMgmt.status eq 'FINISH'}">
                     <li>
                         <span>维修评价</span>
                         <select name="evaluate" id="evaluate">
                             <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
                             <option>请选择</option>
                             <c:forEach items="${commonCodeList}" var="commonCode">
-                                <option value="${commonCode.code}" <c:if test="${repair.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                             </c:forEach>
                         </select>
                     </li>
                 </c:if>
 
             </ul>
-            <input type="hidden" name="uuid" class="form-control" value="${repair.uuid}">
+            <input type="hidden" name="uuid" class="form-control" value="${qualityMgmt.uuid}">
             <input type="hidden" name="versionno" class="form-control"
-                   value="${repair.versionno}">
+                   value="${qualityMgmt.versionno}">
         </form>
 
         <div class="choose" style="display: none">
@@ -173,10 +173,9 @@
 
 <script src="${ctx}/static/admin/js/lrz/dist/lrz.bundle.js"></script>
 <script type="text/javascript" src="${ctx}/static/admin/geo.js"></script>
-    <script src="${ctx}/static/admin/js/calendar/WdatePicker.js"></script>
+<script src="${ctx}/static/admin/js/calendar/WdatePicker.js"></script>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script type="text/javascript" src="${ctx}/static/admin/js/myScript.js"></script>
-<script type="text/javascript" src="${ctx}/static/js/reviewMediaJquery.swipebox.js"></script>
 <script type="text/javascript">
 
     var errorMessage = document.getElementById("errorMessage");
@@ -189,17 +188,37 @@
     }
 
     function submitRepairInfo(){
+        var machinemodelError = '';
+        var machinemodel = document.getElementById("machinemodel").value;
+        if(machinemodel == ""){
+            machinemodelError = "请填写机器型号！"
+        }
+        var machinenoError = '';
+        var machineno = document.getElementById("machineno").value;
+        if(machineno == ""){
+            machinenoError = "请填写机器号！"
+        }
+        var enginenoError = '';
+        var engineno = document.getElementById("engineno").value;
+        if(engineno == ""){
+            enginenoError = "请填写发动机号！"
+        }
+        var productiondtError = '';
+        var productiondt = document.getElementById("productiondt").value;
+        if(productiondt == ""){
+            productiondtError = "请填写生产日期！"
+        }
         var contentError = '';
         var content = document.getElementById("content").value;
         if(content == ""){
             contentError = "请填写问题描述！"
         }
 
-        if(contentError == ""){
+        if(contentError == "" && machinenoError=="" && enginenoError=="" && productiondtError==""){
             var searchForm = document.getElementById("frm");
             searchForm.submit();
         }else{
-            errorMessage.innerHTML = contentError;
+            errorMessage.innerHTML = "请将信息填写完整!";
             $(".choose").css("display","block");
         }
     }
@@ -214,15 +233,10 @@
             $("#notification_bar").css("left", "20%");
             HC.showNotification("网络较慢，请耐心等待！", 2000);
         } else {
-            compressUploadPicture(document.getElementById("repairImg"));
+            compressUploadPicture(document.getElementById("qualityMgmtImg"));
         }
     });
 
-    function reviewMediaShow(obj){
-        var reviewMediaClass = $(obj).attr("class");
-        $( '#'+reviewMediaClass+'' ).swipebox();
-    }
-    $( '#swipebox-video' ).swipebox();
 
 
 

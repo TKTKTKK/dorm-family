@@ -8,8 +8,8 @@ import javax.persistence.Table;
 /**
  * Created by TK on 2017/12/4.
  */
-@Table(name = "tb_mtx_repair")
-public class Repair extends BaseEntity {
+@Table(name = "tb_mtx_quality_management")
+public class QualityMgmt extends BaseEntity {
 
     @Column
     private String snno;
@@ -28,6 +28,8 @@ public class Repair extends BaseEntity {
     @Column
     private String reporterphone;
     @Column
+    private String type;
+    @Column
     private String program;
     @Column
     private String parts;
@@ -44,7 +46,7 @@ public class Repair extends BaseEntity {
     @Column
     private String merchantid;
     @Column
-    private String repairdt;
+    private String servicedt;
     @Column
     private String evaluate;
     @Column
@@ -121,6 +123,14 @@ public class Repair extends BaseEntity {
         this.reporterphone = reporterphone;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getProgram() {
         return program;
     }
@@ -185,12 +195,12 @@ public class Repair extends BaseEntity {
         this.merchantid = merchantid;
     }
 
-    public String getRepairdt() {
-        return repairdt;
+    public String getServicedt() {
+        return servicedt;
     }
 
-    public void setRepairdt(String repairdt) {
-        this.repairdt = repairdt;
+    public void setServicedt(String servicedt) {
+        this.servicedt = servicedt;
     }
 
     public String getEvaluate() {

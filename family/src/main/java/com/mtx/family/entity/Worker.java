@@ -8,11 +8,11 @@ import javax.persistence.Table;
 /**
  * Created by TK on 2017/12/4.
  */
-@Table(name = "tb_mtx_repair_worker")
-public class RepairWorker extends BaseEntity {
+@Table(name = "tb_mtx_worker")
+public class Worker extends BaseEntity {
 
     @Column
-    private String repairid;
+    private String refid;
     @Column
     private String userid;
     @Column
@@ -20,12 +20,12 @@ public class RepairWorker extends BaseEntity {
     @Column
     private String phone;
 
-    public String getRepairid() {
-        return repairid;
+    public String getRefid() {
+        return refid;
     }
 
-    public void setRepairid(String repairid) {
-        this.repairid = repairid;
+    public void setRefid(String refid) {
+        this.refid = refid;
     }
 
     public String getUserid() {

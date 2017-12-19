@@ -80,9 +80,9 @@ public class WeFamilyController extends BaseAdminController {
     @Autowired
     private MtxVideoService mtxVideoService;
     @Autowired
-    private RepairService repairService;
+    private QualityMgmtService qualityMgmtService;
     @Autowired
-    private RepairWorkerService repairWorkerService;
+    private WorkerService workerService;
     @Autowired
     private PlatformUserService platformUserService;
 
@@ -1386,20 +1386,35 @@ public class WeFamilyController extends BaseAdminController {
     public String repairManage(Model model){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
-        return "admin/wefamily/repairManage";
+        model.addAttribute("type","REPAIR");
+        return "admin/wefamily/qualityMgmtManage";
+    }
+
+    /**
+     * 保养管理
+     */
+    @RequestMapping(value = "/maintainManage",method = RequestMethod.GET)
+    public String maintainManage(Model model){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        model.addAttribute("type","MAINTAIN");
+        return "admin/wefamily/qualityMgmtManage";
     }
 
     /**
      * 报修管理
-     * @param repair
+     * @param qualityMgmt
      * @param model
      * @return
      */
-    @RequestMapping(value = "/repairManage",method = RequestMethod.POST)
-    public String repairManage(@RequestParam(required = false,defaultValue = "1") int page,Repair repair,Model model,HttpServletRequest request){
+    @RequestMapping(value = "/qualityMgmtManage",method = RequestMethod.POST)
+    public String qualityMgmtManage(@RequestParam(required = false,defaultValue = "1") int page, QualityMgmt qualityMgmt, Model model, HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
-        model.addAttribute("train",repair);
+        model.addAttribute("qualityMgmt",qualityMgmt);
+        String type = request.getParameter("type");
+        model.addAttribute("type",type);
+        qualityMgmt.setType(type);
         if(null != wechatBinding){
             String startDateStr = request.getParameter("startDateStr");
             model.addAttribute("startDateStr", startDateStr);
@@ -1418,8 +1433,8 @@ public class WeFamilyController extends BaseAdminController {
                 endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
             }
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-            PageList<Repair> repairList = repairService.queryRepairList(repair, startDateTimeStr, endDateTimeStr, pageBounds);
-            model.addAttribute("repairList", repairList);
+            PageList<QualityMgmt> qualityMgmtList = qualityMgmtService.queryQualityMgmtPageList(qualityMgmt, startDateTimeStr, endDateTimeStr, pageBounds);
+            model.addAttribute("qualityMgmtList", qualityMgmtList);
 
             //删除结果
             String deleteFlag = request.getParameter("deleteFlag");
@@ -1430,47 +1445,58 @@ public class WeFamilyController extends BaseAdminController {
             }
         }
 
-        return "admin/wefamily/repairManage";
+        return "admin/wefamily/qualityMgmtManage";
     }
 
     /**
      * 报修信息
      */
-    @RequestMapping(value = "/repairInfo",method = RequestMethod.GET)
-    public String repairInfo(HttpServletRequest request,Model model){
+    @RequestMapping(value = "/qualityMgmtInfo",method = RequestMethod.GET)
+    public String qualityMgmtInfo(HttpServletRequest request,Model model){
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
 
-        String repairId= request.getParameter("repairId");
-        if(StringUtils.isNotBlank(repairId)){
-            Repair repair = new Repair();
-            repair.setUuid(repairId);
-            repair = repairService.queryForObjectByPk(repair);
-            model.addAttribute("repair",repair);
+        String qualityMgmtId= request.getParameter("qualityMgmtId");
+        String type = request.getParameter("type");
+        model.addAttribute("type",type);
+        if(StringUtils.isNotBlank(qualityMgmtId)){
+            QualityMgmt qualityMgmt = new QualityMgmt();
+            qualityMgmt.setUuid(qualityMgmtId);
+            qualityMgmt = qualityMgmtService.queryForObjectByPk(qualityMgmt);
 
-            if(StringUtils.isNotBlank(repair.getMerchantid())){
-                Merchant merchant = new Merchant();
-                merchant.setUuid(repair.getMerchantid());
-                merchant = merchantService.queryForObjectByPk(merchant);
-                model.addAttribute("merchant",merchant);
 
-                List<PlatformUser> repairWorkerList = platformUserService.queryWorkersByMerchantId(merchant.getUuid());
-                model.addAttribute("repairWorkerList",repairWorkerList);
+            if(StringUtils.isNotBlank(qualityMgmt.getMerchantid())){
+                List<PlatformUser> workerUserList = platformUserService.queryWorkersByMerchantIdAndServiveType(qualityMgmt.getMerchantid(),qualityMgmt.getType());
+                model.addAttribute("workerUserList",workerUserList);
             }else{
                 Machine machine = new Machine();
-                machine.setMachinemodel(repair.getMachinemodel());
-                machine.setMachineno(repair.getMachineno());
-                machine.setEngineno(repair.getEngineno());
+                machine.setMachinemodel(qualityMgmt.getMachinemodel());
+                machine.setMachineno(qualityMgmt.getMachineno());
+                machine.setEngineno(qualityMgmt.getEngineno());
                 Merchant merchant = merchantService.queryMerchantByMachineInfo(machine);
-                model.addAttribute("merchant",merchant);
+                if(null != merchant){
+                    qualityMgmt.setMerchantid(merchant.getUuid());
+                    qualityMgmtService.updatePartial(qualityMgmt);
+                }
+            }
+            model.addAttribute("qualityMgmt",qualityMgmt);
+
+            Worker worker = new Worker();
+            worker.setRefid(qualityMgmtId);
+            List<Worker> tempWorkerList = workerService.queryForList(worker);
+            if(null != tempWorkerList && tempWorkerList.size() > 0 ){
+                model.addAttribute("worker",tempWorkerList.get(0));
             }
 
+
             Attachment reporterAttachment = new Attachment();
-            reporterAttachment.setRefid(repairId);
+            reporterAttachment.setRefid(qualityMgmtId);
             reporterAttachment.setType("reporter");
             List<Attachment> reporterAttachmentList = attachmentService.queryForList(reporterAttachment);
             model.addAttribute("reporterAttachmentList",reporterAttachmentList);
 
             Attachment workerAttachment = new Attachment();
-            workerAttachment.setRefid(repairId);
+            workerAttachment.setRefid(qualityMgmtId);
             workerAttachment.setType("worker");
             List<Attachment> workerAttachmentList = attachmentService.queryForList(workerAttachment);
             model.addAttribute("workerAttachmentList",workerAttachmentList);
@@ -1495,23 +1521,39 @@ public class WeFamilyController extends BaseAdminController {
             model.addAttribute("errorMessage", "操作失败");
         }
 
-        return "admin/wefamily/repairInfo";
+        return "admin/wefamily/qualityMgmtInfo";
     }
 
     /**
-     *报修保存机器信息
+     * 根据id查询经销商
      */
-    @RequestMapping(value = "/saveReportRepairInfo",method= RequestMethod.POST)
+    @RequestMapping(value = "/queryMerchantById", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String,Object> saveReportRepairInfo(Repair repair,HttpServletRequest request){
+    public Map<String, Object> queryMerchantById(HttpServletRequest request){
         Map<String, Object> resultMap = new HashMap<String, Object>();
+        String merchantId = request.getParameter("merchantId");
+        Merchant merchant = new Merchant();
+        merchant.setUuid(merchantId);
+        merchant = merchantService.queryForObjectByPk(merchant);
+        resultMap.put("merchant", merchant);
+        return resultMap;
+    }
 
-        String returnMsg = repairService.saveReportRepairInfo(repair);
+    /**
+     *保存用户、机器、经销商信息
+     */
+    @RequestMapping(value = "/saveReportQualityMgmtInfo",method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> saveReportQualityMgmtInfo(QualityMgmt qualityMgmt, HttpServletRequest request){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        String type = request.getParameter("type");
+        qualityMgmt.setType(type);
+        String returnMsg = qualityMgmtService.saveReportQualityMgmtInfo(qualityMgmt);
         if(StringUtils.isNotBlank(returnMsg)){
             resultMap.put("returnMsg",returnMsg);
         }else{
             resultMap.put("successMessage", "保存成功");
-            resultMap.put("repairId",repair.getUuid());
+            resultMap.put("qualityMgmtId",qualityMgmt.getUuid());
         }
         return resultMap;
     }
@@ -1519,19 +1561,17 @@ public class WeFamilyController extends BaseAdminController {
     /**
      * 分配报修
      */
-    @RequestMapping("/distributeRepair")
+    @RequestMapping("/distributeQualityMgmt")
     @ResponseBody
-    public Map<String, Object> distributeRepair(HttpServletRequest request){
+    public Map<String, Object> distributeQualityMgmt(HttpServletRequest request){
         int distributeFlag = 0;
-        String repairId = request.getParameter("repairId");
-        String merchantId = request.getParameter("merchantId");
+        String qualityMgmtId = request.getParameter("qualityMgmtId");
         String versionno = request.getParameter("versionno");
-        if(StringUtils.isNotBlank(repairId)){
-            Repair repair = new Repair();
-            repair.setUuid(repairId);
-            repair.setMerchantid(merchantId);
-            repair.setVersionno(Integer.valueOf(versionno));
-            distributeFlag = repairService.distributeRepair(repair);
+        if(StringUtils.isNotBlank(qualityMgmtId)){
+            QualityMgmt qualityMgmt = new QualityMgmt();
+            qualityMgmt.setUuid(qualityMgmtId);
+            qualityMgmt.setVersionno(Integer.valueOf(versionno));
+            distributeFlag = qualityMgmtService.distributeQualityMgmt(qualityMgmt);
         }
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("distributeFlag", distributeFlag);
@@ -1541,17 +1581,17 @@ public class WeFamilyController extends BaseAdminController {
     /**
      * 开始维修
      */
-    @RequestMapping("/startRepair")
+    @RequestMapping("/startQualityMgmt")
     @ResponseBody
-    public Map<String, Object> startRepair(HttpServletRequest request){
+    public Map<String, Object> startQualityMgmt(HttpServletRequest request){
         int startFlag = 0;
-        String repairId = request.getParameter("repairId");
+        String qualityMgmtId = request.getParameter("qualityMgmtId");
         String versionno = request.getParameter("versionno");
-        if(StringUtils.isNotBlank(repairId)){
-            Repair repair = new Repair();
-            repair.setUuid(repairId);
-            repair.setVersionno(Integer.valueOf(versionno));
-            startFlag = repairService.startRepair(repair);
+        if(StringUtils.isNotBlank(qualityMgmtId)){
+            QualityMgmt qualityMgmt = new QualityMgmt();
+            qualityMgmt.setUuid(qualityMgmtId);
+            qualityMgmt.setVersionno(Integer.valueOf(versionno));
+            startFlag = qualityMgmtService.startQualityMgmt(qualityMgmt);
         }
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("startFlag", startFlag);
@@ -1561,43 +1601,37 @@ public class WeFamilyController extends BaseAdminController {
     /**
      *保存维修信息
      */
-    @RequestMapping(value = "/saveRepairInfo",method= RequestMethod.POST)
+    @RequestMapping(value = "/saveQualityMgmtInfo",method= RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> saveRepairInfo(Repair repair,HttpServletRequest request,Model model){
+    public Map<String,Object> saveQualityMgmtInfo(QualityMgmt qualityMgmt,Worker worker, HttpServletRequest request, Model model){
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        String repairId = request.getParameter("repairId");
+        String qualityMgmtId = request.getParameter("qualityMgmtId");
         String versionno = request.getParameter("versionno");
-        repair.setUuid(repairId);
-        repair.setVersionno(Integer.valueOf(versionno));
+        qualityMgmt.setUuid(qualityMgmtId);
+        qualityMgmt.setVersionno(Integer.valueOf(versionno));
 
         String workerId = request.getParameter("workerId");
-        PlatformUser workerUser = platformUserService.getPlatformUserById(workerId);
-        model.addAttribute("workerUser",workerUser);
-
-        RepairWorker repairWorker = new RepairWorker();
-        repairWorker.setRepairid(repairId);
-        repairWorker.setUserid(workerUser.getUuid());
-
-        List<RepairWorker> repairWorkerList = repairWorkerService.queryForList(repairWorker);
-        if(null != repairWorkerList && repairWorkerList.size() > 0){
-            repairWorker = repairWorkerList.get(0);
+        PlatformUser platformUser = platformUserService.getPlatformUserById(workerId);
+        worker.setRefid(qualityMgmtId);
+        worker.setUserid(workerId);
+        List<Worker> workerList = workerService.queryForList(worker);
+        if(null != workerList && workerList.size() > 0){
+            worker = workerList.get(0);
         }
+        worker.setName(platformUser.getName());
+        worker.setPhone(platformUser.getCellphone());
 
-        repairWorker.setName(workerUser.getName());
-        repairWorker.setPhone(workerUser.getCellphone());
+        String[] qualityMgmtImgs = request.getParameterValues("qualityMgmtImg");
 
-
-        String[] repairImgs = request.getParameterValues("repairImg");
-
-        repairService.saveRepairInfo(repair,repairWorker,repairImgs);
+        qualityMgmtService.saveQualityMgmtInfo(qualityMgmt,worker,qualityMgmtImgs);
 
         String saveType = request.getParameter("saveType");
         if("FINISH".equals(saveType)){
-            Repair tempRepair = new Repair();
-            tempRepair.setUuid(repairId);
-            tempRepair = repairService.queryForObjectByPk(tempRepair);
-            repairService.finishRepair(tempRepair);
+            QualityMgmt tempQualityMgmt = new QualityMgmt();
+            tempQualityMgmt.setUuid(qualityMgmtId);
+            tempQualityMgmt = qualityMgmtService.queryForObjectByPk(tempQualityMgmt);
+            qualityMgmtService.finishQualityMgmt(tempQualityMgmt);
         }
         resultMap.put("successMessage", "保存成功");
         return resultMap;
@@ -1606,17 +1640,19 @@ public class WeFamilyController extends BaseAdminController {
     /**
      * 维修结束
      */
-    @RequestMapping("/finishRepair")
+    @RequestMapping("/finishQualityMgmt")
     @ResponseBody
-    public Map<String, Object> finishRepair(HttpServletRequest request){
+    public Map<String, Object> finishQualityMgmt(HttpServletRequest request){
         int finishFlag = 0;
-        String repairId = request.getParameter("repairId");
+        String qualityMgmtId = request.getParameter("qualityMgmtId");
         String versionno = request.getParameter("versionno");
-        if(StringUtils.isNotBlank(repairId)){
-            Repair repair = new Repair();
-            repair.setUuid(repairId);
-            repair.setVersionno(Integer.valueOf(versionno));
-            finishFlag = repairService.finishRepair(repair);
+        String remarks = request.getParameter("remarks");
+        if(StringUtils.isNotBlank(qualityMgmtId)){
+            QualityMgmt qualityMgmt = new QualityMgmt();
+            qualityMgmt.setUuid(qualityMgmtId);
+            qualityMgmt.setVersionno(Integer.valueOf(versionno));
+            qualityMgmt.setRemarks(remarks);
+            finishFlag = qualityMgmtService.finishQualityMgmt(qualityMgmt);
         }
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("finishFlag", finishFlag);
@@ -1630,68 +1666,85 @@ public class WeFamilyController extends BaseAdminController {
      */
     @RequestMapping(value = "/repairManageForPhone")
     public String repairManageForPhone(Model model) {
-        Repair repair = new Repair();
-        List<Repair> repairList = repairService.queryRepairListForPhone(repair);
-        model.addAttribute("repairList",repairList);
-        return "admin/wefamily/repairManageForPhone";
+        QualityMgmt qualityMgmt = new QualityMgmt();
+        qualityMgmt.setType("REPAIR");
+        model.addAttribute("type","REPAIR");
+        List<QualityMgmt> qualityMgmtList = qualityMgmtService.queryQualityMgmtListForPhone(qualityMgmt);
+        model.addAttribute("qualityMgmtList",qualityMgmtList);
+        return "admin/wefamily/qualityMgmtManageForPhone";
     }
 
-    @RequestMapping(value = "/repairInfoForPhone",method = RequestMethod.GET)
-    public String repairInfoForPhone(Model model,HttpServletRequest request){
-        String repairId= request.getParameter("repairId");
-        if(StringUtils.isNotBlank(repairId)){
-            Repair repair = new Repair();
-            repair.setUuid(repairId);
-            repair = repairService.queryForObjectByPk(repair);
-            model.addAttribute("repair", repair);
+    /**
+     * 保养列表
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/maintainManageForPhone")
+    public String maintainManageForPhone(Model model) {
+        QualityMgmt qualityMgmt = new QualityMgmt();
+        qualityMgmt.setType("MAINTAIN");
+        model.addAttribute("type","MAINTAIN");
+        List<QualityMgmt> qualityMgmtList = qualityMgmtService.queryQualityMgmtListForPhone(qualityMgmt);
+        model.addAttribute("qualityMgmtList",qualityMgmtList);
+        return "admin/wefamily/qualityMgmtManageForPhone";
+    }
 
-            if(StringUtils.isNotBlank(repair.getMerchantid())){
+    @RequestMapping(value = "/qualityMgmtInfoForPhone",method = RequestMethod.GET)
+    public String qualityMgmtInfoForPhone(Model model,HttpServletRequest request){
+        String qualityMgmtId= request.getParameter("qualityMgmtId");
+        if(StringUtils.isNotBlank(qualityMgmtId)){
+            QualityMgmt qualityMgmt = new QualityMgmt();
+            qualityMgmt.setUuid(qualityMgmtId);
+            qualityMgmt = qualityMgmtService.queryForObjectByPk(qualityMgmt);
+            model.addAttribute("qualityMgmt", qualityMgmt);
+
+            if(StringUtils.isNotBlank(qualityMgmt.getMerchantid())){
                 Merchant merchant = new Merchant();
-                merchant.setUuid(repair.getMerchantid());
+                merchant.setUuid(qualityMgmt.getMerchantid());
                 merchant = merchantService.queryForObjectByPk(merchant);
                 model.addAttribute("merchant",merchant);
             }
 
             Attachment reporterAttachment = new Attachment();
-            reporterAttachment.setRefid(repairId);
+            reporterAttachment.setRefid(qualityMgmtId);
             reporterAttachment.setType("reporter");
             List<Attachment> reporterAttachmentList = attachmentService.queryForList(reporterAttachment);
             model.addAttribute("reporterAttachmentList",reporterAttachmentList);
 
             Attachment workerAttachment = new Attachment();
-            workerAttachment.setRefid(repairId);
+            workerAttachment.setRefid(qualityMgmtId);
             workerAttachment.setType("worker");
             List<Attachment> workerAttachmentList = attachmentService.queryForList(workerAttachment);
             model.addAttribute("workerAttachmentList",workerAttachmentList);
 
-            RepairWorker repairWorker = new RepairWorker();
-            repairWorker.setRepairid(repairId);
-            List<RepairWorker> repairWorkerList = repairWorkerService.queryForList(repairWorker);
-            model.addAttribute("repairWorkerList",repairWorkerList);
+            Worker worker = new Worker();
+            worker.setRefid(qualityMgmtId);
+            List<Worker> workerList = workerService.queryForList(worker);
+            model.addAttribute("workerList",workerList);
         }
 
 
-        return "admin/wefamily/repairInfoForPhone";
+        return "admin/wefamily/qualityMgmtInfoForPhone";
     }
 
-    @RequestMapping(value = "/repairInfoForPhone",method = RequestMethod.POST)
-    public String repairInfoForPhone(Model model,HttpServletRequest request,Repair repair,RepairWorker repairWorker, RedirectAttributes redirectAttributes){
+    @RequestMapping(value = "/qualityMgmtInfoForPhone",method = RequestMethod.POST)
+    public String qualityMgmtInfoForPhone(Model model, HttpServletRequest request, QualityMgmt qualityMgmt, Worker worker, RedirectAttributes redirectAttributes){
 
-        String repairWorkerId = request.getParameter("repairworkerid");
-        String repairWorkerVersionno = request.getParameter("repairworkerversionno");
+        String workerId = request.getParameter("workerid");
+        String workerVersionno = request.getParameter("workerversionno");
 
-        if(StringUtils.isNotBlank(repairWorkerId)){
-            repairWorker.setUuid(repairWorkerId);
-            repairWorker.setVersionno(Integer.valueOf(repairWorkerVersionno));
+        if(StringUtils.isNotBlank(workerId)){
+            worker.setUuid(workerId);
+            worker.setVersionno(Integer.valueOf(workerVersionno));
         }
 
 
-        String[] repairImgs = request.getParameterValues("repairImg");
+        String[] qualityMgmtImgs = request.getParameterValues("qualityMgmtImg");
 
         //修改
-        if(StringUtils.isNotBlank(repair.getUuid())){
+        if(StringUtils.isNotBlank(qualityMgmt.getUuid())){
             try {
-                repairService.saveRepairInfo(repair,repairWorker,repairImgs);
+                qualityMgmtService.saveQualityMgmtInfo(qualityMgmt,worker,qualityMgmtImgs);
                 redirectAttributes.addFlashAttribute("successMessage", "保存成功");
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
@@ -1699,7 +1752,7 @@ public class WeFamilyController extends BaseAdminController {
             }
         }
 
-        return "redirect:repairInfoForPhone?repairId=" + repair.getUuid();
+        return "redirect:qualityMgmtInfoForPhone?qualityMgmtId=" + qualityMgmt.getUuid();
     }
 
     @RequestMapping(value = "/goMtxVideo", method = RequestMethod.GET)

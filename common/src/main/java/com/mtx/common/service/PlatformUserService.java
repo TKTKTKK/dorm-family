@@ -195,11 +195,11 @@ public class PlatformUserService  extends BaseService<PlatformUserMapper,Platfor
     }
 
     /**
-     * 根据经销商id查询维修人员
+     * 根据经销商id和服务类型查询工作人员
      * @return
      */
-    public List<PlatformUser> queryWorkersByMerchantId(String merchantId){
-        return mapper.selectWorkersByMerchantId(merchantId);
+    public List<PlatformUser> queryWorkersByMerchantIdAndServiveType(String merchantId, String type){
+        return mapper.selectWorkersByMerchantIdAndServiveType(merchantId,type);
     }
 
     /**

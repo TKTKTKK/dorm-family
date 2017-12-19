@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.family.mapper.QualityMgmtMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.family.entity.QualityMgmt">
+    </resultMap>
+
+    <select id="selectQualityMgmtPageList" resultMap="selectResultMap">
+        select qm.*
+        from tb_mtx_quality_management qm
+        where
+        1=1
+        <if test="qualityMgmt.snno != null and qualityMgmt.snno != ''">
+            and qm.snno like concat("%",#{qualityMgmt.snno},"%")
+        </if>
+        <if test="qualityMgmt.type != null and qualityMgmt.type != ''">
+            and qm.type = #{qualityMgmt.type}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+                              and qm.servicedt >= #{startTime}
+                            ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+                              and qm.servicedt <= #{endTime}
+                            ]]>
+        </if>
+        order by qm.modifyon desc
+    </select>
+
+    <select id="selectQualityMgmtListForPhone" resultMap="selectResultMap">
+        select qm.*
+        from tb_mtx_quality_management qm
+        where qm.type = #{qualityMgmt.type}
+        order by qm.modifyon desc
+    </select>
+
+</mapper>

@@ -42,5 +42,5 @@ public interface PlatformUserMapper extends BaseMapper<PlatformUser> {
 
     List<PlatformUser> selectExpressCreatePerson(@Param("bindId") String bindId,@Param("communityId") String communityId);
 
-    List<PlatformUser> selectWorkersByMerchantId(@Param("merchantId") String merchantId);
+    List<PlatformUser> selectWorkersByMerchantIdAndServiveType(@Param("merchantId") String merchantId,@Param("type") String type);
 }

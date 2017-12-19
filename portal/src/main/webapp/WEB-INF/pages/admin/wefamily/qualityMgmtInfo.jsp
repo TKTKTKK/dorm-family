@@ -275,7 +275,13 @@
             <div class="row" id="sugInfoDiv" style="overflow-x: hidden;overflow-y: auto;">
                 <header class="panel-heading bg-white text-md b-b">
                     满田星 /
-                    <a href="${ctx}/admin/wefamily/repairManage"><span class="font-bold text-shallowred">报修管理</span></a>
+                    <c:if test="${type eq 'REPAIR'}">
+                        <a href="${ctx}/admin/wefamily/repairManage"><span class="font-bold text-shallowred">报修管理</span></a>
+                    </c:if>
+                    <c:if test="${type eq 'MAINTAIN'}">
+                        <a href="${ctx}/admin/wefamily/maintainManage"><span class="font-bold text-shallowred">保养管理</span></a>
+                    </c:if>
+
                 </header>
                 <div class="col-sm-12 pos">
                     <div id="myTabContent" class="tab-content">
@@ -288,34 +294,34 @@
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="tab_1">
                                             <div class="col-md-6">
-                                                <!--报修详情-->
+                                                <!--详情-->
                                                 <div class="portlet green box">
                                                         <div class="portlet-title">
-                                                            <div class="caption"><i class="fa fa-cogs"></i>报修详情</div>
+                                                            <div class="caption"><i class="fa fa-cogs"></i>${showType}详情</div>
                                                         </div>
                                                         <div class="portlet-body">
                                                             <form class="form-horizontal form-bordered" data-validate="parsley"
-                                                                  action="${ctx}/admin/wefamily/saveReportRepairInfo" method="POST"
-                                                                  enctype="multipart/form-data" id="reportRepairInfoFrm" style="border: 0px">
+                                                                  action="${ctx}/admin/wefamily/saveReportQualityMgmtInfo" method="POST"
+                                                                  enctype="multipart/form-data" id="reportQualityMgmtInfoFrm" style="border: 0px">
                                                                 <div class="panel-body p-0-15">
                                                                     <span id="machineError" class="text-danger"></span>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-3 control-label"><span class="text-danger">*</span>报修人：</label>
+                                                                        <label class="col-sm-3 control-label"><span class="text-danger">*</span>用户：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
                                                                             <input type="text" class="form-control"  name="reportername" id="reportername"
-                                                                                   value="${repair.reportername}" data-required="true" onblur="trimText(this)"
-                                                                                   placeholder="请输入报修人姓名" data-maxlength="32"
+                                                                                   value="${qualityMgmt.reportername}" data-required="true" onblur="trimText(this)"
+                                                                                   placeholder="请输入用户姓名" data-maxlength="32"
                                                                             >
-                                                                            <input type="hidden" name="uuid" value="${repair.uuid}">
-                                                                            <input type="hidden" name="versionno" value="${repair.versionno}">
+                                                                            <input type="hidden" name="uuid" value="${qualityMgmt.uuid}">
+                                                                            <input type="hidden" name="versionno" value="${qualityMgmt.versionno}">
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label class="col-sm-3 control-label"><span class="text-danger">*</span>联系电话：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
                                                                             <input type="text" class="form-control"  name="reporterphone" id="reporterphone"
-                                                                                   value="${repair.reporterphone}" data-required="true" onblur="trimText(this),validateContactno('reporter')"
-                                                                                   placeholder="请输入报修人号码" data-maxlength="11"
+                                                                                   value="${qualityMgmt.reporterphone}" data-required="true" onblur="trimText(this),validateContactno('reporter')"
+                                                                                   placeholder="请输入用户号码" data-maxlength="11"
                                                                             >
                                                                             <span id="reporterPhoneError" class="text-danger"></span>
                                                                         </div>
@@ -324,7 +330,7 @@
                                                                         <label class="col-sm-3 control-label"><span class="text-danger">*</span>机器型号：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
                                                                             <input type="text" class="form-control"  name="machinemodel" id="machinemodel"
-                                                                                   value="${repair.machinemodel}" data-required="true" onblur="trimText(this)"
+                                                                                   value="${qualityMgmt.machinemodel}" data-required="true" onblur="trimText(this)"
                                                                                    placeholder="请输入机器型号" data-maxlength="32"
                                                                             >
                                                                         </div>
@@ -334,7 +340,7 @@
                                                                         <div class="col-sm-9  b-l bg-white">
                                                                             <div class="" style="position: relative">
                                                                                 <input type="text" class="form-control my-feetype-ul"  name="machineno" id="machineno"
-                                                                                       value="${repair.machineno}" data-required="true" onblur="trimText(this)"
+                                                                                       value="${qualityMgmt.machineno}" data-required="true" onblur="trimText(this)"
                                                                                        placeholder="请输入机器号" data-maxlength="32"
                                                                                 >
                                                                                 <input type="hidden" name="machineid" id="machineid" value="${machine.uuid}">
@@ -345,7 +351,7 @@
                                                                         <label class="col-sm-3 control-label"><span class="text-danger">*</span>发动机号：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
                                                                             <input type="text" class="form-control"  name="engineno" id="engineno"
-                                                                                   value="${repair.engineno}" data-required="true" onblur="trimText(this)"
+                                                                                   value="${qualityMgmt.engineno}" data-required="true" onblur="trimText(this)"
                                                                                    placeholder="请输入发动机号" data-maxlength="32"
                                                                             >
                                                                         </div>
@@ -354,45 +360,52 @@
                                                                         <label class="col-sm-3 control-label"><span class="text-danger">*</span>生产日期：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
                                                                             <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
-                                                                                   name="productiondt" value="${repair.productiondt}" data-maxlength="23" onblur="trimText(this)"
+                                                                                   name="productiondt" value="${qualityMgmt.productiondt}" data-maxlength="23" onblur="trimText(this)"
                                                                                    data-date-format="yyyy-mm-dd" id="productiondt" placeholder="请选择生产日期" data-required="true">
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label class="col-sm-3 control-label"><span class="text-danger">*</span>经销商：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
-                                                                            <input type="text" class="form-control" readonly
-                                                                                   value="${merchant.name}" data-required="true"
-                                                                                   data-maxlength="32"
+                                                                            <select class="form-control" name="merchantid" id="merchantid"
+                                                                                    onchange="queryMerchantById()"
+                                                                                    data-required="true"
                                                                             >
+                                                                                <c:if test="${fn:length(merchantList) > 1}">
+                                                                                    <option value="">请选择经销商</option>
+                                                                                </c:if>
+                                                                                <c:forEach items="${merchantList}" var="merchant">
+                                                                                    <option value="${merchant.uuid}" <c:if test="${qualityMgmt.merchantid == merchant.uuid}">selected</c:if>>${merchant.name}</option>
+                                                                                </c:forEach>
+                                                                            </select>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-3 control-label"><span class="text-danger">*</span>联系电话：</label>
+                                                                        <label class="col-sm-3 control-label">联系电话：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
-                                                                            <input type="text" class="form-control" readonly
-                                                                                   value="${merchant.contactno}" data-required="true" onblur="trimText(this)"
-                                                                                   data-maxlength="32"
+                                                                            <input type="text" class="form-control" readonly id="merchantContactno"
+                                                                                   onblur="trimText(this)" data-maxlength="32"
                                                                             >
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-3 control-label"><span class="text-danger">*</span>地址：</label>
+                                                                        <label class="col-sm-3 control-label">地址：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
-                                                                            <input type="text" class="form-control" readonly
-                                                                                   value="${merchant.address}" data-required="true"
-                                                                                   data-maxlength="32"
+                                                                            <input type="text" class="form-control" readonly id="merchantAddress"
+                                                                                   data-maxlength="32"  onblur="trimText(this)"
                                                                             >
                                                                         </div>
                                                                     </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-3  control-label">问题描述：</label>
-                                                                        <div class="col-sm-9 b-l bg-white">
+                                                                    <c:if test="${type eq 'REPAIR'}">
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-3  control-label">问题描述：</label>
+                                                                            <div class="col-sm-9 b-l bg-white">
                                                                                 <textarea class="form-control" rows="4" name="content"
                                                                                           id="content" data-maxlength="256" onblur="trimText(this)"
-                                                                                >${repair.content}</textarea>
+                                                                                >${qualityMgmt.content}</textarea>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </c:if>
                                                                     <c:if test="${fn:length(reporterAttachmentList) > 0}">
                                                                         <div class="form-group" >
                                                                             <label class="col-sm-3 control-label">报修照片：</label>
@@ -409,15 +422,23 @@
                                                                         <div class="col-sm-9 b-l bg-white">
                                                                                 <textarea class="form-control" rows="4" name="remarks"
                                                                                           id="remarks" data-maxlength="256" onblur="trimText(this)"
-                                                                                >${repair.remarks}</textarea>
+                                                                                >${qualityMgmt.remarks}</textarea>
                                                                             <span id="remarksError" class="text-danger"></span>
                                                                         </div>
                                                                     </div>
 
                                                                     <div class="panel-footer text-left bg-light lter">
-                                                                        <a class="btn btn-primary btn-info" href="javascript:saveReportRepairInfo()" style="color: white;margin-left: 10px;margin-bottom: 10px">保存</a>
-                                                                        <a class="btn btn-primary btn-info" href="javascript:distributeRepair()" style="color: white;margin-left: 10px;margin-bottom: 10px">分配报修</a>
-                                                                        <a class="btn btn-primary btn-info" href="javascript:closeRepair()" style="color: white;margin-left: 10px;margin-bottom: 10px">关闭报修</a>
+                                                                        <c:if test="${qualityMgmt.status ne 'FINISH'}">
+                                                                            <a class="btn btn-primary btn-info" href="javascript:saveReportQualityMgmtInfo()" style="color: white;margin-left: 10px;margin-bottom: 10px">保存</a>
+                                                                        </c:if>
+                                                                        <c:if test="${qualityMgmt.status eq 'NEW' && not empty qualityMgmt.merchantid}">
+                                                                            <a class="btn btn-primary btn-info" href="javascript:distributeQualityMgmt()" style="color: white;margin-left: 10px;margin-bottom: 10px">
+                                                                                分配<c:if test="${type eq 'REPAIR'}">报修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>
+                                                                            </a>
+                                                                        </c:if>
+                                                                        <c:if test="${type eq 'REPAIR' && qualityMgmt.status ne 'FINISH'}">
+                                                                            <a class="btn btn-primary btn-info" href="javascript:closeQualityMgmt()" style="color: white;margin-left: 10px;margin-bottom: 10px">关闭报修</a>
+                                                                        </c:if>
                                                                     </div>
 
                                                                 </div>
@@ -433,40 +454,40 @@
                                                 <c:if test="${order.status ne 'NEW'}">
                                                     <div class="portlet blue-hoki box">
                                                         <div class="portlet-title">
-                                                            <div class="caption"><i class="fa fa-cogs"></i>维修信息</div>
+                                                            <div class="caption"><i class="fa fa-cogs"></i>
+                                                                <c:if test="${type eq 'REPAIR'}">维修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>信息
+                                                            </div>
                                                         </div>
                                                         <div class="portlet-body">
-                                                            <c:if test="${repair.status eq 'REPAIRING' or repair.status eq 'FINISH'}">
+                                                            <c:if test="${qualityMgmt.status eq 'REPAIRING' or qualityMgmt.status eq 'FINISH'}">
                                                                 <form class="form-horizontal form-bordered" data-validate="parsley"
-                                                                      action="${ctx}/admin/wefamily/saveRepairInfo" method="POST"
-                                                                      enctype="multipart/form-data" id="repairInfoFrm" style="border: 0px">
+                                                                      action="${ctx}/admin/wefamily/saveQualityMgmtInfo" method="POST"
+                                                                      enctype="multipart/form-data" id="qualityMgmtInfoFrm" style="border: 0px">
                                                                     <div class="panel-body p-0-15">
                                                                         <div class="form-group">
-                                                                            <label class="col-sm-3 control-label"><span class="text-danger">*</span>维修人员：</label>
+                                                                            <label class="col-sm-3 control-label"><span class="text-danger">*</span><c:if test="${type eq 'REPAIR'}">维修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>员工：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
                                                                                 <select  class="form-control" name="workerId" id="workerId" data-required="true">
-                                                                                    <c:if test="${fn:length(repairWorkerList) > 1}">
-                                                                                        <option value="">请选择</option>
-                                                                                    </c:if>
-                                                                                    <c:forEach items="${repairWorkerList}" var="repairWorker">
-                                                                                            <option value="${repairWorker.uuid}" <c:if test="${repairWorker.uuid == workerUser.uuid}">selected</c:if>>${repairWorker.name}</option>
+                                                                                    <option value="">请选择</option>
+                                                                                    <c:forEach items="${workerUserList}" var="workerUser">
+                                                                                            <option value="${workerUser.uuid}" <c:if test="${worker.userid == workerUser.uuid}">selected</c:if>>${workerUser.name}</option>
                                                                                     </c:forEach>
                                                                                 </select>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label class="col-sm-3 control-label">维修日期：</label>
+                                                                            <label class="col-sm-3 control-label"><c:if test="${type eq 'REPAIR'}">维修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>日期：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
                                                                                 <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
-                                                                                       name="repairdt" value="${repair.repairdt}" data-maxlength="23" onblur="trimText(this)"
-                                                                                       data-date-format="yyyy-mm-dd" id="repairdt" placeholder="请选择维修日期">
+                                                                                       name="servicedt" value="${qualityMgmt.servicedt}" data-maxlength="23" onblur="trimText(this)"
+                                                                                       data-date-format="yyyy-mm-dd" id="servicedt" placeholder="请选择维修日期">
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group">
                                                                             <label class="col-sm-3 control-label">现场地点：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
                                                                                 <input type="text" class="form-control"  name="location" id="location"
-                                                                                       value="${repair.location}" onblur="trimText(this)"
+                                                                                       value="${qualityMgmt.location}" onblur="trimText(this)"
                                                                                        data-maxlength="32" readonly
                                                                                 >
                                                                             </div>
@@ -475,7 +496,7 @@
                                                                             <label class="col-sm-3 control-label">损坏项目：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
                                                                                 <input type="text" class="form-control"  name="program" id="program"
-                                                                                       value="${repair.program}" onblur="trimText(this)"
+                                                                                       value="${qualityMgmt.program}" onblur="trimText(this)"
                                                                                        placeholder="请输入损坏项目" data-maxlength="32"
                                                                                 >
                                                                             </div>
@@ -484,7 +505,7 @@
                                                                             <label class="col-sm-3 control-label">处理配件：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
                                                                                 <input type="text" class="form-control"  name="parts" id="parts"
-                                                                                       value="${repair.parts}" onblur="trimText(this)"
+                                                                                       value="${qualityMgmt.parts}" onblur="trimText(this)"
                                                                                        placeholder="请输入处理配件" data-maxlength="32"
                                                                                 >
                                                                             </div>
@@ -493,7 +514,7 @@
                                                                             <label class="col-sm-3 control-label">已作业面积：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
                                                                                 <input type="text" class="form-control"  name="workarea" id="workarea"
-                                                                                       value="${repair.workarea}" onblur="trimText(this)"
+                                                                                       value="${qualityMgmt.workarea}" onblur="trimText(this)"
                                                                                        placeholder="请输入已作业面积" data-maxlength="32"
                                                                                 >
                                                                             </div>
@@ -502,20 +523,19 @@
                                                                             <label class="col-sm-3 control-label">效果如何：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
                                                                                 <input type="text" class="form-control"  name="effect" id="effect"
-                                                                                       value="${repair.effect}" onblur="trimText(this)"
+                                                                                       value="${qualityMgmt.effect}" onblur="trimText(this)"
                                                                                        placeholder="请输入效果" data-maxlength="32"
                                                                                 >
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group" >
-                                                                            <label class="col-sm-3 control-label"><span class="text-danger">*</span>损坏分类：</label>
+                                                                            <label class="col-sm-3 control-label">损坏分类：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
-                                                                                <select  class="form-control" name="damagecategory" id="damagecategory"
-                                                                                         data-required="true">
+                                                                                <select  class="form-control" name="damagecategory" id="damagecategory">
                                                                                     <c:set var="commonCodeList" value="${web:queryCommonCodeList('DAMAGE_CATEGORY')}"></c:set>
                                                                                     <option value="">--请选择--</option>
                                                                                     <c:forEach items="${commonCodeList}" var="commonCode">
-                                                                                        <option value="${commonCode.code}" <c:if test="${repair.damagecategory == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                                                                        <option value="${commonCode.code}" <c:if test="${qualityMgmt.damagecategory == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                                                                                     </c:forEach>
                                                                                 </select>
                                                                             </div>
@@ -524,18 +544,18 @@
                                                                             <label class="col-sm-3 control-label">到达所用时间：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
                                                                                 <input type="text" class="form-control"  name="arrivetime" id="arrivetime"
-                                                                                       value="${repair.arrivetime}" onblur="trimText(this)"
+                                                                                       value="${qualityMgmt.arrivetime}" onblur="trimText(this)"
                                                                                        placeholder="请输入到达所用时间" data-maxlength="32"
                                                                                 >
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label class="col-sm-3 control-label"><span class="text-danger">*</span>维修金额：</label>
+                                                                            <label class="col-sm-3 control-label">
+                                                                                <c:if test="${type eq 'REPAIR'}">维修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>金额：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
                                                                                     <input class="form-control myFee" size="4"
-                                                                                           data-required="true"
                                                                                            name="price"
-                                                                                           value="${repair.price}" id="price"
+                                                                                           value="${qualityMgmt.price}" id="price"
                                                                                            data-maxlength="10"
                                                                                            onblur="validateMoney(this,'priceError')"
                                                                                     >
@@ -549,18 +569,18 @@
                                                                                     <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
                                                                                     <option value="">--请选择--</option>
                                                                                     <c:forEach items="${commonCodeList}" var="commonCode">
-                                                                                        <option value="${commonCode.code}" <c:if test="${repair.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                                                                        <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                                                                                     </c:forEach>
                                                                                 </select>
                                                                             </div>
                                                                         </div>
-                                                                        <c:if test="${repair.status ne 'FINISH'}">
+                                                                        <c:if test="${qualityMgmt.status ne 'FINISH'}">
                                                                             <div class="form-group" >
-                                                                                <label class="col-sm-3 control-label">上传照片：</label>
+                                                                                <label class="col-sm-3 control-label">上传人机合影：</label>
                                                                                 <div class="col-sm-9  b-l bg-white">
                                                                                     <div class="my-display-inline-box">
-                                                                                        <div id="repairImgUrlContainer">
-                                                                                            <input type="file" id="repairImg" name="picUrl" class="filestyle"
+                                                                                        <div id="qualityMgmtImgUrlContainer">
+                                                                                            <input type="file" id="qualityMgmtImg" name="picUrl" class="filestyle"
                                                                                                    data-icon="false" data-classButton="btn btn-default"
                                                                                                    data-classInput="form-control inline v-middle input-xs"
                                                                                                    onchange="compressUploadPicture(this)" accept="image/*"
@@ -569,7 +589,7 @@
                                                                                                    data-max-count="4">
                                                                                             <div id="picUrlError" class="text-danger"></div>
                                                                                         </div>
-                                                                                        <div id="repairImgContainer" class="row value">
+                                                                                        <div id="qualityMgmtImgContainer" class="row value">
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -577,7 +597,7 @@
                                                                         </c:if>
                                                                         <c:if test="${fn:length(workerAttachmentList) > 0}">
                                                                             <div class="form-group" >
-                                                                                <label class="col-sm-3 control-label">维修照片：</label>
+                                                                                <label class="col-sm-3 control-label"></label>
                                                                                 <div class="col-sm-9  b-l bg-white">
                                                                                     <c:forEach items="${workerAttachmentList}" var="attachment">
                                                                                         <img src="${attachment.name}" width="50" height="50"
@@ -590,25 +610,25 @@
                                                                 </form>
                                                             </c:if>
 
-                                                            <c:if test="${empty repair.status or repair.status eq 'NEW' or repair.status eq 'DISTRIBUTED'}">
+                                                            <c:if test="${empty qualityMgmt.status or qualityMgmt.status eq 'NEW' or qualityMgmt.status eq 'DISTRIBUTED'}">
                                                                 <div class="row static-info">
                                                                     <div class="col-md-12 col-xs-12 value">
-                                                                        <span>暂无维修信息</span>
+                                                                        <span>暂无<c:if test="${type eq 'qualityMgmt'}">维修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>信息</span>
                                                                     </div>
                                                                 </div>
-                                                                <c:if test="${repair.status eq 'DISTRIBUTED'}">
-                                                                    <a class="btn btn-sm" href="javascript:startRepair()" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
-                                                                        开始维修
+                                                                <c:if test="${qualityMgmt.status eq 'DISTRIBUTED'}">
+                                                                    <a class="btn btn-sm" href="javascript:startQualityMgmt()" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
+                                                                        开始<c:if test="${type eq 'REPAIR'}">维修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>
                                                                     </a>
                                                                 </c:if>
                                                             </c:if>
                                                             <div class="panel-footer text-left bg-light lter">
-                                                                <c:if test="${repair.status eq 'REPAIRING'}">
-                                                                    <a class="btn btn-sm" href="javascript:saveRepairInfo('SAVE')" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
-                                                                        保存维修信息
+                                                                <c:if test="${qualityMgmt.status eq 'REPAIRING'}">
+                                                                    <a class="btn btn-sm" href="javascript:saveQualityMgmtInfo('SAVE')" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
+                                                                        保存<c:if test="${type eq 'REPAIR'}">维修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>信息
                                                                     </a>
-                                                                    <a class="btn btn-sm" href="javascript:saveRepairInfo('FINISH')" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
-                                                                        <i class="fa fa-check"></i> 维修结束
+                                                                    <a class="btn btn-sm" href="javascript:saveQualityMgmtInfo('FINISH')" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
+                                                                        <i class="fa fa-check"></i> <c:if test="${type eq 'REPAIR'}">维修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>结束
                                                                     </a>
                                                                 </c:if>
                                                             </div>
@@ -665,18 +685,39 @@
             //显示父菜单
             showParentMenu('品质服务');
         }
+
+        queryMerchantById();
     }
 
-    function saveReportRepairInfo(){
+    //根据id查询经销商
+    function queryMerchantById(){
+        initMerchantInfo();
+        var merchantId = $('#merchantid').val();
+        if(merchantId.length > 0){
+            $.get("${ctx}/admin/wefamily/queryMerchantById?merchantId="+merchantId+"&version="+Math.random(),function(data,status){
+                if(undefined != data.merchant){
+                    $('#merchantContactno').val(data.merchant.contactno);
+                    $('#merchantAddress').val(data.merchant.address);
+                }
+            });
+        }
+    }
+
+    function initMerchantInfo(){
+        $('#merchantContactno').val("");
+        $('#merchantAddress').val("");
+    }
+
+    function saveReportQualityMgmtInfo(){
         var machineError = document.getElementById('machineError');
         machineError.innerHTML = "";
-        $("#reportRepairInfoFrm").parsley("validate");
-        if($('#reportRepairInfoFrm').parsley().isValid()){
+        $("#reportQualityMgmtInfoFrm").parsley("validate");
+        if($('#reportQualityMgmtInfoFrm').parsley().isValid()){
             $.ajax({
                 cache: true,
                 type: "POST",
-                url:"${ctx}/admin/wefamily/saveReportRepairInfo",
-                data:$('#reportRepairInfoFrm').serialize(),// 你的formid
+                url:"${ctx}/admin/wefamily/saveReportQualityMgmtInfo?type=${type}",
+                data:$('#reportQualityMgmtInfoFrm').serialize(),// 你的formid
                 async: false,
                 error: function(request) {
                     qikoo.dialog.alert("系统忙，稍候再试");
@@ -685,21 +726,21 @@
                     if(undefined != data.returnMsg){
                         machineError.innerHTML = data.returnMsg;
                     }else{
-                        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/repairInfo?repairId="+data.repairId+"&successMessage="+data.successMessage;
+                        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/qualityMgmtInfo?qualityMgmtId="+data.qualityMgmtId+"&successMessage="+data.successMessage+"&type=${type}";
                     }
                 }
             });
         }
     }
 
-    function saveRepairInfo(saveType){
-        $("#repairInfoFrm").parsley("validate");
-        if($('#repairInfoFrm').parsley().isValid()){
+    function saveQualityMgmtInfo(saveType){
+        $("#qualityMgmtInfoFrm").parsley("validate");
+        if($('#qualityMgmtInfoFrm').parsley().isValid()){
             $.ajax({
                 cache: true,
                 type: "POST",
-                url:"${ctx}/admin/wefamily/saveRepairInfo?repairId=${repair.uuid}&versionno=${repair.versionno}&saveType="+saveType,
-                data:$('#repairInfoFrm').serialize(),// 你的formid
+                url:"${ctx}/admin/wefamily/saveQualityMgmtInfo?qualityMgmtId=${qualityMgmt.uuid}&versionno=${qualityMgmt.versionno}&saveType="+saveType,
+                data:$('#qualityMgmtInfoFrm').serialize(),// 你的formid
                 async: false,
                 error: function(request) {
                     qikoo.dialog.alert("系统忙，稍候再试");
@@ -708,57 +749,43 @@
                     if(undefined != data.returnMsg){
 
                     }else{
-                        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/repairInfo?repairId=${repair.uuid}&successMessage="+data.successMessage;
+                        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/qualityMgmtInfo?qualityMgmtId=${qualityMgmt.uuid}&successMessage="+data.successMessage+"&type=${type}";
                     }
                 }
             });
         }
     }
 
-    function distributeRepair(){
-        $.get("${ctx}/admin/wefamily/distributeRepair?repairId=${repair.uuid}&merchantId=${merchant.uuid}&versionno=${repair.versionno}",function(data,status){
+    function distributeQualityMgmt(){
+        $.get("${ctx}/admin/wefamily/distributeQualityMgmt?qualityMgmtId=${qualityMgmt.uuid}&versionno=${qualityMgmt.versionno}",function(data,status){
             if(undefined != data.distributeFlag){
-                window.location.href = "<%=request.getContextPath()%>/admin/wefamily/repairInfo?repairId=${repair.uuid}&distributeFlag="+data.distributeFlag;
+                window.location.href = "<%=request.getContextPath()%>/admin/wefamily/qualityMgmtInfo?qualityMgmtId=${qualityMgmt.uuid}&distributeFlag="+data.distributeFlag+"&type=${type}";
             }
         });
     }
 
-    function startRepair(){
-        $.get("${ctx}/admin/wefamily/startRepair?repairId=${repair.uuid}&versionno=${repair.versionno}",function(data,status){
+    function startQualityMgmt(){
+        $.get("${ctx}/admin/wefamily/startQualityMgmt?qualityMgmtId=${qualityMgmt.uuid}&versionno=${qualityMgmt.versionno}",function(data,status){
             if(undefined != data.startFlag){
-                window.location.href = "<%=request.getContextPath()%>/admin/wefamily/repairInfo?repairId=${repair.uuid}";
+                window.location.href = "<%=request.getContextPath()%>/admin/wefamily/qualityMgmtInfo?qualityMgmtId=${qualityMgmt.uuid}"+"&type=${type}";
             }
         });
     }
 
-    function finishRepair(){
-        $("#repairInfoFrm").parsley("validate");
-        if($('#repairInfoFrm').parsley().isValid() && validateContactno()){
-            if(confirm('确定完成维修？')){
-                //确定
-                $.get("${ctx}/admin/wefamily/finishRepair?repairId=${repair.uuid}&versionno=${repair.versionno}",function(data,status){
-                    if(undefined != data.finishFlag){
-                        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/repairInfo?repairId=${repair.uuid}&finishFlag="+data.finishFlag;
-                    }
-                });
-            }
-        }
-    }
-
-    function closeRepair(){
+    function closeQualityMgmt(){
         var remarksError = document.getElementById('remarksError');
         remarksError.innerHTML = "";
         var remarks=document.getElementById("remarks").value;
         if(null == remarks || remarks == ""){
             remarksError.innerHTML = "此项关闭时必填";
         }else{
-            $("#reportRepairInfoFrm").parsley("validate");
-            if($('#reportRepairInfoFrm').parsley().isValid() && validateContactno()){
+            $("#reportQualityMgmtInfoFrm").parsley("validate");
+            if($('#reportQualityMgmtInfoFrm').parsley().isValid() && validateContactno('reporter')){
                 if(confirm('确定关闭维修？')){
                     //确定
-                    $.get("${ctx}/admin/wefamily/finishRepair?repairId=${repair.uuid}&versionno=${repair.versionno}",function(data,status){
+                    $.get("${ctx}/admin/wefamily/finishQualityMgmt?qualityMgmtId=${qualityMgmt.uuid}&versionno=${qualityMgmt.versionno}&remarks="+remarks,function(data,status){
                         if(undefined != data.finishFlag){
-                            window.location.href = "<%=request.getContextPath()%>/admin/wefamily/repairInfo?repairId=${repair.uuid}&finishFlag="+data.finishFlag;
+                            window.location.href = "<%=request.getContextPath()%>/admin/wefamily/qualityMgmtInfo?qualityMgmtId=${qualityMgmt.uuid}&finishFlag="+data.finishFlag+"&type=${type}";
                         }
                     });
                 }

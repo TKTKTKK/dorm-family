@@ -10,8 +10,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
     <meta http-equiv="x-dns-prefetch-control" content="on">
-    <title>维修详情</title>
+    <title><c:if test="${qualityMgmt.type == 'REPAIR'}">报修</c:if><c:if test="${qualityMgmt.type == 'MAINTAIN'}">保养</c:if>详情</title>
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
+    <link rel="stylesheet" href="${ctx}/static/guest/css/reviewMediaSwipebox.css" type="text/css" />
     <style>
         .goal_total{padding-left: 1.25rem;border-bottom: 1px solid rgba(0,0,0,0.1);font-size: 1.6rem;color: #333;background-color: #fff;position: relative;padding: 1.17rem 2rem 1.17rem 1.25rem;margin-top: 1rem;}
         .goal_total:nth-of-type(even) span{border-left: 4px solid #ff9933;padding-left: 1.25rem;}
@@ -65,9 +66,9 @@
         }
         #reporterImgContainer{display: inline-block;vertical-align: middle}
         #reporterImgContainer img{width: 5rem;height: 5rem;margin:1rem}
-        #repairImgContainer{display: inline-block;vertical-align: middle}
-        #repairImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 2rem}
-        #repairImgContainer img{width: 5rem;height: 5rem;margin:1rem}
+        #qualityMgmtImgContainer{display: inline-block;vertical-align: middle}
+        #qualityMgmtImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 2rem}
+        #qualityMgmtImgContainer img{width: 4.5rem;height: 4.5rem;margin:1rem}
         .my-display-inline-box{width: auto}
         .required{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
         .maxlength{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
@@ -78,8 +79,14 @@
 </head>
 <body>
     <div class="head">
-        <a class="back" href="${ctx}/admin/wefamily/repairManageForPhone"></a>
-        <span>维修详情</span>
+        <c:if test="${qualityMgmt.type == 'REPAIR'}">
+            <a class="back" href="${ctx}/guest/repair_list"></a>
+            <span>报修详情</span>
+        </c:if>
+        <c:if test="${qualityMgmt.type == 'MAINTAIN'}">
+            <a class="back" href="${ctx}/guest/maintain_list"></a>
+            <span>保养详情</span>
+        </c:if>
         <img src="../../../static/guest/img/sao.png" alt="">
     </div>
     <div class="b-l b-r" style="padding-left: 1.25rem">
@@ -88,73 +95,53 @@
     </div>
 
         <form class="form-horizontal" data-validate="parsley"
-              action="${ctx}/admin/wefamily/repairInfoForPhone" method="POST"
+              action="${ctx}/admin/wefamily/qualityMgmtInfoForPhone" method="POST"
               enctype="multipart/form-data" id="frm">
             <div class="goal_total" style="margin-top: 0px">
-                <a href="javaScript:enableUl('machineUl','machineListImg')">
                     <span>主机信息</span>
                     <img src="../../../../static/guest/img/list.png" alt="" id="machineListImg" class="up">
-                </a>
             </div>
             <ul class="list" id="machineUl">
                 <li>
                     <span>机器型号<a class="dataRequired">*</a></span>
-                    <input type="text" id="machinemodel" name="machinemodel" value="${repair.machinemodel}"
+                    <input type="text" id="machinemodel" name="machinemodel" value="${qualityMgmt.machinemodel}"
                            data-required="true" placeholder="请填写机器型号" data-maxlength="32"/>
                 </li>
                 <li>
                     <span>发动机号<a class="dataRequired">*</a></span>
-                    <input type="text" id="engineno" name="engineno" value="${repair.engineno}"
+                    <input type="text" id="engineno" name="engineno" value="${qualityMgmt.engineno}"
                            data-required="true" placeholder="请填写发动机号" data-maxlength="32"/>
                 </li>
                 <li>
                     <span>机器号<a class="dataRequired">*</a></span>
-                    <input type="text" id="machineno" name="machineno" value="${repair.machineno}"
+                    <input type="text" id="machineno" name="machineno" value="${qualityMgmt.machineno}"
                            data-required="true" placeholder="请填写机器号" data-maxlength="32"/>
                 </li>
                 <li>
                     <span>生产日期<a class="dataRequired">*</a></span>
-                    <input class="Wdate" type="text" name="productiondt" id="productiondt" value="${repair.productiondt}" onClick="WdatePicker()"
+                    <input class="Wdate" type="text" name="productiondt" id="productiondt" value="${qualityMgmt.productiondt}" onClick="WdatePicker()"
                            data-required="true" placeholder="请选择生产日期" data-maxlength="23">
-                </li>
-                <li style="display: flex;display: -webkit-flex;">
-                    <span style="vertical-align: middle;">问题描述</span>
-                    <textarea rows="4" name="content" id="content" data-maxlength="256"
-                              style=" width: 16rem;vertical-align: middle;text-align: right" readonly>${repair.content}</textarea>
-                </li>
-                <li>
-                    <div class="my-display-inline-box">
-                        <div id="reporterImgContainer" class="row value">
-                            <c:forEach items="${reporterAttachmentList}" var="attachment">
-                                <img src="${attachment.name}" alt="" style="margin-top: 3px;margin-left: 10px" onclick="viewBigImageForUpload(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image">
-                            </c:forEach>
-                        </div>
-                    </div>
                 </li>
             </ul>
             <div class="goal_total">
-                <a href="javaScript:enableUl('personUl','personListImg')">
                     <span>用户信息</span>
                     <img src="../../../../static/guest/img/list.png" alt="" id="personListImg" class="up">
-                </a>
             </div>
             <ul class="list" id="personUl">
                 <li>
                     <span>姓名<a class="dataRequired">*</a></span>
-                    <input type="text" placeholder="请填写真实姓名" value="${repair.reportername}" name="reportername" id="reportername"
+                    <input type="text" placeholder="请填写真实姓名" value="${qualityMgmt.reportername}" name="reportername" id="reportername"
                            data-required="true" data-maxlength="32">
                 </li>
                 <li>
                     <span>手机号码<a class="dataRequired">*</a></span>
-                    <input type="text" placeholder="请填写手机号码" value="${repair.reporterphone}" name="reporterphone" id="reporterphone"
+                    <input type="text" placeholder="请填写手机号码" value="${qualityMgmt.reporterphone}" name="reporterphone" id="reporterphone"
                            data-required="true" data-maxlength="11">
                 </li>
             </ul>
             <div class="goal_total">
-                <a href="javaScript:enableUl('merchantUl','merchantListImg')">
                     <span>经销商信息</span>
                     <img src="../../../../static/guest/img/list.png" alt="" id="merchantListImg" class="up">
-                </a>
             </div>
             <ul class="list" id="merchantUl">
                 <li>
@@ -174,81 +161,83 @@
                 </li>
             </ul>
             <div class="goal_total">
-                <a href="javaScript:enableUl('workerUl','workerListImg')">
-                    <span>维修工信息</span>
+                    <span><c:if test="${qualityMgmt.type == 'REPAIR'}">维修</c:if><c:if test="${qualityMgmt.type == 'MAINTAIN'}">保养</c:if>工人信息</span>
                     <img src="../../../../static/guest/img/list.png" alt="" id="workerListImg" class="up">
-                </a>
             </div>
             <ul class="list" id="workerUl">
                 <li>
                     <span>姓名<a class="dataRequired">*</a></span>
-                    <input type="text" placeholder="请填写真实姓名" value="${repairWorkerList[0].name}" name="name" id="name"
+                    <input type="text" placeholder="请填写真实姓名" value="${workerList[0].name}" name="name" id="name"
                            data-required="true" data-maxlength="32">
-                    <input type="hidden" name="repairworkerid" value="${repairWorkerList[0].uuid}">
-                    <input type="hidden" name="repairworkerversionno" value="${repairWorkerList[0].versionno}">
+                    <input type="hidden" name="workerid" value="${workerList[0].uuid}">
+                    <input type="hidden" name="workerversionno" value="${workerList[0].versionno}">
                 </li>
                 <li>
                     <span>手机号码<a class="dataRequired">*</a></span>
-                    <input type="text" placeholder="请填写手机号码" value="${repairWorkerList[0].phone}" name="phone" id="phone"
+                    <input type="text" placeholder="请填写手机号码" value="${workerList[0].phone}" name="phone" id="phone"
                            data-required="true" data-maxlength="11">
                 </li>
             </ul>
             <div class="goal_total">
-                <a href="javaScript:enableUl('situationUl','situationListImg')">
                     <span>现场情况</span>
                     <img src="../../../../static/guest/img/list.png" alt="" id="situationListImg" class="up">
-                </a>
             </div>
             <ul class="list" id="situationUl">
                 <li>
                     <span>损坏项目<a class="dataRequired">*</a></span>
-                    <input type="text" placeholder="请填写损坏项目" value="${repair.program}" name="program" id="program"
+                    <input type="text" placeholder="请填写损坏项目" value="${qualityMgmt.program}" name="program" id="program"
                            data-required="true" data-maxlength="50">
                 </li>
                 <li>
                     <span>处理配件<a class="dataRequired">*</a></span>
-                    <input type="text" placeholder="请填写处理的配件" value="${repair.parts}" name="parts" id="parts"
+                    <input type="text" placeholder="请填写处理的配件" value="${qualityMgmt.parts}" name="parts" id="parts"
                            data-required="true" data-maxlength="32">
                 </li>
                 <li>
                     <span>现场地点</span>
-                    <input type="text" placeholder="请填写用户地址" name="location" id="location" value="${repair.location}" data-maxlength="32">
+                    <input type="text" placeholder="请填写用户地址" name="location" id="location" value="${qualityMgmt.location}" data-maxlength="32">
                     <%--<img src="../../../../static/admin/img/location.png" alt="" style="width: 2rem;height: 2rem">--%>
                 </li>
                 <li>
                     <span>已作业面积</span>
-                    <input type="text" name="workarea" id="workarea" value="${repair.workarea}"
+                    <input type="text" name="workarea" id="workarea" value="${qualityMgmt.workarea}"
                            data-maxlength="20" onblur="trimText(this)" placeholder="请填写已作业面积">
                 </li>
                 <li>
                     <span>效果如何</span>
-                    <input type="text" placeholder="请填写作业效果" value="${repair.effect}" name="effect" id="effect"
+                    <input type="text" placeholder="请填写作业效果" value="${qualityMgmt.effect}" name="effect" id="effect"
                             data-maxlength="32">
                 </li>
                 <li>
                     <span>损坏分类</span>
-                    <select name="damagecategory" id="damagecategory">
-                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('DAMAGE_CATEGORY')}"></c:set>
-                        <option>请选择</option>
-                        <c:forEach items="${commonCodeList}" var="commonCode">
-                            <option value="${commonCode.code}" <c:if test="${repair.damagecategory == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                        </c:forEach>
-                    </select>
+                    <c:if test="${empty qualityMgmt.damagecategory}">
+                        <input type="text"  value="未损坏"
+                               >
+                    </c:if>
+                    <c:if test="${not empty qualityMgmt.damagecategory}">
+                        <select name="damagecategory" id="damagecategory">
+                            <c:set var="commonCodeList" value="${web:queryCommonCodeList('DAMAGE_CATEGORY')}"></c:set>
+                            <option>请选择</option>
+                            <c:forEach items="${commonCodeList}" var="commonCode">
+                                <option value="${commonCode.code}" <c:if test="${qualityMgmt.damagecategory == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                            </c:forEach>
+                        </select>
+                    </c:if>
                 </li>
                 <li>
                     <span>到达所用时间</span>
-                    <input type="text" name="arrivetime" value="${repair.arrivetime}"
+                    <input type="text" name="arrivetime" value="${qualityMgmt.arrivetime}"
                            data-maxlength="20"  onblur="trimText(this)" id="arrivetime" placeholder="请填写到达所用时间"
                     >
                 </li>
                 <li>
-                    <span>维修日期<a class="dataRequired">*</a></span>
-                    <input class="Wdate" type="text" name="repairdt" id="repairdt" onClick="WdatePicker()"
-                           value="${repair.repairdt}" placeholder="请选择维修日期" data-required="true" data-maxlength="23">
+                    <span><c:if test="${qualityMgmt.type == 'REPAIR'}">维修</c:if><c:if test="${qualityMgmt.type == 'MAINTAIN'}">保养</c:if>日期<a class="dataRequired">*</a></span>
+                    <input class="Wdate" type="text" name="servicedt" id="servicedt" onClick="WdatePicker()"
+                           value="${qualityMgmt.servicedt}" placeholder="请选择维修日期" data-required="true" data-maxlength="23">
                 </li>
                 <li>
                     <span>收费金额</span>
-                    <input name="price" id="price" value="${repair.price}" size="24"
+                    <input name="price" id="price" value="${qualityMgmt.price}" size="24"
                            data-maxlength="10" onblur="validateMoney(this,'priceError')" placeholder="请填写收费金额">
                     <span id="priceError" class="text-danger" style="float: right;color: red;font-size: 1.2rem;"></span>
                 </li>
@@ -258,85 +247,52 @@
                         <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
                         <option>请选择</option>
                         <c:forEach items="${commonCodeList}" var="commonCode">
-                            <option value="${commonCode.code}" <c:if test="${repair.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                            <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                         </c:forEach>
                     </select>
                 </li>
                 <li style="display: flex;display: -webkit-flex;">
                     <span style="vertical-align: middle;">备注</span>
                     <textarea rows="4" name="remarks" id="remarks" data-maxlength="256"
-                              style=" width: 16rem;vertical-align: middle;text-align: right">${repair.remarks}</textarea>
+                              style=" width: 16rem;vertical-align: middle;text-align: right">${qualityMgmt.remarks}</textarea>
                 </li>
                 <li style="border: 0">
-                    <span>上传图片</span>
+                    <span>人机合影</span>
                 </li>
                 <li>
                     <div class="my-display-inline-box">
-                        <div id="repairImgContainer" class="row value">
+                        <div id="qualityMgmtImgContainer" class="row value">
                             <c:forEach items="${workerAttachmentList}" var="attachment">
-                                <img src="${attachment.name}" alt="" style="margin-top: 3px;margin-left: 10px" onclick="viewBigImageForUpload(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image">
+                                <a class="swipebox" id="swipebox" href= "${attachment.name}" onclick="reviewMediaShow(this)">
+                                    <img style="width:50px;height: 50px;margin-right:10px;"
+                                         src="${attachment.name}" alt="Bottle Closeup"/>
+                                </a>
+                                <%--<img src="${attachment.name}" alt="" style="margin-top: 3px;margin-left: 10px" onclick="viewBigImageForUpload(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image">--%>
+
                             </c:forEach>
                         </div>
-                        <c:if test="${fn:length(workerAttachmentList) < 4}">
-                            <div id="repairImgUrlContainer" class="upload-btn-box" style="display: inline-block">
-                                <input type="file" id="repairImg" name="picUrl" class="upload-btn pageUpload"
-                                       data-icon="false" data-classButton="btn btn-default"
-                                       data-classInput="form-control inline v-middle input-xs"
-                                       accept="image/*"
-                                    <%--data-max_size="2000000" --%>
-                                       data-max-count="4">
-                                <div id="picUrlError" class="text-danger"></div>
-                            </div>
-                        </c:if>
                     </div>
                 </li>
             </ul>
-            <input type="hidden" name="uuid" class="form-control" value="${repair.uuid}">
+            <input type="hidden" name="uuid" class="form-control" value="${qualityMgmt.uuid}">
             <input type="hidden" name="versionno" class="form-control"
-                   value="${repair.versionno}">
+                   value="${qualityMgmt.versionno}">
         </form>
 
-        <c:if test="${repair.status ne 'FINISH'}">
-            <div class="fixsubmit">
-                <a href="javascript:submitRepairInfo()">保存</a>
-                <a href="javascript:finishTrain()">提交</a>
-            </div>
-        </c:if>
 
 
 
-    <!-- /.modal 大图 start -->
-    <div class="modal fade bs-example-modal-lg-image" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
 
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" id="modelCloseBtn"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myLargeModalLabel">大图</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="bs-example" data-example-id="simple-carousel">
-                                <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal 大图 end -->
 
 <script src="${ctx}/static/admin/js/lrz/dist/lrz.bundle.js"></script>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script src="${ctx}/static/admin/js/calendar/WdatePicker.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script src="${ctx}/static/js/wechatUtil.js?20171201"></script>
+<script type="text/javascript" src="${ctx}/static/js/reviewMediaJquery.swipebox.js"></script>
 <script type="text/javascript">
 
-    function submitRepairInfo(){
+    function submitQualityMgmtInfo(){
         $("#frm").parsley("validate");
         //表单合法 单价合法性
         if ($('#frm').parsley().isValid()){
@@ -352,7 +308,7 @@
             $("#notification_bar").css("left", "20%");
             HC.showNotification("网络较慢，请耐心等待！", 2000);
         } else {
-            compressUploadPicture(document.getElementById("repairImg"));
+            compressUploadPicture(document.getElementById("qualityMgmtImg"));
         }
     });
 
@@ -396,6 +352,19 @@
         }
     });
 
+    function reviewMediaShow(obj){
+        var reviewMediaClass = $(obj).attr("class");
+        $( '.'+reviewMediaClass+'' ).swipebox();
+    }
+    $( '.swipebox-video' ).swipebox();
+
+
+    //去空格
+    function trimText(obj){
+        if(obj.value.length > 0){
+            obj.value = obj.value.replace(/(^\s*)|(\s*$)/g, "");
+        }
+    }
 </script>
 
 </body>

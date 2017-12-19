@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"><!-- 控制状态栏显示样式 -->
     <meta name="format-detection" content="telephone=no"><!-- 禁止了把数字转化为拨号链接 -->
     <meta http-equiv="x-dns-prefetch-control" content="on"><!-- 浏览器开启预解析功能 -->
-    <title>维修列表</title>
+    <title><c:if test="${type == 'REPAIR'}">维修</c:if><c:if test="${type == 'MAINTAIN'}">保养</c:if>列表</title>
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
     <style>
         .list{background-color: #fff;color: #333;margin-bottom: 3.67rem;}
@@ -24,27 +24,29 @@
 </head>
 <body>
 <div class="head">
-    <span>维修列表</span>
+    <span><c:if test="${type == 'REPAIR'}">维修</c:if><c:if test="${type == 'MAINTAIN'}">保养</c:if>列表</span>
 </div>
 <div class="content">
     <ul class="list">
-        <c:forEach items="${repairList}" var="repair">
-            <a href="${ctx}/admin/wefamily/repairInfoForPhone?repairId=${repair.uuid}">
+        <c:forEach items="${qualityMgmtList}" var="qualityMgmt">
+            <a href="${ctx}/admin/wefamily/qualityMgmtInfoForPhone?qualityMgmtId=${qualityMgmt.uuid}">
                 <li>
                     <p>
-                        <span>${repair.machinemodel}</span>
-                        <span>${repair.reportername}</span>
-                        <img src="../../../../static/guest/img/${fn:toLowerCase(repair.status)}.png" alt="">
+                        <span>${qualityMgmt.machinemodel}</span>
+                        <span>${qualityMgmt.reportername}</span>
+                        <img src="../../../../static/guest/img/${fn:toLowerCase(qualityMgmt.status)}.png" alt="">
                     </p>
-                    <p><span class="time">${fn:substring(repair.createon, 0, 16)}</span></p>
+                    <p><span class="time">${fn:substring(qualityMgmt.createon, 0, 16)}</span></p>
                 </li>
             </a>
         </c:forEach>
         <div class="clearfix"></div>
     </ul>
-    <a href="${ctx}/admin/wefamily/repairInfoForPhone">
-        <div class="fixsubmit">添加维修</div>
-    </a>
+    <c:if test="${type == 'REPAIR'}">
+        <a href="${ctx}/admin/wefamily/qualityMgmtInfoForPhone">
+            <div class="fixsubmit">添加维修</div>
+        </a>
+    </c:if>
 </div>
 </body>
 </html>

@@ -145,21 +145,36 @@
         and uc.communityid =  #{communityid};
     </select>
 
-    <select id="selectWorkersByMerchantId" resultMap="selectResultMap">
+    <select id="selectWorkersByMerchantIdAndServiveType" resultMap="selectResultMap">
         select pu.*
         from tb_platform_user pu ,tb_platform_user_role ur, tb_platform_role pr,tb_mtx_user_merchant um
         where um.merchantid = #{merchantId}
         and   um.userid = pu.uuid
         and   pu.uuid = ur.userid
         and   ur.roleid = pr.uuid
-        and   pr.rolekey = 'MTX_REPAIR_WORKER'
+        <choose>
+            <when test="type == 'REPAIR'">
+                and   pr.rolekey = 'MTX_REPAIR_WORKER'
+            </when>
+            <when test="type == 'MAINTAIN'">
+                and   pr.rolekey = 'MTX_MAINTAIN_WORKER'
+            </when>
+        </choose>
+
 
         union
         select pu.*
         from tb_platform_user pu ,tb_platform_user_role ur, tb_platform_role pr
         where pu.uuid = ur.userid
         and   ur.roleid = pr.uuid
-        and   pr.rolekey = 'MTX_REPAIR_WORKER'
+        <choose>
+            <when test="type == 'REPAIR'">
+                and   pr.rolekey = 'MTX_REPAIR_WORKER'
+            </when>
+            <when test="type == 'MAINTAIN'">
+                and   pr.rolekey = 'MTX_MAINTAIN_WORKER'
+            </when>
+        </choose>
         and   not exists (select um.userid from tb_mtx_user_merchant um where um.userid = pu.uuid);
     </select>
 

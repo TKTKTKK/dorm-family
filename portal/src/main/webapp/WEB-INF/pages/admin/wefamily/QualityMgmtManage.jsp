@@ -12,24 +12,31 @@
 
 <section id="content">
     <section class="vbox">
+        <c:if test="${type eq 'REPAIR'}">
+            <c:set var="showType" value="报修" scope="page"></c:set>
+        </c:if>
+        <c:if test="${type eq 'MAINTAIN'}">
+            <c:set var="showType" value="保养" scope="page"></c:set>
+        </c:if>
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 报修管理</span>
+            满田星 / <span class="font-bold  text-shallowred">
+            ${showType}管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
                 <div class="bg-white closel">
                     <div class="col-sm-12 no-padder">
-                        <form method="post" action="${ctx}/admin/wefamily/repairManage" class="form-horizontal b-l b-r b-b padding20"
+                        <form method="post" action="${ctx}/admin/wefamily/qualityMgmtManage" class="form-horizontal b-l b-r b-b padding20"
                               data-validate="parsley"
                               id="searchForm">
                             <div class="row">
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
-                                    <input type="text" class="form-control" id="snno" name="snno" onblur="trimText(this)" value="${repair.snno}"  placeholder="报修编号"/>
+                                    <input type="text" class="form-control" id="snno" name="snno" onblur="trimText(this)" value="${qualityMgmt.snno}"
+                                           <c:if test="${type eq 'REPAIR'}">placeholder="报修编号"</c:if>
+                                           <c:if test="${type eq 'MAINTAIN'}">placeholder="保养编号"</c:if>
+                                    />
+                                    <input type="hidden" name="type" value="${type}">
                                 </div>
-
-                                <%--<div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
-                                    <input type="text" class="form-control" id="personphone" name="personphone" onblur="trimText(this)" value="${train.personphone}"  placeholder="用户电话"/>
-                                </div>--%>
 
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
@@ -59,51 +66,51 @@
                             <div>
                                 <span class="text-success">${successMessage}</span>
                                 <span class="text-success" id="synSuccessMsg"></span>
-                                <c:if test="${successFlag == 1}">
-                                    <span class="text-success">删除成功！</span>
-                                </c:if>
                             </div>
                             <div class="table-responsive" >
                                 <table class="table table-striped b-light b-a text-center">
-
                                     <thead>
                                     <tr>
-                                        <th class="text-center">报修编号</th>
-                                        <th class="text-center">报修人姓名</th>
-                                        <th class="text-center">报修人电话</th>
-                                        <th class="text-center">报修状态</th>
+                                        <th class="text-center">${showType}编号</th>
+                                        <th class="text-center">${showType}人姓名</th>
+                                        <th class="text-center">${showType}人电话</th>
+                                        <th class="text-center">${showType}日期</th>
+                                        <th class="text-center">${showType}状态</th>
                                         <th class="text-center">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach items="${repairList}" var="repair">
+                                    <c:forEach items="${qualityMgmtList}" var="qualityMgmt">
                                         <tr>
                                             <td>
-                                                    ${repair.snno}
+                                                    ${qualityMgmt.snno}
                                             </td>
                                             <td>
-                                                    ${repair.reportername}
+                                                    ${qualityMgmt.reportername}
                                             </td>
                                             <td>
-                                                    ${repair.reporterphone}
+                                                    ${qualityMgmt.reporterphone}
                                             </td>
                                             <td>
-                                                    ${web:getCodeDesc("REPAIR_STATUS",repair.status)}
+                                                    ${fn:substring(qualityMgmt.createon, 0, 10)}
                                             </td>
                                             <td>
-                                                <a href="${ctx}/admin/wefamily/repairInfo?repairId=${repair.uuid}" class="btn  btn-infonew btn-sm" style="color: white" >处理</a>
+                                                    ${web:getCodeDesc("REPAIR_STATUS",qualityMgmt.status)}
+                                            </td>
+                                            <td>
+                                                <a href="${ctx}/admin/wefamily/qualityMgmtInfo?qualityMgmtId=${qualityMgmt.uuid}&type=${type}" class="btn  btn-infonew btn-sm" style="color: white" >处理</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
                                     </tbody>
                                 </table>
-                                <c:if test="${not empty repairList}">
-                                    <web:pagination pageList="${repairList}" postParam="true"/>
+                                <c:if test="${not empty qualityMgmtList}">
+                                    <web:pagination pageList="${qualityMgmtList}" postParam="true"/>
                                 </c:if>
                             </div>
                         <div class="navbar-left">
-                            <a class="btn btn-sm btn-info" href="javascript:showRepairInfo()"
-                               style="color:white">添加报修</a>
+                            <a class="btn btn-sm btn-info" href="javascript:showQualityMgmtInfo()"
+                               style="color:white">添加${showType}</a>
                         </div>
                         <div style="clear: both"></div>
                     </c:if>
@@ -172,13 +179,13 @@
             //ui block
             pleaseWait();
             var searchForm = document.getElementById("searchForm");
-            searchForm.action = "${ctx}/admin/wefamily/repairManage?page=" + page;
+            searchForm.action = "${ctx}/admin/wefamily/qualityMgmtManage?page=" + page;
             searchForm.submit();
         }
     }
 
-    function showRepairInfo(){
-        window.location.href = "${ctx}/admin/wefamily/repairInfo";
+    function showQualityMgmtInfo(){
+        window.location.href = "${ctx}/admin/wefamily/qualityMgmtInfo?type=${type}";
     }
 
 </script>
