@@ -16,7 +16,7 @@
     <section class="vbox">
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
-                满田星 /
+                产品中心 /
                 <a href="${ctx}/admin/wefamily/mtxVideoManage">视频管理 </a> /
                 <span class="font-bold  text-shallowred"> 视频详情</span>
             </header>
@@ -51,23 +51,6 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>状态：</label>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <select class="form-control" id="status" name="status" data-required="true">
-                                        <option value="">--全部--</option>
-                                        <c:set var="typeList" value="${web:queryCommonCodeList('PRODUCT_STATUS')}"></c:set>
-                                        <c:forEach items="${typeList}" var="typeCode">
-                                            <c:if test="${mtxVideo.status == typeCode.code}">
-                                                <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
-                                            </c:if>
-                                            <c:if test="${mtxVideo.status != typeCode.code}">
-                                                <option value="${typeCode.code}">${typeCode.codevalue}</option>
-                                            </c:if>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>分类：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <select class="form-control" id="type" name="type" data-required="true">
@@ -78,6 +61,23 @@
                                                 <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
                                             </c:if>
                                             <c:if test="${mtxVideo.type != typeCode.code}">
+                                                <option value="${typeCode.code}">${typeCode.codevalue}</option>
+                                            </c:if>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>状态：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <select class="form-control" id="status" name="status" data-required="true">
+                                        <option value="">--全部--</option>
+                                        <c:set var="typeList" value="${web:queryCommonCodeList('PRODUCT_STATUS')}"></c:set>
+                                        <c:forEach items="${typeList}" var="typeCode">
+                                            <c:if test="${mtxVideo.status == typeCode.code}">
+                                                <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
+                                            </c:if>
+                                            <c:if test="${mtxVideo.status != typeCode.code}">
                                                 <option value="${typeCode.code}">${typeCode.codevalue}</option>
                                             </c:if>
                                         </c:forEach>
@@ -120,7 +120,7 @@
 
     window.onload = function () {
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('产品中心');
     }
 </script>
 

@@ -15,7 +15,7 @@
     <section class="vbox">
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
-                满田星 /
+                会员管理 /
                 <a href="${ctx}/admin/wefamily/mtxGoodManage">商品管理 </a> /
                 <span class="font-bold  text-shallowred"> 商品详情</span>
             </header>
@@ -144,7 +144,7 @@
 
     window.onload = function () {
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('会员管理');
         if(${mtxProduct.img!=null && mtxProduct.img!=''}){
             $('#imgDiv').removeClass('hidden');
         }

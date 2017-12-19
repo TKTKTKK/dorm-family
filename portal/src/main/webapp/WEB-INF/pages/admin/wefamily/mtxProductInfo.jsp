@@ -15,7 +15,7 @@
     <section class="vbox">
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
-                满田星 /
+                产品中心 /
                 <a href="${ctx}/admin/wefamily/MtxProduct">产品管理 </a> /
                 <span class="font-bold  text-shallowred"> 产品详情</span>
             </header>
@@ -50,24 +50,6 @@
                                            data-maxlength="60"
                                            onblur="trimText(this)"
                                            value="${mtxProduct.name}">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>状态：</label>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <select class="form-control" id="status" name="status" data-required="true">
-                                        <option value="">--全部--</option>
-                                        <c:set var="typeList" value="${web:queryCommonCodeList('PRODUCT_STATUS')}"></c:set>
-                                        <c:forEach items="${typeList}" var="typeCode">
-                                            <c:if test="${mtxProduct.status == typeCode.code}">
-                                                <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
-                                            </c:if>
-                                            <c:if test="${mtxProduct.status != typeCode.code}">
-                                                <option value="${typeCode.code}">${typeCode.codevalue}</option>
-                                            </c:if>
-                                        </c:forEach>
-                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -106,6 +88,23 @@
                                             </div><!-- /.modal-content -->
                                         </div><!-- /.modal-dialog -->
                                     </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>状态：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <select class="form-control" id="status" name="status" data-required="true">
+                                        <option value="">--全部--</option>
+                                        <c:set var="typeList" value="${web:queryCommonCodeList('PRODUCT_STATUS')}"></c:set>
+                                        <c:forEach items="${typeList}" var="typeCode">
+                                            <c:if test="${mtxProduct.status == typeCode.code}">
+                                                <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
+                                            </c:if>
+                                            <c:if test="${mtxProduct.status != typeCode.code}">
+                                                <option value="${typeCode.code}">${typeCode.codevalue}</option>
+                                            </c:if>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -162,7 +161,7 @@
 
     window.onload = function () {
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('产品中心');
         if(${mtxProduct.img!=null && mtxProduct.img!=''}){
             $('#imgDiv').removeClass('hidden');
         }

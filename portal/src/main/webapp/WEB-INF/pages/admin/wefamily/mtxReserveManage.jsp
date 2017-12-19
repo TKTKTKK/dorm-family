@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 咨询管理</span>
+            咨询留言 / <span class="font-bold  text-shallowred"> 咨询管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
@@ -180,7 +180,7 @@
 
     window.onload = function(){
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('咨询留言');
     }
     function searchMtxReserve(){
         var searchForm = document.getElementById("searchForm");

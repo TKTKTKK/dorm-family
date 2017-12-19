@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 视频管理</span>
+            产品中心 / <span class="font-bold  text-shallowred"> 视频管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
@@ -38,23 +38,6 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 状态：</label>
-                                    <div class="col-sm-7  my-display-inline-box">
-                                        <select class="form-control" id="status" name="status">
-                                            <option value="">--全部--</option>
-                                            <c:set var="typeList" value="${web:queryCommonCodeList('PRODUCT_STATUS')}"></c:set>
-                                            <c:forEach items="${typeList}" var="typeCode">
-                                                <c:if test="${mtxVideo.status == typeCode.code}">
-                                                    <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
-                                                </c:if>
-                                                <c:if test="${mtxVideo.status != typeCode.code}">
-                                                    <option value="${typeCode.code}">${typeCode.codevalue}</option>
-                                                </c:if>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
                                     <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">分类：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <select class="form-control" id="type" name="type">
@@ -65,6 +48,23 @@
                                                     <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
                                                 </c:if>
                                                 <c:if test="${mtxVideo.type != typeCode.code}">
+                                                    <option value="${typeCode.code}">${typeCode.codevalue}</option>
+                                                </c:if>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 状态：</label>
+                                    <div class="col-sm-7  my-display-inline-box">
+                                        <select class="form-control" id="status" name="status">
+                                            <option value="">--全部--</option>
+                                            <c:set var="typeList" value="${web:queryCommonCodeList('PRODUCT_STATUS')}"></c:set>
+                                            <c:forEach items="${typeList}" var="typeCode">
+                                                <c:if test="${mtxVideo.status == typeCode.code}">
+                                                    <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
+                                                </c:if>
+                                                <c:if test="${mtxVideo.status != typeCode.code}">
                                                     <option value="${typeCode.code}">${typeCode.codevalue}</option>
                                                 </c:if>
                                             </c:forEach>
@@ -140,7 +140,7 @@
 
     window.onload = function(){
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('产品中心');
     }
 
     function resubmitSearch(page){

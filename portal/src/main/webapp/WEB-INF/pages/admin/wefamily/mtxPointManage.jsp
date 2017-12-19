@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 积分管理</span>
+            会员管理 / <span class="font-bold  text-shallowred"> 积分管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
@@ -98,7 +98,7 @@
 
     window.onload = function(){
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('会员管理');
     }
 
     function resubmitSearch(page){

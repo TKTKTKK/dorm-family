@@ -19,7 +19,7 @@
     <section class="vbox">
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
-                满田星 /
+                产品中心 /
                 <a href="${ctx}/admin/wefamily/mtxPartsCenterManage">配件管理 </a> /
                 <span class="font-bold  text-shallowred"> 配件详情</span>
             </header>
@@ -185,7 +185,7 @@
 
     window.onload = function () {
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('产品中心');
         if('${machine.price}'.length > 0){
             formatMoney(document.getElementById('price'));
         }
