@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"><!-- 控制状态栏显示样式 -->
     <meta name="format-detection" content="telephone=no"><!-- 禁止了把数字转化为拨号链接 -->
     <meta http-equiv="x-dns-prefetch-control" content="on"><!-- 浏览器开启预解析功能 -->
-    <title><c:if test="${qualityMgmt.type == 'REPAIR'}">报修</c:if><c:if test="${qualityMgmt.type == 'MAINTAIN'}">保养</c:if>列表</title>
+    <title><c:if test="${type == 'REPAIR'}">报修</c:if><c:if test="${type == 'MAINTAIN'}">保养</c:if>列表</title>
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
     <style>
         .list{background-color: #fff;color: #333;margin-bottom: 3.67rem;}
@@ -25,7 +25,7 @@
 <body>
 <div class="head">
     <a class="back" href="${ctx}/guest/member/center"></a>
-    <span><c:if test="${qualityMgmt.type == 'REPAIR'}">报修</c:if><c:if test="${qualityMgmt.type == 'MAINTAIN'}">保养</c:if>列表</span>
+    <span><c:if test="${type == 'REPAIR'}">报修</c:if><c:if test="${type == 'MAINTAIN'}">保养</c:if>列表</span>
 </div>
 <div class="content">
     <ul class="list">
@@ -43,7 +43,7 @@
         <div class="clearfix"></div>
     </ul>
     <c:if test="${type == 'REPAIR'}">
-        <a href="${ctx}/guest/repair_info">
+        <a href="${ctx}/guest/member/repair_info">
             <div class="fixsubmit">添加报修</div>
         </a>
     </c:if>

@@ -74,13 +74,13 @@
 </head>
 <body>
     <div class="head">
-        <a class="back" href="${ctx}/guest/repair_list"></a>
+        <a class="back" href="${ctx}/guest/member/repair_list"></a>
         <span>报修</span>
         <img src="../../../static/guest/img/sao.png" alt="">
     </div>
 
         <form class="form-horizontal form-bordered" data-validate="parsley"
-              action="${ctx}/guest/repair_info" method="POST"
+              action="${ctx}/guest/member/repair_info" method="POST"
               enctype="multipart/form-data" id="frm">
             <ul class="list">
                 <li>
