@@ -102,6 +102,7 @@ public class MtxGuestController extends BaseGuestController{
         if(StringUtils.isBlank(mtxReserve.getDetail())){
             mtxReserve.setDetail(null);
         }
+        mtxReserve.setStatus("N_DEAL");
         mtxReserveService.insert(mtxReserve);
         return "redirect:/guest/product_center";
     }
