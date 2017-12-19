@@ -158,8 +158,8 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <select name="ifsubscribe" id="ifsubscribe" class="form-control">
                                         <option value="">请选择</option>identify
-                                        <option value="1" <c:if test="${wpUser.ifsubscribe eq '1'}">selected</c:if>>已关注</option>
-                                        <option value="0" <c:if test="${wpUser.ifsubscribe eq '0'}">selected</c:if>>未关注</option>
+                                        <option value="Y" <c:if test="${wpUser.ifsubscribe eq 'Y'}">selected</c:if>>已关注</option>
+                                        <option value="N" <c:if test="${wpUser.ifsubscribe eq 'N'}">selected</c:if>>未关注</option>
                                     </select>
                                 </div>
                             </div>

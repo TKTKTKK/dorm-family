@@ -70,6 +70,17 @@ public class MtxMemberService {
                 }
                 mtxUserMachineService.insert(userMachine);
             }
+        }else{
+            wpUserTemp.setName(wpUser.getName());
+            wpUserTemp.setContactno(wpUser.getContactno());
+            wpUserTemp.setAddress(wpUser.getAddress());
+            wpUserTemp.setProvince(wpUser.getProvince());
+            wpUserTemp.setCity(wpUser.getCity());
+            wpUserTemp.setDistrict(wpUser.getDistrict());
+            if("N".equals(wpUserTemp.getIfauth())){
+                wpUserTemp.setIfauth("Y");
+            }
+            wpUserService.updatePartial(wpUserTemp);
         }
     }
 }
