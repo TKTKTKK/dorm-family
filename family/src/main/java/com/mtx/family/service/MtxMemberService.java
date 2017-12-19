@@ -31,56 +31,41 @@ public class MtxMemberService {
     @Autowired
     private MtxUserMachineService mtxUserMachineService;
 
-    public void insertMemberAndPoint(WpUser wpUser, String machineid) {
-        WpUser wpUserTemp = wpUserService.getWpUser(wpUser.getOpenid());
-        if (wpUserTemp == null || StringUtils.isBlank(wpUserTemp.getUuid())) {
-            Machine machine = new Machine();
-            MtxPoint point = new MtxPoint();
-            MtxUserMachine userMachine=new MtxUserMachine();
-            MtxUserMachine userMachineTemp=new MtxUserMachine();
-            WechatUser wechatUser = WechatBindingUtil.getWechatUser(wpUser.getBindid(), wpUser.getOpenid());
-            if(wechatUser!=null){
-                wpUser.setNickname(wechatUser.getNickname());
-                wpUser.setHeadimgurl(wechatUser.getHeadimgurl());
-            }
-            wpUser.setIfauth("Y");
-            wpUser.setPoints(0);
-            wpUserService.insert(wpUser);
-            if (StringUtils.isNotBlank(machineid)) {
-                machine.setUuid(machineid);
-            }
-            point.setUserid(wpUser.getUuid());
-            userMachine.setUserid(wpUser.getUuid());
-            machine = machineService.queryForObjectByPk(machine);
-            if (machine != null) {
-                userMachine.setMachineid(machine.getUuid());
-                userMachineTemp.setMachineid(machine.getUuid());
-                List<MtxUserMachine> userMachineTempList=mtxUserMachineService.queryForList(userMachineTemp);
-                if(userMachineTempList.size()<=0){
-                    int p=0;
-                    if(machine.getPrice()!=null){
-                        double price = machine.getPrice();
-                        p = (int) price;
-                    }
-                    wpUser.setPoints(p);
-                    point.setPoints(p);
-                    point.setName(machine.getMachinename());
-                    mtxPointService.insert(point);
-                    wpUserService.updatePartial(wpUser);
+    public void insertMemberAndPoint(WpUser wpUser, WpUser wpUserTemp,String machineid) {
+        Machine machine = new Machine();
+        MtxPoint point = new MtxPoint();
+        MtxUserMachine userMachine=new MtxUserMachine();
+        MtxUserMachine userMachineTemp=new MtxUserMachine();
+        wpUserTemp.setName(wpUser.getName());
+        wpUserTemp.setContactno(wpUser.getContactno());
+        wpUserTemp.setProvince(wpUser.getProvince());
+        wpUserTemp.setCity(wpUser.getCity());
+        wpUserTemp.setDistrict(wpUser.getDistrict());
+        wpUserTemp.setAddress(wpUser.getAddress());
+        wpUserTemp.setIfauth("Y");
+        if (StringUtils.isNotBlank(machineid)) {
+            machine.setUuid(machineid);
+        }
+        point.setUserid(wpUserTemp.getUuid());
+        userMachine.setUserid(wpUserTemp.getUuid());
+        machine = machineService.queryForObjectByPk(machine);
+        if (machine != null) {
+            userMachine.setMachineid(machine.getUuid());
+            userMachineTemp.setMachineid(machine.getUuid());
+            List<MtxUserMachine> userMachineTempList=mtxUserMachineService.queryForList(userMachineTemp);
+            if(userMachineTempList.size()<=0){
+                int p=0;
+                if(machine.getPrice()!=null){
+                    double price = machine.getPrice();
+                    p = (int) price;
                 }
-                mtxUserMachineService.insert(userMachine);
+                wpUserTemp.setPoints(p);
+                point.setPoints(p);
+                point.setName(machine.getMachinename());
+                mtxPointService.insert(point);
+                wpUserService.updatePartial(wpUserTemp);
             }
-        }else{
-            wpUserTemp.setName(wpUser.getName());
-            wpUserTemp.setContactno(wpUser.getContactno());
-            wpUserTemp.setAddress(wpUser.getAddress());
-            wpUserTemp.setProvince(wpUser.getProvince());
-            wpUserTemp.setCity(wpUser.getCity());
-            wpUserTemp.setDistrict(wpUser.getDistrict());
-            if("N".equals(wpUserTemp.getIfauth())){
-                wpUserTemp.setIfauth("Y");
-            }
-            wpUserService.updatePartial(wpUserTemp);
+            mtxUserMachineService.insert(userMachine);
         }
     }
 }

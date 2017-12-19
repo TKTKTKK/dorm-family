@@ -62,7 +62,7 @@
     </li>
 </ul>
     <input type="text" name="productid" class="hidden" value="${mtxProduct.uuid}" style="display:none">
-    <input  class="fixsubmit" onclick="submitForm()" value="提交">
+    <span  class="fixsubmit" onclick="submitForm()">提交</span>
 </form>
 <div class="choose" style="display: none">
     <div class="error">

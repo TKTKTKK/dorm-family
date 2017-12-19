@@ -40,7 +40,6 @@
 </head>
 <body>
 <div class="head">
-    <a href="" class="back"></a>
     <span>留言板</span>
 </div>
 <%--<div class="enquiry_list">--%>

@@ -29,7 +29,6 @@
 </head>
 <body>
 <div class="head">
-    <a class="back" href=""></a>
     <span>产品中心</span>
     <img src="../../../static/guest/img/sao.png" alt="" onclick="scan()">
 </div>

@@ -149,15 +149,14 @@ public class MtxGuestController extends BaseGuestController{
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public String addRegister(WpUser wpUser, String machineno,HttpServletRequest req,Model model) {
-        wpUser.setBindid(getBindid(req));
-        wpUser.setOpenid(getOpenid(req));
+        WpUser userTemp=getWechatMemberInfo(req);
         Machine machine=new Machine();
         if(StringUtils.isNotBlank(machineno)){
             machine.setMachineno(machineno);
             machine=machineService.queryForObjectByUniqueKey(machine);
             if(machine!=null){
                 String machineid=machine.getUuid();
-                mtxMemberService.insertMemberAndPoint(wpUser,machineid);
+                mtxMemberService.insertMemberAndPoint(wpUser,userTemp,machineid);
             }else{
                 model.addAttribute("ErrorMessage","机器号有误！该机器不存在！");
                 return "guest/register";

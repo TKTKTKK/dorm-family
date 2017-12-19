@@ -28,7 +28,6 @@
 </head>
 <body>
 <div class="head">
-    <a href="" class="back"></a>
     <span>会员中心</span>
 </div>
 <div class="center_top">

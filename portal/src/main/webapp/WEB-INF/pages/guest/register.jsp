@@ -25,7 +25,6 @@
 <body>
 <div class="choose" id="imgDiv" style="z-index: 10;background: rgba(0,0,0,0.7);"><img src="../../../static/guest/img/help.png" alt="" onclick="closeImg()" style="width: 100%"></div>
 <div class="head">
-    <a class="back" href="" ></a>
     <span>注册</span>
     <img src="../../../static/guest/img/sao.png" alt="" onclick="scan()">
 </div>
