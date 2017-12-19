@@ -85,6 +85,7 @@
                                                    class="btn  btn-infonew btn-sm" style="color: white">
                                                     修改
                                                 </a>
+                                                <%--<a href="javascript:deleteWpUser('${wpUser.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>--%>
                                             </td>
                                         </tr>
                                     </c:forEach>
