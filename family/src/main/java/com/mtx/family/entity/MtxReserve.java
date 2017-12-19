@@ -27,8 +27,28 @@ public class MtxReserve extends BaseEntity {
     private String detail;
     @Column
     private String type;
+    @Column
+    private String status;
+    @Column
+    private String remarks;
 
-    private String productname;
+    private String model;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
     public String getType() {
         return type;
@@ -54,12 +74,12 @@ public class MtxReserve extends BaseEntity {
         this.district = district;
     }
 
-    public String getProductname() {
-        return productname;
+    public String getModel() {
+        return model;
     }
 
-    public void setProductname(String productname) {
-        this.productname = productname;
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public String getProductid() {

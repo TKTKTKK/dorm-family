@@ -9,7 +9,7 @@
         from tb_mtx_video mv
         where TRUE
         <if test="mtxVideo.model != null and mtxVideo.model != ''">
-            and mv.model like concat("%",#{mtxVideo.model},"%")
+            and mv.model =#{mtxVideo.model}
         </if>
         <if test="mtxVideo.status != null and mtxVideo.status != ''">
             and mv.status =#{mtxVideo.status}

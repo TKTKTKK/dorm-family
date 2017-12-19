@@ -20,6 +20,26 @@ public class MtxExchangeRecord extends BaseEntity {
     @Column
     private String detail;
 
+    private String username;
+
+    private String productname;
+
+    public String getProductname() {
+        return productname;
+    }
+
+    public void setProductname(String productname) {
+        this.productname = productname;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getUserid() {
         return userid;
     }

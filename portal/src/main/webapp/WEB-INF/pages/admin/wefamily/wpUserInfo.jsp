@@ -15,7 +15,7 @@
     <section class="vbox">
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
-                满田星 /
+                会员管理 /
                 <a href="${ctx}/admin/wefamily/mtxWpUserManage">会员管理 </a> /
                 <span class="font-bold  text-shallowred"> 会员详情</span>
             </header>
@@ -158,8 +158,8 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <select name="ifsubscribe" id="ifsubscribe" class="form-control">
                                         <option value="">请选择</option>identify
-                                        <option value="1" <c:if test="${wpUser.ifsubscribe eq '1'}">selected</c:if>>已关注</option>
-                                        <option value="0" <c:if test="${wpUser.ifsubscribe eq '0'}">selected</c:if>>未关注</option>
+                                        <option value="Y" <c:if test="${wpUser.ifsubscribe eq 'Y'}">selected</c:if>>已关注</option>
+                                        <option value="N" <c:if test="${wpUser.ifsubscribe eq 'N'}">selected</c:if>>未关注</option>
                                     </select>
                                 </div>
                             </div>
@@ -207,7 +207,7 @@
 
     window.onload = function () {
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('会员管理');
         if(${wpUser.headimgurl!=null && wpUser.headimgurl!=''}){
             $('#imgDiv').removeClass('hidden');
         }

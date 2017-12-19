@@ -3,7 +3,6 @@ package com.mtx.family.mapper;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.base.BaseMapper;
-import com.mtx.family.entity.MtxConsultDetail;
 import com.mtx.family.entity.MtxExchangeRecord;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

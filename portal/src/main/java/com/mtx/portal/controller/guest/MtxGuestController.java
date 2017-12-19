@@ -67,6 +67,8 @@ public class MtxGuestController extends BaseGuestController{
     private MerchantService merchantService;
     @Autowired
     private WorkerService workerService;
+    @Autowired
+    private MtxExchangeRecordService mtxExchangeRecordService;
 
 
     @RequestMapping(value = "/product_center")
@@ -104,21 +106,23 @@ public class MtxGuestController extends BaseGuestController{
         return "redirect:/guest/product_center";
     }
 
-    @RequestMapping(value = "/message")
+    @RequestMapping(value = "/message",method = RequestMethod.GET)
     public String enquiry(MtxConsultDetail mtxConsultDetail, String userid, Model model, HttpServletRequest request) {
-        if(StringUtils.isNotBlank(userid)){
-            MtxConsult mtxConsult=new MtxConsult();
-            mtxConsult.setUserid(userid);
-            List<MtxConsult> consultList=mtxConsultService.queryForList(mtxConsult);
-            if(consultList.size()==0){
-                model.addAttribute("userid",userid);
-            }else{
-                MtxConsult consult=consultList.get(0);
-                model.addAttribute("userid",consult.getUserid());
-                model.addAttribute("identify",consult.getIdentify());
-                model.addAttribute("flag","1");
-                mtxConsultDetail.setConsultid(consult.getUuid());
-            }
+        if(StringUtils.isBlank(userid)){
+            WpUser user=getWechatMemberInfo(request);
+            userid=user.getUuid();
+        }
+        MtxConsult mtxConsult=new MtxConsult();
+        mtxConsult.setUserid(userid);
+        List<MtxConsult> consultList=mtxConsultService.queryForList(mtxConsult);
+        if(consultList.size()==0){
+            model.addAttribute("userid",userid);
+        }else{
+            MtxConsult consult=consultList.get(0);
+            model.addAttribute("userid",consult.getUserid());
+            model.addAttribute("identify",consult.getIdentify());
+            model.addAttribute("flag","1");
+            mtxConsultDetail.setConsultid(consult.getUuid());
         }
         List<MtxConsultDetail> mtxConsultDetailList = mtxConsultDetailService.queryForListWithPagination(mtxConsultDetail);
         model.addAttribute("mtxConsultDetailList", mtxConsultDetailList);
@@ -167,7 +171,7 @@ public class MtxGuestController extends BaseGuestController{
      * 会员中心
      * @return
      */
-    @RequestMapping(value = "/member_center",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/center",method = RequestMethod.GET)
     public String member_center(String userid,Model model,HttpServletRequest req) {
         if(StringUtils.isBlank(userid)){
             WpUser user =new WpUser();
@@ -190,7 +194,7 @@ public class MtxGuestController extends BaseGuestController{
      * 积分列表
      * @return
      */
-    @RequestMapping(value = "/point_list",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/point_list",method = RequestMethod.GET)
     public String point_list(String userid,Model model) {
         if(StringUtils.isNotBlank(userid)){
             WpUser user=new WpUser();
@@ -236,7 +240,7 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 个人中心
      */
-    @RequestMapping(value = "/userInfo",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/userInfo",method = RequestMethod.GET)
     public String userInfo(String userid,Model model) {
         if(StringUtils.isNotBlank(userid)){
             WpUser user=new WpUser();
@@ -250,9 +254,9 @@ public class MtxGuestController extends BaseGuestController{
     }
 
     /**
-     * 我的配件
+     * 我的产品
      */
-    @RequestMapping(value = "/product_list",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/product_list",method = RequestMethod.GET)
     public String product_list(String userid,Model model) {
         if(StringUtils.isNotBlank(userid)){
             MtxUserMachine machine=new MtxUserMachine();
@@ -347,7 +351,7 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 报修列表
      */
-    @RequestMapping(value = "/repair_list",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/repair_list",method = RequestMethod.GET)
     public String repair_list(HttpServletRequest request,Model model){
 
         WpUser wpUser = getWechatMemberInfo(request);
@@ -365,7 +369,7 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 报修信息
      */
-    @RequestMapping(value = "/repair_info",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/repair_info",method = RequestMethod.GET)
     public String repair_info(){
         return "guest/repair_info";
     }
@@ -373,7 +377,7 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 报修信息
      */
-    @RequestMapping(value = "/repair_info",method = RequestMethod.POST)
+    @RequestMapping(value = "/member/repair_info",method = RequestMethod.POST)
     public String repair_info(QualityMgmt qualityMgmt, RedirectAttributes redirectAttributes, HttpServletRequest request){
 
         String[] qualityMgmtImgs = request.getParameterValues("qualityMgmtImg");
@@ -389,13 +393,13 @@ public class MtxGuestController extends BaseGuestController{
         qualityMgmtService.saveQualityMgmt(qualityMgmt,qualityMgmtImgs);
         redirectAttributes.addFlashAttribute("successMessage", "保存成功");
 
-        return "redirect:repair_list";
+        return "redirect:/guest/member/repair_list";
     }
 
     /**
      * 保养小视屏
      */
-    @RequestMapping(value = "/maintain",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/video",method = RequestMethod.GET)
     public String maintain(Model model) {
         MtxVideo video=new MtxVideo();
         List<MtxVideo> videoList=mtxVideoService.queryForList(video);
@@ -463,8 +467,8 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 积分兑换中心
      */
-    @RequestMapping(value = "/good_exchange",method = RequestMethod.GET)
-    public String good_exchange(Model model) {
+    @RequestMapping(value = "/member/good_exchange",method = RequestMethod.GET)
+    public String good_exchange(Model model,HttpServletRequest req) {
         MtxProduct product=new MtxProduct();
         product.setType("EXCHANGE_GOOD");
         product.setStatus("ON_SALE");
@@ -496,7 +500,7 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 我的配件
      */
-    @RequestMapping(value = "/parts_list",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/parts_list",method = RequestMethod.GET)
     public String part_list(String userid,Model model) {
         if(StringUtils.isNotBlank(userid)){
             MtxUserMachine machine=new MtxUserMachine();
@@ -532,5 +536,42 @@ public class MtxGuestController extends BaseGuestController{
         model.addAttribute("message",message);
         model.addAttribute("userid",userid);
         return "guest/parts_info";
+    }
+
+    @RequestMapping(value = "/exchange",method = RequestMethod.POST)
+    public String exchange(MtxExchangeRecord mMtxExchangeRecord,MtxProduct product,Model model,HttpServletRequest req,RedirectAttributes redirectAttributes) {
+        String message=null;
+        WpUser user =new WpUser();
+        String productid=req.getParameter("productid");
+        if(StringUtils.isNotBlank(productid)){
+            product.setUuid(productid);
+        }
+        user=getWechatMemberInfo(req);
+        product=mxtProductService.queryForObjectByPk(product);
+        if(product!=null){
+            if(user!=null){
+                int point=product.getPoints();
+                int allPoint=0;
+                if(mMtxExchangeRecord.getCount()>0){
+                    allPoint=mMtxExchangeRecord.getCount()*point;
+                }
+                if(user.getPoints()>=allPoint){
+                    mtxExchangeRecordService.addExchangeRecord(user.getUuid(),product.getUuid(),mMtxExchangeRecord);
+                    redirectAttributes.addFlashAttribute("successMessage", "恭喜,兑换成功!");
+                }else{
+                    model.addAttribute("mMtxExchangeRecord",mMtxExchangeRecord);
+                    message="积分不足，请重试！";
+                    model.addAttribute("mtxProduct",product);
+                    model.addAttribute("message",message);
+                    return "guest/exchange";
+                }
+            }
+        }else{
+            model.addAttribute("mtxProduct",product);
+            message="该商品不存在！";
+            model.addAttribute("message",message);
+            return "guest/exchange";
+        }
+        return "redirect:/guest/member/good_exchange";
     }
 }

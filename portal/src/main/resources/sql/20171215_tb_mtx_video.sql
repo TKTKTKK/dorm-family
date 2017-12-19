@@ -16,7 +16,7 @@ CREATE TABLE `tb_mtx_video` (
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-INSERT INTO `tb_platform_permit` VALUES ('2017121410000001', 'MENU', '视频管理', 'admin/wefamily/mtxVideoManage', '2015050510000011', '1109', 'APP', now(), 'sys', now(), 'sys', '1', 'N', '');
+INSERT INTO `tb_platform_permit` VALUES ('2017121410000001', 'MENU', '视频管理', 'admin/wefamily/mtxVideoManage', '2017121210000001', '1110', 'APP', now(), 'sys', now(), 'sys', '1', 'N', '');
 
 -- 视频类型
 INSERT INTO tb_common_code VALUES ('2017121400000003', null, null, 'VIDEO_TYPE', 'M_VIDEO', '保养小视频', null,'', '3', '2014-11-30 21:44:31', 'sys', '2014-11-30 21:44:31', 'sys', '1', '0');
@@ -24,7 +24,7 @@ INSERT INTO tb_common_code VALUES ('2017121400000004', null, null, 'VIDEO_TYPE',
 
 
 
-INSERT INTO `tb_platform_permit` VALUES ('2017121510000001', 'MENU', '配件管理', 'admin/wefamily/mtxPartsCenterManage', '2015050510000011', '1110', 'APP', now(), 'sys', now(), 'sys', '1', 'N', '');
+INSERT INTO `tb_platform_permit` VALUES ('2017121510000001', 'MENU', '配件管理', 'admin/wefamily/mtxPartsCenterManage', '2017121210000001', '1109', 'APP', now(), 'sys', now(), 'sys', '1', 'N', '');
 
 
 

@@ -41,7 +41,7 @@
 <script type="text/javascript">
     var userid=$("#userid").val();
     function goBack(){
-        window.location.href="${ctx}/guest/member_center?userid="+userid;
+        window.location.href="${ctx}/guest/member/center?userid="+userid;
     }
     function addProduct(){
         window.location.href="${ctx}/guest/productInfo?userid="+userid;

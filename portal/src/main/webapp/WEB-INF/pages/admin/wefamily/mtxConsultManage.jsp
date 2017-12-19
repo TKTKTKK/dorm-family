@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 留言管理</span>
+            咨询留言 / <span class="font-bold  text-shallowred"> 留言管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
@@ -39,7 +39,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">读取状态：</label>
+                                    <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">状态：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <select class="form-control" id="status" name="status">
                                             <option value="">--全部--</option>
@@ -122,7 +122,7 @@
 
     window.onload = function(){
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('咨询留言');
     }
     function searchMtxConsult(){
         var searchForm = document.getElementById("searchForm");

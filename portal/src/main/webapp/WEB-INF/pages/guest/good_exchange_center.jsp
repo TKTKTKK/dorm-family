@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"><!-- 控制状态栏显示样式 -->
     <meta name="format-detection" content="telephone=no"><!-- 禁止了把数字转化为拨号链接 -->
     <meta http-equiv="x-dns-prefetch-control" content="on"><!-- 浏览器开启预解析功能 -->
-    <title>积分兑换</title>
+    <title>积分商城</title>
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
     <style>
         .content .goods_list li {width:48%;background-color: #fff;border-radius:1rem;margin-bottom: 1.25rem;}
@@ -29,7 +29,7 @@
 <body>
 <div class="head">
     <a class="back" href=""></a>
-    <span>积分兑换</span>
+    <span>积分商城</span>
     <img src="../../../static/guest/img/sao.png" alt="" onclick="scan()">
 </div>
 <div class="content">
@@ -52,11 +52,28 @@
         <div class="clearfix"></div>
     </ul>
 </div>
+<div class="choose" style="display: none">
+    <div class="error">
+        <p id="errorMessage"></p >
+        <button onclick="closeModel()">我知道了</button>
+    </div>
+</div>
 </body>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script src="${ctx}/static/js/wechatUtil.js?20171201"></script>
 <script type="text/javascript">
-
+    var errorMessage = document.getElementById("errorMessage");
+    errorMessage.innerHTML = "";
+    window.onload=function (){
+        var message='${successMessage}';
+        if(message!=null&&message!=''){
+            errorMessage.innerHTML=message;
+            $(".choose").css("display","block");
+        }
+    }
+    function closeModel(){
+        $(".choose").css("display","none");
+    }
 </script>
 </html>

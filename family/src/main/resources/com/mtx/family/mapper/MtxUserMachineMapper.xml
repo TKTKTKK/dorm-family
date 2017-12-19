@@ -12,4 +12,21 @@
         and mu.type=#{type}
         order by date_format(mu.createon,'%Y-%m-%d %H:%i:%s') desc;
     </select>
+    <select id="selectMtxUserMachineList" resultMap="selectResultMap">
+        select mu.*,wu.name as name,mm.machinename as machinename
+        from tb_mtx_usermachine mu
+        left join tb_mtx_machine mm on mm.uuid=mu.machineid
+        left join tb_wp_user wu on wu.uuid=mu.userid
+        where true
+        <if test="mtxUserMachine.name != null and mtxUserMachine.name != ''">
+            and wu.name like concat("%", #{mtxUserMachine.name},"%")
+        </if>
+        <if test="mtxUserMachine.machinename != null and mtxUserMachine.machinename != ''">
+            and mm.machinename like concat("%", #{mtxUserMachine.machinename},"%")
+        </if>
+        <if test="mtxUserMachine.type != null and mtxUserMachine.type != ''">
+            and mu.type = #{mtxUserMachine.type}
+        </if>
+        order by date_format(mu.createon,'%Y-%m-%d %H:%i:%s'),mu.userid desc;
+    </select>
 </mapper>

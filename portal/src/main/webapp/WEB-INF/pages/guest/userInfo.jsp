@@ -57,7 +57,7 @@
 <script type="text/javascript">
     function goBack(){
         var userid=$("#userid").val();
-        window.location.href="${ctx}/guest/member_center?userid="+userid;
+        window.location.href="${ctx}/guest/member/center?userid="+userid;
     }
 </script>
 </html>

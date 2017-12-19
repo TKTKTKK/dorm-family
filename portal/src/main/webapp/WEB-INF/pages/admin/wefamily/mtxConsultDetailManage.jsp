@@ -37,7 +37,7 @@
     <section class="vbox">
         <section class="scrollable">
             <header class="panel-heading  bg-white text-md b-b">
-                满田星 /
+                咨询留言 /
                 <a href="${ctx}/admin/wefamily/mtxConsultManage"> 留言管理</a> /
                 <span class="font-bold  text-shallowred"> 留言详情</span>
             </header>
@@ -100,7 +100,7 @@
 <script  type="text/javascript">
     window.onload = function(){
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('咨询留言');
         $('#flow_id').scrollTop( $('#flow_id')[0].scrollHeight );
     }
     function ValidContent(){

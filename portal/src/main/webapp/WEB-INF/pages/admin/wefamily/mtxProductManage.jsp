@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 产品管理</span>
+            产品中心 / <span class="font-bold  text-shallowred"> 产品管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
@@ -24,8 +24,17 @@
                                 <div class="col-sm-4">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 型号：</label>
                                     <div class="col-sm-7  my-display-inline-box">
-                                        <input type="text" class="form-control" name="model" id="model" data-maxlength="90"
-                                               onblur="trimText(this)" value="${mtxProduct.model}">
+                                        <select class="form-control" id="model" name="model">
+                                            <option value="">--全部--</option>
+                                            <c:forEach items="${modelList}" var="modelTemp">
+                                                <c:if test="${mtxProduct.model == modelTemp}">
+                                                    <option value="${modelTemp}" selected>${modelTemp}</option>
+                                                </c:if>
+                                                <c:if test="${mtxProduct.model != modelTemp}">
+                                                    <option value="${modelTemp}">${modelTemp}</option>
+                                                </c:if>
+                                            </c:forEach>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
@@ -125,7 +134,7 @@
 
     window.onload = function(){
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('产品中心');
     }
     function deleteMtxProduct(uuid){
         qikoo.dialog.confirm('确定要删除吗？',function(){
