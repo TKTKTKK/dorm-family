@@ -312,7 +312,7 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 报修信息
      */
-    @RequestMapping(value = "/repair_info",method = RequestMethod.GET)
+    @RequestMapping(value = "/member/repair_info",method = RequestMethod.GET)
     public String repair_info(HttpServletRequest request,Model model){
 
         String repairId = request.getParameter("repairId");
@@ -334,7 +334,7 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 报修信息
      */
-    @RequestMapping(value = "/repair_info",method = RequestMethod.POST)
+    @RequestMapping(value = "/member/repair_info",method = RequestMethod.POST)
     public String repair_info(Repair repair, RedirectAttributes redirectAttributes, HttpServletRequest request){
 
         String[] repairImgs = request.getParameterValues("repairImg");
@@ -358,7 +358,7 @@ public class MtxGuestController extends BaseGuestController{
             repairService.saveRepair(repair,repairImgs);
             redirectAttributes.addFlashAttribute("successMessage", "保存成功");
         }
-        return "redirect:repair_info?repairId=" + repair.getUuid();
+        return "redirect:/guest/member/repair_info?repairId=" + repair.getUuid();
     }
 
     /**
