@@ -255,8 +255,7 @@ public class WeFamilyController extends BaseAdminController {
             mtxProduct.setType("PRODUCT");
             int p=0;
             if(mtxProduct.getPrice()!=null){
-                double price = mtxProduct.getPrice();
-                p = (int) price;
+                p  = mtxProduct.getPrice().intValue();
                 mtxProduct.setPoints(p);
             }
             mxtProductService.insert(mtxProduct);
