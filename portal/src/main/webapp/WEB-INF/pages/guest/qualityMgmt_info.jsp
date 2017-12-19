@@ -80,11 +80,11 @@
 <body>
     <div class="head">
         <c:if test="${qualityMgmt.type == 'REPAIR'}">
-            <a class="back" href="${ctx}/guest/repair_list"></a>
+            <a class="back" href="${ctx}/guest/member/repair_list"></a>
             <span>报修详情</span>
         </c:if>
         <c:if test="${qualityMgmt.type == 'MAINTAIN'}">
-            <a class="back" href="${ctx}/guest/maintain_list"></a>
+            <a class="back" href="${ctx}/guest/member/maintain_list"></a>
             <span>保养详情</span>
         </c:if>
         <img src="../../../static/guest/img/sao.png" alt="">
