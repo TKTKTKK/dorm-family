@@ -23,16 +23,13 @@ public class MtxMemberService {
     @Autowired
     private MachineService machineService;
     @Autowired
-    private MtxProductService mtxProductService;
-    @Autowired
     private MtxPointService mtxPointService;
     @Autowired
     private WpUserService wpUserService;
     @Autowired
     private MtxUserMachineService mtxUserMachineService;
 
-    public void insertMemberAndPoint(WpUser wpUser, WpUser wpUserTemp,String machineid) {
-        Machine machine = new Machine();
+    public void insertMemberAndPoint(WpUser wpUser, WpUser wpUserTemp,Machine machine) {
         MtxPoint point = new MtxPoint();
         MtxUserMachine userMachine=new MtxUserMachine();
         MtxUserMachine userMachineTemp=new MtxUserMachine();
@@ -43,29 +40,22 @@ public class MtxMemberService {
         wpUserTemp.setDistrict(wpUser.getDistrict());
         wpUserTemp.setAddress(wpUser.getAddress());
         wpUserTemp.setIfauth("Y");
-        if (StringUtils.isNotBlank(machineid)) {
-            machine.setUuid(machineid);
-        }
         point.setUserid(wpUserTemp.getUuid());
         userMachine.setUserid(wpUserTemp.getUuid());
-        machine = machineService.queryForObjectByPk(machine);
-        if (machine != null) {
-            userMachine.setMachineid(machine.getUuid());
-            userMachineTemp.setMachineid(machine.getUuid());
-            List<MtxUserMachine> userMachineTempList=mtxUserMachineService.queryForList(userMachineTemp);
-            if(userMachineTempList.size()<=0){
-                int p=0;
-                if(machine.getPrice()!=null){
-                    double price = machine.getPrice();
-                    p = (int) price;
-                }
-                wpUserTemp.setPoints(p);
-                point.setPoints(p);
-                point.setName(machine.getMachinename());
-                mtxPointService.insert(point);
-                wpUserService.updatePartial(wpUserTemp);
+        userMachine.setMachineid(machine.getUuid());
+        userMachineTemp.setMachineid(machine.getUuid());
+        List<MtxUserMachine> userMachineTempList=mtxUserMachineService.queryForList(userMachineTemp);
+        if(userMachineTempList.size()<=0){
+            int p=0;
+            if(machine.getPrice()!=null){
+                p = machine.getPrice().intValue();
             }
-            mtxUserMachineService.insert(userMachine);
+            wpUserTemp.setPoints(p);
+            point.setPoints(p);
+            point.setName(machine.getMachinename());
+            mtxPointService.insert(point);
         }
+        wpUserService.updatePartial(wpUserTemp);
+        mtxUserMachineService.insert(userMachine);
     }
 }

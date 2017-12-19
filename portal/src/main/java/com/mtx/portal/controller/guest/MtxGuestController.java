@@ -102,6 +102,7 @@ public class MtxGuestController extends BaseGuestController{
         if(StringUtils.isBlank(mtxReserve.getDetail())){
             mtxReserve.setDetail(null);
         }
+        mtxReserve.setStatus("N_DEAL");
         mtxReserveService.insert(mtxReserve);
         return "redirect:/guest/product_center";
     }
@@ -150,19 +151,22 @@ public class MtxGuestController extends BaseGuestController{
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public String addRegister(WpUser wpUser, String machineno,HttpServletRequest req,Model model) {
         WpUser userTemp=getWechatMemberInfo(req);
-        Machine machine=new Machine();
-        if(StringUtils.isNotBlank(machineno)){
-            machine.setMachineno(machineno);
-            machine=machineService.queryForObjectByUniqueKey(machine);
-            if(machine!=null){
-                String machineid=machine.getUuid();
-                mtxMemberService.insertMemberAndPoint(wpUser,userTemp,machineid);
-            }else{
-                model.addAttribute("ErrorMessage","机器号有误！该机器不存在！");
-                return "guest/register";
+        if(StringUtils.isNotBlank(userTemp.getIfauth())&&"Y".equals(userTemp.getIfauth())){
+            model.addAttribute("ErrorMessage","您已是会员，无需重复注册！");
+            return "guest/register";
+        }else{
+            Machine machine=new Machine();
+            if(StringUtils.isNotBlank(machineno)){
+                machine.setMachineno(machineno);
+                machine=machineService.queryForObjectByUniqueKey(machine);
+                if(machine!=null){
+                    mtxMemberService.insertMemberAndPoint(wpUser,userTemp,machine);
+                }else{
+                    model.addAttribute("ErrorMessage","机器号有误！该机器不存在！");
+                    return "guest/register";
+                }
             }
         }
-
         return "redirect:/guest/product_center";
     }
 
@@ -449,15 +453,21 @@ public class MtxGuestController extends BaseGuestController{
         Machine partsCenter=new Machine();
         if(StringUtils.isNotBlank(code)){
             partsCenter.setMachineno(code);
-            partsCenter=machineService.queryForObjectByUniqueKey(partsCenter);
-            if(partsCenter!=null){
-                Attachment attachment=new Attachment();
-                attachment.setRefid(partsCenter.getUuid());
-                List<Attachment> attachmentList=attachmentService.queryForList(attachment);
-                model.addAttribute("attachmentList",attachmentList);
+            partsCenter.setType("PARTS");
+            List<Machine> partsCenterList=machineService.queryForList(partsCenter);
+            if(partsCenterList.size()>0){
+                partsCenter=partsCenterList.get(0);
+                if(partsCenter!=null){
+                    Attachment attachment=new Attachment();
+                    attachment.setRefid(partsCenter.getUuid());
+                    List<Attachment> attachmentList=attachmentService.queryForList(attachment);
+                    model.addAttribute("attachmentList",attachmentList);
+                }
             }
+        }//为了区分是机器还是配件
+        if(StringUtils.isNotBlank(partsCenter.getUuid())){
+            model.addAttribute("partsCenter",partsCenter);
         }
-        model.addAttribute("partsCenter",partsCenter);
         model.addAttribute("Flag","1");
         model.addAttribute("code",code);
         return "guest/parts_center";

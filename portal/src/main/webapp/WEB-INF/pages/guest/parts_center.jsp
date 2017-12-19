@@ -111,12 +111,13 @@
                         $("#imgDiv").css("display","none");
                         $(".content").css("display","block");
                         $("#imgid").css("display","none");
+                        $("#code").val('');
                         $("#material_code").val(paramArr[0]);
                         $("#machinename").val(paramArr[1]);
                         $("#price").val(paramArr[2]);
                         $("#fitmodel").val(paramArr[3]);
                         $("#address").val(paramArr[4]);
-                        $.post("${ctx}/admin/wefamily/getMtxParts?code="+$("#material_code").val(),function(data){
+                        $.post("${ctx}/guest/getMtxParts?code="+$("#material_code").val(),function(data){
                             if(data.machine){
                                 $("#imgid").css("display","block");
                                 $("#imgDiv").css("display","none");
