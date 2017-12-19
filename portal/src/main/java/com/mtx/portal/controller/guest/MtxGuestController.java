@@ -256,6 +256,20 @@ public class MtxGuestController extends BaseGuestController{
         return "guest/userInfo";
     }
 
+    @RequestMapping(value = "/userInfo",method = RequestMethod.POST)
+    public String userInfo(WpUser user,Model model) {
+        WpUser userTemp=new WpUser();
+        userTemp.setUuid(user.getUuid());
+        userTemp=wpUserService.queryForObjectByPk(userTemp);
+        userTemp.setName(user.getName());
+        userTemp.setContactno(user.getContactno());
+        userTemp.setAddress(user.getAddress());
+        wpUserService.updatePartial(userTemp);
+        model.addAttribute("user",userTemp);
+        model.addAttribute("message","恭喜！修改成功！");
+        return "guest/userInfo";
+    }
+
     /**
      * 我的产品
      */

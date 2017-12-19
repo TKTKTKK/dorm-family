@@ -25,18 +25,19 @@
     <a class="back" onclick="goBack()" ></a>
     <span>个人中心</span>
 </div>
+<form method="post" action="" id="searchForm">
     <ul class="list">
         <li>
             <span>姓名</span>
-            <span>${user.name}</span>
+            <input type="text" id="name" name="name" value="${user.name}"/>
         </li>
         <li>
             <span>电话</span>
-            <span>${user.contactno}</span>
+            <input type="text" id="contactno" name="contactno" value="${user.contactno}"/>
         </li>
         <li>
             <span>地区</span>
-            <span>${user.address}</span>
+            <input type="text" id="address" name="address" value="${user.address}"/>
         </li>
         <li>
             <span>昵称</span>
@@ -51,13 +52,46 @@
             <span>${user.points}</span>
         </li>
     </ul>
-<input type="text" value="${user.uuid}" id="userid" style="display: none">
+<input type="text" value="${user.uuid}" id="userid" name="uuid" style="display: none">
+<span  class="fixsubmit" onclick="submitForm()">修改</span>
+</form>
+<div class="choose" style="display: none">
+    <div class="error">
+        <p id="errorMessage"></p >
+        <button onclick="closeModel()">我知道了</button>
+    </div>
+</div>
 </body>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script type="text/javascript">
+    var errorMessage = document.getElementById("errorMessage");
+    errorMessage.innerHTML = "";
+    window.onload=function(){
+        var message='${message}';
+        if(message!=null&&message!=''){
+            errorMessage.innerHTML=message;
+            $(".choose").css("display","block");
+        }
+    }
     function goBack(){
         var userid=$("#userid").val();
         window.location.href="${ctx}/guest/member/center?userid="+userid;
+    }
+    function  submitForm(){
+        var name=document.getElementById("name").value;
+        var phone=document.getElementById("contactno").value;
+        var address=document.getElementById("address").value;
+        if(name!=null&&name!=''&&phone!=null&&phone!=''&&address!=null&&address!=''){
+            var searchForm = document.getElementById("searchForm");
+            searchForm.action = "${ctx}/guest/userInfo";
+            searchForm.submit();
+        }else{
+            errorMessage.innerHTML="内容不能为空！";
+            $(".choose").css("display","block");
+        }
+    }
+    function closeModel(){
+        $(".choose").css("display","none");
     }
 </script>
 </html>
