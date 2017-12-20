@@ -45,18 +45,20 @@
         <div class="info_name">
             <p style="text-align: center;"><input id="machinename" style="text-align: center;" type="text" value="${partsCenter.machinename}"/></p>
             <hr>
-            <p>物料编码：<input type="text" id="material_code" value="${partsCenter.machineno}"/></p>
+            <form action="" method="post" id="form">
+            <p>物料编码：<input type="text" name="code" id="material_code" value="${partsCenter.machineno}"/></p>
+            </form>
             <p>零售价：<input type="text" id="price" value="${partsCenter.price}${partsCenter.format}"/></p>
             <p>适用机型：<input type="text" id="fitmodel" value="${partsCenter.machinemodel}"/></p>
             <p>产地：<input type="text" id="address" value="${partsCenter.address}"/> </p>
             <hr>
             <div id="imgid">
-            <p>配件图片</p>
-            <ul class="parts_img">
-                <c:forEach items="${attachmentList}" var="attachment">
-                <li><img src="${attachment.name}" alt=""></li>
-                </c:forEach>
-            </ul>
+                <p>配件图片</p>
+                    <ul class="parts_img">
+                        <c:forEach items="${attachmentList}" var="attachment">
+                            <li><img src="${attachment.name}" alt=""></li>
+                        </c:forEach>
+                    </ul>
             </div>
         </div>
     </div>
@@ -89,11 +91,19 @@
     }
     function searchParts(){
         var code=$("#code").val();
-        if(code==null||code==''){
-          code= $("#material_code").val();
-        }
         if(code!=null&&code!=''){
             var searchForm = document.getElementById("frm");
+            searchForm.action = "${ctx}/guest/parts_center";
+            searchForm.submit();
+        }else{
+            errorMessage.innerHTML="配件号不能为空！";
+            $("#chooseClose").css("display","block");
+        }
+    }
+    function searchPartsAuto(){
+        var code=$("#material_code").val();
+        if(code!=null&&code!=''){
+            var searchForm = document.getElementById("form");
             searchForm.action = "${ctx}/guest/parts_center";
             searchForm.submit();
         }else{
@@ -121,7 +131,7 @@
                             if(data.machine){
                                 $("#imgid").css("display","block");
                                 $("#imgDiv").css("display","none");
-                                searchParts();
+                                searchPartsAuto();
                             }
                         });
                     }
