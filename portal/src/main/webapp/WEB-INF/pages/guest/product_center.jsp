@@ -52,6 +52,7 @@
         <div class="clearfix"></div>
     </ul>
 </div>
+<input type="text" id="model" style="display: none"/>
 <div class="choose" id="chooseClose" style="display: none">
     <div class="error">
         <p id="errorMessage"></p >
@@ -68,7 +69,13 @@
     function scan(){
         wechatUtil.scanQRCode({
                     success : function(res){
-                        alert(res.resultStr);
+                        var paramArr = wechatUtil.handleScanResult(res.resultStr);
+                        $("#model").val(paramArr[0]);
+                        $.post("${ctx}/guest/goProductDetail?model="+$("#model").val(),function(data){
+                            if(data.mtxProduct){
+                                window.location.href="${ctx}/guest/product_detail?uuid="+data.mtxProduct.uuid;
+                            }
+                        });
                     }
                 }
         );

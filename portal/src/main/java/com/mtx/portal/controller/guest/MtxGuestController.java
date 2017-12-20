@@ -453,6 +453,19 @@ public class MtxGuestController extends BaseGuestController{
         return resultMap;
     }
 
+    @RequestMapping(value = "/goProductDetail", method = RequestMethod.POST)
+    @ResponseBody
+    public Map goProductDetail(String model){
+        MtxProduct product=new MtxProduct();
+        if(StringUtils.isNotBlank(model)){
+            product.setModel(model);
+            product=mxtProductService.queryForObjectByUniqueKey(product);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("mtxProduct", product);
+        return resultMap;
+    }
+
     /**
      * 配件中心
      */
