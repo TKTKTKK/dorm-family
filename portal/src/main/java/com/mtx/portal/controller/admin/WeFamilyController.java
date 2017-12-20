@@ -1085,6 +1085,8 @@ public class WeFamilyController extends BaseAdminController {
     public String trainManage(Model model,HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
+        List<String> machineModelList = getModel();
+        model.addAttribute("machineModelList",machineModelList);
         model.addAttribute("successMessage",request.getParameter("successMessage"));
         return "admin/wefamily/trainManage";
     }
@@ -1100,6 +1102,8 @@ public class WeFamilyController extends BaseAdminController {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         model.addAttribute("train",train);
+        List<String> machineModelList = getModel();
+        model.addAttribute("machineModelList",machineModelList);
         if(null != wechatBinding){
             String startDateStr = request.getParameter("startDateStr");
             model.addAttribute("startDateStr", startDateStr);
@@ -1142,8 +1146,8 @@ public class WeFamilyController extends BaseAdminController {
     @RequestMapping(value = "/trainInfo",method = RequestMethod.GET)
     public String trainInfo(HttpServletRequest request,Model model){
 
-        List<CommonCode> programCodeList = commonCodeService.queryCodeList("TRAIN_PROGRAM");
-        model.addAttribute("programCodeList",programCodeList);
+        List<String> machineModelList = getModel();
+        model.addAttribute("machineModelList",machineModelList);
 
         String trainId = request.getParameter("trainId");
         if(StringUtils.isNotBlank(trainId)){
@@ -1319,6 +1323,10 @@ public class WeFamilyController extends BaseAdminController {
 
     @RequestMapping(value = "/trainInfoForPhone",method = RequestMethod.GET)
     public String trainInfoForPhone(Model model,HttpServletRequest request){
+
+        List<String> machineModelList = getModel();
+        model.addAttribute("machineModelList",machineModelList);
+
         String trainId= request.getParameter("trainId");
         if(StringUtils.isNotBlank(trainId)){
             Train train = new Train();
@@ -1398,6 +1406,8 @@ public class WeFamilyController extends BaseAdminController {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         model.addAttribute("type","REPAIR");
+        List<String> machineModelList = getModel();
+        model.addAttribute("machineModelList",machineModelList);
         return "admin/wefamily/qualityMgmtManage";
     }
 
@@ -1409,6 +1419,8 @@ public class WeFamilyController extends BaseAdminController {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         model.addAttribute("type","MAINTAIN");
+        List<String> machineModelList = getModel();
+        model.addAttribute("machineModelList",machineModelList);
         return "admin/wefamily/qualityMgmtManage";
     }
 
@@ -1423,6 +1435,8 @@ public class WeFamilyController extends BaseAdminController {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         model.addAttribute("qualityMgmt",qualityMgmt);
+        List<String> machineModelList = getModel();
+        model.addAttribute("machineModelList",machineModelList);
         String type = request.getParameter("type");
         model.addAttribute("type",type);
         qualityMgmt.setType(type);
@@ -1466,6 +1480,9 @@ public class WeFamilyController extends BaseAdminController {
     public String qualityMgmtInfo(HttpServletRequest request,Model model){
         List<Merchant> merchantList = merchantService.selectMerchantForUser();
         model.addAttribute("merchantList",merchantList);
+
+        List<String> machineModelList = getModel();
+        model.addAttribute("machineModelList",machineModelList);
 
         String qualityMgmtId= request.getParameter("qualityMgmtId");
         String type = request.getParameter("type");
@@ -1679,6 +1696,7 @@ public class WeFamilyController extends BaseAdminController {
     public String repairManageForPhone(Model model) {
         QualityMgmt qualityMgmt = new QualityMgmt();
         qualityMgmt.setType("REPAIR");
+        qualityMgmt.setWorkerid(UserUtils.getUserId());
         model.addAttribute("type","REPAIR");
         List<QualityMgmt> qualityMgmtList = qualityMgmtService.queryQualityMgmtListForPhone(qualityMgmt);
         model.addAttribute("qualityMgmtList",qualityMgmtList);
@@ -1694,6 +1712,7 @@ public class WeFamilyController extends BaseAdminController {
     public String maintainManageForPhone(Model model) {
         QualityMgmt qualityMgmt = new QualityMgmt();
         qualityMgmt.setType("MAINTAIN");
+        qualityMgmt.setWorkerid(UserUtils.getUserId());
         model.addAttribute("type","MAINTAIN");
         List<QualityMgmt> qualityMgmtList = qualityMgmtService.queryQualityMgmtListForPhone(qualityMgmt);
         model.addAttribute("qualityMgmtList",qualityMgmtList);
@@ -1702,6 +1721,10 @@ public class WeFamilyController extends BaseAdminController {
 
     @RequestMapping(value = "/qualityMgmtInfoForPhone",method = RequestMethod.GET)
     public String qualityMgmtInfoForPhone(Model model,HttpServletRequest request){
+
+        List<String> machineModelList = getModel();
+        model.addAttribute("machineModelList",machineModelList);
+
         String qualityMgmtId= request.getParameter("qualityMgmtId");
         if(StringUtils.isNotBlank(qualityMgmtId)){
             QualityMgmt qualityMgmt = new QualityMgmt();

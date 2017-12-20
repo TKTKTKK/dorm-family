@@ -136,33 +136,44 @@
                 </li>
             </ul>
             <div class="goal_total">
-                <a href="javaScript:enableUl('programUl','programListImg')">
-                    <span>培训项目</span>
-                    <img src="../../../../static/guest/img/list.png" alt="" id="programListImg" class="up">
-                </a>
+                <span>培训项目</span>
             </div>
             <ul class="list" id="programUl">
-                <c:forEach items="${web:queryCommonCodeList('TRAIN_PROGRAM')}" var="programCode">
+                <li>
+                    <span>培训类型<a class="dataRequired">*</a></span>
+                    <select name="type" id="type" data-required="true" onchange="changeTrainProgram()">
+                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_TYPE')}"></c:set>
+                        <c:forEach items="${commonCodeList}" var="commonCode">
+                            <option value="${commonCode.code}" <c:if test="${train.type == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                        </c:forEach>
+                    </select>
+                </li>
+
+                <c:forEach items="${web:queryCommonCodeList('TRAIN_PROGRAM_FIRST')}" var="programCode">
                     <c:set var="showFlag" value="0" scope="page"></c:set>
                     <c:forEach items="${trainProgramList}" var="program">
                         <c:if test="${program == programCode.code}">
                             <c:set var="showFlag" value="1" scope="page"></c:set>
                         </c:if>
                     </c:forEach>
-                    <c:if test="${showFlag == 1}">
-                        <li>
-                            <input type="checkbox" class="chk" id="${programCode.code}" name="trainPrograms" onchange="checkProgram('${programCode.code}')" style="display: none;" checked value="${programCode.code}">
+                        <li class="first">
+                            <input type="checkbox" class="chk" id="${programCode.code}" name="trainPrograms" onchange="checkProgram('${programCode.code}')" style="display: none;" <c:if test="${showFlag == 1}">checked </c:if> value="${programCode.code}">
                             <label for="${programCode.code}"></label>
                             <span>${programCode.codevalue}</span>
                         </li>
-                    </c:if>
-                    <c:if test="${showFlag == 0}">
-                        <li>
-                            <input type="checkbox" class="chk" id="${programCode.code}" name="trainPrograms" onchange="checkProgram('${programCode.code}')" style="display: none;" value="${programCode.code}">
-                            <label for="${programCode.code}"></label>
-                            <span>${programCode.codevalue}</span>
-                        </li>
-                    </c:if>
+                </c:forEach>
+                <c:forEach items="${web:queryCommonCodeList('TRAIN_PROGRAM_SCENE')}" var="programCode">
+                    <c:set var="showFlag" value="0" scope="page"></c:set>
+                    <c:forEach items="${trainProgramList}" var="program">
+                        <c:if test="${program == programCode.code}">
+                            <c:set var="showFlag" value="1" scope="page"></c:set>
+                        </c:if>
+                    </c:forEach>
+                    <li class="scene">
+                        <input type="checkbox" class="chk" id="${programCode.code}" name="trainPrograms" onchange="checkProgram('${programCode.code}')" style="display: none;" <c:if test="${showFlag == 1}">checked </c:if> value="${programCode.code}">
+                        <label for="${programCode.code}"></label>
+                        <span>${programCode.codevalue}</span>
+                    </li>
                 </c:forEach>
             </ul>
             <div class="goal_total">
@@ -173,15 +184,6 @@
             </div>
             <ul class="list" id="situationUl">
                 <li>
-                    <span>培训类型<a class="dataRequired">*</a></span>
-                    <select name="type" id="type" data-required="true">
-                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_TYPE')}"></c:set>
-                        <c:forEach items="${commonCodeList}" var="commonCode">
-                            <option value="${commonCode.code}" <c:if test="${train.type == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                        </c:forEach>
-                    </select>
-                </li>
-                <li>
                     <span>培训日期<a class="dataRequired">*</a></span>
                     <input class="Wdate" type="text" name="traindt" id="traindt" onClick="WdatePicker()"
                            value="${train.traindt}" placeholder="请选择培训日期" data-required="true" data-maxlength="23">
@@ -190,7 +192,7 @@
                     <span>培训情况</span>
                     <select name="situation" id="situation">
                         <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_SITUATION')}"></c:set>
-                        <option>请选择</option>
+                        <option value="">请选择</option>
                         <c:forEach items="${commonCodeList}" var="commonCode">
                             <option value="${commonCode.code}" <c:if test="${train.situation == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                         </c:forEach>
@@ -198,8 +200,8 @@
                 </li>
                 <li>
                     <span>现场定位</span>
-                    <input type="text" placeholder="请填写位置" name="location" id="location" value="${train.location}" data-maxlength="32">
-                    <%--<img src="../../../../static/admin/img/location.png" alt="" style="width: 2rem;height: 2rem">--%>
+                    <input type="text" name="location" id="location" value="${train.location}" data-maxlength="32" readonly onblur="initLocation()">
+                    <img src="../../../../static/admin/img/location.png" id="locationImg" onclick="getLocation()" alt="" style="width: 2rem;height: 2rem;float: right">
                 </li>
                 <li style="border: 0">
                     <span>上传图片</span>
@@ -271,6 +273,17 @@
 <script src="${ctx}/static/js/coordtransform.js"></script>
 <script type="text/javascript">
 
+    window.onload = function(){
+        var location = $('#location').val();
+        if(location.length > 0){
+            $('#location').show();
+            $('#locationImg').hide();
+        }else{
+            getLocation();
+        }
+        changeTrainProgram();
+    }
+
     function submitTrainInfo(){
         $("#frm").parsley("validate");
         //表单合法 单价合法性
@@ -303,11 +316,11 @@
         var ul = document.getElementById(ulId);
         var lis = ul.getElementsByTagName("li");
         var img = document.getElementById(imgId);
-        for(var i=0;i<lis.length;i++){
+            for(var i=0;i<lis.length;i++) {
             if(lis[i].style.display == "none"){
                 lis[i].style.display = "block";
                 img.className = "up";
-            }else{
+        }else{
                 lis[i].style.display = "none";
                 img.className = "down";
             }
@@ -324,19 +337,62 @@
             });
     }
 
-    wechatUtil.getLocation({
-        success : function(res){
-            var gcj02tobd09 = coordtransform.gcj02tobd09(res.longitude,res.latitude);
-            wechatUtil.requestFormattedAddress({
-                latitude:gcj02tobd09[1],
-                longitude:gcj02tobd09[0],
-                success:function(data){
-                    alert(data.address);
-                }
+    function getLocation(){
+        $('#location').show();
+        wechatUtil.getLocation({
+            success : function(res){
+                var gcj02tobd09 = coordtransform.gcj02tobd09(res.longitude,res.latitude);
+                wechatUtil.requestFormattedAddress({
+                    latitude:gcj02tobd09[1],
+                    longitude:gcj02tobd09[0],
+                    success:function(data){
+                        $('#location').val(data.address);
+                    }
 
-            })
+                })
+            }
+        });
+
+        $('#locationImg').hide();
+    }
+
+    function initLocation(){
+        var location = $('#location').val();
+        if(location.length > 0){
+            $('#location').show();
+            $('#locationImg').hide();
+        }else{
+            $('#location').hide();
+            $('#locationImg').show();
         }
-    });
+    }
+
+    function changeTrainProgram(){
+        var ul = document.getElementById("programUl");
+        var lis = ul.getElementsByTagName("li");
+
+        var type = $('#type').val();
+        if(type.length > 0 ){
+            if(type == 'FIRST'){
+                for(var i=0;i<lis.length;i++){
+                    if(lis[i].className == 'first'){
+                        lis[i].style.display = "block";
+                    }else if(lis[i].className == 'scene'){
+                        lis[i].style.display = "none";
+                    }
+                }
+            }else if(type == 'SCENE'){
+                for(var i=0;i<lis.length;i++){
+                    if(lis[i].className == 'scene'){
+                        lis[i].style.display = "block";
+                    }else if(lis[i].className == 'first'){
+                        lis[i].style.display = "none";
+                    }
+                }
+            }
+
+        }
+    }
 
 </script>
 

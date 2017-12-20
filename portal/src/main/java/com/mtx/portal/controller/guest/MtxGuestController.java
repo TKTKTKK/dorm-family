@@ -69,6 +69,8 @@ public class MtxGuestController extends BaseGuestController{
     private WorkerService workerService;
     @Autowired
     private MtxExchangeRecordService mtxExchangeRecordService;
+    @Autowired
+    private MtxProductService mtxProductService;
 
 
     @RequestMapping(value = "/product_center")
@@ -387,7 +389,9 @@ public class MtxGuestController extends BaseGuestController{
      * 报修信息
      */
     @RequestMapping(value = "/member/repair_info",method = RequestMethod.GET)
-    public String repair_info(){
+    public String repair_info(Model model){
+        List<String> machineModelList = mtxProductService.getAllModel();
+        model.addAttribute("machineModelList",machineModelList);
         return "guest/repair_info";
     }
 

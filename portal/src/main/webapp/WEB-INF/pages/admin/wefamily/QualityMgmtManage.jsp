@@ -37,6 +37,24 @@
                                     />
                                     <input type="hidden" name="type" value="${type}">
                                 </div>
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <select class="form-control" name="machinemodel" id="machinemodel">
+                                        <c:if test="${fn:length(machineModelList) > 1}">
+                                            <option value="">机器型号</option>
+                                        </c:if>
+                                        <c:forEach items="${machineModelList}" var="machineModel">
+                                            <option value="${machineModel}" <c:if test="${qualityMgmt.machinemodel == machineModel}">selected</c:if>>${machineModel}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <input type="text" class="form-control" id="reportername" name="reportername" onblur="trimText(this)"
+                                           value="${qualityMgmt.reportername}" placeholder="用户姓名"/>
+                                </div>
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <input type="text" class="form-control" id="reporterphone" name="reporterphone" onblur="trimText(this)"
+                                           value="${qualityMgmt.reporterphone}" placeholder="用户电话"/>
+                                </div>
 
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
@@ -72,8 +90,9 @@
                                     <thead>
                                     <tr>
                                         <th class="text-center">${showType}编号</th>
-                                        <th class="text-center">${showType}人姓名</th>
-                                        <th class="text-center">${showType}人电话</th>
+                                        <th class="text-center">机器型号</th>
+                                        <th class="text-center">用户姓名</th>
+                                        <th class="text-center">用户电话</th>
                                         <th class="text-center">${showType}日期</th>
                                         <th class="text-center">${showType}状态</th>
                                         <th class="text-center">操作</th>
@@ -84,6 +103,9 @@
                                         <tr>
                                             <td>
                                                     ${qualityMgmt.snno}
+                                            </td>
+                                            <td>
+                                                    ${qualityMgmt.machinemodel}
                                             </td>
                                             <td>
                                                     ${qualityMgmt.reportername}

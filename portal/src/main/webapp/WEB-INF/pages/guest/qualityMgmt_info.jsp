@@ -87,7 +87,6 @@
             <a class="back" href="${ctx}/guest/member/maintain_list"></a>
             <span>保养详情</span>
         </c:if>
-        <img src="../../../static/guest/img/sao.png" alt="">
     </div>
     <div class="b-l b-r" style="padding-left: 1.25rem">
         <span class="text-success">${successMessage}</span>
@@ -105,22 +104,22 @@
                 <li>
                     <span>机器型号<a class="dataRequired">*</a></span>
                     <input type="text" id="machinemodel" name="machinemodel" value="${qualityMgmt.machinemodel}"
-                           data-required="true" placeholder="请填写机器型号" data-maxlength="32"/>
+                           data-required="true"  data-maxlength="32"/>
                 </li>
                 <li>
                     <span>发动机号<a class="dataRequired">*</a></span>
                     <input type="text" id="engineno" name="engineno" value="${qualityMgmt.engineno}"
-                           data-required="true" placeholder="请填写发动机号" data-maxlength="32"/>
+                           data-required="true"  data-maxlength="32"/>
                 </li>
                 <li>
                     <span>机器号<a class="dataRequired">*</a></span>
                     <input type="text" id="machineno" name="machineno" value="${qualityMgmt.machineno}"
-                           data-required="true" placeholder="请填写机器号" data-maxlength="32"/>
+                           data-required="true"  data-maxlength="32"/>
                 </li>
                 <li>
                     <span>生产日期<a class="dataRequired">*</a></span>
                     <input class="Wdate" type="text" name="productiondt" id="productiondt" value="${qualityMgmt.productiondt}" onClick="WdatePicker()"
-                           data-required="true" placeholder="请选择生产日期" data-maxlength="23">
+                           data-required="true"  data-maxlength="23">
                 </li>
             </ul>
             <div class="goal_total">
@@ -130,12 +129,12 @@
             <ul class="list" id="personUl">
                 <li>
                     <span>姓名<a class="dataRequired">*</a></span>
-                    <input type="text" placeholder="请填写真实姓名" value="${qualityMgmt.reportername}" name="reportername" id="reportername"
+                    <input type="text"  value="${qualityMgmt.reportername}" name="reportername" id="reportername"
                            data-required="true" data-maxlength="32">
                 </li>
                 <li>
                     <span>手机号码<a class="dataRequired">*</a></span>
-                    <input type="text" placeholder="请填写手机号码" value="${qualityMgmt.reporterphone}" name="reporterphone" id="reporterphone"
+                    <input type="text"  value="${qualityMgmt.reporterphone}" name="reporterphone" id="reporterphone"
                            data-required="true" data-maxlength="11">
                 </li>
             </ul>
@@ -167,14 +166,14 @@
             <ul class="list" id="workerUl">
                 <li>
                     <span>姓名<a class="dataRequired">*</a></span>
-                    <input type="text" placeholder="请填写真实姓名" value="${workerList[0].name}" name="name" id="name"
+                    <input type="text"  value="${workerList[0].name}" name="name" id="name"
                            data-required="true" data-maxlength="32">
                     <input type="hidden" name="workerid" value="${workerList[0].uuid}">
                     <input type="hidden" name="workerversionno" value="${workerList[0].versionno}">
                 </li>
                 <li>
                     <span>手机号码<a class="dataRequired">*</a></span>
-                    <input type="text" placeholder="请填写手机号码" value="${workerList[0].phone}" name="phone" id="phone"
+                    <input type="text"  value="${workerList[0].phone}" name="phone" id="phone"
                            data-required="true" data-maxlength="11">
                 </li>
             </ul>
@@ -185,27 +184,27 @@
             <ul class="list" id="situationUl">
                 <li>
                     <span>损坏项目<a class="dataRequired">*</a></span>
-                    <input type="text" placeholder="请填写损坏项目" value="${qualityMgmt.program}" name="program" id="program"
+                    <input type="text"  value="${qualityMgmt.program}" name="program" id="program"
                            data-required="true" data-maxlength="50">
                 </li>
                 <li>
                     <span>处理配件<a class="dataRequired">*</a></span>
-                    <input type="text" placeholder="请填写处理的配件" value="${qualityMgmt.parts}" name="parts" id="parts"
+                    <input type="text"  value="${qualityMgmt.parts}" name="parts" id="parts"
                            data-required="true" data-maxlength="32">
                 </li>
                 <li>
                     <span>现场地点</span>
-                    <input type="text" placeholder="请填写用户地址" name="location" id="location" value="${qualityMgmt.location}" data-maxlength="32">
+                    <input type="text"  name="location" id="location" value="${qualityMgmt.location}" data-maxlength="32">
                     <%--<img src="../../../../static/admin/img/location.png" alt="" style="width: 2rem;height: 2rem">--%>
                 </li>
                 <li>
                     <span>已作业面积</span>
                     <input type="text" name="workarea" id="workarea" value="${qualityMgmt.workarea}"
-                           data-maxlength="20" onblur="trimText(this)" placeholder="请填写已作业面积">
+                           data-maxlength="20" onblur="trimText(this)" >
                 </li>
                 <li>
                     <span>效果如何</span>
-                    <input type="text" placeholder="请填写作业效果" value="${qualityMgmt.effect}" name="effect" id="effect"
+                    <input type="text"  value="${qualityMgmt.effect}" name="effect" id="effect"
                             data-maxlength="32">
                 </li>
                 <li>
@@ -217,7 +216,7 @@
                     <c:if test="${not empty qualityMgmt.damagecategory}">
                         <select name="damagecategory" id="damagecategory">
                             <c:set var="commonCodeList" value="${web:queryCommonCodeList('DAMAGE_CATEGORY')}"></c:set>
-                            <option>请选择</option>
+                            <option value="">请选择</option>
                             <c:forEach items="${commonCodeList}" var="commonCode">
                                 <option value="${commonCode.code}" <c:if test="${qualityMgmt.damagecategory == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                             </c:forEach>
@@ -227,25 +226,24 @@
                 <li>
                     <span>到达所用时间</span>
                     <input type="text" name="arrivetime" value="${qualityMgmt.arrivetime}"
-                           data-maxlength="20"  onblur="trimText(this)" id="arrivetime" placeholder="请填写到达所用时间"
-                    >
+                           data-maxlength="20"  onblur="trimText(this)" id="arrivetime">
                 </li>
                 <li>
                     <span><c:if test="${qualityMgmt.type == 'REPAIR'}">维修</c:if><c:if test="${qualityMgmt.type == 'MAINTAIN'}">保养</c:if>日期<a class="dataRequired">*</a></span>
                     <input class="Wdate" type="text" name="servicedt" id="servicedt" onClick="WdatePicker()"
-                           value="${qualityMgmt.servicedt}" placeholder="请选择维修日期" data-required="true" data-maxlength="23">
+                           value="${qualityMgmt.servicedt}"  data-required="true" data-maxlength="23">
                 </li>
                 <li>
                     <span>收费金额</span>
                     <input name="price" id="price" value="${qualityMgmt.price}" size="24"
-                           data-maxlength="10" onblur="validateMoney(this,'priceError')" placeholder="请填写收费金额">
+                           data-maxlength="10" onblur="validateMoney(this,'priceError')" >
                     <span id="priceError" class="text-danger" style="float: right;color: red;font-size: 1.2rem;"></span>
                 </li>
                 <li>
                     <span>用户评价</span>
                     <select name="evaluate" id="evaluate">
                         <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
-                        <option>请选择</option>
+                        <option value="">请选择</option>
                         <c:forEach items="${commonCodeList}" var="commonCode">
                             <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                         </c:forEach>
@@ -278,11 +276,6 @@
             <input type="hidden" name="versionno" class="form-control"
                    value="${qualityMgmt.versionno}">
         </form>
-
-
-
-
-
 
 <script src="${ctx}/static/admin/js/lrz/dist/lrz.bundle.js"></script>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>

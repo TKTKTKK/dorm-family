@@ -329,10 +329,15 @@
                                                                     <div class="form-group">
                                                                         <label class="col-sm-3 control-label"><span class="text-danger">*</span>机器型号：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
-                                                                            <input type="text" class="form-control"  name="machinemodel" id="machinemodel"
-                                                                                   value="${qualityMgmt.machinemodel}" data-required="true" onblur="trimText(this)"
-                                                                                   placeholder="请输入机器型号" data-maxlength="32"
-                                                                            >
+                                                                            <select class="form-control" name="machinemodel" id="machinemodel"
+                                                                                    data-required="true">
+                                                                                <c:if test="${fn:length(machineModelList) > 1}">
+                                                                                    <option value="">请选择机器型号</option>
+                                                                                </c:if>
+                                                                                <c:forEach items="${machineModelList}" var="machineModel">
+                                                                                    <option value="${machineModel}" <c:if test="${qualityMgmt.machinemodel == machineModel}">selected</c:if>>${machineModel}</option>
+                                                                                </c:forEach>
+                                                                            </select>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
@@ -465,7 +470,7 @@
                                                                       enctype="multipart/form-data" id="qualityMgmtInfoFrm" style="border: 0px">
                                                                     <div class="panel-body p-0-15">
                                                                         <div class="form-group">
-                                                                            <label class="col-sm-3 control-label"><span class="text-danger">*</span><c:if test="${type eq 'REPAIR'}">维修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>员工：</label>
+                                                                            <label class="col-sm-3 control-label"><span class="text-danger">*</span><c:if test="${type eq 'REPAIR'}">维修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>工人：</label>
                                                                             <div class="col-sm-9  b-l bg-white">
                                                                                 <select  class="form-control" name="workerId" id="workerId" data-required="true">
                                                                                     <option value="">请选择</option>

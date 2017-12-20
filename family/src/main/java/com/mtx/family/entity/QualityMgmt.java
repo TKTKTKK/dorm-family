@@ -58,6 +58,15 @@ public class QualityMgmt extends BaseEntity {
     @Column
     private String remarks;
 
+    private String workerid;
+
+    public String getWorkerid() {
+        return workerid;
+    }
+
+    public void setWorkerid(String workerid) {
+        this.workerid = workerid;
+    }
 
     public String getSnno() {
         return snno;

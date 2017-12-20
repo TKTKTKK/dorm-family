@@ -142,7 +142,7 @@
                         <span>维修评价</span>
                         <select name="evaluate" id="evaluate">
                             <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
-                            <option>请选择</option>
+                            <option value="">请选择</option>
                             <c:forEach items="${commonCodeList}" var="commonCode">
                                 <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                             </c:forEach>

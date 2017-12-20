@@ -215,9 +215,9 @@
                            data-required="true" data-maxlength="32">
                 </li>
                 <li>
-                    <span>现场地点</span>
-                    <input type="text" placeholder="请填写用户地址" name="location" id="location" value="${qualityMgmt.location}" data-maxlength="32">
-                    <%--<img src="../../../../static/admin/img/location.png" alt="" style="width: 2rem;height: 2rem">--%>
+                    <span>现场定位</span>
+                    <input type="text" name="location" id="location" value="${train.location}" data-maxlength="32" readonly onblur="initLocation()">
+                    <img src="../../../../static/admin/img/location.png" id="locationImg" onclick="getLocation()" alt="" style="width: 2rem;height: 2rem;float: right">
                 </li>
                 <li>
                     <span>已作业面积</span>
@@ -233,7 +233,7 @@
                     <span>损坏分类</span>
                     <select name="damagecategory" id="damagecategory">
                         <c:set var="commonCodeList" value="${web:queryCommonCodeList('DAMAGE_CATEGORY')}"></c:set>
-                        <option>请选择</option>
+                        <option value="">请选择</option>
                         <c:forEach items="${commonCodeList}" var="commonCode">
                             <option value="${commonCode.code}" <c:if test="${qualityMgmt.damagecategory == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                         </c:forEach>
@@ -248,7 +248,9 @@
                 <li>
                     <span><c:if test="${qualityMgmt.type == 'REPAIR'}">维修</c:if><c:if test="${qualityMgmt.type == 'MAINTAIN'}">保养</c:if>日期<a class="dataRequired">*</a></span>
                     <input class="Wdate" type="text" name="servicedt" id="servicedt" onClick="WdatePicker()"
-                           value="${qualityMgmt.servicedt}" placeholder="请选择维修日期" data-required="true" data-maxlength="23">
+                           value="${qualityMgmt.servicedt}"  data-required="true" data-maxlength="23"
+                           <c:if test="${qualityMgmt.type == 'REPAIR'}">placeholder="请选择维修日期"</c:if>
+                           <c:if test="${qualityMgmt.type == 'MAINTAIN'}">placeholder="请选择保养日期"</c:if>>
                 </li>
                 <li>
                     <span>收费金额</span>
@@ -260,7 +262,7 @@
                     <span>用户评价</span>
                     <select name="evaluate" id="evaluate">
                         <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
-                        <option>请选择</option>
+                        <option value="">请选择</option>
                         <c:forEach items="${commonCodeList}" var="commonCode">
                             <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                         </c:forEach>
@@ -338,7 +340,48 @@
 <script src="${ctx}/static/admin/js/calendar/WdatePicker.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script src="${ctx}/static/js/wechatUtil.js?20171201"></script>
+<script src="${ctx}/static/js/coordtransform.js"></script>
 <script type="text/javascript">
+
+    window.onload = function(){
+        var location = $('#location').val();
+        if(location.length > 0){
+            $('#location').show();
+            $('#locationImg').hide();
+        }else{
+            getLocation();
+        }
+    }
+
+    function getLocation(){
+        $('#location').show();
+        wechatUtil.getLocation({
+            success : function(res){
+                var gcj02tobd09 = coordtransform.gcj02tobd09(res.longitude,res.latitude);
+                wechatUtil.requestFormattedAddress({
+                    latitude:gcj02tobd09[1],
+                    longitude:gcj02tobd09[0],
+                    success:function(data){
+                        $('#location').val(data.address);
+                    }
+
+                })
+            }
+        });
+
+        $('#locationImg').hide();
+    }
+
+    function initLocation(){
+        var location = $('#location').val();
+        if(location.length > 0){
+            $('#location').show();
+            $('#locationImg').hide();
+        }else{
+            $('#location').hide();
+            $('#locationImg').show();
+        }
+    }
 
     function submitQualityMgmtInfo(){
         $("#frm").parsley("validate");

@@ -10,6 +10,9 @@
         from tb_mtx_train mt
         where
         1=1
+        <if test="train.machinemodel != null and train.machinemodel != ''">
+            and mt.machinemodel = #{train.machinemodel}
+        </if>
         <if test="train.machineno != null and train.machineno != ''">
             and mt.machineno like concat("%",#{train.machineno},"%")
         </if>

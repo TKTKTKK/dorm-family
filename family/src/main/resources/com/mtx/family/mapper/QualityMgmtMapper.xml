@@ -13,6 +13,15 @@
         <if test="qualityMgmt.snno != null and qualityMgmt.snno != ''">
             and qm.snno like concat("%",#{qualityMgmt.snno},"%")
         </if>
+        <if test="qualityMgmt.machinemodel != null and qualityMgmt.machinemodel != ''">
+            and qm.machinemodel like = #{qualityMgmt.machinemodel}
+        </if>
+        <if test="qualityMgmt.reportername != null and qualityMgmt.reportername != ''">
+            and qm.reportername like concat("%",#{qualityMgmt.reportername},"%")
+        </if>
+        <if test="qualityMgmt.reporterphone != null and qualityMgmt.reporterphone != ''">
+            and qm.reporterphone like concat("%",#{qualityMgmt.reporterphone},"%")
+        </if>
         <if test="qualityMgmt.type != null and qualityMgmt.type != ''">
             and qm.type = #{qualityMgmt.type}
         </if>
@@ -32,7 +41,9 @@
     <select id="selectQualityMgmtListForPhone" resultMap="selectResultMap">
         select qm.*
         from tb_mtx_quality_management qm
+        inner join tb_mtx_worker mw on mw.refid = qm.uuid
         where qm.type = #{qualityMgmt.type}
+        and mw.userid = #{qualityMgmt.workerid}
         order by qm.modifyon desc
     </select>
 

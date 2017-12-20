@@ -91,19 +91,15 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><span class="text-danger">*</span>机器型号：</label>
                                 <div class="col-sm-9  b-l bg-white">
-                                    <input type="text" class="form-control"  name="machinemodel" id="machinemodel"
-                                           value="${train.machinemodel}" data-required="true"
-                                           placeholder="请输入机器型号" data-maxlength="32"
-                                    >
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label"><span class="text-danger">*</span>发动机号：</label>
-                                <div class="col-sm-9  b-l bg-white">
-                                    <input type="text" class="form-control"  name="engineno" id="engineno"
-                                           value="${train.engineno}" data-required="true"
-                                           placeholder="请输入发动机号" data-maxlength="32"
-                                    >
+                                    <select class="form-control" name="machinemodel" id="machinemodel"
+                                            data-required="true">
+                                        <c:if test="${fn:length(machineModelList) > 1}">
+                                            <option value="">请选择机器型号</option>
+                                        </c:if>
+                                        <c:forEach items="${machineModelList}" var="machineModel">
+                                            <option value="${machineModel}" <c:if test="${train.machinemodel == machineModel}">selected</c:if>>${machineModel}</option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -115,14 +111,16 @@
                                                placeholder="请输入机器号" data-maxlength="32"
                                         >
                                         <input type="hidden" name="machineid" id="machineid" value="${machine.uuid}">
-                                        <%--<a class="btn btn-default btn-sm a-noline my-supplier-ul"
-                                           style="margin-top: 2px;position: absolute;top: 0;right: 2px;border: 0;box-shadow: 0 0 0 rgba(255,255,255,1);"
-                                           onclick="queryMachineList(undefined)"
-                                        ><i class="fa fa-search"></i></a>--%>
                                     </div>
-                                    <%--<i class="icon-close hidden" id="machineClose" style="cursor:pointer;margin-top: 17px;position: absolute;top: 38px;right: 20px;border: 0;box-shadow: 0 0 0 rgba(255,255,255,1);"></i>
-                                    <ul class="feetype-ul hidden" id="machineUl" style=" padding-top:20px">
-                                    </ul>--%>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"><span class="text-danger">*</span>发动机号：</label>
+                                <div class="col-sm-9  b-l bg-white">
+                                    <input type="text" class="form-control"  name="engineno" id="engineno"
+                                           value="${train.engineno}" data-required="true"
+                                           placeholder="请输入发动机号" data-maxlength="32"
+                                    >
                                 </div>
                             </div>
                             <div class="form-group">
@@ -153,45 +151,56 @@
                                     <span class="text-danger" id="contactnoError"></span>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">培训项目：</label>
-                                <div class="col-sm-9  b-l bg-white">
-
-                                    <c:forEach items="${programCodeList}" var="programCode">
-                                        <div class="checkbox i-checks" style="padding-left: 0px;position: relative">
-                                            <label class="checkbox m-n">
-
-                                                <c:set var="showFlag" value="0" scope="page"></c:set>
-                                                <c:forEach items="${trainProgramList}" var="program">
-                                                    <c:if test="${program == programCode.code}">
-                                                        <c:set var="showFlag" value="1" scope="page"></c:set>
-                                                    </c:if>
-                                                </c:forEach>
-                                                <c:if test="${showFlag == 1}">
-                                                    <input type="checkbox" name="programs" value="${programCode.code}"  checked>
-                                                    <i></i>
-                                                            <span>${programCode.codevalue}</span>
-                                                </c:if>
-                                                <c:if test="${showFlag == 0}">
-                                                    <input type="checkbox" name="programs" value="${programCode.code}">
-                                                    <i></i>
-                                                            <span>${programCode.codevalue}</span>
-                                                </c:if>
-                                            </label>
-                                            <div class="permit-list"></div>
-                                        </div>
-                                    </c:forEach>
-                                </div>
-                            </div>
                             <div class="form-group" >
                                 <label class="col-sm-3 control-label"><span class="text-danger">*</span>培训类型：</label>
                                 <div class="col-sm-9  b-l bg-white">
-                                    <select  class="form-control" name="type" id="type" data-required="true">
+                                    <select  class="form-control" name="type" id="type" data-required="true" onchange="changeTrainProgram()">
                                         <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_TYPE')}"></c:set>
                                         <c:forEach items="${commonCodeList}" var="commonCode">
                                             <option value="${commonCode.code}" <c:if test="${train.type == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                                         </c:forEach>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">培训项目：</label>
+                                <div class="col-sm-9  b-l bg-white">
+                                    <div id="firstTrain">
+                                        <c:forEach items="${web:queryCommonCodeList('TRAIN_PROGRAM_FIRST')}" var="programCode">
+                                            <div class="checkbox i-checks" style="padding-left: 0px;position: relative">
+                                                <label class="checkbox m-n">
+                                                    <c:set var="showFlag" value="0" scope="page"></c:set>
+                                                    <c:forEach items="${trainProgramList}" var="program">
+                                                        <c:if test="${program == programCode.code}">
+                                                            <c:set var="showFlag" value="1" scope="page"></c:set>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                    <input type="checkbox" name="programs" value="${programCode.code}" <c:if test="${showFlag == 1}">checked</c:if>>
+                                                    <i></i>
+                                                    <span>${programCode.codevalue}</span>
+                                                </label>
+                                                <div class="permit-list"></div>
+                                            </div>
+                                        </c:forEach>
+                                    </div>
+                                    <div id="sceneTrain">
+                                        <c:forEach items="${web:queryCommonCodeList('TRAIN_PROGRAM_SCENE')}" var="programCode">
+                                            <div class="checkbox i-checks" style="padding-left: 0px;position: relative">
+                                                <label class="checkbox m-n">
+                                                    <c:set var="showFlag" value="0" scope="page"></c:set>
+                                                    <c:forEach items="${trainProgramList}" var="program">
+                                                        <c:if test="${program == programCode.code}">
+                                                            <c:set var="showFlag" value="1" scope="page"></c:set>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                    <input type="checkbox" name="programs" value="${programCode.code}" <c:if test="${showFlag == 1}">checked</c:if>>
+                                                    <i></i>
+                                                    <span>${programCode.codevalue}</span>
+                                                </label>
+                                                <div class="permit-list"></div>
+                                            </div>
+                                        </c:forEach>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -218,7 +227,7 @@
                             </div>
                             <c:if test="${fn:length(attachmentList) < 4}">
                                 <div class="form-group" >
-                                    <label class="col-sm-3 control-label">上传照片：</label>
+                                    <label class="col-sm-3 control-label">上传人机合影：</label>
                                     <div class="col-sm-9  b-l bg-white">
                                         <div class="my-display-inline-box">
                                             <div id="trainImgUrlContainer">
@@ -239,7 +248,7 @@
                             </c:if>
                             <c:if test="${fn:length(attachmentList) > 0}">
                                 <div class="form-group" >
-                                    <label class="col-sm-3 control-label">培训照片：</label>
+                                    <label class="col-sm-3 control-label"></label>
                                     <div class="col-sm-9  b-l bg-white">
                                         <c:forEach items="${attachmentList}" var="attachment">
                                             <img src="${attachment.name}" width="50" height="50"
@@ -252,7 +261,7 @@
                                 <label class="col-sm-3  control-label">地址：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="text" class="form-control" name="location" id="location"
-                                           data-maxlength="32"
+                                           data-maxlength="32" readonly
                                            onblur="trimText(this)"
                                            value="${train.location}">
                                     <span id="locationError" class="text-danger"></span>
@@ -318,6 +327,7 @@
     window.onload = function () {
         //显示父菜单
         showParentMenu('品质服务');
+        changeTrainProgram();
     }
 
     $('#traintime').datetimepicker({
@@ -330,6 +340,21 @@
         showMeridian: 1
     });
 
+    //根据类型查询培训项目
+    function changeTrainProgram(){
+        var type = $('#type').val();
+        if(type.length > 0 ){
+            if(type == 'FIRST'){
+                $('#sceneTrain').hide();
+                $('#firstTrain').show();
+            }else if(type == 'SCENE'){
+                $('#sceneTrain').show();
+                $('#firstTrain').hide();
+            }
+
+        }
+    }
+
     //自动查询机器
     function autoQueryMachineList(obj,callback){
         trimText(obj);
@@ -338,7 +363,7 @@
         }
     }
 
-    //查询材料列表
+    //查询机器列表
     function queryMachineList(callback){
         trimText(document.getElementById('machineno'));
         var url = "${ctx}/admin/wefamily/queryMachineList?machineno=" + $('#machineno').val();
@@ -374,7 +399,7 @@
                 });
     }
 
-    //根据id查询材料
+    //根据id查询机器
     function queryMachineById(machineId){
         if(machineId.length > 0){
             $.get("${ctx}/admin/wefamily/queryMachineById?machineId="+machineId+"&version="+Math.random(),function(data,status){

@@ -24,6 +24,16 @@
                               id="searchForm">
                             <div class="row">
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <select class="form-control" name="machinemodel" id="machinemodel">
+                                        <c:if test="${fn:length(machineModelList) > 1}">
+                                            <option value="">机器型号</option>
+                                        </c:if>
+                                        <c:forEach items="${machineModelList}" var="machineModel">
+                                            <option value="${machineModel}" <c:if test="${train.machinemodel == machineModel}">selected</c:if>>${machineModel}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <input type="text" class="form-control" id="machineno" name="machineno" onblur="trimText(this)" value="${train.machineno}"  placeholder="机器号"/>
                                 </div>
 
