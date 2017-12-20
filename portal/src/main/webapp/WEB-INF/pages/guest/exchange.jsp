@@ -67,7 +67,7 @@
     </li>
     <li>
         <span>补充内容</span>
-        <textarea  type="textarea" name="detail" id="detail" value="${mMtxExchangeRecord.detail}" placeholder="对本次兑换的说明(选填)" style="height:4rem;text-align:right;color:#666;font-size: 1.4rem;"></textarea>
+        <textarea  type="textarea" name="detail" id="detail" value="${mMtxExchangeRecord.detail}" placeholder="对本次兑换的说明" style="height:4rem;text-align:right;color:#666;font-size: 1.4rem;"></textarea>
     </li>
 </ul>
     <input type="text" name="productid" class="hidden" value="${mtxProduct.uuid}" style="display:none">

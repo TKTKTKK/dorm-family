@@ -77,6 +77,7 @@ public class MtxGuestController extends BaseGuestController{
     public String product_center(Model model,HttpServletRequest requset) {
         MtxProduct mtxProduct = new MtxProduct();
         mtxProduct.setStatus("ON_SALE");
+        mtxProduct.setType("PRODUCT");
         List<MtxProduct> mtxProductList= mxtProductService.queryForList(mtxProduct);
         model.addAttribute("mtxProductList",mtxProductList);
         String success=requset.getParameter("success");
