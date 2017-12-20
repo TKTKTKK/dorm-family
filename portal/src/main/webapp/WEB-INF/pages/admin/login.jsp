@@ -83,7 +83,7 @@
             </label>
         </div>
         <div class="login">
-        <button style="background: transparent;color: #fff;">登录</button>
+        <button style="background: transparent;color: #fff; width: 100%">登录</button>
         </div>
     </div>
     <%--<div class="login" onclick="submitLogin()">登录</div>--%>

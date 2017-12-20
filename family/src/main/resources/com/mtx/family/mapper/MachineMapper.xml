@@ -8,6 +8,7 @@
     <select id="selectMachineForMachineNoRepeat" resultMap="selectResultMap">
         select mm.* from tb_mtx_machine mm
         where mm.bindid = #{machine.bindid}
+        and mm.type='MACHINE'
         <if test="machine.machineno != null and machine.machineno != ''">
             and mm.machineno = #{machine.machineno}
         </if>
@@ -48,6 +49,7 @@
         from tb_mtx_machine mm
         where
         mm.bindid = #{machine.bindid}
+        and mm.type='MACHINE'
         <if test="machine.machineno != null and machine.machineno != ''">
             and mm.machineno like CONCAT('%',#{machine.machineno},'%')
         </if>

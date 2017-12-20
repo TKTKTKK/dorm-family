@@ -30,7 +30,6 @@
 <div class="head">
     <a class="back" href=""></a>
     <span>积分商城</span>
-    <img src="../../../static/guest/img/sao.png" alt="" onclick="scan()">
 </div>
 <div class="content">
     <ul class="goods_list">
@@ -58,10 +57,9 @@
         <button onclick="closeModel()">我知道了</button>
     </div>
 </div>
+<input type="text" id="model" style="display: none"/>
 </body>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
-<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-<script src="${ctx}/static/js/wechatUtil.js?20171201"></script>
 <script type="text/javascript">
     var errorMessage = document.getElementById("errorMessage");
     errorMessage.innerHTML = "";
@@ -75,5 +73,6 @@
     function closeModel(){
         $(".choose").css("display","none");
     }
+
 </script>
 </html>

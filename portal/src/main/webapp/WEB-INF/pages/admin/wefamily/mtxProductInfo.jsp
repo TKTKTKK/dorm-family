@@ -108,11 +108,12 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-3 control-label"><span class="text-danger"></span>价格：</div>
+                                <div class="col-sm-3 control-label"><span class="text-danger">*</span>价格：</div>
                                 <div class="col-sm-9 b-l bg-white">
                                     <div class="col-sm-8 col-xs-11" style="padding-left: 0">
                                         <input class="form-control" type="text" name="price" value="${mtxProduct.price}"
                                                id="price"
+                                               data-required="true"
                                                data-maxlength="10"
                                                onblur="validateMoney(this,'priceError')">
                                         <div class="text-danger" id="priceError"></div>

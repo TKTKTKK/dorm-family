@@ -67,13 +67,11 @@
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
                                     <tr>
-                                        <th width="15%">物料编码</th>
-                                        <th width="15%">适用机型</th>
-                                        <th width="15%">名称</th>
-                                        <th width="15%">价格</th>
-                                        <th width="10%">规格</th>
-                                        <th width="15%">地址</th>
-                                        <th width="15%">操作</th>
+                                        <th width="20%">物料编码</th>
+                                        <th width="20%">适用机型</th>
+                                        <th width="20%">名称</th>
+                                        <th width="20%">地址</th>
+                                        <th width="20%">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -87,12 +85,6 @@
                                             </td>
                                             <td>
                                                     ${machine.machinename}
-                                            </td>
-                                            <td>
-                                                    ${machine.price}
-                                            </td>
-                                            <td>
-                                                    ${machine.format}
                                             </td>
                                             <td>
                                                     ${machine.address}

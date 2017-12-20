@@ -18,8 +18,8 @@
                     <span class="text-danger">${errorMessage}</span>
                 </div>
                 <form class="form-horizontal form-bordered" data-validate="parsley"
-                      action="${ctx}/admin/wefamily/machineInfo" method="POST"
-                      onsubmit="return checkIfValid()" enctype="multipart/form-data" id="frm">
+                      action="" method="POST"
+                      enctype="multipart/form-data" id="frm">
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
                             <i class="fa fa-gift"></i>
@@ -67,6 +67,16 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>价格：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <input type="text" class="form-control" data-required="true" name="price" id="price"
+                                           data-maxlength="11"
+                                           onblur="validateMoney(this,'priceError')"
+                                           value="${machine.price}">
+                                    <div class="text-danger" id="priceError"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <div>
                                     <label class="col-sm-3  control-label"><span class="text-danger">*</span>生产日期：</label>
                                     <div class="col-sm-9 b-l bg-white">
@@ -85,9 +95,9 @@
                             </div>
                         </div>
                         <div class="panel-footer text-left bg-light lter">
-                                <button type="submit" class="btn btn-submit btn-s-xs ">
+                                <a onclick="submitForm()" class="btn btn-submit btn-s-xs ">
                                     <i class="fa fa-check"></i>&nbsp;提&nbsp;交
-                                </button>
+                                </a>
                         </div>
                     </section>
                 </form>
@@ -102,10 +112,21 @@
     window.onload = function () {
         //显示父菜单
         showParentMenu('满田星');
+        if('${machine.price}'.length > 0){
+            formatMoney(document.getElementById('price'));
+        }
     }
-
-
-
+    function submitForm(){
+        $("#frm").parsley("validate");
+        if(validateMoney(document.getElementById('price'),'priceError') && $('#frm').parsley().isValid()){
+            var searchForm = document.getElementById("frm");
+            searchForm.action = "${ctx}/admin/wefamily/machineInfo";
+            searchForm.submit();
+        }
+    }
+    function validMoney(){
+        return validateMoney(document.getElementById('price'),'priceError');
+    }
 </script>
 
 </body>

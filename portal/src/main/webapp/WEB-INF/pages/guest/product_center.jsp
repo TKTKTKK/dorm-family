@@ -52,19 +52,43 @@
         <div class="clearfix"></div>
     </ul>
 </div>
+<input type="text" id="model" style="display: none"/>
+<div class="choose" id="chooseClose" style="display: none">
+    <div class="error">
+        <p id="errorMessage"></p >
+        <button onclick="closeModel()">我知道了</button>
+    </div>
+</div>
 </body>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script src="${ctx}/static/js/wechatUtil.js?20171201"></script>
 <script type="text/javascript">
+    var errorMessage = document.getElementById("errorMessage");
+    errorMessage.innerHTML = "";
     function scan(){
         wechatUtil.scanQRCode({
                     success : function(res){
-                        alert(res.resultStr);
+                        var paramArr = wechatUtil.handleScanResult(res.resultStr);
+                        $("#model").val(paramArr[0]);
+                        $.post("${ctx}/guest/goProductDetail?model="+$("#model").val(),function(data){
+                            if(data.mtxProduct){
+                                window.location.href="${ctx}/guest/product_detail?uuid="+data.mtxProduct.uuid;
+                            }
+                        });
                     }
                 }
         );
     }
-
+    window.onload=function (){
+        var message='${success}';
+        if(message!=null&&message!=''){
+            errorMessage.innerHTML=message;
+            $("#chooseClose").css("display","block");
+        }
+    }
+    function closeModel(){
+        $("#chooseClose").css("display","none");
+    }
 </script>
 </html>
