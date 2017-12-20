@@ -24,7 +24,6 @@
 </head>
 <body>
 <div class="head">
-    <a class="back" href="${ctx}/guest/member/center"></a>
     <span><c:if test="${type == 'REPAIR'}">维修</c:if><c:if test="${type == 'MAINTAIN'}">保养</c:if>列表</span>
 </div>
 <div class="content">

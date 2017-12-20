@@ -78,8 +78,14 @@
 </head>
 <body>
     <div class="head">
-        <a class="back" href="${ctx}/admin/wefamily/repairManageForPhone"></a>
-        <span><c:if test="${qualityMgmt.type == 'REPAIR'}">维修</c:if><c:if test="${qualityMgmt.type == 'MAINTAIN'}">保养</c:if>详情</span>
+        <c:if test="${qualityMgmt.type == 'REPAIR'}">
+            <a class="back" href="${ctx}/admin/wefamily/repairManageForPhone"></a>
+            <span>维修详情</span>
+        </c:if>
+        <c:if test="${qualityMgmt.type == 'MAINTAIN'}">
+            <a class="back" href="${ctx}/admin/wefamily/maintainManageForPhone"></a>
+            <span>保养详情</span>
+        </c:if>
         <img src="../../../static/guest/img/sao.png" alt="">
     </div>
     <div class="b-l b-r" style="padding-left: 1.25rem">
