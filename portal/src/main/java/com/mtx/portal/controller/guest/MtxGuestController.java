@@ -356,6 +356,12 @@ public class MtxGuestController extends BaseGuestController{
                 model.addAttribute("merchant",merchant);
             }
 
+            Attachment reporterAttachment = new Attachment();
+            reporterAttachment.setRefid(qualityMgmtId);
+            reporterAttachment.setType("reporter");
+            List<Attachment> reporterAttachmentList = attachmentService.queryForList(reporterAttachment);
+            model.addAttribute("reporterAttachmentList",reporterAttachmentList);
+
             Attachment workerAttachment = new Attachment();
             workerAttachment.setRefid(qualityMgmtId);
             workerAttachment.setType("worker");

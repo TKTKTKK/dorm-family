@@ -121,6 +121,27 @@
                     <input class="Wdate" type="text" name="productiondt" id="productiondt" value="${qualityMgmt.productiondt}" onClick="WdatePicker()"
                            data-required="true"  data-maxlength="23">
                 </li>
+                <c:if test="${qualityMgmt.type == 'REPAIR'}">
+                    <li style="display: flex;display: -webkit-flex;">
+                        <span style="vertical-align: middle;">问题描述</span>
+                    <textarea rows="4" name="content" id="content" data-maxlength="256"
+                              style=" width: 16rem;vertical-align: middle;text-align: right" readonly>${qualityMgmt.content}</textarea>
+                    </li>
+                </c:if>
+                <c:if test="${fn:length(reporterAttachmentList) > 0}">
+                    <li>
+                        <div class="my-display-inline-box">
+                            <div id="reporterImgContainer" class="row value">
+                                <c:forEach items="${reporterAttachmentList}" var="attachment">
+                                    <a class="swipebox" id="swipebox" href= "${attachment.name}" onclick="reviewMediaShow(this)">
+                                        <img style="width:50px;height: 50px;margin-right:10px;"
+                                             src="${attachment.name}" alt="Bottle Closeup"/>
+                                    </a>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </li>
+                </c:if>
             </ul>
             <div class="goal_total">
                     <span>用户信息</span>
