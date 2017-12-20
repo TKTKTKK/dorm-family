@@ -72,11 +72,13 @@ public class MtxGuestController extends BaseGuestController{
 
 
     @RequestMapping(value = "/product_center")
-    public String product_center(Model model) {
+    public String product_center(Model model,HttpServletRequest requset) {
         MtxProduct mtxProduct = new MtxProduct();
         mtxProduct.setStatus("ON_SALE");
         List<MtxProduct> mtxProductList= mxtProductService.queryForList(mtxProduct);
         model.addAttribute("mtxProductList",mtxProductList);
+        String success=requset.getParameter("success");
+        model.addAttribute("success",success);
         return "guest/product_center";
     }
 
@@ -95,7 +97,7 @@ public class MtxGuestController extends BaseGuestController{
     }
 
     @RequestMapping(value = "/reserve",method = RequestMethod.POST)
-    public String saveMtxReserve(MtxReserve mtxReserve){
+    public String saveMtxReserve(MtxReserve mtxReserve,RedirectAttributes redirectAttributes){
         if(StringUtils.isBlank(mtxReserve.getProductid())){
             mtxReserve.setProductid(null);
         }
@@ -104,6 +106,7 @@ public class MtxGuestController extends BaseGuestController{
         }
         mtxReserve.setStatus("N_DEAL");
         mtxReserveService.insert(mtxReserve);
+        redirectAttributes.addAttribute("success","预订成功！");
         return "redirect:/guest/product_center";
     }
 
