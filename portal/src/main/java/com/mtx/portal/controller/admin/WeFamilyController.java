@@ -559,6 +559,7 @@ public class WeFamilyController extends BaseAdminController {
             }
         }else{
             //添加
+            machine.setType("MACHINE");
             machineService.insert(machine);
             redirectAttributes.addFlashAttribute("successMessage", "保存成功");
             machine = new Machine();
