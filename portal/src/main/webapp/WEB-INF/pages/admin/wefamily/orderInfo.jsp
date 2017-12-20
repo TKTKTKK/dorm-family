@@ -29,7 +29,7 @@
                         </header>
                         <div class="panel-body p-0-15">
                             <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>机器型号：</label>
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>经销商：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="text" class="form-control" data-required="true"
                                            value="${merchant.name}" readonly>
