@@ -42,6 +42,7 @@
         select DISTINCT model
         from tb_mtx_product
         where model is not null and model!=''
+        and type='PRODUCT'
         ;
     </select>
 </mapper>
