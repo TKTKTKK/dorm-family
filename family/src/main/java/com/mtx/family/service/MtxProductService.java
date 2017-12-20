@@ -65,17 +65,12 @@ public class MtxProductService extends BaseService<MtxProductMapper,MtxProduct> 
                         MtxPoint point =new MtxPoint();
                         point.setUserid(userid);
                         point.setName(machine.getMachinename());
-                        MtxProduct product=new MtxProduct();
-                        product.setModel(machine.getMachinemodel());
-                        product=this.queryForObjectByUniqueKey(product);
-                        if(product!=null){
-                            point.setPoints(product.getPoints());
-                            WpUser user=new WpUser();
-                            user.setUuid(userid);
-                            user=wpUserService.queryForObjectByPk(user);
-                            if(user!=null){
-                                user.setPoints(user.getPoints()+product.getPoints());
-                            }
+                        point.setPoints(machine.getPrice().intValue());
+                        WpUser user=new WpUser();
+                        user.setUuid(userid);
+                        user=wpUserService.queryForObjectByPk(user);
+                        if(user!=null){
+                            user.setPoints(user.getPoints()+machine.getPrice().intValue());
                             wpUserService.updatePartial(user);
                         }
                         mtxPointService.insert(point);
