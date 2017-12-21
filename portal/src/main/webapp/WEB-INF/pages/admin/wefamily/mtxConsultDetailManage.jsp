@@ -59,7 +59,7 @@
                                     <c:choose>
                                         <c:when test="${mtxConsultDetail.createby eq 'guest'}">
                                             <div class="myquestion">
-                                                <img src="../../../static/admin/img/qrcode.png" alt="">
+                                                <img src="${user.headimgurl}" alt="">
                                                 <div class="sanjiaol"></div>
                                                 <div class="enquiry_words left">
                                                     <p class="time">${fn:substring(mtxConsultDetail.createon, 0, 19)}</p>
@@ -82,6 +82,7 @@
                             </div>
                         </div>
                         <input type="text" name="consultid" class="hidden" value="${uuid}">
+                        <input type="text" name="userid" class="hidden" value="${userid}">
                         <div class="newwords">
                             <textarea name="content" id="result" placeholder="回复内容......"></textarea>
                             <button>发送</button>

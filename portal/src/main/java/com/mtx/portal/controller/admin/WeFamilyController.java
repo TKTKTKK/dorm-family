@@ -861,10 +861,18 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     @RequestMapping(value = "/goMtxConsultDetail")
-    public String goMtxConsultDetail(MtxConsultDetail mtxConsultDetail, Model model,String uuid,HttpServletRequest request) {
-        if(StringUtils.isNotBlank(uuid)){
-            mtxConsultDetail.setConsultid(uuid);
-            model.addAttribute("uuid",uuid);
+    public String goMtxConsultDetail(MtxConsultDetail mtxConsultDetail, Model model,String userid,String consultid,HttpServletRequest request) {
+        if(StringUtils.isNotBlank(consultid)){
+            mtxConsultDetail.setConsultid(consultid);
+            model.addAttribute("uuid",consultid);
+        }
+        if(StringUtils.isNotBlank(userid))
+        {
+            WpUser user=new WpUser();
+            user.setUuid(userid);
+            user=wpUserService.queryForObjectByPk(user);
+            model.addAttribute("user",user);
+            model.addAttribute("userid",userid);
         }
         List<MtxConsultDetail> mtxConsultDetailList = mtxConsultDetailService.queryForListWithPagination(mtxConsultDetail);
         model.addAttribute("mtxConsultDetailList", mtxConsultDetailList);
@@ -880,7 +888,7 @@ public class WeFamilyController extends BaseAdminController {
 
 
     @RequestMapping(value = "/answer")
-    public String answer(MtxConsultDetail mtxConsultDetail) {
+    public String answer(MtxConsultDetail mtxConsultDetail,String userid) {
         String flag=mtxConsultService.answerQuestion(mtxConsultDetail);
         String successMsg=null;
         if("Y".equals(flag)){
@@ -888,7 +896,7 @@ public class WeFamilyController extends BaseAdminController {
         }else{
             successMsg="0";
         }
-        return "redirect:goMtxConsultDetail?uuid="+mtxConsultDetail.getConsultid()+"&successMsg="+successMsg;
+        return "redirect:goMtxConsultDetail?consultid="+mtxConsultDetail.getConsultid()+"&userid="+userid+"&successMsg="+successMsg;
     }
 
     /**

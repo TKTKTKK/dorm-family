@@ -90,13 +90,13 @@
                                         </td>
                                         <td>
                                             <c:if test="${mtxConsult.status eq 'NO_ANWSER'}">
-                                            <a href="${ctx}/admin/wefamily/goMtxConsultDetail?uuid=${mtxConsult.uuid}"
+                                            <a href="${ctx}/admin/wefamily/goMtxConsultDetail?consultid=${mtxConsult.uuid}&userid=${mtxConsult.userid}"
                                                class="btn  btn-infonew btn-sm" style="color: white">
                                                 查看新消息
                                             </a>
                                             </c:if>
                                             <c:if test="${mtxConsult.status eq 'ANWSER_RECENT'}">
-                                                <a href="${ctx}/admin/wefamily/goMtxConsultDetail?uuid=${mtxConsult.uuid}" class="btn  btn-dangernew btn-sm" style="color: white">留言历史</a>
+                                                <a href="${ctx}/admin/wefamily/goMtxConsultDetail?consultid=${mtxConsult.uuid}&userid=${mtxConsult.userid}" class="btn  btn-dangernew btn-sm" style="color: white">留言历史</a>
                                             </c:if>
                                         </td>
                                     </tr>

@@ -137,6 +137,10 @@ public class MtxGuestController extends BaseGuestController{
         if(StringUtils.isNotBlank(flag)){
             model.addAttribute("flag",flag);
         }
+        WpUser userTemp=new WpUser();
+        userTemp.setUuid(userid);
+        userTemp=wpUserService.queryForObjectByPk(userTemp);
+        model.addAttribute("user",userTemp);
         return "guest/message";
     }
 
