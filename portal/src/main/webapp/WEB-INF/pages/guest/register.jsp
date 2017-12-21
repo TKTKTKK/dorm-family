@@ -13,7 +13,7 @@
     <title>注册</title>
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
     <style>
-        .list{background: #fff;margin-top:1.25rem;}
+        .list{background: #fff;margin-top:1.25rem;margin-bottom: 4rem;}
         .list li{display: flex;display: -webkit-flex;justify-content: space-between;border-bottom: 1px solid rgba(0,0,0,0.1);padding: 1.17rem 2rem;}
         .list li>span:nth-of-type(1){font-size: 1.6rem;color: #333}
         .list li>input,.list li>span:nth-of-type(2){font-size: 1.4rem;color: #666;text-align: right;}

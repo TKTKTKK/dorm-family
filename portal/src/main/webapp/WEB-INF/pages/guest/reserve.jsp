@@ -16,7 +16,7 @@
         .goods{ display: flex;display: -webkit-flex;justify-content: space-between;align-items: center;margin: 0 0 1.25rem 0;height: 8rem;background: #fff;padding: 1rem 2rem;box-sizing: border-box;color: #333}
         .goods>img{width: 5rem;height:5rem;}
         .goods>span{font-size: 1.6rem;}
-        .list{background: #fff;}
+        .list{background: #fff;margin-bottom: 4rem;}
         .list li{display: flex;display: -webkit-flex;justify-content: space-between;border-bottom: 1px solid rgba(0,0,0,0.1);padding: 1.17rem 2rem;}
         .list li>span{font-size: 1.6rem;color: #333}
         .list li>input{font-size: 1.4rem;color: #666;text-align: right;}
