@@ -13,6 +13,17 @@ public class MtxConsultDetail extends BaseEntity {
     private String consultid;
     @Column
     private String content;
+    @Column
+    private String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public String getConsultid() {
         return consultid;
     }

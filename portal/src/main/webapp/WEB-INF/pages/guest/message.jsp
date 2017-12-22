@@ -56,7 +56,7 @@
 <div class="content">
     <c:forEach items="${mtxConsultDetailList}" var="mtxConsultDetail">
         <c:choose>
-            <c:when test="${mtxConsultDetail.createby eq 'guest'}">
+            <c:when test="${mtxConsultDetail.category eq 'QUERY'}">
                 <div class="myquestion rotatey">
                     <img src="${user.headimgurl}" alt="" class="rotatey">
                     <div class="sanjiaor"></div>

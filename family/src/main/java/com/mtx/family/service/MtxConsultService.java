@@ -36,6 +36,7 @@ public class MtxConsultService extends BaseService<MtxConsultMapper,MtxConsult> 
         }
         MtxConsult mtxConsultTemp=this.queryForObjectByPk(mtxConsult);
         if(mtxConsultTemp!=null){
+            mtxConsultDetail.setCategory("REPLY");
             mtxConsultDetailService.insert(mtxConsultDetail);
             if(StringUtils.isNotBlank(mtxConsultTemp.getStatus())&& !"ANWSER_RECENT".equals(mtxConsultTemp.getStatus())){
                 mtxConsultTemp.setStatus("ANWSER_RECENT");
@@ -48,6 +49,7 @@ public class MtxConsultService extends BaseService<MtxConsultMapper,MtxConsult> 
     public String addMessage(MtxConsult mtxConsult, String content) {
         MtxConsult mtxConsultTemp=new MtxConsult();
         MtxConsultDetail mtxConsultDetailTemp=new MtxConsultDetail();
+        mtxConsultDetailTemp.setCategory("QUERY");
         if(StringUtils.isNotBlank(mtxConsult.getUserid())){
             mtxConsultTemp.setUserid(mtxConsult.getUserid());
             List<MtxConsult> mtxConsultTempList=this.queryForList(mtxConsultTemp);

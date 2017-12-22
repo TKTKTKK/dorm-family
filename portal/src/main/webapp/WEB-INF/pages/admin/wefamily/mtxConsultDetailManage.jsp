@@ -57,7 +57,7 @@
                             <div id="flow_id" class="content" style="height: 600px;overflow-y: scroll;">
                                 <c:forEach items="${mtxConsultDetailList}" var="mtxConsultDetail">
                                     <c:choose>
-                                        <c:when test="${mtxConsultDetail.createby eq 'guest'}">
+                                        <c:when test="${mtxConsultDetail.category eq 'QUERY'}">
                                             <div class="myquestion">
                                                 <img src="${user.headimgurl}" alt="">
                                                 <div class="sanjiaol"></div>

@@ -8,3 +8,5 @@ alter table tb_mtx_exchange_record add  column status VARCHAR(15) DEFAULT  NULL 
 alter table tb_mtx_exchange_record add  column remarks VARCHAR(256) DEFAULT  NULL AFTER status;
 -- 修改留言的字符集
 ALTER TABLE tb_mtx_consult_detail  MODIFY content VARCHAR(256) CHARACTER SET utf8mb4;
+-- 增加留言的问和答的字段
+alter table tb_mtx_consult_detail add column category VARCHAR(15) DEFAULT  NULL AFTER content;
