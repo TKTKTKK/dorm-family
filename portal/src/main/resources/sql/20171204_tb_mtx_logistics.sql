@@ -9,7 +9,6 @@ CREATE TABLE `tb_mtx_logistics` (
   `location` varchar(32) DEFAULT NULL,
   `platenumber` varchar(20) NOT NULL,
   `freight` decimal(10,2) DEFAULT NULL,
-  `status` VARCHAR(10) NOT NULL,
   `createon` varchar(23) NOT NULL,
   `createby` varchar(32) NOT NULL,
   `modifyon` varchar(23) NOT NULL,
