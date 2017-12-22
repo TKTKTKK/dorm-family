@@ -32,11 +32,11 @@
 <ul class="list">
     <li>
         <span>姓名</span>
-        <input type="text" name="name" id="name" placeholder="请填写真实姓名" >
+        <input type="text" name="name" id="name" value="${wpUser.name}" placeholder="请填写真实姓名" >
     </li>
     <li>
         <span>电话</span>
-        <input type="text" name="contactno" id="contactno" placeholder="请填写真实号码">
+        <input type="text" name="contactno" id="contactno" value="${wpUser.contactno}" placeholder="请填写真实号码">
     </li>
     <li>
         <span style="width: 17%">地区</span>
@@ -48,26 +48,26 @@
     </li>
     <li>
         <span>详细地址</span>
-        <input type="text" name="address" id="address" placeholder="请填写详细地址">
+        <input type="text" name="address" id="address" value="${wpUser.address}" placeholder="请填写详细地址">
     </li>
     <li>
         <span>机器型号</span>
-        <input type="text" id="machinemodel" name="machinemodel" placeholder="请填写机器型号">
+        <input type="text" id="machinemodel" name="machinemodel" value="${machine.machinemodel}" placeholder="请填写机器型号">
     </li>
     <li>
         <span>机器名称</span>
-        <input type="text" id="machinename" name="machinename" placeholder="请填写机器名称">
+        <input type="text" id="machinename" name="machinename" value="${machine.machinename}" placeholder="请填写机器名称">
     </li>
     <li>
         <span>机器号</span>
-        <input type="text" id="machineno" name="machineno" placeholder="请填写机器号">
+        <input type="text" id="machineno" name="machineno" value="${machine.machineno}" placeholder="请填写机器号">
     </li>
     <li>
         <span>发动机号</span>
-        <input type="text" id="machinengine" name="engineno" placeholder="请填写发动机号">
+        <input type="text" id="machinengine" name="engineno" value="${machine.engineno}" placeholder="请填写发动机号">
     </li>
 </ul>
-    <span  class="fixsubmit" onclick="submitForm()">提交</span>
+    <span  class="fixsubmit" onclick="submitForm()">注册</span>
 </form>
 <div class="choose" style="display: none">
     <div class="error">
@@ -114,6 +114,30 @@
         }
     }
     setup();
+    if (('${wpUser.province}'.length > 0 && '${wpUser.city}'.length > 0 && '${wpUser.district}'.length > 0)) {
+        var s1Slt = document.getElementById('s1');
+        var s2Slt = document.getElementById('s2');
+        var s3Slt = document.getElementById('s3');
+        s1Slt.value = '${wpUser.province}';
+        change(1);
+        if ('${wpUser.address}'.length <= 0) {
+            promptinfo();
+        }
+        s2Slt.value = '${wpUser.city}';
+        change(2);
+        if ('${wpUser.address}'.length <= 0) {
+            promptinfo();
+        }
+        s3Slt.value = '${wpUser.district}';
+        if ('${wpUser.address}'.length <= 0) {
+            promptinfo();
+        }
+        if ('${wpUser.address}'.length > 0) {
+            var address = document.getElementById('address');
+            address.value = '${wpUser.address}';
+        }
+    }
+    promptinfo();
     function promptinfo() {
         var address = document.getElementById('address');
         var s1 = document.getElementById('s1');
@@ -197,8 +221,13 @@
             var searchForm = document.getElementById("searchForm");
             searchForm.action = "${ctx}/guest/register";
             searchForm.submit();
-        }else{
-            errorMessage.innerHTML="信息不完整或输入有误，请确认后重试！";
+        }else if(isPoneAvailable()){
+            errorMessage.innerHTML="信息输入不完整！";
+            $(".choose").css("display","block");
+            $("#imgDiv").css("display","none");
+        }
+        else{
+            errorMessage.innerHTML="手机号输入不正确！";
             $(".choose").css("display","block");
             $("#imgDiv").css("display","none");
         }

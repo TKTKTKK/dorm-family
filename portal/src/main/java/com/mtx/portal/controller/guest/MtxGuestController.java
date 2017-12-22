@@ -159,25 +159,27 @@ public class MtxGuestController extends BaseGuestController{
     }
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public String addRegister(WpUser wpUser, String machineno,HttpServletRequest req,Model model) {
+    public String addRegister(WpUser wpUser, Machine machinetemp,HttpServletRequest req,Model model) {
         WpUser userTemp=getWechatMemberInfo(req);
         if(StringUtils.isNotBlank(userTemp.getIfauth())&&"Y".equals(userTemp.getIfauth())){
             model.addAttribute("ErrorMessage","您已是会员，无需重复注册！");
             return "guest/register";
         }else{
             Machine machine=new Machine();
-            if(StringUtils.isNotBlank(machineno)){
-                machine.setMachineno(machineno);
+            if(StringUtils.isNotBlank(machinetemp.getMachineno())){
+                machine.setMachineno(machinetemp.getMachineno());
                 machine=machineService.queryForObjectByUniqueKey(machine);
                 if(machine!=null){
                     mtxMemberService.insertMemberAndPoint(wpUser,userTemp,machine);
                 }else{
-                    model.addAttribute("ErrorMessage","机器号有误！该机器不存在！");
+                    model.addAttribute("wpUser",wpUser);
+                    model.addAttribute("machine",machinetemp);
+                    model.addAttribute("ErrorMessage","机器填写有误！确认后重试！");
                     return "guest/register";
                 }
             }
         }
-        return "redirect:/guest/product_center";
+        return "redirect:/guest/member/center";
     }
 
     /**
@@ -548,6 +550,10 @@ public class MtxGuestController extends BaseGuestController{
     public String exchange(Model model,MtxProduct mtxProduct) {
         MtxProduct mtxProductTemp= mxtProductService.queryForObjectByPk(mtxProduct);
         model.addAttribute("mtxProduct",mtxProductTemp);
+        Merchant merchant=new Merchant();
+        List<Merchant> merchantList=new ArrayList<Merchant>();
+        merchantList=merchantService.queryForList(merchant);
+        model.addAttribute("merchantList",merchantList);
         return "guest/exchange";
     }
 

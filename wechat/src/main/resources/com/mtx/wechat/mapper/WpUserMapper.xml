@@ -41,6 +41,9 @@
         <if test="wpUser.contactno != null and wpUser.contactno != ''">
             and wu.contactno like concat("%",#{wpUser.contactno},"%")
         </if>
+        <if test="wpUser.ifauth != null and wpUser.ifauth != ''">
+            and wu.ifauth =#{wpUser.ifauth}
+        </if>
         order by modifyon desc;
     </select>
 </mapper>

@@ -84,7 +84,7 @@
                                 <label class="col-sm-3  control-label"><span class="text-danger"></span>微信昵称：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="text" class="form-control" name="nickname" id="nickname"
-                                           data-maxlength="32"
+                                           data-maxlength="32" disabled
                                            onblur="trimText(this)"
                                            value="${wpUser.nickname}">
                                 </div>
@@ -92,12 +92,15 @@
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger"></span>微信头像：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="file" name="imgfile" class="filestyle"  data-icon="false" data-classButton="btn btn-default"
-                                           data-classInput="form-control inline v-middle input-s"
-                                           id="value"
-                                    >
+                                    <%--<input type="file" name="imgfile" class="filestyle"  data-icon="false" data-classButton="btn btn-default"--%>
+                                           <%--data-classInput="form-control inline v-middle input-s"--%>
+                                           <%--id="value"--%>
+                                    <%-->--%>
+                                    <c:if test="${wpUser.headimgurl==null|| wpUser.headimgurl==''}">
+                                        <input type="text" class="form-control" disabled>
+                                    </c:if>
                                     <input type="text" class="hidden" name="headimgurl" value="${wpUser.headimgurl}">
-                                    <div class="hidden" id="imgDiv" style="margin-top: 20px">
+                                    <div class="hidden" id="imgDiv">
                                         <img src="${wpUser.headimgurl}" width="100" height="100"
                                              data-toggle="modal" data-target=".bs-example-modal-lg1"
                                              class="hover-pointer">
@@ -153,21 +156,43 @@
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger"></span>是否关注：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <select name="ifsubscribe" id="ifsubscribe" class="form-control">
-                                        <option value="">请选择</option>identify
-                                        <option value="Y" <c:if test="${wpUser.ifsubscribe eq 'Y'}">selected</c:if>>已关注</option>
-                                        <option value="N" <c:if test="${wpUser.ifsubscribe eq 'N'}">selected</c:if>>未关注</option>
-                                    </select>
+                                    <%--<select name="ifsubscribe" id="ifsubscribe" class="form-control" readonly="readonly">--%>
+                                        <%--<option value="">请选择</option>identify--%>
+                                        <%--<option value="Y" <c:if test="${wpUser.ifsubscribe eq 'Y'}">selected</c:if>>已关注</option>--%>
+                                        <%--<option value="N" <c:if test="${wpUser.ifsubscribe eq 'N'}">selected</c:if>>未关注</option>--%>
+                                    <%--</select>--%>
+                                        <input type="text" class="form-control"
+                                               data-maxlength="32" disabled
+                                               <c:choose>
+                                                <c:when test="${wpUser.ifsubscribe eq 'Y'}">
+                                               value="已关注"
+                                                </c:when>
+                                                <c:otherwise>
+                                               value="未关注"
+                                                </c:otherwise>
+                                                </c:choose>
+                                               >
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger"></span>是否是会员：</label>
+                                <label class="col-sm-3  control-label"><span class="text-danger"></span>是否注册：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <select name="ifauth" id="ifauth" class="form-control">
-                                        <option value="">请选择</option>identify
-                                        <option value="Y" <c:if test="${wpUser.ifauth eq 'Y'}">selected</c:if>>会员</option>
-                                        <option value="N" <c:if test="${wpUser.ifauth eq 'N'}">selected</c:if>>非会员</option>
-                                    </select>
+                                    <%--<select name="ifauth" id="ifauth" class="form-control" readonly="readonly">--%>
+                                        <%--<option value="">请选择</option>identify--%>
+                                        <%--<option value="Y" <c:if test="${wpUser.ifauth eq 'Y'}">selected</c:if>>是</option>--%>
+                                        <%--<option value="N" <c:if test="${wpUser.ifauth eq 'N'}">selected</c:if>>否</option>--%>
+                                    <%--</select>--%>
+                                        <input type="text" class="form-control"
+                                               data-maxlength="32" disabled
+                                        <c:choose>
+                                        <c:when test="${wpUser.ifauth eq 'Y'}">
+                                               value="是"
+                                        </c:when>
+                                        <c:otherwise>
+                                               value="否"
+                                        </c:otherwise>
+                                        </c:choose>
+                                        >
                                 </div>
                             </div>
                             </div>

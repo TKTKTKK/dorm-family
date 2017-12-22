@@ -6,7 +6,7 @@
     </resultMap>
 
     <select id="selectMtxExchangeRecordList" resultMap="selectResultMap">
-        select mer.* ,wu.name as username,mp.name as productname
+        select mer.* ,wu.name as username,mp.name as productname,ifnull(mp.points,0)*ifnull(mer.count,0) as points
         from tb_mtx_exchange_record mer
         left join tb_wp_user wu on wu.uuid=mer.userid
         left join tb_mtx_product mp on mp.uuid=mer.productid
@@ -17,6 +17,9 @@
         <if test="mtxExchangeRecord.productname != null and mtxExchangeRecord.productname != ''">
             and mp.name like concat("%", #{mtxExchangeRecord.productname},"%")
         </if>
-        order by mer.createon,mer.userid desc;
+        <if test="mtxExchangeRecord.status != null and mtxExchangeRecord.status != ''">
+            and mer.status =#{mtxExchangeRecord.status}
+        </if>
+        order by mer.createon desc,mer.userid desc;
     </select>
 </mapper>

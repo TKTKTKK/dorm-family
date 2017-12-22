@@ -48,5 +48,12 @@
     <div class="detail">${mtxProduct.detail}</div>
 
 </div>
+<span  class="fixsubmit" onclick="reserve('${mtxProduct.uuid}')" >咨询购买</span>
 </body>
+<script src="${ctx}/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+function reserve(uuid){
+    window.location.href="${ctx}/guest/reserve?uuid="+uuid;
+}
+</script>
 </html>

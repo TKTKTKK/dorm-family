@@ -147,8 +147,11 @@
             var searchForm = document.getElementById("searchForm");
             searchForm.action = "${ctx}/guest/reserve?type=MACHINE";
             searchForm.submit();
+        }else if(isPoneAvailable()){
+            errorMessage.innerHTML="信息输入不完整！";
+            $(".choose").css("display","block");
         }else{
-            errorMessage.innerHTML="信息不完整或输入有误，请确认后重试！";
+            errorMessage.innerHTML="手机号输入不正确！";
             $(".choose").css("display","block");
         }
     }
