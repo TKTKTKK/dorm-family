@@ -71,6 +71,8 @@ public class MtxGuestController extends BaseGuestController{
     private MtxExchangeRecordService mtxExchangeRecordService;
     @Autowired
     private MtxProductService mtxProductService;
+    @Autowired
+    private OrderService orderService;
 
 
     @RequestMapping(value = "/product_center")
@@ -547,12 +549,28 @@ public class MtxGuestController extends BaseGuestController{
      * 商品兑换
      */
     @RequestMapping(value = "/exchange",method = RequestMethod.GET)
-    public String exchange(Model model,MtxProduct mtxProduct) {
+    public String exchange(Model model,MtxProduct mtxProduct,HttpServletRequest req) {
+        WpUser user=new WpUser();
+        user=getWechatMemberInfo(req);
         MtxProduct mtxProductTemp= mxtProductService.queryForObjectByPk(mtxProduct);
         model.addAttribute("mtxProduct",mtxProductTemp);
-        Merchant merchant=new Merchant();
-        List<Merchant> merchantList=new ArrayList<Merchant>();
-        merchantList=merchantService.queryForList(merchant);
+        MtxUserMachine userMachine=new MtxUserMachine();
+        userMachine.setUserid(user.getUuid());
+        List<String> merchantidList=new ArrayList<String>();
+        List<MtxUserMachine> userMachineList=mtxUserMachineService.queryForList(userMachine);
+        if(userMachineList.size()>0){
+            for(int i=0;i<userMachineList.size();i++){
+                Machine machine=new Machine();
+                machine.setUuid(userMachineList.get(i).getMachineid());
+                machine=machineService.queryForObjectByPk(machine);
+                Order order=new Order();
+                order.setUuid(machine.getOrderid());
+                order=orderService.queryForObjectByPk(order);
+                merchantidList.add(order.getMerchantid());
+            }
+        }
+        List<String> merchantList=new ArrayList<String>();
+        merchantList=merchantService.queryMerchantNameList(merchantidList);
         model.addAttribute("merchantList",merchantList);
         return "guest/exchange";
     }

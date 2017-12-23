@@ -78,4 +78,8 @@ public class MerchantService extends BaseService<MerchantMapper,Merchant> {
         }
 
     }
+
+    public List<String> queryMerchantNameList(List<String> merchantidList) {
+        return mapper.queryMerchantNameList(merchantidList);
+    }
 }

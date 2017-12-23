@@ -61,7 +61,7 @@
             <select name="address">
                 <option value="">全部</option>
                 <c:forEach var="merchant" items="${merchantList}">
-                    <option value="${merchant.name}">${merchant.name}</option>
+                    <option value="${merchant}">${merchant}</option>
                 </c:forEach>
             </select>
         </div>

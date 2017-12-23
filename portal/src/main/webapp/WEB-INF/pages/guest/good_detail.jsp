@@ -45,7 +45,7 @@
     </p>
     <div class="detail">${mtxProduct.detail}</div>
 </div>
-<span  class="fixsubmit" onclick="exchange('${mtxProduct.uuid}')" >咨询购买</span>
+<span  class="fixsubmit" onclick="exchange('${mtxProduct.uuid}')" >兑换</span>
 </body>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script type="text/javascript">
