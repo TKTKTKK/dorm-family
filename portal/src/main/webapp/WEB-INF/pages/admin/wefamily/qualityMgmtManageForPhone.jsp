@@ -20,6 +20,8 @@
         .list li p:nth-of-type(2){font-size: 1.2rem;color: #999}
         .list li img{width: 5rem;}
         .list a {color: #333}
+        .snno{color: #666}
+        .time{float: right;color: #666}
     </style>
 </head>
 <body>
@@ -36,17 +38,15 @@
                         <span>${qualityMgmt.reportername}</span>
                         <img src="../../../../static/guest/img/${fn:toLowerCase(qualityMgmt.status)}.png" alt="">
                     </p>
-                    <p><span class="time">${fn:substring(qualityMgmt.createon, 0, 16)}</span></p>
+                    <p>
+                        <span class="snno">${qualityMgmt.snno}</span>
+                        <span class="time">${fn:substring(qualityMgmt.createon, 0, 16)}</span>
+                    </p>
                 </li>
             </a>
         </c:forEach>
         <div class="clearfix"></div>
     </ul>
-    <c:if test="${type == 'REPAIR'}">
-        <a href="${ctx}/admin/wefamily/qualityMgmtInfoForPhone">
-            <div class="fixsubmit">添加维修</div>
-        </a>
-    </c:if>
 </div>
 </body>
 </html>

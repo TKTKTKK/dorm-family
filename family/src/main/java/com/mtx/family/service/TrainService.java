@@ -6,6 +6,7 @@ import com.mtx.common.base.BaseService;
 import com.mtx.common.entity.Attachment;
 import com.mtx.common.mapper.AttachmentMapper;
 import com.mtx.family.entity.Logistics;
+import com.mtx.family.entity.Merchant;
 import com.mtx.family.entity.Train;
 import com.mtx.family.mapper.LogisticsMapper;
 import com.mtx.family.mapper.TrainMapper;
@@ -66,7 +67,13 @@ public class TrainService extends BaseService<TrainMapper,Train> {
         }
     }
 
-    public List<Train> queryTrainListForPhone(Train train) {
-        return this.mapper.selectTrainListForPhone(train);
+    public List<Train> queryTrainListForPhone(Train train, List<Merchant> merchantList) {
+        return this.mapper.selectTrainListForPhone(train,merchantList);
+    }
+
+    public void saveFinishTrain(Train train, String[] trainImgs) {
+        train.setStatus("FINISH");
+        this.mapper.insert(train);
+        saveTrainImg(train,trainImgs);
     }
 }

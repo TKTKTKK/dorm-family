@@ -262,6 +262,9 @@
                 text-align: right;
             }
         }
+        #receiptImgContainer{display: inline-block;vertical-align: middle}
+        #receiptImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 0rem}
+        #receiptImgContainer img{width: 5rem;height: 5rem;margin:1rem}
     </style>
 </head>
 <body class="">
@@ -338,122 +341,132 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                <!--物流信息-->
-                                                <c:if test="${order.status ne 'NEW'}">
-                                                    <div class="portlet red-sunglo box">
-                                                        <div class="portlet-title">
-                                                            <div class="caption"><i class="fa fa-cogs"></i>物流信息</div>
-                                                        </div>
-                                                        <div class="portlet-body">
-                                                            <div class="row static-info">
-                                                                <div class="col-md-12 col-xs-12 value">
-                                                                    <c:if test="${fn:length(logisticsList) > 0}">
-                                                                        <div class="detaildiv1"
-                                                                             style="padding: 0px 0px 0px 0px;margin-left: 0px;margin-bottom: 10px;width: 100%;">
-                                                                            <ul class="new-of-storey"
-                                                                                style="margin-left: -35px;">
-                                                                                <c:forEach var="logistics" items="${logisticsList}" varStatus="stat">
-                                                                                    <li style="border:0px;padding: 0px 0px 0px 10px;border-left: 3px solid #ccc;">
-                                                                                        <div>
-                                                                                            <c:if test="${stat.index > 0}">
-                                                                                                <span class="icon" ></span>
-                                                                                            </c:if>
-                                                                                            <c:if test="${stat.index == 0}">
-                                                                                                <span class="icon on"></span>
-                                                                                            </c:if>
+                                                <shiro:hasRole name="HQ_FINANCE">
+                                                    <!--物流信息-->
+                                                    <c:if test="${order.status ne 'NEW'}">
+                                                        <div class="portlet red-sunglo box">
+                                                            <div class="portlet-title">
+                                                                <div class="caption"><i class="fa fa-cogs"></i>物流信息</div>
+                                                            </div>
+                                                            <div class="portlet-body">
+                                                                <div class="row static-info">
+                                                                    <div class="col-md-12 col-xs-12 value">
+                                                                        <c:if test="${fn:length(logisticsList) > 0}">
+                                                                            <div class="detaildiv1"
+                                                                                 style="padding: 0px 0px 0px 0px;margin-left: 0px;margin-bottom: 10px;width: 100%;">
+                                                                                <ul class="new-of-storey"
+                                                                                    style="margin-left: -35px;">
+                                                                                    <c:forEach var="logistics" items="${logisticsList}" varStatus="stat">
+                                                                                        <li style="border:0px;padding: 0px 0px 0px 10px;border-left: 3px solid #ccc;">
+                                                                                            <div>
+                                                                                                <c:if test="${stat.index > 0}">
+                                                                                                    <span class="icon" ></span>
+                                                                                                </c:if>
+                                                                                                <c:if test="${stat.index == 0}">
+                                                                                                    <span class="icon on"></span>
+                                                                                                </c:if>
                                                                                                 <span style="color: #000000">
                                                                                                         司机号码：${logistics.driverphone} 车牌号：${logistics.platenumber}
                                                                                                 </span>
-                                                                                        </div>
-                                                                                        <c:if test="${not empty logistics.remarks}">
-                                                                                            <div>
+                                                                                            </div>
+                                                                                            <c:if test="${not empty logistics.remarks}">
+                                                                                                <div>
                                                                                                 <span style="color: #000000">
                                                                                                     备注：${logistics.remarks}
                                                                                                 </span>
+                                                                                                </div>
+                                                                                            </c:if>
+                                                                                            <div class="time">
+                                                                                                <div class="pull-left">
+                                                                                                        ${fn:substring(logistics.createon, 0, 19)}
+                                                                                                </div>
+                                                                                                <div class="pull-right">
+                                                                                                        ${logistics.location}
+                                                                                                </div>
                                                                                             </div>
-                                                                                        </c:if>
-                                                                                        <div class="time">
-                                                                                            <div class="pull-left">
-                                                                                                    ${fn:substring(logistics.createon, 0, 19)}
-                                                                                            </div>
-                                                                                            <div class="pull-right">
-                                                                                                    ${logistics.location}
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div style="clear: both"></div>
-                                                                                    </li>
-                                                                                </c:forEach>
-                                                                            </ul>
+                                                                                            <div style="clear: both"></div>
+                                                                                        </li>
+                                                                                    </c:forEach>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </c:if>
+                                                                        <c:if test="${fn:length(logisticsList) == 0}">
+                                                                            <span>暂无物流信息</span>
+                                                                        </c:if>
+                                                                    </div>
+                                                                </div>
+                                                                <c:if test="${order.status == 'INLOGISTICS' && fn:length(receiptList) == 0}">
+                                                                    <a class="btn btn-sm btn-danger" href="javascript:addLogistics()" style="color: white;margin-left: 10px;margin-bottom: 10px">添加物流信息</a>
+                                                                    <button class="hidden" data-toggle="modal" data-target=".bs-example-modal-tj-logistics" style="color: white" id="addLogistics">添加物流信息</button>
+                                                                </c:if>
+                                                            </div>
+                                                        </div>
+                                                    </c:if>
+                                                    <!--回执信息-->
+                                                    <c:if test="${order.status ne 'NEW'}">
+                                                        <div class="portlet blue-hoki box">
+                                                            <div class="portlet-title">
+                                                                <div class="caption"><i class="fa fa-cogs"></i>回执信息</div>
+                                                            </div>
+                                                            <div class="portlet-body">
+                                                                <c:if test="${fn:length(receiptList) > 0}">
+                                                                    <div class="row static-info" style="margin-bottom: 0px">
+                                                                        <div class="col-md-2 col-xs-4 name detail-div">回执日期:</div>
+                                                                        <div class="col-md-4 col-xs-8 value detail-div" >${receiptList[0].receiptdt}</div>
+
+                                                                        <div class="col-md-2 col-xs-4 name detail-div">满意度:</div>
+                                                                        <div class="col-md-4 col-xs-8 value detail-div" >${web:getCodeDesc("SATISFACTION", receiptList[0].satisfaction)}</div>
+                                                                    </div>
+                                                                    <c:if test="${not empty receiptList[0].question}">
+                                                                        <div class="row static-info" style="margin-bottom: 0px">
+                                                                            <div class="col-md-2 col-xs-4 name detail-div">问题反馈:</div>
+                                                                            <div class="col-md-10 col-xs-8 value detail-div" >${receiptList[0].question}</div>
                                                                         </div>
                                                                     </c:if>
-                                                                    <c:if test="${fn:length(logisticsList) == 0}">
-                                                                        <span>暂无物流信息</span>
-                                                                    </c:if>
-                                                                </div>
-                                                            </div>
-                                                            <c:if test="${order.status == 'OUT'}">
-                                                                <a class="btn btn-sm btn-danger" href="javascript:addLogistics()" style="color: white;margin-left: 10px;margin-bottom: 10px">添加物流信息</a>
-                                                                <button class="hidden" data-toggle="modal" data-target=".bs-example-modal-tj-logistics" style="color: white" id="addLogistics">添加物流信息</button>
-                                                            </c:if>
-                                                        </div>
-                                                    </div>
-                                                </c:if>
-                                                <!--回执信息-->
-                                                <c:if test="${order.status ne 'NEW'}">
-                                                    <div class="portlet blue-hoki box">
-                                                        <div class="portlet-title">
-                                                            <div class="caption"><i class="fa fa-cogs"></i>回执信息</div>
-                                                        </div>
-                                                        <div class="portlet-body">
-                                                            <c:if test="${fn:length(receiptList) > 0}">
-                                                                <div class="row static-info" style="margin-bottom: 0px">
-                                                                    <div class="col-md-2 col-xs-4 name detail-div">回执日期:</div>
-                                                                    <div class="col-md-4 col-xs-8 value detail-div" >${receiptList[0].receiptdt}</div>
-
-                                                                    <div class="col-md-2 col-xs-4 name detail-div">满意度:</div>
-                                                                    <div class="col-md-4 col-xs-8 value detail-div" >${web:getCodeDesc("SATISFACTION", receiptList[0].satisfaction)}</div>
-                                                                </div>
-                                                                <c:if test="${not empty receiptList[0].question}">
-                                                                    <div class="row static-info" style="margin-bottom: 0px">
-                                                                        <div class="col-md-2 col-xs-4 name detail-div">问题反馈:</div>
-                                                                        <div class="col-md-10 col-xs-8 value detail-div" >${receiptList[0].question}</div>
-                                                                    </div>
-                                                                </c:if>
-                                                                <div class="row static-info" style="margin-bottom: 0px">
-                                                                    <div class="col-md-2 col-xs-4 name detail-div">回执图片:</div>
-                                                                    <div class="col-md-10 col-xs-8 value detail-div" >
-                                                                            <c:if test="${fn:length(attachmentList) > 0}">
+                                                                    <c:if test="${fn:length(attachmentList) > 0}">
+                                                                        <div class="row static-info" style="margin-bottom: 0px">
+                                                                            <div class="col-md-2 col-xs-4 name detail-div">回执图片:</div>
+                                                                            <div class="col-md-10 col-xs-8 value detail-div" >
                                                                                 <c:forEach var="receiptImg" items="${attachmentList}">
-                                                                                    <img src="${receiptImg.name}"
+                                                                                    <img src="${receiptImg.name}" style="width: 50px;height: 50px;"
                                                                                          onclick="viewBigImage(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image"
                                                                                     />
                                                                                 </c:forEach>
-                                                                            </c:if>
-                                                                    </div>
-                                                                </div>
-                                                            </c:if>
-                                                            <c:if test="${fn:length(receiptList) == 0}">
-                                                                <div class="row static-info">
-                                                                    <div class="col-md-12 col-xs-12 value">
-                                                                        <span>暂无回执信息</span>
-                                                                    </div>
-                                                                </div>
-                                                            </c:if>
-                                                            <c:if test="${order.status == 'OUT'}">
-                                                                <a class="btn btn-sm" href="javascript:addReceipt()" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
-                                                                    <c:if test="${fn:length(receiptList) == 0}">添加回执信息</c:if>
-                                                                    <c:if test="${fn:length(receiptList) == 1}">修改回执信息</c:if>
-                                                                </a>
-                                                                <button class="hidden" data-toggle="modal" data-target=".bs-example-modal-tj-receipt" style="color: white" id="addReceipt">添加回执信息</button>
-                                                                <c:if test="${fn:length(receiptList) > 0}">
-                                                                    <a class="btn btn-sm" href="javascript:finishOrder()" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
-                                                                        <i class="fa fa-check"></i> 订单完成
-                                                                    </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </c:if>
+                                                                    <c:if test="${not empty order.remarks}">
+                                                                        <div class="row static-info" style="margin-bottom: 0px">
+                                                                            <div class="col-md-2 col-xs-4 name detail-div">订单备注:</div>
+                                                                            <div class="col-md-10 col-xs-8 value detail-div" >${order.remarks}</div>
+                                                                        </div>
+                                                                    </c:if>
                                                                 </c:if>
-                                                            </c:if>
+                                                                <c:if test="${fn:length(receiptList) == 0}">
+                                                                    <div class="row static-info">
+                                                                        <div class="col-md-12 col-xs-12 value">
+                                                                            <span>暂无回执信息</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </c:if>
+                                                                <shiro:hasRole name="HQ_FINANCE">
+                                                                    <c:if test="${ fn:length(logisticsList) > 0 && order.status ne 'FILED' && order.status == 'INLOGISTICS' || order.status == 'RECEIVED'}">
+                                                                        <a class="btn btn-sm" href="javascript:addReceipt()" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
+                                                                            <c:if test="${fn:length(receiptList) == 0}">添加回执信息</c:if>
+                                                                            <c:if test="${fn:length(receiptList) == 1}">修改回执信息</c:if>
+                                                                        </a>
+                                                                        <button class="hidden" data-toggle="modal" data-target=".bs-example-modal-tj-receipt" style="color: white" id="addReceipt">添加回执信息</button>
+                                                                        <c:if test="${fn:length(receiptList) > 0}">
+                                                                            <a class="btn btn-sm"  data-toggle="modal" data-target=".bs-example-modal-order-remarks" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
+                                                                                <i class="fa fa-check"></i> 订单完成
+                                                                            </a>
+                                                                        </c:if>
+                                                                    </c:if>
+                                                                </shiro:hasRole>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </c:if>
+                                                    </c:if>
+                                                </shiro:hasRole>
                                             </div>
                                             <div class="col-md-6">
                                                 <!--机器信息-->
@@ -470,7 +483,7 @@
                                                                         <th class="text-center">机器号</th>
                                                                         <th class="text-center">发动机号</th>
                                                                         <th class="text-center">生产日期</th>
-                                                                        <c:if test="${order.status == 'NEW'}">
+                                                                        <c:if test="${order.status == 'NEW' || order.status == 'INPLAN'}">
                                                                             <th class="text-center">操作</th>
                                                                         </c:if>
 
@@ -491,10 +504,10 @@
                                                                             <td>
                                                                                     ${machine.productiondate}
                                                                             </td>
-                                                                            <c:if test="${order.status == 'NEW'}">
+                                                                            <c:if test="${order.status == 'NEW' || order.status == 'INPLAN'}">
                                                                                 <td>
-                                                                                    <a href="javascript:showMachineInfo('${machine.machinename}','${machine.machinemodel}','${machine.machineno}','${machine.engineno}','${machine.productiondate}','${machine.uuid}','${machine.versionno}')"
-                                                                                       class="btn btn-sm btn-infonew a-noline" style="color: #fff">修改</a>
+                                                                                    <a href="javascript:showMachineInfo('${machine.machinename}','${machine.machinemodel}','${machine.machineno}','${machine.engineno}','${machine.productiondate}','${machine.price}','${machine.remarks}','${machine.uuid}','${machine.versionno}')"
+                                                                                       class="btn btn-sm btn-infonew a-noline" style="color: #fff">详情</a>
                                                                                     <a href="javascript:deleteMachineForOrder('${machine.uuid}')"
                                                                                        class="btn btn-sm btn-danger a-noline" style="color: #fff">删除</a>
                                                                                 </td>
@@ -506,10 +519,15 @@
                                                                 <c:if test="${not empty machineList}">
                                                                     <web:pagination pageList="${machineList}" postParam="true"/>
                                                                 </c:if>
-                                                                <c:if test="${order.status == 'NEW'}">
-                                                                    <a class="btn btn-sm btn-info" href="javascript:addMachine()" style="color: white;margin-left: 10px;margin-bottom: 10px">添加机器</a>
-                                                                    <button class="hidden" data-toggle="modal" data-target=".bs-example-modal-tj" style="color: white" id="addMachine">添加机器</button>
-                                                                </c:if>
+                                                                <shiro:hasRole name="HQ_PLAN">
+                                                                    <c:if test="${order.status == 'NEW' || order.status == 'INPLAN'}">
+                                                                        <a class="btn btn-sm btn-info" href="javascript:addMachine()" style="color: white;margin-left: 10px;margin-bottom: 10px">添加机器</a>
+                                                                        <button class="hidden" data-toggle="modal" data-target=".bs-example-modal-tj" style="color: white" id="addMachine">添加机器</button>
+                                                                    </c:if>
+                                                                    <c:if test="${fn:length(machineList) >= order.quantity && (order.status =='NEW' || order.status == 'INPLAN')}">
+                                                                        <a class="btn btn-sm btn-success" href="javascript:finishAddMachine('${order.uuid}','${order.versionno}')" style="color: white;margin-left: 10px;margin-bottom: 10px">添加完成</a>
+                                                                    </c:if>
+                                                                </shiro:hasRole>
                                                             </div>
 
                                                         </div>
@@ -548,8 +566,8 @@
                                                     <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">机器型号:<span class="text-danger">*</span></div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
-                                                            <input type="text" class="form-control" name="machinemodelAdd"
-                                                                   id="machinemodelAdd"  data-required="true"
+                                                            <input type="text" class="form-control" name="machinemodel"
+                                                                   id="machinemodel"  data-required="true"
                                                                    value="${order.machinemodel}" readonly
                                                             >
                                                             <input type="hidden" id="machineId" name="machineId">
@@ -561,8 +579,8 @@
                                                     <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">机器名称:<span class="text-danger">*</span></div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
-                                                            <input type="text" class="form-control" name="machinenameAdd"
-                                                                   id="machinenameAdd" data-maxlength="32" data-required="true"
+                                                            <input type="text" class="form-control" name="machinename"
+                                                                   id="machinename" data-maxlength="32" data-required="true"
                                                                    onblur="trimText(this)"
                                                             >
                                                         </div>
@@ -572,8 +590,8 @@
                                                     <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">机器号:<span class="text-danger">*</span></div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
-                                                            <input type="text" class="form-control" name="machinenoAdd"
-                                                                   id="machinenoAdd" data-maxlength="32" data-required="true"
+                                                            <input type="text" class="form-control" name="machineno"
+                                                                   id="machineno" data-maxlength="32" data-required="true"
                                                                    onblur="trimText(this)"
                                                             >
                                                             <span id="machinenoError" class="text-danger"></span>
@@ -584,8 +602,8 @@
                                                     <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">发动机号:<span class="text-danger">*</span></div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
-                                                            <input type="text" class="form-control" name="enginenoAdd"
-                                                                   id="enginenoAdd" data-maxlength="32" data-required="true"
+                                                            <input type="text" class="form-control" name="engineno"
+                                                                   id="engineno" data-maxlength="32" data-required="true"
                                                                    onblur="trimText(this)"
                                                             >
                                                         </div>
@@ -596,8 +614,31 @@
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
                                                             <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
-                                                                   name="productiondateAdd"
-                                                                   data-date-format="yyyy-mm-dd" id="productiondateAdd" >
+                                                                   name="productiondate"
+                                                                   data-date-format="yyyy-mm-dd" id="productiondate" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row static-info">
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">机器价格:<span class="text-danger">*</span></div>
+                                                    <div class="col-md-9 col-xs-12 value">
+                                                        <div class="my-display-inline-box">
+                                                            <input class="form-control" size="6"
+                                                                   data-required="true" name="price"
+                                                                   id="price" data-maxlength="10"
+                                                                   onblur="validateMoney(this,'priceError')"
+                                                            >
+                                                            <span id="priceError" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row static-info">
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">备注:</div>
+                                                    <div class="col-md-9 col-xs-12 value">
+                                                        <div class="my-display-inline-box">
+                                                            <textarea class="form-control" rows="5" name="remarks" id="remarks"
+                                                                      data-maxlength="256"
+                                                                      onblur="trimText(this)"></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -754,7 +795,7 @@
                                                     <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">问题反馈:</div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
-                                                            <textarea class="form-control" rows="5" name="questionAdd" id="questionAdd"
+                                                            <textarea class="form-control" rows="4" name="questionAdd" id="questionAdd"
                                                                       data-maxlength="100"
                                                                       onblur="trimText(this)"></textarea>
                                                             <span id="questionError" class="text-danger"></span>
@@ -789,6 +830,56 @@
                                     <a href="javascript:submitReceiptInfo()"
                                        class="btn btn-submit btn-s-md a-noline" style="color: #fff"
                                        id="submitAddReceiptBtn"
+                                    >提交</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+
+            <!-- 订单备注modal添加 -->
+            <div class="modal fade bs-example-modal-order-remarks " tabindex="-1" role="dialog"
+                 aria-labelledby="myLargeModalLabelTj" aria-hidden="false">
+                <div class="modal-dialog modal-lg" style="margin-top: 15%">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" id="modelCloseBtnAddRemarks"><span
+                                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myLargeModalLabelAddRemarks">订单</h4>
+                        </div>
+                        <form action="${ctx}/admin/wefamily/finishOrder" method="POST" id="addRemarksFrm" data-validate="parsley">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="portlet green box">
+                                            <div class="portlet-title">
+                                                <div class="caption"><i class="fa fa-cogs"></i>订单完成</div>
+                                            </div>
+                                            <div class="portlet-body">
+
+
+                                                <div class="row static-info">
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">备注:</div>
+                                                    <div class="col-md-9 col-xs-12 value">
+                                                        <div class="my-display-inline-box">
+                                                            <textarea class="form-control" rows="4" name="remarksForOrder" id="remarksForOrder"
+                                                                      data-maxlength="256"
+                                                                      onblur="trimText(this)"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="text-align: center;border: 0;margin: 0;padding: 0 20px 20px 20px;">
+                                    <a href="javascript:finishOrder()"
+                                       class="btn btn-submit btn-s-md a-noline" style="color: #fff"
+                                       id="submitAddRemarksBtn"
                                     >提交</a>
                                 </div>
                             </div>
@@ -879,15 +970,25 @@
         });
     }
 
+    function finishAddMachine(orderId,versionno){
+        $.get("${ctx}/admin/wefamily/finishAddMachine?orderId="+orderId+"&versionno="+versionno,function(data,status){
+            if(undefined != data.finishAddFlag){
+                window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&finishAddFlag="+data.finishAddFlag;
+            }
+        });
+    }
+
     function resubmitSearch(page){
         window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&page="+page;
     }
 
-    function showMachineInfo(machinename,machinemodel,machineno,engineno,productiondate,machineId,versionno){
-        $('#machinenameAdd').val(machinename);
-        $('#machinenoAdd').val(machineno);
-        $('#enginenoAdd').val(engineno);
-        $('#productiondateAdd').val(productiondate);
+    function showMachineInfo(machinename,machinemodel,machineno,engineno,productiondate,price,remarks,machineId,versionno){
+        $('#machinename').val(machinename);
+        $('#machineno').val(machineno);
+        $('#engineno').val(engineno);
+        $('#productiondate').val(productiondate);
+        $('#price').val(price);
+        $('#remarks').val(remarks);
         $('#machineId').val(machineId);
         $('#versionno').val(versionno);
         var machinenoError = document.getElementById('machinenoError');
@@ -907,10 +1008,12 @@
     }
 
     function openAddMachineModal(){
-        $('#machinenameAdd').val("");
-        $('#machinenoAdd').val("");
-        $('#enginenoAdd').val("");
-        $('#productiondateAdd').val("");
+        $('#machinename').val("");
+        $('#machineno').val("");
+        $('#engineno').val("");
+        $('#productiondate').val("");
+        $('#price').val("");
+        $('#remarks').val("");
         $('#machineId').val("");
         $('#versionno').val("");
         var machinenoError = document.getElementById('machinenoError');
@@ -997,7 +1100,7 @@
     function finishOrder(){
         if(confirm('确定完成订单？')){
             //确定
-            $.get("${ctx}/admin/wefamily/finishOrder?orderId=${order.uuid}&versionno=${order.versionno}",function(data,status){
+            $.get("${ctx}/admin/wefamily/finishOrder?orderId=${order.uuid}&versionno=${order.versionno}&remarks="+$('#remarksForOrder').val(),function(data,status){
                 if(undefined != data.finishFlag){
                     window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&finishFlag="+data.finishFlag;
                 }

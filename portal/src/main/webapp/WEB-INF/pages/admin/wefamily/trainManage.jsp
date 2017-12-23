@@ -24,6 +24,22 @@
                               id="searchForm">
                             <div class="row">
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <select class="form-control" name="merchantid" id="merchantid" <shiro:hasAnyRoles name="MERCHANT_MANAGER,MTX_MAINTAIN_WORKER,MTX_REPAIR_WORKER,MTX_TRAIN_WORKER">data-required="true"</shiro:hasAnyRoles>>
+                                        <c:if test="${fn:length(merchantList) > 1}">
+                                            <option value="">经销商</option>
+                                        </c:if>
+                                        <c:forEach items="${merchantList}" var="merchant">
+                                            <option value="${merchant.uuid}" <c:if test="${train.merchantid == merchant.uuid}">selected="selected"</c:if>>${merchant.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <input type="text" class="form-control" id="snno" name="snno" onblur="trimText(this)" value="${train.snno}"
+                                           placeholder="培训编号"
+                                    />
+                                    <input type="hidden" name="type" value="${type}">
+                                </div>
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <select class="form-control" name="machinemodel" id="machinemodel">
                                         <c:if test="${fn:length(machineModelList) > 1}">
                                             <option value="">机器型号</option>
@@ -78,6 +94,7 @@
 
                                     <thead>
                                     <tr>
+                                        <th class="text-center">编号</th>
                                         <th class="text-center">机器型号</th>
                                         <th class="text-center">机器号</th>
                                         <th class="text-center">用户姓名</th>
@@ -91,6 +108,9 @@
                                     <tbody>
                                     <c:forEach items="${trainList}" var="train">
                                         <tr>
+                                            <td>
+                                                    ${train.snno}
+                                            </td>
                                             <td>
                                                     ${train.machinemodel}
                                             </td>
@@ -113,8 +133,8 @@
                                                     ${web:getCodeDesc("TRAIN_STATUS",train.status)}
                                             </td>
                                             <td>
-                                                <a href="${ctx}/admin/wefamily/trainInfo?trainId=${train.uuid}" class="btn  btn-infonew btn-sm" style="color: white" >修改</a>
-                                                <a href="javascript:deleteTrain('${train.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white" >删除</a>
+                                                <a href="${ctx}/admin/wefamily/trainInfo?trainId=${train.uuid}&merchantId=${train.merchantid}" class="btn  btn-infonew btn-sm" style="color: white" >修改</a>
+                                                <a href="javascript:deleteTrain('${train.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white" <c:if test="${train.status == 'FINISH'}">disabled="disabled" </c:if> >删除</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -216,7 +236,13 @@
     }
 
     function showTrainInfo(){
-        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/trainInfo";
+        var mercahntid = $("#merchantid").val();
+        if(mercahntid.length > 0){
+            window.location.href = "<%=request.getContextPath()%>/admin/wefamily/trainInfo?merchantId=" + mercahntid;
+        }else{
+            qikoo.dialog.alert("请选择经销商！");
+        }
+
     }
 
 </script>

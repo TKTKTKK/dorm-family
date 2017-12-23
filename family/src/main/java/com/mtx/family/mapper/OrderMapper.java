@@ -16,5 +16,5 @@ public interface OrderMapper extends BaseMapper<Order> {
 
     List<Order> selectOrderForSnnoRepeat(@Param("order") Order order);
 
-    PageList<Order> selectOrderList(@Param("order") Order order,@Param("startTime") String startTime,@Param("endTime") String endTime, PageBounds pageBounds);
+    PageList<Order> selectOrderList(@Param("order") Order order,@Param("ifHqUser") String ifHqUser, @Param("startTime") String startTime, @Param("endTime") String endTime, PageBounds pageBounds);
 }

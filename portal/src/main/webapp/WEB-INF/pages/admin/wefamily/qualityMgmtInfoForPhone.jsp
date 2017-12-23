@@ -12,6 +12,10 @@
     <meta http-equiv="x-dns-prefetch-control" content="on">
     <title><c:if test="${qualityMgmt.type == 'REPAIR'}">维修</c:if><c:if test="${qualityMgmt.type == 'MAINTAIN'}">保养</c:if>详情</title>
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
+    <link rel="stylesheet" href="${ctx}/static/guest/css/normalize3.0.2.min.css" />
+    <link rel="stylesheet" href="${ctx}/static/guest/css/style.css?v=7" />
+    <link href="${ctx}/static/guest/css/mobiscroll.css" rel="stylesheet" />
+    <link href="${ctx}/static/guest/css/mobiscroll_date.css" rel="stylesheet" />
     <style>
         .goal_total{padding-left: 1.25rem;border-bottom: 1px solid rgba(0,0,0,0.1);font-size: 1.6rem;color: #333;background-color: #fff;position: relative;padding: 1.17rem 2rem 1.17rem 1.25rem;margin-top: 1rem;}
         .goal_total:nth-of-type(even) span{border-left: 4px solid #ff9933;padding-left: 1.25rem;}
@@ -67,13 +71,17 @@
         #reporterImgContainer img{width: 5rem;height: 5rem;margin:1rem}
         #qualityMgmtImgContainer{display: inline-block;vertical-align: middle}
         #qualityMgmtImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 2rem}
-        #qualityMgmtImgContainer img{width: 5rem;height: 5rem;margin:1rem}
+        #qualityMgmtImgContainer img{width: 64px;height: 64px;margin:1rem;max-width: none}
         .my-display-inline-box{width: auto}
         .required{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
         .maxlength{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
         .fixsubmit{background-color: none;display: flex;display: -webkit-flex}
         .fixsubmit>a:nth-of-type(1){left: 0;background: #5bbc4e;width: 70%;color: white}
         .fixsubmit>a:nth-of-type(2){right: 0;background: #f0d439;width: 30%;color: white}
+        #productiondt{width: auto;height: auto}
+        #servicedt{width: auto;height: auto}
+        #content{font-size: initial}
+        #remarks{font-size: initial}
     </style>
 </head>
 <body>
@@ -86,11 +94,7 @@
             <a class="back" href="${ctx}/admin/wefamily/maintainManageForPhone"></a>
             <span>保养详情</span>
         </c:if>
-        <img src="../../../static/guest/img/sao.png" alt="">
-    </div>
-    <div class="b-l b-r" style="padding-left: 1.25rem">
-        <span class="text-success">${successMessage}</span>
-        <span class="text-danger">${errorMessage}</span>
+        <img src="../../../static/guest/img/sao.png" alt="" onclick="scan()">
     </div>
 
         <form class="form-horizontal" data-validate="parsley"
@@ -120,7 +124,7 @@
                 </li>
                 <li>
                     <span>生产日期<a class="dataRequired">*</a></span>
-                    <input class="Wdate" type="text" name="productiondt" id="productiondt" value="${qualityMgmt.productiondt}" onClick="WdatePicker()"
+                    <input class="input" type="text" name="productiondt" id="productiondt" value="${qualityMgmt.productiondt}" readonly
                            data-required="true" placeholder="请选择生产日期" data-maxlength="23">
                 </li>
                 <c:if test="${qualityMgmt.type == 'REPAIR'}">
@@ -221,9 +225,9 @@
                            data-required="true" data-maxlength="32">
                 </li>
                 <li>
-                    <span>现场定位</span>
-                    <input type="text" name="location" id="location" value="${train.location}" data-maxlength="32" readonly onblur="initLocation()">
-                    <img src="../../../../static/admin/img/location.png" id="locationImg" onclick="getLocation()" alt="" style="width: 2rem;height: 2rem;float: right">
+                    <span>现场定位<a class="dataRequired">*</a></span>
+                    <input type="text" name="location" id="location" value="${qualityMgmt.location}" data-maxlength="32" readonly onblur="initLocation()">
+                    <img src="../../../../static/guest/img/location.png" id="locationImg" onclick="getLocation()" alt="" style="width: 2rem;height: 2rem;float: right">
                 </li>
                 <li>
                     <span>已作业面积</span>
@@ -253,14 +257,14 @@
                 </li>
                 <li>
                     <span><c:if test="${qualityMgmt.type == 'REPAIR'}">维修</c:if><c:if test="${qualityMgmt.type == 'MAINTAIN'}">保养</c:if>日期<a class="dataRequired">*</a></span>
-                    <input class="Wdate" type="text" name="servicedt" id="servicedt" onClick="WdatePicker()"
+                    <input class="input" type="text" name="servicedt" id="servicedt" readonly
                            value="${qualityMgmt.servicedt}"  data-required="true" data-maxlength="23"
                            <c:if test="${qualityMgmt.type == 'REPAIR'}">placeholder="请选择维修日期"</c:if>
                            <c:if test="${qualityMgmt.type == 'MAINTAIN'}">placeholder="请选择保养日期"</c:if>>
                 </li>
                 <li>
-                    <span>收费金额</span>
-                    <input name="price" id="price" value="${qualityMgmt.price}" size="24"
+                    <span>收费金额<a class="dataRequired">*</a></span>
+                    <input name="price" id="price" value="${qualityMgmt.price}" size="24" data-required="true"
                            data-maxlength="10" onblur="validateMoney(this,'priceError')" placeholder="请填写收费金额">
                     <span id="priceError" class="text-danger" style="float: right;color: red;font-size: 1.2rem;"></span>
                 </li>
@@ -280,7 +284,7 @@
                               style=" width: 16rem;vertical-align: middle;text-align: right">${qualityMgmt.remarks}</textarea>
                 </li>
                 <li style="border: 0">
-                    <span>上传人机合影</span>
+                    <span>人机合影<a class="dataRequired">*</a></span>
                 </li>
                 <li>
                     <div class="my-display-inline-box">
@@ -289,7 +293,7 @@
                                 <img src="${attachment.name}" alt="" style="margin-top: 3px;margin-left: 10px" onclick="viewBigImageForUpload(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image">
                             </c:forEach>
                         </div>
-                        <c:if test="${fn:length(workerAttachmentList) < 4}">
+                        <c:if test="${fn:length(workerAttachmentList) < 4 && qualityMgmt.status ne 'FINISH'}">
                             <div id="qualityMgmtImgUrlContainer" class="upload-btn-box" style="display: inline-block">
                                 <input type="file" id="qualityMgmtImg" name="picUrl" class="upload-btn pageUpload"
                                        data-icon="false" data-classButton="btn btn-default"
@@ -308,10 +312,17 @@
                    value="${qualityMgmt.versionno}">
         </form>
 
+    <div class="choose" style="display: none">
+        <div class="error">
+            <p id="Message"></p >
+            <button onclick="closeModel()">OK</button>
+        </div>
+    </div>
+
         <c:if test="${qualityMgmt.status ne 'FINISH'}">
             <div class="fixsubmit">
                 <a href="javascript:submitQualityMgmtInfo()">保存</a>
-                <a href="javascript:finishTrain()">提交</a>
+                <a href="javascript:finishQualityMgmt()">提交</a>
             </div>
         </c:if>
 
@@ -343,13 +354,31 @@
 
 <script src="${ctx}/static/admin/js/lrz/dist/lrz.bundle.js"></script>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
-<script src="${ctx}/static/admin/js/calendar/WdatePicker.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script src="${ctx}/static/js/wechatUtil.js?20171201"></script>
 <script src="${ctx}/static/js/coordtransform.js"></script>
+<script src="${ctx}/static/js/mobiscroll_date.js" charset="gb2312"></script>
+<script src="${ctx}/static/js/mobiscroll.js"></script>
 <script type="text/javascript">
 
+    var Message = document.getElementById("Message");
+    Message.innerHTML = "";
+
+    function closeModel(){
+        $(".choose").css("display","none");
+    }
+
+
     window.onload = function(){
+
+        if(${successMessage != null}){
+            Message.innerHTML = "${successMessage}";
+            $(".choose").css("display","block");
+        }else if(${errorMessage != null}){
+            Message.innerHTML = "${errorMessage}";
+            $(".choose").css("display","block");
+        }
+
         var location = $('#location').val();
         if(location.length > 0){
             $('#location').show();
@@ -358,6 +387,29 @@
             getLocation();
         }
     }
+
+    $(function () {
+        var currYear = (new Date()).getFullYear();
+        var opt={};
+        opt.date = {preset : 'date'};
+        opt.datetime = {preset : 'datetime'};
+        opt.time = {preset : 'time'};
+        opt.default = {
+            theme: 'android-ics light', //皮肤样式
+            display: 'modal', //显示方式
+            mode: 'scroller', //日期选择模式
+            dateFormat: 'yyyy-mm-dd',
+            lang: 'zh',
+            showNow: true,
+            nowText: "返回今天",
+            startYear: currYear - 100, //开始年份
+            endYear: currYear + 100 //结束年份
+        };
+
+        $("#productiondt").mobiscroll($.extend(opt['date'], opt['default']));
+        $("#servicedt").mobiscroll($.extend(opt['date'], opt['default']));
+
+    });
 
     function getLocation(){
         $('#location').show();
@@ -433,21 +485,41 @@
         }
     }
 
-    function finishTrain(){
+    function finishQualityMgmt(){
 
-            //确定
-            $.get("${ctx}/admin/wefamily/finishTrain?trainId=${train.uuid}&versionno=${train.versionno}",function(data,status){
-                if(undefined != data.finishFlag){
-                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/trainInfoForPhone?trainId=${train.uuid}&finishFlag="+data.finishFlag;
-                }
-            });
+        $("#frm").parsley("validate");
+        //表单合法 单价合法性
+        if ($('#frm').parsley().isValid()){
+
+            if($('#qualityMgmtImgContainer').find('img').length > 0){
+                var searchForm = document.getElementById("frm");
+                searchForm.action = "${ctx}/admin/wefamily/finishQualityMgmtForPhone?trainId=${qualityMgmt.uuid}&versionno=${qualityMgmt.versionno}"
+                searchForm.submit();
+            }else{
+                Message.innerHTML = "请上传人机合影！";
+                $(".choose").css("display","block");
+            }
+        }
     }
 
-    wechatUtil.getLocation({
+   /* wechatUtil.getLocation({
         success : function(res){
             alert("latitude : " + res.latitude + " longitude " + res.longitude);
         }
-    });
+    });*/
+
+    function scan(){
+        wechatUtil.scanQRCode({
+                    success : function(res){
+                        var paramArr = wechatUtil.handleScanResult(res.resultStr);
+                        $("#machinemodel").val(paramArr[0]);
+                        $("#machineno").val(paramArr[1]);
+                        $("#engineno").val(paramArr[2]);
+                        $("#productiondt").val(paramArr[3]);
+                    }
+                }
+        );
+    }
 
 </script>
 

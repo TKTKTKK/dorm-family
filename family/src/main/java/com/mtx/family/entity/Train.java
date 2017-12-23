@@ -12,6 +12,10 @@ import javax.persistence.Table;
 public class Train extends BaseEntity {
 
     @Column
+    private String snno;
+    @Column
+    private String merchantid;
+    @Column
     private String machinemodel;
     @Column
     private String machineno;
@@ -36,6 +40,21 @@ public class Train extends BaseEntity {
     @Column
     private String status;
 
+    public String getSnno() {
+        return snno;
+    }
+
+    public void setSnno(String snno) {
+        this.snno = snno;
+    }
+
+    public String getMerchantid() {
+        return merchantid;
+    }
+
+    public void setMerchantid(String merchantid) {
+        this.merchantid = merchantid;
+    }
 
     public String getMachinemodel() {
         return machinemodel;

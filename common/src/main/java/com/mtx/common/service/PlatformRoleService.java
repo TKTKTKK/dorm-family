@@ -2,6 +2,7 @@ package com.mtx.common.service;
 
 import com.mtx.common.base.BaseService;
 import com.mtx.common.entity.PlatformRole;
+import com.mtx.common.entity.PlatformUserRole;
 import com.mtx.common.mapper.PlatformRoleMapper;
 import com.mtx.common.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,5 +90,9 @@ public class PlatformRoleService extends BaseService<PlatformRoleMapper,Platform
     public List<PlatformRole> queryRolesByBindId(){
         String bindid = UserUtils.getUserBindId();
         return this.mapper.selectRolesByBindId(bindid);
+    }
+
+    public List<PlatformRole> queryUserRoleListForUser() {
+        return this.mapper.querySuperRole(UserUtils.getUserId());
     }
 }

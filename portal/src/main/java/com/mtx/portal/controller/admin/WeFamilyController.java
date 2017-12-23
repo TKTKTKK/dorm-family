@@ -2,14 +2,9 @@ package com.mtx.portal.controller.admin;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
-import com.mtx.common.entity.Attachment;
-import com.mtx.common.entity.CommonCode;
-import com.mtx.common.entity.PlatformUser;
+import com.mtx.common.entity.*;
 import com.mtx.common.exception.ServiceException;
-import com.mtx.common.service.AttachmentService;
-import com.mtx.common.service.CommonCodeService;
-import com.mtx.common.service.PlatformUserService;
-import com.mtx.common.service.SequenceService;
+import com.mtx.common.service.*;
 import com.mtx.common.utils.DateUtils;
 import com.mtx.common.utils.StringUtils;
 import com.mtx.common.utils.UploadUtils;
@@ -91,6 +86,8 @@ public class WeFamilyController extends BaseAdminController {
     private MtxUserMachineService mtxUserMachineService;
     @Autowired
     private MtxActivityService mtxActivityService;
+    @Autowired
+    private PlatformRoleService platformRoleService;
 
     /**
      * 经销商管理界面
@@ -341,9 +338,28 @@ public class WeFamilyController extends BaseAdminController {
             if(null != endDate){
                 endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
             }
+
+            String[] statusArr = request.getParameterValues("status");
+            String statusStr = "";
+            if(null != statusArr){
+                statusStr = StringUtils.join(statusArr, ",");
+            }
+            model.addAttribute("statusStr", statusStr);
+            if(null != statusArr && statusArr.length == 1 && StringUtils.isBlank(statusArr[0])){
+                statusArr = null;
+            }
+            order.setStatusArr(statusArr);
+            String ifHqUser = "";
+            List<PlatformRole> platformRoleList = platformRoleService.queryUserRoleListForUser();
+            for(PlatformRole pr:platformRoleList){
+                if(pr.getRolekey().split("_")[0].equals("HQ") || pr.getRolekey().equals("WP_SUPER")){
+                    ifHqUser = "Y";
+                }
+            }
+
             order.setBindid(wechatBinding.getUuid());
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-            PageList<Order> orderList = orderService.queryOrderList(order, startDateTimeStr, endDateTimeStr, pageBounds);
+            PageList<Order> orderList = orderService.queryOrderList(order,ifHqUser, startDateTimeStr, endDateTimeStr, pageBounds);
             model.addAttribute("orderList", orderList);
 
             //删除结果
@@ -420,6 +436,10 @@ public class WeFamilyController extends BaseAdminController {
         merchant.setUuid(merchantId);
         merchant = merchantService.queryForObjectByPk(merchant);
         model.addAttribute("merchant",merchant);
+
+        List<String> machineModelList = getModel();
+        model.addAttribute("machineModelList",machineModelList);
+
         String orderId = request.getParameter("orderId");
         if(StringUtils.isNotBlank(orderId)){
             Order order = new Order();
@@ -440,6 +460,7 @@ public class WeFamilyController extends BaseAdminController {
     @RequestMapping(value = "/orderInfo",method = RequestMethod.POST)
     public String orderInfo(Order order, RedirectAttributes redirectAttributes, Model model){
         order.setBindid(UserUtils.getUserBindId());
+        String merchantId = order.getMerchantid();
         //修改
         if(StringUtils.isNotBlank(order.getUuid())){
             try {
@@ -451,19 +472,36 @@ public class WeFamilyController extends BaseAdminController {
             }
         }else{
             //添加
-            order.setStatus("NEW");
+            order.setStatus("UNSUBMIT");
             order.setSnno(sequenceService.getOrderSeqNo());
-            List<Order> orderList = orderService.queryOrderForSnnoRepeat(order);
-            if(null != orderList && orderList.size()>0){
-                model.addAttribute("errorMessage", "抱歉，订单编号重复!");
-                return  "admin/wefamily/orderInfo";
-            }
             orderService.insert(order);
             redirectAttributes.addFlashAttribute("successMessage", "保存成功");
             order = new Order();
         }
 
-        return "redirect:orderInfo?orderId=" + order.getUuid();
+        return "redirect:orderInfo?orderId=" + order.getUuid() + "&merchantId=" + merchantId;
+    }
+
+    /**
+     * 机器添加完成
+     * @param request
+     * @return
+     */
+    @RequestMapping("/finishAddMachine")
+    @ResponseBody
+    public Map<String, Object> finishAddMachine(HttpServletRequest request){
+        int finishAddFlag = 0;
+        String orderId = request.getParameter("orderId");
+        String versionno = request.getParameter("versionno");
+        if(StringUtils.isNotBlank(orderId)){
+            Order order = new Order();
+            order.setUuid(orderId);
+            order.setVersionno(Integer.valueOf(versionno));
+            finishAddFlag = orderService.finishAddMachine(order);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("finishAddFlag", finishAddFlag);
+        return resultMap;
     }
 
     /**
@@ -649,6 +687,14 @@ public class WeFamilyController extends BaseAdminController {
         }
 
         //订单发送结果
+        String finishAddFlag = request.getParameter("finishAddFlag");
+        if("1".equals(finishAddFlag)){
+            model.addAttribute("successMessage", "机器添加完成");
+        }else if("0".equals(finishAddFlag)){
+            model.addAttribute("errorMessage", "操作失败");
+        }
+
+        //订单完成结果
         String finishFlag = request.getParameter("finishFlag");
         if("1".equals(finishFlag)){
             model.addAttribute("successMessage", "订单已完成");
@@ -664,20 +710,10 @@ public class WeFamilyController extends BaseAdminController {
      */
     @RequestMapping(value = "/addMachineForOrder",method= RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> addMachineForOrder(HttpServletRequest request){
+    public Map<String,Object> addMachineForOrder(HttpServletRequest request,Machine machine){
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        Machine machine = new Machine();
         machine.setBindid(UserUtils.getUserBindId());
-        machine.setMachinename(request.getParameter("machinenameAdd"));
-        machine.setMachinemodel(request.getParameter("machinemodelAdd"));
-        machine.setMachineno(request.getParameter("machinenoAdd"));
-        machine.setEngineno(request.getParameter("enginenoAdd"));
-        machine.setProductiondate(request.getParameter("productiondateAdd"));
-        String versionno = request.getParameter("versionno");
-        if(StringUtils.isNotBlank(versionno)){
-            machine.setVersionno(Integer.valueOf(versionno));
-        }
 
         String orderId = request.getParameter("orderId");
 
@@ -735,7 +771,7 @@ public class WeFamilyController extends BaseAdminController {
 
         String orderId = request.getParameter("orderId");
 
-        Logistics logistics = new Logistics();
+         Logistics logistics = new Logistics();
         logistics.setBindid(UserUtils.getUserBindId());
         logistics.setOrderid(orderId);
         logistics.setDriverphone(request.getParameter("driverphoneAdd"));
@@ -808,11 +844,15 @@ public class WeFamilyController extends BaseAdminController {
         int finishFlag = 0;
         String orderId = request.getParameter("orderId");
         String versionno = request.getParameter("versionno");
+        String remarks = request.getParameter("remarks");
         if(StringUtils.isNotBlank(orderId)){
             Order order = new Order();
             order.setUuid(orderId);
+            if(StringUtils.isNotBlank(remarks)){
+                order.setRemarks(remarks);
+            }
             order.setVersionno(Integer.valueOf(versionno));
-            finishFlag = orderService. finishOrder(order);
+            finishFlag = orderService.finishOrder(order);
         }
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("finishFlag", finishFlag);
@@ -1106,6 +1146,8 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("wechatBinding", wechatBinding);
         List<String> machineModelList = getModel();
         model.addAttribute("machineModelList",machineModelList);
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
         model.addAttribute("successMessage",request.getParameter("successMessage"));
         return "admin/wefamily/trainManage";
     }
@@ -1123,6 +1165,8 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("train",train);
         List<String> machineModelList = getModel();
         model.addAttribute("machineModelList",machineModelList);
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
         if(null != wechatBinding){
             String startDateStr = request.getParameter("startDateStr");
             model.addAttribute("startDateStr", startDateStr);
@@ -1164,6 +1208,12 @@ public class WeFamilyController extends BaseAdminController {
      */
     @RequestMapping(value = "/trainInfo",method = RequestMethod.GET)
     public String trainInfo(HttpServletRequest request,Model model){
+
+        String merchantId = request.getParameter("merchantId");
+        Merchant merchant = new Merchant();
+        merchant.setUuid(merchantId);
+        merchant = merchantService.queryForObjectByPk(merchant);
+        model.addAttribute("merchant",merchant);
 
         List<String> machineModelList = getModel();
         model.addAttribute("machineModelList",machineModelList);
@@ -1240,11 +1290,12 @@ public class WeFamilyController extends BaseAdminController {
                 redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");
             }
         }else{
+            train.setSnno(sequenceService.getTrainSeqNo());
             trainService.saveTrain(train,trainImgs);
             redirectAttributes.addFlashAttribute("successMessage", "保存成功");
         }
 
-        return "redirect:trainInfo?trainId=" + train.getUuid();
+        return "redirect:trainInfo?trainId=" + train.getUuid() + "&merchantId="+ train.getMerchantid();
     }
 
     //自动查询机器列表
@@ -1299,11 +1350,46 @@ public class WeFamilyController extends BaseAdminController {
             Train train = new Train();
             train.setUuid(trainId);
             train.setVersionno(Integer.valueOf(versionno));
-            finishFlag = trainService. finishTrain(train);
+            finishFlag = trainService.finishTrain(train);
         }
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("finishFlag", finishFlag);
         return resultMap;
+    }
+
+    @RequestMapping(value = "/finishTrainForPhone",method = RequestMethod.POST)
+    public String finishTrainForPhone(Model model,HttpServletRequest request,Train train, RedirectAttributes redirectAttributes){
+        //培训项目
+        String trainProgramStr = "";
+        String[] trainPrograms = request.getParameterValues("trainPrograms");
+        if(null != trainPrograms){
+            for(String program : trainPrograms){
+                trainProgramStr += program + ",";
+            }
+            if(StringUtils.isNotBlank(trainProgramStr)){
+                train.setProgram(trainProgramStr);
+            }
+        }
+
+        String[] trainImgs = request.getParameterValues("trainImg");
+
+        //修改
+        if(StringUtils.isNotBlank(train.getUuid())){
+            try {
+                train.setStatus("FINISH");
+                trainService.updateTrain(train,trainImgs);
+                redirectAttributes.addFlashAttribute("successMessage", "培训结束");
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");
+            }
+        }else{
+            train.setSnno(sequenceService.getTrainSeqNo());
+            trainService.saveFinishTrain(train,trainImgs);
+            redirectAttributes.addFlashAttribute("successMessage", "培训结束");
+        }
+
+        return "redirect:trainInfoForPhone?trainId=" + train.getUuid();
     }
 
     /**
@@ -1334,8 +1420,8 @@ public class WeFamilyController extends BaseAdminController {
     @RequestMapping(value = "/trainManageForPhone")
     public String trainManageForPhone(Model model) {
         Train train = new Train();
-        train.setCreateby(UserUtils.getUserId());
-        List<Train> trainList = trainService.queryTrainListForPhone(train);
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        List<Train> trainList = trainService.queryTrainListForPhone(train,merchantList);
         model.addAttribute("trainList",trainList);
         return "admin/wefamily/trainManageForPhone";
     }
@@ -1345,6 +1431,9 @@ public class WeFamilyController extends BaseAdminController {
 
         List<String> machineModelList = getModel();
         model.addAttribute("machineModelList",machineModelList);
+
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
 
         String trainId= request.getParameter("trainId");
         if(StringUtils.isNotBlank(trainId)){
@@ -1410,6 +1499,7 @@ public class WeFamilyController extends BaseAdminController {
                 redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");
             }
         }else{
+            train.setSnno(sequenceService.getTrainSeqNo());
             trainService.saveTrain(train,trainImgs);
             redirectAttributes.addFlashAttribute("successMessage", "保存成功");
         }
@@ -1427,6 +1517,8 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("type","REPAIR");
         List<String> machineModelList = getModel();
         model.addAttribute("machineModelList",machineModelList);
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
         return "admin/wefamily/qualityMgmtManage";
     }
 
@@ -1440,6 +1532,8 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("type","MAINTAIN");
         List<String> machineModelList = getModel();
         model.addAttribute("machineModelList",machineModelList);
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
         return "admin/wefamily/qualityMgmtManage";
     }
 
@@ -1456,6 +1550,8 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("qualityMgmt",qualityMgmt);
         List<String> machineModelList = getModel();
         model.addAttribute("machineModelList",machineModelList);
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
         String type = request.getParameter("type");
         model.addAttribute("type",type);
         qualityMgmt.setType(type);
@@ -1799,6 +1895,35 @@ public class WeFamilyController extends BaseAdminController {
             try {
                 qualityMgmtService.saveQualityMgmtInfo(qualityMgmt,worker,qualityMgmtImgs);
                 redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");
+            }
+        }
+
+        return "redirect:qualityMgmtInfoForPhone?qualityMgmtId=" + qualityMgmt.getUuid();
+    }
+
+    @RequestMapping(value = "/finishQualityMgmtForPhone",method = RequestMethod.POST)
+    public String finishQualityMgmtForPhone(Model model, HttpServletRequest request, QualityMgmt qualityMgmt, Worker worker, RedirectAttributes redirectAttributes){
+
+        String workerId = request.getParameter("workerid");
+        String workerVersionno = request.getParameter("workerversionno");
+
+        if(StringUtils.isNotBlank(workerId)){
+            worker.setUuid(workerId);
+            worker.setVersionno(Integer.valueOf(workerVersionno));
+        }
+
+
+        String[] qualityMgmtImgs = request.getParameterValues("qualityMgmtImg");
+
+        //修改
+        if(StringUtils.isNotBlank(qualityMgmt.getUuid())){
+            try {
+                qualityMgmt.setStatus("FINISH");
+                qualityMgmtService.saveQualityMgmtInfo(qualityMgmt,worker,qualityMgmtImgs);
+                redirectAttributes.addFlashAttribute("successMessage", "服务结束！");
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
                 redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");

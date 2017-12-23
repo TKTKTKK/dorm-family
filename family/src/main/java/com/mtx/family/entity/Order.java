@@ -42,7 +42,11 @@ public class Order extends BaseEntity {
     private String fueltank;
     @Column
     private String status;
+    @Column
+    private String remarks;
 
+    //状态数组
+    private String[] statusArr;
 
     public String getBindid() {
         return bindid;
@@ -162,5 +166,21 @@ public class Order extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String[] getStatusArr() {
+        return statusArr;
+    }
+
+    public void setStatusArr(String[] statusArr) {
+        this.statusArr = statusArr;
     }
 }

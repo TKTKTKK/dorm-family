@@ -5,9 +5,37 @@
 <html lang="en" class="app">
 <head>
     <link href="${ctx}/static/admin/css/qikoo/qikoo.css" rel="stylesheet">
-</head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="${ctx}/static/admin/bootstrap-select/bootstrap-select.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="${ctx}/static/admin/bootstrap-select/bootstrap-select.min.js"></script>
+
 <style>
+    @media (min-width: 768px){
+        .bootstrap-select>.dropdown-menu {
+            /*position: absolute;*/
+            top: 0;
+            left: 0;
+            /*z-index: 1000;*/
+            /*display: none;*/
+            float: left;
+            /*min-width: 160px;*/
+            padding: 5px 0;
+            margin: 2px 0 0;
+            font-size: 14px;
+            list-style: none;
+            background-color: #fff;
+            /*border: 1px solid #ccc;*/
+            /*border: 1px solid rgba(0,0,0,0.15);*/
+            /*border-radius: 4px;*/
+            /*-webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);*/
+            /*box-shadow: 0 6px 12px rgba(0,0,0,0.175);*/
+            background-clip: padding-box;
+        }
+    }
 </style>
+</head>
 <body class="">
 
 <section id="content">
@@ -24,12 +52,20 @@
                               id="searchForm">
                             <div class="row">
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
-                                    <select class="form-control" name="merchantid" id="merchantid" data-required="true">
+                                    <select class="form-control" name="merchantid" id="merchantid" <shiro:hasAnyRoles name="MERCHANT_MANAGER">data-required="true"</shiro:hasAnyRoles>>
                                         <c:if test="${fn:length(merchantList) > 1}">
                                             <option value="">经销商</option>
                                         </c:if>
                                         <c:forEach items="${merchantList}" var="merchant">
                                             <option value="${merchant.uuid}" <c:if test="${order.merchantid == merchant.uuid}">selected="selected"</c:if>>${merchant.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <select class="selectpicker show-tick form-control " name="status" id="status"  multiple data-live-search="false">
+                                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('ORDER_STATUS')}"></c:set>
+                                        <c:forEach items="${commonCodeList}" var="commonCode">
+                                            <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -111,10 +147,13 @@
                                                     ${order.createon}
                                             </td>
                                             <td>
-                                                <a href="${ctx}/admin/wefamily/orderInfo?orderId=${order.uuid}" class="btn  btn-infonew btn-sm" style="color: white" <c:if test="${order.status == 'OUT'}">disabled="disabled" </c:if>>修改</a>
-                                                <a href="javascript:deleteOrder('${order.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white" <c:if test="${order.status ne 'NEW'}">disabled="disabled" </c:if>>删除</a>
-                                                <a href="javascript:addMachineForOrder('${order.uuid}')" class="btn btn-sm btn-yellow a-noline" style="color:white">管理订单</a>
-                                                <c:if test="${order.status == 'NEW'}">
+
+                                                <a href="${ctx}/admin/wefamily/orderInfo?orderId=${order.uuid}&merchantId=${order.merchantid}" class="btn  btn-infonew btn-sm" style="color: white" <c:if test="${order.status ne 'UNSUBMIT'}">disabled="disabled" </c:if>>修改</a>
+                                                <a href="javascript:deleteOrder('${order.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white" <c:if test="${order.status ne 'UNSUBMIT'}">disabled="disabled" </c:if>>删除</a>
+                                                <shiro:hasAnyRoles name="HQ_PLAN,HQ_FINANCE">
+                                                    <a href="javascript:addMachineForOrder('${order.uuid}')" class="btn btn-sm btn-yellow a-noline" style="color:white">管理订单</a>
+                                                </shiro:hasAnyRoles>
+                                                <c:if test="${order.status == 'UNSUBMIT'}">
                                                     <a href="javascript:sendOrder('${order.uuid}','${order.versionno}')" class="btn  btn-success btn-sm" style="color: white">
                                                         发送订单
                                                     </a>
@@ -151,6 +190,15 @@
     window.onload = function(){
         //显示父菜单
         showParentMenu('满田星');
+
+        $("button[data-id='status']").attr('title', "状态");
+        $($("button[data-id='status']").find('span')[0]).text("状态")
+        $($("button[data-id='status']").find('span')[0]).css('color', '#555');
+
+        if('${statusStr}'.length > 0){
+            var statusArr = '${statusStr}'.split(",");
+            $('.selectpicker').selectpicker('val', statusArr);
+        }
     }
 
     //提交查询
@@ -210,7 +258,9 @@
             //确定
             $.get("${ctx}/admin/wefamily/sendOrder?orderId="+orderId+"&versionno="+versionno,function(data,status){
                 if(undefined != data.sendFlag){
-                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId="+orderId+"&sendFlag="+data.sendFlag;
+                    var searchForm = document.getElementById("searchForm");
+                    searchForm.action = "${ctx}/admin/wefamily/orderManage?sendFlag=" + data.sendFlag;
+                    searchForm.submit();
                 }
             });
         },function(){
@@ -234,9 +284,11 @@
 
 
     function showOrderInfo(){
-        $("#searchForm").parsley("validate");
-        if($('#searchForm').parsley().isValid()) {
-            window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderInfo?merchantId="+$("#merchantid").val();
+        var mercahntid = $("#merchantid").val();
+        if(mercahntid.length > 0){
+            window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderInfo?merchantId="+mercahntid;
+        }else{
+            qikoo.dialog.alert("请选择经销商！");
         }
     }
 

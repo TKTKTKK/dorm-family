@@ -561,11 +561,8 @@ public class UserManageController extends BaseAdminController {
             PlatformUser tempUser = platformUserService.getPlatformUserByUserName(platformUser.getUsername());
             if(null == tempUser){
                 //添加用户信息
-                StringBuilder password = new StringBuilder();
-                for (int i = 0; i < 8; i++) {
-                    password.append(Math.round(Math.floor(Math.random() * 10)));
-                }
-                platformUser.setPassword(password.toString());
+                String password = request.getParameter("inputPassword");
+                platformUser.setPassword(password);
                 userMerchantService.addUserInfo(platformUser);
                 //发送手机短信验证码
 //                SMSUtil.sendPlatformUserCreatedNotification(platformUser.getCellphone(), password.toString());
