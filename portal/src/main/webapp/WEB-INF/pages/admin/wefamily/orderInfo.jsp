@@ -39,11 +39,15 @@
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>机器型号：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" data-required="true" name="machinemodel" id="machinemodel"
-                                           data-maxlength="32"
-                                           onblur="trimText(this)"
-                                           value="${order.machinemodel}">
-                                    <span id="machinemodelError" class="text-danger"></span>
+                                    <select class="form-control" name="machinemodel" id="machinemodel"
+                                            data-required="true">
+                                        <c:if test="${fn:length(machineModelList) > 1}">
+                                            <option value="">请选择</option>
+                                        </c:if>
+                                        <c:forEach items="${machineModelList}" var="machineModel">
+                                            <option value="${machineModel}" <c:if test="${order.machinemodel == machineModel}">selected</c:if>>${machineModel}</option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">

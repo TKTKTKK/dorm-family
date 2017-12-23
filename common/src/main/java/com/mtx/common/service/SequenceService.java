@@ -36,4 +36,11 @@ public class SequenceService {
         String prefix = DateUtils.getDate("yyMMdd");
         return prefix + formatSeq;
     }
+
+    public String getTrainSeqNo() {
+        Integer seq = sequenceMapper.selectNextVal("MTX_TRAIN");
+        String formatSeq = StringUtils.leftPad(seq.toString(),8,"0");
+        String prefix = DateUtils.getDate("yyMMdd");
+        return prefix + formatSeq;
+    }
 }

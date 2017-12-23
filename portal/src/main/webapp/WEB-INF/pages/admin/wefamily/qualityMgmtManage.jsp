@@ -31,6 +31,16 @@
                               id="searchForm">
                             <div class="row">
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <select class="form-control" name="merchantid" id="merchantid" <shiro:hasAnyRoles name="MERCHANT_MANAGER,MTX_MAINTAIN_WORKER,MTX_REPAIR_WORKER,MTX_TRAIN_WORKER">data-required="true"</shiro:hasAnyRoles>>
+                                        <c:if test="${fn:length(merchantList) > 1}">
+                                            <option value="">经销商</option>
+                                        </c:if>
+                                        <c:forEach items="${merchantList}" var="merchant">
+                                            <option value="${merchant.uuid}" <c:if test="${qualityMgmt.merchantid == merchant.uuid}">selected="selected"</c:if>>${merchant.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <input type="text" class="form-control" id="snno" name="snno" onblur="trimText(this)" value="${qualityMgmt.snno}"
                                            <c:if test="${type eq 'REPAIR'}">placeholder="报修编号"</c:if>
                                            <c:if test="${type eq 'MAINTAIN'}">placeholder="保养编号"</c:if>

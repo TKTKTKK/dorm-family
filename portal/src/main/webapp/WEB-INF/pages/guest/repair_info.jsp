@@ -12,6 +12,10 @@
     <meta http-equiv="x-dns-prefetch-control" content="on">
     <title>报修</title>
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
+    <link rel="stylesheet" href="${ctx}/static/guest/css/normalize3.0.2.min.css" />
+    <link rel="stylesheet" href="${ctx}/static/guest/css/style.css?v=7" />
+    <link href="${ctx}/static/guest/css/mobiscroll.css" rel="stylesheet" />
+    <link href="${ctx}/static/guest/css/mobiscroll_date.css" rel="stylesheet" />
     <style>
         .goal_total{padding-left: 1.25rem;border-bottom: 1px solid rgba(0,0,0,0.1);font-size: 1.6rem;color: #333;background-color: #fff;position: relative;padding: 1.17rem 2rem 1.17rem 1.25rem;margin-top: 1rem;}
         .goal_total:nth-of-type(even) span{border-left: 4px solid #ff9933;padding-left: 1.25rem;}
@@ -65,18 +69,19 @@
         }
         #qualityMgmtImgContainer{display: inline-block;vertical-align: middle}
         #qualityMgmtImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 2rem}
-        #qualityMgmtImgContainer img{width: 4.5rem;height: 4.5rem;margin:1rem}
+        #qualityMgmtImgContainer img{width: 64px;height: 64px;margin:1rem;max-width: none}
         .my-display-inline-box{width: auto}
         .required{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
         .maxlength{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
         .hidden{display: none}
+        #productiondt{width: auto;height: auto}
     </style>
 </head>
 <body>
     <div class="head">
         <a class="back" href="${ctx}/guest/member/repair_list"></a>
         <span>报修</span>
-        <img src="../../../static/guest/img/sao.png" alt="">
+        <img src="../../../static/guest/img/sao.png" alt="" onclick="scan()">
     </div>
 
         <form class="form-horizontal form-bordered" data-validate="parsley"
@@ -100,7 +105,7 @@
                 </li>
                 <li>
                     <span>生产日期<a class="dataRequired">*</a></span>
-                    <input class="Wdate" type="text" name="productiondt" id="productiondt" value="${qualityMgmt.productiondt}" onClick="WdatePicker()"
+                    <input class="input" type="text" name="productiondt" id="productiondt" value="${qualityMgmt.productiondt}" readonly
                            data-required="true" placeholder="请选择生产日期" data-maxlength="23" onblur="trimText(this)">
                 </li>
                 <li style="display: flex;display: -webkit-flex;">
@@ -173,9 +178,12 @@
 
 <script src="${ctx}/static/admin/js/lrz/dist/lrz.bundle.js"></script>
 <script type="text/javascript" src="${ctx}/static/admin/geo.js"></script>
-<script src="${ctx}/static/admin/js/calendar/WdatePicker.js"></script>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script type="text/javascript" src="${ctx}/static/admin/js/myScript.js"></script>
+<script src="${ctx}/static/js/mobiscroll_date.js" charset="gb2312"></script>
+<script src="${ctx}/static/js/mobiscroll.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="${ctx}/static/js/wechatUtil.js?20171201"></script>
 <script type="text/javascript">
 
     var errorMessage = document.getElementById("errorMessage");
@@ -186,6 +194,28 @@
             obj.value = obj.value.replace(/(^\s*)|(\s*$)/g, "");
         }
     }
+
+    $(function () {
+        var currYear = (new Date()).getFullYear();
+        var opt={};
+        opt.date = {preset : 'date'};
+        opt.datetime = {preset : 'datetime'};
+        opt.time = {preset : 'time'};
+        opt.default = {
+            theme: 'android-ics light', //皮肤样式
+            display: 'modal', //显示方式
+            mode: 'scroller', //日期选择模式
+            dateFormat: 'yyyy-mm-dd',
+            lang: 'zh',
+            showNow: true,
+            nowText: "返回今天",
+            startYear: currYear - 100, //开始年份
+            endYear: currYear + 100 //结束年份
+        };
+
+        $("#productiondt").mobiscroll($.extend(opt['date'], opt['default']));
+
+    });
 
     function submitRepairInfo(){
         var machinemodelError = '';
@@ -218,7 +248,7 @@
             var searchForm = document.getElementById("frm");
             searchForm.submit();
         }else{
-            errorMessage.innerHTML = "请将信息填写完整!";
+            errorMessage.innerHTML = machinemodelError+machinenoError+enginenoError+productiondtError+contentError;
             $(".choose").css("display","block");
         }
     }
@@ -236,6 +266,19 @@
             compressUploadPicture(document.getElementById("qualityMgmtImg"));
         }
     });
+
+    function scan(){
+        wechatUtil.scanQRCode({
+                    success : function(res){
+                        var paramArr = wechatUtil.handleScanResult(res.resultStr);
+                        $("#machinemodel").val(paramArr[0]);
+                        $("#machineno").val(paramArr[1]);
+                        $("#engineno").val(paramArr[2]);
+                        $("#productiondt").val(paramArr[3]);
+                    }
+                }
+        );
+    }
 
 
 

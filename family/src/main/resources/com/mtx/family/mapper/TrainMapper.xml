@@ -10,6 +10,12 @@
         from tb_mtx_train mt
         where
         1=1
+        <if test="train.merchantid != null and train.merchantid != ''">
+            and mt.merchantid = #{train.merchantid}
+        </if>
+        <if test="train.snno != null and train.snno != ''">
+            and mt.snno  like concat("%",#{train.snno},"%")
+        </if>
         <if test="train.machinemodel != null and train.machinemodel != ''">
             and mt.machinemodel = #{train.machinemodel}
         </if>
@@ -35,6 +41,12 @@
     <select id="selectTrainListForPhone" resultMap="selectResultMap">
         select mt.*
         from tb_mtx_train mt
+        inner join tb_mtx_merchant mm on mt.merchantid = mm.uuid
+        and   mm.uuid  in
+        <foreach item="item" index="index" collection="merchantList" open="("
+                 separator="," close=")">
+            #{item.uuid}
+        </foreach>
         order by mt.modifyon desc
     </select>
 

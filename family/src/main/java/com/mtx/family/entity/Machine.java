@@ -35,6 +35,11 @@ public class Machine extends BaseEntity {
     private String format;
     @Column
     private Double price;
+    @Column
+    private String remarks;
+
+
+    private String orderno;
 
     public String getType() {
         return type;
@@ -130,5 +135,21 @@ public class Machine extends BaseEntity {
 
     public void setStandardpower(String standardpower) {
         this.standardpower = standardpower;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getOrderno() {
+        return orderno;
+    }
+
+    public void setOrderno(String orderno) {
+        this.orderno = orderno;
     }
 }

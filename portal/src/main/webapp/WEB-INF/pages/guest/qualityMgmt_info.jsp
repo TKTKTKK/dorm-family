@@ -216,7 +216,7 @@
                 <li>
                     <span>现场地点</span>
                     <input type="text"  name="location" id="location" value="${qualityMgmt.location}" data-maxlength="32">
-                    <%--<img src="../../../../static/admin/img/location.png" alt="" style="width: 2rem;height: 2rem">--%>
+                    <%--<img src="../../../../static/guest/img/location.png" alt="" style="width: 2rem;height: 2rem">--%>
                 </li>
                 <li>
                     <span>已作业面积</span>

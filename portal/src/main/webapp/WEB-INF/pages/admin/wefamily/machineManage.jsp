@@ -24,6 +24,10 @@
                               id="searchForm">
                             <div class="row">
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <input type="text" class="form-control" id="orderno" name="orderno" onblur="trimText(this)" value="${machine.orderno}"  placeholder="订单号"/>
+                                </div>
+
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <input type="text" class="form-control" id="machineno" name="machineno" onblur="trimText(this)" value="${machine.machineno}"  placeholder="机器号"/>
                                 </div>
 
@@ -69,6 +73,7 @@
 
                                     <thead>
                                     <tr>
+                                        <th class="text-center">订单号</th>
                                         <th class="text-center">机器名称</th>
                                         <th class="text-center">机器型号</th>
                                         <th class="text-center">机器号</th>
@@ -80,6 +85,9 @@
                                     <tbody>
                                     <c:forEach items="${machineList}" var="machine">
                                         <tr>
+                                            <td>
+                                                    ${machine.orderno}
+                                            </td>
                                             <td>
                                                     ${machine.machinename}
                                             </td>

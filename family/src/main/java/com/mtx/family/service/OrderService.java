@@ -36,12 +36,12 @@ public class OrderService extends BaseService<OrderMapper,Order> {
         return this.mapper.selectOrderForSnnoRepeat(order);
     }
 
-    public PageList<Order> queryOrderList(Order order, String startTime, String endTime, PageBounds pageBounds) {
-        return this.mapper.selectOrderList(order,startTime,endTime,pageBounds);
+    public PageList<Order> queryOrderList(Order order, String ifHqUser, String startTime, String endTime, PageBounds pageBounds) {
+        return this.mapper.selectOrderList(order,ifHqUser,startTime,endTime,pageBounds);
     }
 
     public int sendOrder(Order order) {
-        order.setStatus("OUT");
+        order.setStatus("NEW");
         this.mapper.updatePartial(order);
         return 1;
     }
@@ -66,13 +66,20 @@ public class OrderService extends BaseService<OrderMapper,Order> {
                 tempOrder = this.mapper.retrieveByPk(tempOrder);
                 returnMsg = "机器已在订单"+tempOrder.getSnno()+"内！";
             }else{
+                machine = machineList.get(0);
                 machine.setOrderid(orderId);
                 machineMapper.updatePartial(machine);
             }
         }else{
             machine.setOrderid(orderId);
+            machine.setType("MACHINE");
             machineMapper.insert(machine);
         }
+        Order order = new Order();
+        order.setUuid(orderId);
+        order = this.mapper.retrieveByPk(order);
+        order.setStatus("INPLAN");
+        this.mapper.updatePartial(order);
 
         return returnMsg;
 
@@ -107,7 +114,13 @@ public class OrderService extends BaseService<OrderMapper,Order> {
     }
 
     public int finishOrder(Order order) {
-        order.setStatus("FINISH");
+        order.setStatus("FILED");
+        this.mapper.updatePartial(order);
+        return 1;
+    }
+
+    public int finishAddMachine(Order order) {
+        order.setStatus("INLOGISTICS");
         this.mapper.updatePartial(order);
         return 1;
     }

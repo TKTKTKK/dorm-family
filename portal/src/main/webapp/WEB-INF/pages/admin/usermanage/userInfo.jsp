@@ -133,6 +133,17 @@
                                         </c:if>
                                         <span id="usernameError" class="text-danger"></span>
                                     </div>
+                                    <c:if test="${empty platformUser.uuid}">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label"><span class="text-danger">*</span>密码：</label>
+                                                <div class="col-sm-9  b-l bg-white">
+                                                    <input type="password" class="form-control" data-required="true" name="inputPassword" id="inputPassword"
+                                                           data-maxlength="30" onblur="checkInputPassword(this.value)"/>
+                                                    <span id="inputPasswordError" class="text-danger"></span>
+                                                </div>
+
+                                        </div>
+                                    </c:if>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label"><span class="text-danger">*</span>姓名：</label>
                                         <div class="col-sm-9  b-l bg-white">
@@ -446,7 +457,7 @@
                                 <label class="col-sm-3 control-label">密码：</label>
                                 <div class="col-sm-9">
                                     <input type="password" style="margin-top: 12px;" class="form-control"  name="password" id="password" data-maxlength="30"
-                                           onblur="checkPassword(this.value)" value=""/>
+                                           value=""/>
                                 </div>
                             </div>
                             <div class="row">
@@ -582,6 +593,18 @@
             }
 
         }
+
+        function checkInputPassword(userPassword){
+            var passwordError = document.getElementById("inputPasswordError");
+            passwordError.innerText = "";
+            var pwdRes = /^[A-Za-z0-9_#@]{6,16}$/;
+            if(!pwdRes.test(userPassword)){
+                passwordError.innerText = "该项只能输入字母、数字及特殊符号（_#@），且只能输入6-16位";
+                return false;
+            }
+            return true;
+        }
+
         //验证密码合法性
         function checkPassword(userPassword){
             var passwordError = document.getElementById("passwordError");
