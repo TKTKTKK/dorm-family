@@ -89,6 +89,8 @@ public class WeFamilyController extends BaseAdminController {
     private MtxExchangeRecordService mtxExchangeRecordService;
     @Autowired
     private MtxUserMachineService mtxUserMachineService;
+    @Autowired
+    private MtxActivityService mtxActivityService;
 
     /**
      * 经销商管理界面
@@ -2033,5 +2035,98 @@ public class WeFamilyController extends BaseAdminController {
             model.addAttribute("mtxUserMachine",mtxUserMachine);
         }
         return "admin/wefamily/mtxUserMachineManage";
+    }
+
+    /**
+     * 活动管理
+     */
+    @RequestMapping(value = "/mtxActivityManage")
+    public String mtxActivityManage(@RequestParam(required = false, defaultValue = "1") int page, MtxActivity activity, Model model, HttpServletRequest request) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
+        if (null != wechatBinding) {
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            activity.setBindid(UserUtils.getUserBindId());
+            PageList<MtxActivity> activityList = mtxActivityService.queryForListWithPagination(activity, pageBounds);
+            model.addAttribute("activityList", activityList);
+            model.addAttribute("activity",activity);
+        }
+        String successFlag=request.getParameter("deleteFlag");
+        if("1".equals(successFlag)){
+            model.addAttribute("successFlag","删除成功");
+        }
+        return "admin/wefamily/mtxActivityManage";
+    }
+
+    @RequestMapping(value = "/goMtxActivity", method = RequestMethod.GET)
+    public String goMtxGood(Model model,MtxActivity activity){
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        MtxActivity activityTemp=mtxActivityService.queryForObjectByPk(activity);
+        model.addAttribute("activity",activityTemp);
+        return "admin/wefamily/mtxActivityInfo";
+    }
+
+    @RequestMapping(value = "/updateMtxActivity",method = RequestMethod.POST)
+    public String updateMtxActivity(MtxActivity activity, RedirectAttributes redirectAttributes, Model model,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
+        String[] detailImgs = request.getParameterValues("detailImg");
+        if (StringUtils.isBlank(activity.getUuid())) {
+            activity.setBindid(UserUtils.getUserBindId());
+            mtxActivityService.insert(activity);
+            model.addAttribute("activity", activity);
+            if(detailImgs!=null&&detailImgs.length>0){
+                for(int i=0;i<detailImgs.length;i++){
+                    Attachment attachment=new Attachment();
+                    attachment.setRefid(activity.getUuid());
+                    attachment.setName(detailImgs[i]);
+                    attachmentService.insert(attachment);
+                }
+            }
+            List<Attachment> attachmentList=new ArrayList<Attachment>();
+            attachmentList=getAttachmentByRefid(activity.getUuid());
+            model.addAttribute("attachmentList",attachmentList);
+            model.addAttribute("successMessage", "保存成功！");
+        } else {
+            try {
+                mtxActivityService.updatePartial(activity);
+                MtxActivity activityTemp = mtxActivityService.queryForObjectByPk(activity);
+                model.addAttribute("activity", activityTemp);
+                if(detailImgs!=null&&detailImgs.length>0){
+                    for(int i=0;i<detailImgs.length;i++){
+                        Attachment attachment=new Attachment();
+                        attachment.setRefid(activityTemp.getUuid());
+                        attachment.setName(detailImgs[i]);
+                        attachmentService.insert(attachment);
+                    }
+                }
+                List<Attachment> attachmentList=new ArrayList<Attachment>();
+                attachmentList=getAttachmentByRefid(activityTemp.getUuid());
+                model.addAttribute("attachmentList",attachmentList);
+            } catch (ServiceException e) {
+                logger.error(e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("errorMessage", "数据已修改，请重试！");
+                return "redirect:/admin/wefamily/goMtxActivity?uuid=" + activity.getUuid();
+
+            }
+            model.addAttribute("successMessage", "保存成功！");
+        }
+        return "admin/wefamily/mtxActivityInfo";
+    }
+
+    @RequestMapping(value = "/deleteMtxActivity", method = RequestMethod.POST)
+    @ResponseBody
+    public Map deleteMtxActivity(MtxActivity activity){
+        int deleteFlag=mtxActivityService.delete(activity);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
     }
 }

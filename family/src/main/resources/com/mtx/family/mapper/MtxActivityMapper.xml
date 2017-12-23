@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.family.mapper.MtxActivityMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.family.entity.MtxActivity">
+    </resultMap>
+    <select id="selectMtxActivityList" resultMap="selectResultMap">
+        select ma.*
+        from tb_mtx_activity ma
+        where ma.bindid=#{mtxActivity.bindid}
+        <if test="mtxActivity.merchantid != null and mtxActivity.merchantid != ''">
+            and ma.merchantid =#{mtxActivity.merchantid}
+        </if>
+        <if test="mtxActivity.name != null and mtxActivity.name != ''">
+            and ma.name like concat("%",#{mtxActivity.name},"%")
+        </if>
+        <if test="mtxActivity.status != null and mtxActivity.status != ''">
+            and ma.status =#{mtxActivity.status}
+        </if>
+        <if test="mtxActivity.startdate != null and mtxActivity.startdate != ''">
+            <![CDATA[
+                    and DATE_FORMAT(ma.startdate, '%Y-%m-%d %H:%i:%S')>= #{mtxActivity.startdate}
+            ]]>
+        </if>
+        <if test="mtxActivity.enddate != null and mtxActivity.enddate != ''">
+            <![CDATA[
+                    and DATE_FORMAT(ma.enddate, '%Y-%m-%d %H:%i:%S') <= #{mtxActivity.enddate}
+            ]]>
+        </if>
+        order by ma.modifyon desc;
+    </select>
+</mapper>
