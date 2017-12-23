@@ -16,7 +16,7 @@
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
                 会员中心 /
-                <a href="${ctx}/admin/wefamily/mtxGoodManage">商品管理 </a> /
+                <a href="${ctx}/admin/wefamily/mtxGoodManage">积分商城 </a> /
                 <span class="font-bold  text-shallowred"> 商品详情</span>
             </header>
             <div class="col-sm-12 pos">
@@ -76,6 +76,7 @@
                                            id="value"
                                     ></div>
                                     <span id="imgError" class="text-danger"></span>
+                                    <div><span class="text-danger">图片推荐使用510*510的正方形图片！！！</span></div>
                                     <input type="text" class="hidden" name="img" id="img" value="${mtxProduct.img}">
                                     <div class="hidden" id="imgDiv" style="margin-top: 20px">
                                         <img src="${mtxProduct.img}" width="100" height="100"

@@ -28,7 +28,6 @@
 </head>
 <body>
 <div class="head">
-    <a class="back" href=""></a>
     <span>积分商城</span>
 </div>
 <div class="content">

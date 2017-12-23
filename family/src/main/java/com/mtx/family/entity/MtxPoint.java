@@ -16,6 +16,16 @@ public class MtxPoint extends BaseEntity {
     @Column
     private Integer points;
 
+    private String  type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public Integer getPoints() {
         return points;
     }

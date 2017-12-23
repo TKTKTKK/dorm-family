@@ -25,4 +25,6 @@ public interface MerchantMapper extends BaseMapper<Merchant> {
 
 
     List<Merchant> selectMerchantByMachineInfo(@Param("machine") Machine machine);
+
+    List<String> queryMerchantNameList(@Param("list")List<String> list);
 }

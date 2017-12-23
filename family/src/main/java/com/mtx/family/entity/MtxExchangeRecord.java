@@ -19,10 +19,40 @@ public class MtxExchangeRecord extends BaseEntity {
     private String address;
     @Column
     private String detail;
+    @Column
+    private String status;
+    @Column
+    private String remarks;
 
     private String username;
 
     private String productname;
+
+    private Integer points;
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
     public String getProductname() {
         return productname;

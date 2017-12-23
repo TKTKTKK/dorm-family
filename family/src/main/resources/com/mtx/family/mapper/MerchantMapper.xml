@@ -64,4 +64,13 @@
         and me.type = 'MACHINE'
     </select>
 
+    <select id="queryMerchantNameList" resultType="String">
+        select DISTINCT  mm.name
+        from tb_mtx_merchant mm
+        where mm.uuid in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

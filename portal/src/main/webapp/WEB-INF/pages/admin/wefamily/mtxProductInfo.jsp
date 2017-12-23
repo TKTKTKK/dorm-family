@@ -25,8 +25,9 @@
                     <span class="text-danger">${errorMessage}</span>
                 </div>
                 <form class="form-horizontal form-bordered" data-validate="parsley"
-                      action="" method="POST"
-                      enctype="multipart/form-data" id="frm">
+                      action="${ctx}/admin/wefamily/updateMtxProduct" method="POST"
+                      enctype="multipart/form-data" id="frm"
+                onsubmit="return submitForm()">
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
                             <i class="fa fa-gift"></i>
@@ -61,6 +62,7 @@
                                            id="value"
                                     ></div>
                                     <span id="imgError" class="text-danger"></span>
+                                    <div><span class="text-danger">图片推荐使用510*510的正方形图片！！！</span></div>
                                     <input type="text" class="hidden" name="img" id="img" value="${mtxProduct.img}">
                                     <div class="hidden" id="imgDiv" style="margin-top: 20px">
                                         <img src="${mtxProduct.img}" width="100" height="100"
@@ -138,10 +140,10 @@
                             </div>
                         </div>
                         <div class="panel-footer text-left bg-light lter">
-                            <a onclick="submitForm()"
+                            <button
                                class="btn  btn-submit btn-s-xs " style="color: white">
                                 提交
-                            </a>
+                            </button>
                         </div>
                     </section>
                     <div>
@@ -195,32 +197,37 @@
             return true;
         }
     }
-    function validModelIsExist(){
-        var modelError=document.getElementById("modelError");
-        var uuid='${mtxProduct.uuid}';
-        modelError.innerHTML="";
-        var model=$("#model").val();
-        if(model.length>0){
-            $("#imgStyle").css("border","none");
-            $.post("${ctx}/admin/wefamily/validModelIsExist?model="+model+"&uuid="+uuid,function(data){
-                if(data){
-                    if(validImg()){
-                        var searchForm = document.getElementById("frm");
-                        searchForm.action = "${ctx}/admin/wefamily/updateMtxProduct";
-                        searchForm.submit();
-                    }else{
-                        $("#imgStyle").css("border","1px solid red");
-                    }
-                }else{
-                    modelError.innerHTML="此型号已存在，请换一个试试！"
-                }
-            });
-        }
-    }
+    <%--function validModelIsExist(){--%>
+        <%--var modelError=document.getElementById("modelError");--%>
+        <%--var uuid='${mtxProduct.uuid}';--%>
+        <%--modelError.innerHTML="";--%>
+        <%--var model=$("#model").val();--%>
+        <%--if(model.length>0){--%>
+            <%--$("#imgStyle").css("border","none");--%>
+            <%--$.post("${ctx}/admin/wefamily/validModelIsExist?model="+model+"&uuid="+uuid,function(data){--%>
+                <%--if(data){--%>
+                    <%--if(validImg()){--%>
+                        <%--var searchForm = document.getElementById("frm");--%>
+                        <%--searchForm.action = "${ctx}/admin/wefamily/updateMtxProduct";--%>
+                        <%--searchForm.submit();--%>
+                    <%--}else{--%>
+                        <%--$("#imgStyle").css("border","1px solid red");--%>
+                    <%--}--%>
+                <%--}else{--%>
+                    <%--modelError.innerHTML="此型号已存在，请换一个试试！"--%>
+                <%--}--%>
+            <%--});--%>
+        <%--}--%>
+    <%--}--%>
     function submitForm(){
         $("#frm").parsley("validate");
         if(validateMoney(document.getElementById('price'),'priceError') && $('#frm').parsley().isValid()){
-            validModelIsExist();
+            if(validImg()){
+                return true;
+            }else{
+                $("#imgStyle").css("border","1px solid red");
+                return false;
+            }
         }
     }
 </script>

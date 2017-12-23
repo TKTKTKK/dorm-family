@@ -248,28 +248,36 @@ public class WeFamilyController extends BaseAdminController {
             String filename = UploadUtils.uploadFile(multipartFile, foldername);
             mtxProduct.setImg(filename);
         }
-        if (StringUtils.isBlank(mtxProduct.getUuid())) {
-            mtxProduct.setType("PRODUCT");
-            int p=0;
-            if(mtxProduct.getPrice()!=null){
-                p  = mtxProduct.getPrice().intValue();
-                mtxProduct.setPoints(p);
-            }
-            mxtProductService.insert(mtxProduct);
-            model.addAttribute("mtxProduct", mtxProduct);
-            model.addAttribute("successMessage", "保存成功！");
-        } else {
-            try {
-                mxtProductService.updatePartial(mtxProduct);
-                MtxProduct mtxProductTemp = mxtProductService.queryForObjectByPk(mtxProduct);
-                model.addAttribute("mtxProduct", mtxProductTemp);
-            } catch (ServiceException e) {
-                logger.error(e.getMessage(), e);
-                redirectAttributes.addFlashAttribute("errorMessage", "数据已修改，请重试！");
-                return "redirect:/admin/wefamily/goMtxProduct?uuid=" + mtxProduct.getUuid();
+        if(StringUtils.isNotBlank(mtxProduct.getModel())){
+            Boolean flag=validModelIsExist(mtxProduct.getModel(),mtxProduct.getUuid());
+            if(flag){
+                if (StringUtils.isBlank(mtxProduct.getUuid())) {
+                    mtxProduct.setType("PRODUCT");
+                    int p=0;
+                    if(mtxProduct.getPrice()!=null){
+                        p  = mtxProduct.getPrice().intValue();
+                        mtxProduct.setPoints(p);
+                    }
+                    mxtProductService.insert(mtxProduct);
+                    model.addAttribute("mtxProduct", mtxProduct);
+                    model.addAttribute("successMessage", "保存成功！");
+                } else {
+                    try {
+                        mxtProductService.updatePartial(mtxProduct);
+                        MtxProduct mtxProductTemp = mxtProductService.queryForObjectByPk(mtxProduct);
+                        model.addAttribute("mtxProduct", mtxProductTemp);
+                    } catch (ServiceException e) {
+                        logger.error(e.getMessage(), e);
+                        redirectAttributes.addFlashAttribute("errorMessage", "数据已修改，请重试！");
+                        return "redirect:/admin/wefamily/goMtxProduct?uuid=" + mtxProduct.getUuid();
 
+                    }
+                    model.addAttribute("successMessage", "保存成功！");
+                }
+            }else{
+                model.addAttribute("mtxProduct", mtxProduct);
+                model.addAttribute("errorMessage", "此型号已存在，请换一个试试！");
             }
-            model.addAttribute("successMessage", "保存成功！");
         }
         return "admin/wefamily/mtxProductInfo";
     }
@@ -2109,12 +2117,31 @@ public class WeFamilyController extends BaseAdminController {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         if (null != wechatBinding) {
+            if(StringUtils.isBlank(mtxExchangeRecord.getStatus())){
+                mtxExchangeRecord.setStatus("N_DEAL");
+            }
+            model.addAttribute("status",mtxExchangeRecord.getStatus());
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
             PageList<MtxExchangeRecord> mtxExchangeRecordList = mtxExchangeRecordService.queryForListWithPagination(mtxExchangeRecord, pageBounds);
             model.addAttribute("mtxExchangeRecordList", mtxExchangeRecordList);
             model.addAttribute("mtxExchangeRecord",mtxExchangeRecord);
         }
         return "admin/wefamily/mtxExchangeRecordManage";
+    }
+
+    @RequestMapping(value = "/updateExchangeRecord",method = RequestMethod.POST)
+    public String updateExchangeRecord(MtxExchangeRecord mtxExchangeRecord, RedirectAttributes redirectAttributes) {
+        String remarks=mtxExchangeRecord.getRemarks();
+        mtxExchangeRecord=mtxExchangeRecordService.queryForObjectByPk(mtxExchangeRecord);
+        if(mtxExchangeRecord!=null){
+            mtxExchangeRecord.setRemarks(remarks);
+            mtxExchangeRecord.setStatus("C_DEAL");
+            mtxExchangeRecordService.updatePartial(mtxExchangeRecord);
+            redirectAttributes.addFlashAttribute("successMessage","处理成功！");
+        }else{
+            redirectAttributes.addFlashAttribute("errorMessage","处理失败！");
+        }
+        return "redirect:/admin/wefamily/mtxExchangeRecordManage";
     }
 
     /**

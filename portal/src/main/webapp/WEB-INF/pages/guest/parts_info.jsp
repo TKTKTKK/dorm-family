@@ -74,7 +74,7 @@
             searchForm.action="${ctx}/guest/parts_info";
             searchForm.submit();
         }else{
-            errorMessage.innerHTML="信息不完整或输入有误，请确认后重试！";
+            errorMessage.innerHTML="信息不完整，请确认后重试！";
             $(".choose").css("display","block");
         }
     }

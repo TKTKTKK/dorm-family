@@ -60,8 +60,9 @@
         <div class="address">
             <select name="address">
                 <option value="">全部</option>
-                <option id="123" value="123">12311111111111111</option>
-                <option id="456" value="456">45611111111111</option>
+                <c:forEach var="merchant" items="${merchantList}">
+                    <option value="${merchant}">${merchant}</option>
+                </c:forEach>
             </select>
         </div>
     </li>
@@ -106,7 +107,7 @@
                 searchForm.submit();
             }
         }else{
-            errorMessage.innerHTML="信息不完整或输入有误，请确认后重试！";
+            errorMessage.innerHTML="信息不完整或输入有误！";
             $(".choose").css("display","block");
         }
     }

@@ -35,7 +35,18 @@
                                                onblur="trimText(this)" value="${wpUser.contactno}">
                                     </div>
                                 </div>
-                                <div class="col-sm-4 text-center text-white">
+                                <div class="col-sm-4">
+                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 是否注册：</label>
+                                    <div class="col-sm-7  my-display-inline-box">
+                                            <select name="ifauth" id="ifauth" class="form-control">
+                                            <option value="">请选择</option>identify
+                                            <option value="Y" <c:if test="${wpUser.ifauth eq 'Y'}">selected</c:if>>是</option>
+                                            <option value="N" <c:if test="${wpUser.ifauth eq 'N'}">selected</c:if>>否</option>
+                                            </select>
+                                    </div>
+                                </div>
+                                <div style="clear: both"></div>
+                                <div class="row col-sm-12 text-center text-white" style="margin-top: 20px">
                                     <a type="submit"  class="btn btn-submit btn-s-xs"
                                        onclick="searchWpUser()"
                                        id="searchBtn" style="color: #fff">查 询</a>
@@ -50,13 +61,14 @@
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
                                     <tr>
-                                        <th width="15%">姓名</th>
-                                        <th width="15%">手机号</th>
+                                        <th width="12%">姓名</th>
+                                        <th width="13%">手机号</th>
                                         <th width="15%">详细地址</th>
                                         <th width="10%">微信昵称</th>
                                         <th width="15%">微信头像</th>
                                         <th width="10%">积分</th>
-                                        <th width="20%">操作</th>
+                                        <th width="10%">是否注册</th>
+                                        <th width="15%">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -79,6 +91,16 @@
                                             </td>
                                             <td>
                                                     ${wpUser.points}
+                                            </td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${wpUser.ifauth eq 'Y'}">
+                                                        是
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        否
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </td>
                                             <td>
                                                 <a href="${ctx}/admin/wefamily/goWpUser?uuid=${wpUser.uuid}"

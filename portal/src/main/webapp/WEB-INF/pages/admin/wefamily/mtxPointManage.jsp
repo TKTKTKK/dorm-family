@@ -35,7 +35,18 @@
                                                onblur="trimText(this)" value="${mtxPoint.phone}">
                                     </div>
                                 </div>
-                                <div class="col-sm-4 text-center text-white">
+                                <div class="col-sm-4">
+                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 类型：</label>
+                                    <div class="col-sm-7  my-display-inline-box">
+                                        <select name="type" id="type" class="form-control">
+                                            <option value="">请选择</option>identify
+                                            <option value="Y" <c:if test="${mtxPoint.type eq 'Y'}">selected</c:if>>购买</option>
+                                            <option value="N" <c:if test="${mtxPoint.type eq 'N'}">selected</c:if>>兑换</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="clear: both"></div>
+                                <div class="row col-sm-12 text-center text-white" style="margin-top: 20px">
                                     <a type="submit"  class="btn btn-submit btn-s-xs"
                                        onclick="searchMtxPoint()"
                                        id="searchBtn" style="color: #fff">查 询</a>
@@ -67,6 +78,14 @@
                                                     ${mtxPoint.phone}
                                             </td>
                                             <td>
+                                                    <c:choose>
+                                                        <c:when test="${mtxPoint.points>=0}">
+                                                            购买
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            兑换
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                     ${mtxPoint.name}
                                             </td>
                                             <td>

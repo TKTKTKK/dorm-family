@@ -45,5 +45,12 @@
     </p>
     <div class="detail">${mtxProduct.detail}</div>
 </div>
+<span  class="fixsubmit" onclick="exchange('${mtxProduct.uuid}')" >兑换</span>
 </body>
+<script src="${ctx}/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    function exchange(uuid){
+        window.location.href="${ctx}/guest/exchange?uuid="+uuid;
+    }
+</script>
 </html>

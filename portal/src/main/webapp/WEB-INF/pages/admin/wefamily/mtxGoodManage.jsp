@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            会员中心 / <span class="font-bold  text-shallowred"> 商品管理</span>
+            会员中心 / <span class="font-bold  text-shallowred">积分商城</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
