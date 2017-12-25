@@ -19,6 +19,8 @@ public class MtxActivity extends BaseEntity {
     @Column
     private String enddate;
     @Column
+    private String img;
+    @Column
     private String detail;
     @Column
     private String status;
@@ -26,6 +28,14 @@ public class MtxActivity extends BaseEntity {
     private String address;
     @Column
     private String password;
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public String getBindid() {
         return bindid;

@@ -66,6 +66,45 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <div class="col-sm-3 control-label"><span class="text-danger">*</span>主题图片：</div>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <div id="imgStyle" style="width: 265px">
+                                        <input type="file" name="imgfile" id="imgfile" class="filestyle"  data-icon="false" data-classButton="btn btn-default"
+                                               data-classInput="form-control inline v-middle input-s"
+                                               id="value"
+                                        ></div>
+                                    <span id="imgError" class="text-danger"></span>
+                                    <div><span class="text-danger">图片推荐使用510*510的正方形图片！！！</span></div>
+                                    <input type="text" class="hidden" name="img" id="img" value="${activity.img}">
+                                    <div class="hidden" id="imgDiv" style="margin-top: 20px">
+                                        <img src="${activity.img}" width="100" height="100"
+                                             data-toggle="modal" data-target=".bs-example-modal-lg1"
+                                             class="hover-pointer">
+                                    </div>
+
+
+                                    <!-- /.modal -->
+                                    <div class="modal fade bs-example-modal-lg1" tabindex="-1" role="dialog" aria-labelledby="myLargePicModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" id="modelPicCloseBtn"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                    <h4 class="modal-title" id="myLargePicModalLabel">大图</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <img src="${activity.img}" width="100%" height="100%" id="showLargePic"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!-- /.modal-content -->
+                                        </div><!-- /.modal-dialog -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <div class="col-sm-3 control-label"><span class="text-danger">*</span>开始时间：</div>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input class="input-sm form-control" type="text"
@@ -282,7 +321,7 @@
     window.onload = function () {
         //显示父菜单
         showParentMenu('活动中心');
-        if(${mtxProduct.img!=null && mtxProduct.img!=''}){
+        if(${activity.img!=null && activity.img!=''}){
             $('#imgDiv').removeClass('hidden');
         }
     }
@@ -302,7 +341,7 @@
     }
     function submitForm(){
         $("#frm").parsley("validate");
-        if($('#frm').parsley().isValid()&&compareBeginEndDate("startdate", "enddate", "dateError")){
+        if($('#frm').parsley().isValid()&&compareBeginEndDate("startdate", "enddate", "dateError")&&validImg()){
             var searchForm = document.getElementById("frm");
             searchForm.action = "${ctx}/admin/wefamily/updateMtxActivity";
             searchForm.submit();
