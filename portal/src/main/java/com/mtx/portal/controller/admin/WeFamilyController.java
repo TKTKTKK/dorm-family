@@ -1622,6 +1622,7 @@ public class WeFamilyController extends BaseAdminController {
                 if(null != merchant){
                     qualityMgmt.setMerchantid(merchant.getUuid());
                     qualityMgmtService.updatePartial(qualityMgmt);
+                    qualityMgmt.setVersionno(qualityMgmt.getVersionno()+1);
                 }
             }
             model.addAttribute("qualityMgmt",qualityMgmt);
