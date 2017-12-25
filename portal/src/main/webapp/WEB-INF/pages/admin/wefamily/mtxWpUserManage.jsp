@@ -29,13 +29,20 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 电话：</label>
+                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 手机号：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <input type="text" class="form-control" name="contactno" id="contactno" data-maxlength="90"
                                                onblur="trimText(this)" value="${wpUser.contactno}">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
+                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span>地址：</label>
+                                    <div class="col-sm-7  my-display-inline-box">
+                                        <input type="text" class="form-control" name="address" id="address" data-maxlength="256"
+                                               onblur="trimText(this)" value="${wpUser.address}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4" style="margin-top: 20px">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 是否注册：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                             <select name="ifauth" id="ifauth" class="form-control">
