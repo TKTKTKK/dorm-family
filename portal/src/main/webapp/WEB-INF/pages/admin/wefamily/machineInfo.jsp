@@ -81,7 +81,7 @@
                                     <label class="col-sm-3  control-label"><span class="text-danger">*</span>生产日期：</label>
                                     <div class="col-sm-9 b-l bg-white">
                                         <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
-                                               name="productiondate" value="${endDateStr}"
+                                               name="productiondate" value="${machine.productiondate}"
                                                data-date-format="yyyy-mm-dd" id="productiondate" placeholder="生产日期">
                                     </div>
                                 </div>
