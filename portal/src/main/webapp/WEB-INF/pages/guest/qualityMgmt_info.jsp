@@ -360,11 +360,11 @@
             });
     }
 
-    wechatUtil.getLocation({
+    /*wechatUtil.getLocation({
         success : function(res){
             alert("latitude : " + res.latitude + " longitude " + res.longitude);
         }
-    });
+    });*/
 
     function reviewMediaShow(obj){
         var reviewMediaClass = $(obj).attr("class");
