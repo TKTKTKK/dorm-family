@@ -52,7 +52,7 @@
         mm.bindid = #{machine.bindid}
         and mm.type='MACHINE'
         <if test="machine.orderno != null and machine.orderno != ''">
-            and mo.orderno like CONCAT('%',#{machine.orderno},'%')
+            and mo.snno like CONCAT('%',#{machine.orderno},'%')
         </if>
         <if test="machine.machineno != null and machine.machineno != ''">
             and mm.machineno like CONCAT('%',#{machine.machineno},'%')

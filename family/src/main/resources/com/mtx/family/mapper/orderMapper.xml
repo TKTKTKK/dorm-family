@@ -33,6 +33,16 @@
         <if test="order.machinemodel != null and order.machinemodel != ''">
             and mo.machinemodel like CONCAT('%',#{order.machinemodel},'%')
         </if>
+        <if test="order.statusArr != null">
+            and mo.status in
+            <foreach item="item" index="index" collection="order.statusArr"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="ifHqUser == 'Y'.toString()">
+            and mo.status != 'UNSUBMIT'
+        </if>
         <if test="startTime != null and startTime != ''">
             <![CDATA[
                               and mo.createon >= #{startTime}
