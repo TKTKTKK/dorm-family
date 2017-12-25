@@ -36,17 +36,33 @@
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>经销商：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <select class="form-control" id="merchantid" name="merchantid" data-required="true">
-                                        <option value="">--全部--</option>
-                                        <c:forEach items="${merchantList}" var="merchant">
-                                            <c:if test="${merchant.uuid == activity.merchantid}">
-                                                <option value="${merchant.uuid}" selected>${merchant.name}</option>
-                                            </c:if>
-                                            <c:if test="${merchant.uuid != activity.merchantid}">
-                                                <option value="${merchant.uuid}">${merchant.name}</option>
-                                            </c:if>
-                                        </c:forEach>
-                                    </select>
+                                    <c:choose>
+                                        <c:when test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                            <input class="form-control hidden" type="text" name="merchantid" value="${activity.merchantid}"
+                                                   id="merchantid"
+                                                   data-required="true">
+                                            <input class="form-control" type="text"
+                                                    <c:forEach items="${merchantList}" var="merchant">
+                                                        <c:if test="${merchant.uuid == activity.merchantid}">
+                                                           value="${merchant.name}"
+                                                        </c:if>
+                                                    </c:forEach>
+                                                   disabled>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <select class="form-control" id="merchantid" name="merchantid" data-required="true">
+                                                <option value="">--全部--</option>
+                                                <c:forEach items="${merchantList}" var="merchant">
+                                                    <c:if test="${merchant.uuid == activity.merchantid}">
+                                                        <option value="${merchant.uuid}" selected>${merchant.name}</option>
+                                                    </c:if>
+                                                    <c:if test="${merchant.uuid != activity.merchantid}">
+                                                        <option value="${merchant.uuid}">${merchant.name}</option>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </select>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -54,6 +70,9 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <input class="form-control" type="text" name="name" value="${activity.name}"
                                            id="name" data-maxlength="64"
+                                            <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                               disabled
+                                            </c:if>
                                            data-required="true">
                                 </div>
                             </div>
@@ -62,21 +81,29 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <input class="form-control" type="text" name="address" value="${activity.address}"
                                            id="address" data-maxlength="90"
+                                    <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                           disabled
+                                    </c:if>
                                            data-required="true">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-3 control-label"><span class="text-danger">*</span>主题图片：</div>
                                 <div class="col-sm-9 b-l bg-white">
+                                    <c:if test="${activity.status eq 'INIT'||activity.status eq ''||activity.status eq null}">
                                     <div id="imgStyle" style="width: 265px">
                                         <input type="file" name="imgfile" id="imgfile" class="filestyle"  data-icon="false" data-classButton="btn btn-default"
                                                data-classInput="form-control inline v-middle input-s"
                                                id="value"
                                         ></div>
                                     <span id="imgError" class="text-danger"></span>
-                                    <div><span class="text-danger">图片推荐使用510*510的正方形图片！！！</span></div>
+                                    </c:if>
                                     <input type="text" class="hidden" name="img" id="img" value="${activity.img}">
-                                    <div class="hidden" id="imgDiv" style="margin-top: 20px">
+                                    <div class="hidden" id="imgDiv"
+                                    <c:if test="${activity.status eq 'INIT'||activity.status eq ''||activity.status eq null}">
+                                        style="margin-top: 20px"
+                                            </c:if>
+                                         >
                                         <img src="${activity.img}" width="100" height="100"
                                              data-toggle="modal" data-target=".bs-example-modal-lg1"
                                              class="hover-pointer">
@@ -111,6 +138,9 @@
                                            name="startdate"
                                            data-date-format="yyyy-mm-dd hh:ii:00" id="startdate"
                                            size="23" data-required="true" readonly
+                                    <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                           disabled
+                                    </c:if>
                                            value="${activity.startdate}"
                                     >
                                     <div class="text-danger" id="dateError">
@@ -124,6 +154,9 @@
                                            name="enddate"
                                            data-date-format="yyyy-mm-dd hh:ii:00" id="enddate"
                                            size="23" data-required="true" readonly
+                                    <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                           disabled
+                                    </c:if>
                                            value="${activity.enddate}"
                                     >
                                 </div>
@@ -133,30 +166,52 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <input class="form-control" type="text" name="password" value="${activity.password}"
                                            id="password" data-maxlength="48"
+                                    <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                           disabled
+                                    </c:if>
                                            data-required="true">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>状态：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <select class="form-control" id="status" name="status" data-required="true">
-                                        <option value="">--全部--</option>
-                                        <c:set var="typeList" value="${web:queryCommonCodeList('ACTIVITY_STATUS')}"></c:set>
-                                        <c:forEach items="${typeList}" var="typeCode">
-                                            <c:if test="${activity.status == typeCode.code}">
-                                                <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
-                                            </c:if>
-                                            <c:if test="${activity.status != typeCode.code}">
-                                                <option value="${typeCode.code}">${typeCode.codevalue}</option>
-                                            </c:if>
-                                        </c:forEach>
-                                    </select>
+                                    <c:choose>
+                                        <c:when test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                            <input class="form-control hidden" type="text" name="status" value="${activity.status}"
+                                                   id="status"
+                                                   data-required="true">
+                                            <c:set var="typeList" value="${web:queryCommonCodeList('ACTIVITY_STATUS')}"></c:set>
+                                            <input class="form-control" type="text"
+                                            <c:forEach items="${typeList}" var="typeCode">
+                                                <c:if test="${activity.status == typeCode.code}">
+                                                    value="${typeCode.codevalue}"
+                                                </c:if>
+                                            </c:forEach>
+                                                   disabled>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <select class="form-control" id="status" name="status" data-required="true">
+                                                <option value="">--全部--</option>
+                                                <c:set var="typeList" value="${web:queryCommonCodeList('ACTIVITY_STATUS')}"></c:set>
+                                                <c:forEach items="${typeList}" var="typeCode">
+                                                    <c:if test="${activity.status == typeCode.code}">
+                                                        <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
+                                                    </c:if>
+                                                    <c:if test="${activity.status != typeCode.code}">
+                                                        <option value="${typeCode.code}">${typeCode.codevalue}</option>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </select>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><span class="text-danger">*</span>活动详情：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <textarea  class="form-control" data-required="true" name="detail" style="width:300px; height:100px;" data-maxlength="256">${activity.detail}</textarea>
+                                    <textarea  class="form-control" data-required="true" <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                        disabled
+                                    </c:if> name="detail" style="width:300px; height:100px;" data-maxlength="256">${activity.detail}</textarea>
                                 </div>
                             </div>
                             <div id="ActivityImg" class="hidden">
@@ -198,64 +253,19 @@
                                     <div class="col-sm-9 b-l bg-white">
                                         <label class="checkbox m-n">
                                             <input type="checkbox" name="sltAll" id="sltAll" style="width: 20px;height: 20px"
+                                                   <c:if test="${activity.status eq 'APP'}">disabled</c:if>
                                                    onclick="selectAllOrNone('users','sltAll')"><i></i>
                                         </label>
                                         <br/>
-                                        <label class="checkbox m-n col-sm-4">
-                                            <input type="checkbox" name="users" value="${userall.uuid}"
-                                                   onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
-                                            ><i></i><span style="font-size: 1.8rem">何世玉</span>
-                                        </label>
-                                        <label class="checkbox m-n col-sm-4">
-                                            <input type="checkbox" name="users" value="${userall.uuid}"
-                                                   onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
-                                            ><i></i><span style="font-size: 1.8rem">何世玉</span>
-                                        </label>
-                                        <label class="checkbox m-n col-sm-4">
-                                            <input type="checkbox" name="users" value="${userall.uuid}"
-                                                   onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
-                                            ><i></i><span style="font-size: 1.8rem">何世玉</span>
-                                        </label>
-                                        <label class="checkbox m-n col-sm-4">
-                                            <input type="checkbox" name="users" value="${userall.uuid}"
-                                                   onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
-                                            ><i></i><span style="font-size: 1.8rem">何世玉</span>
-                                        </label>
-                                        <label class="checkbox m-n col-sm-4">
-                                            <input type="checkbox" name="users" value="${userall.uuid}"
-                                                   onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
-                                            ><i></i><span style="font-size: 1.8rem">何世玉</span>
-                                        </label>
-                                        <label class="checkbox m-n col-sm-4">
-                                            <input type="checkbox" name="users" value="${userall.uuid}"
-                                                   onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
-                                            ><i></i><span style="font-size: 1.8rem">何世玉</span>
-                                        </label>
-                                        <label class="checkbox m-n col-sm-4">
-                                            <input type="checkbox" name="users" value="${userall.uuid}"
-                                                   onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
-                                            ><i></i><span style="font-size: 1.8rem">何世玉</span>
-                                        </label>
-                                        <label class="checkbox m-n col-sm-4">
-                                            <input type="checkbox" name="users" value="${userall.uuid}"
-                                                   onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
-                                            ><i></i><span style="font-size: 1.8rem">何世玉</span>
-                                        </label>
-                                        <label class="checkbox m-n col-sm-4">
-                                            <input type="checkbox" name="users" value="${userall.uuid}"
-                                                   onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
-                                            ><i></i><span style="font-size: 1.8rem">何世玉</span>
-                                        </label>
-                                        <label class="checkbox m-n col-sm-4">
-                                            <input type="checkbox" name="users" value="${userall.uuid}"
-                                                   onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
-                                            ><i></i><span style="font-size: 1.8rem">何世玉</span>
-                                        </label>
-                                        <label class="checkbox m-n col-sm-4">
-                                            <input type="checkbox" name="users" value="${userall.uuid}"
-                                                   onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
-                                            ><i></i><span style="font-size: 1.8rem">何世玉</span>
-                                        </label>
+                                        <c:forEach items="${participantList}" var="participant">
+                                            <label class="checkbox m-n col-sm-4">
+                                                <input type="checkbox" name="users" value="${participant.userid}"
+                                                       onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
+                                                       <c:if test="${participant.status eq 'WAIT_WIN' || participant.status eq 'WIN'}">checked</c:if>
+                                                       <c:if test="${activity.status eq 'APP'}">disabled</c:if>
+                                                ><i></i><img src="${participant.headimg}" style="border-radius:25px;" width="30px" height="30px" alt=""><span style="font-size: 1.8rem">${participant.name}</span>
+                                            </label>
+                                        </c:forEach>
                                     </div>
                                 </div>
                             </div>
@@ -263,11 +273,17 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><span class="text-danger"></span>中奖人员名单：</label>
                                     <div class="col-sm-9 b-l bg-white">
-                                        <label class="col-sm-4 text-danger" style="font-size: 1.8rem">何世玉</label>
-                                        <label class="col-sm-4 text-danger" style="font-size: 1.8rem">何世玉</label>
-                                        <label class="col-sm-4 text-danger" style="font-size: 1.8rem">何世玉</label>
-                                        <label class="col-sm-4 text-danger" style="font-size: 1.8rem">何世玉</label>
-                                        <label class="col-sm-4 text-danger" style="font-size: 1.8rem">何世玉</label>
+                                        <c:if test="${fn:length(winList)>0}">
+                                            <c:forEach items="${winList}" var="participant">
+                                                <c:if test="${participant.status eq 'WIN'}">
+                                                    <label class="col-sm-4 text-danger" style="font-size: 1.8rem">
+                                                        <img src="${participant.headimg}" style="border-radius:25px;" width="30px" height="30px" alt="">${participant.name}</label>
+                                                </c:if>
+                                            </c:forEach>
+                                        </c:if>
+                                        <c:if test="${fn:length(winList)<=0}">
+                                            <input class="form-control" type="text" value="暂无中奖记录" disabled>
+                                        </c:if>
                                     </div>
                                 </div>
                             </div>
@@ -281,7 +297,6 @@
                             <div class="modal fade bs-example-modal-lg-image" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
-
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" id="modelCloseBtn"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                             <h4 class="modal-title" id="myLargeModalLabel">大图</h4>
@@ -301,9 +316,18 @@
                             </div>
                         </div>
                         <div class="panel-footer text-left bg-light lter">
-                            <a onclick="submitForm()" class="btn btn-submit btn-s-xs ">
-                                <i class="fa fa-check"></i>&nbsp;提&nbsp;交
-                            </a>
+                            <c:choose>
+                                <c:when test="${activity.status eq 'PENDING'}">
+                                    <a onclick="submitParticipant()" class="btn btn-submit btn-s-xs ">
+                                        <i class="fa fa-check"></i>&nbsp;确&nbsp;定
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a onclick="submitForm()" class="btn btn-submit btn-s-xs ">
+                                        <i class="fa fa-check"></i>&nbsp;提&nbsp;交
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </section>
                     <div>
@@ -330,6 +354,7 @@
         }
         if(${activity.status=='PENDING'}){
             $('#participantid').removeClass('hidden');
+            setTimeout("fmPost()",1000);
         }
         if(${activity.status=='APP'}){
             $('#participantid').removeClass('hidden');
@@ -337,6 +362,52 @@
             $('#ActivityImg').removeClass('hidden');
         }
     }
+    var t=0;
+    function fmPost(){
+        if(compareEndDate('${activity.enddate}',getNowFormatDate())){
+            location.reload(true);
+        }
+    }
+    function compareEndDate(startDateStr, endDateStr) {
+        var starttimes;
+        var arr = startDateStr.split(" ");
+        if (arr != null && arr != '') {
+            var begin = arr[0].split("-");
+            var end = arr[1].split(":");
+            var bgDate = new Date(begin[0], begin[1], begin[2], end[0], end[1], end[2]);
+            starttimes= bgDate.getTime();
+        }
+        var edtimes;
+        var arrs = endDateStr.split(" ");
+        if (arrs != null && arrs != '') {
+            var begins = arrs[0].split("-");
+            var ends = arrs[1].split(":");
+            var edDate = new Date(begins[0], begins[1], begins[2], ends[0], ends[1], ends[2]);
+            edtimes = edDate.getTime();
+        }
+        if (starttimes > edtimes) {
+            return true;
+        }
+        return false;
+    }
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var seperator2 = ":";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+        return currentdate;
+    }
+
     function validImg(){
         var imgError=document.getElementById("imgError");
         imgError.innerHTML="";
@@ -351,13 +422,26 @@
             return true;
         }
     }
+    function validStatus(){
+        if(${activity.status==null || activity.status==''||activity.status=='INIT'}){
+            return validImg();
+        }else{
+            return true;
+        }
+    }
     function submitForm(){
         $("#frm").parsley("validate");
-        if($('#frm').parsley().isValid()&&compareBeginEndDate("startdate", "enddate", "dateError")&&validImg()){
+        if($('#frm').parsley().isValid()&&compareBeginEndDate("startdate", "enddate", "dateError")&&validStatus()){
             var searchForm = document.getElementById("frm");
             searchForm.action = "${ctx}/admin/wefamily/updateMtxActivity";
             searchForm.submit();
         }
+    }
+    function submitParticipant(){
+        var uuid='${activity.uuid}';
+        var searchForm = document.getElementById("frm");
+        searchForm.action = "${ctx}/admin/wefamily/addParticipant?uuid="+uuid;
+        searchForm.submit();
     }
     $('#startdate').datetimepicker({
         weekStart: 1,

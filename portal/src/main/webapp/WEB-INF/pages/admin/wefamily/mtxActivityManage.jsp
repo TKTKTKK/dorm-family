@@ -151,10 +151,18 @@
                                                         <a href="javascript:deleteMtxActivity('${activity.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <a href="${ctx}/admin/wefamily/goMtxActivity?uuid=${activity.uuid}"
-                                                           class="btn  btn-infonew btn-sm" style="color: white;background: mediumpurple;border: 1px solid mediumpurple">
-                                                            详情
-                                                        </a>
+                                                        <c:if test="${activity.status eq 'PENDING'}">
+                                                            <a href="${ctx}/admin/wefamily/goMtxActivity?uuid=${activity.uuid}"
+                                                               class="btn  btn-infonew btn-sm" style="color: white;background: mediumpurple;border: 1px solid mediumpurple">
+                                                                详情
+                                                            </a>
+                                                        </c:if>
+                                                        <c:if test="${activity.status eq 'APP'}">
+                                                            <a href="${ctx}/admin/wefamily/goMtxActivity?uuid=${activity.uuid}"
+                                                               class="btn  btn-infonew btn-sm" style="color: white;background: orange;border: 1px solid orange">
+                                                                详情
+                                                            </a>
+                                                        </c:if>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>

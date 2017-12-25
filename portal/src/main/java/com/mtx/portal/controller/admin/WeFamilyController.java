@@ -90,6 +90,8 @@ public class WeFamilyController extends BaseAdminController {
     private PlatformRoleService platformRoleService;
     @Autowired
     private MtxActivityParticipantService mtxActivityParticipantService;
+    @Autowired
+    private MtxLuckyParticipantService mtxLuckyParticipantService;
 
     /**
      * 经销商管理界面
@@ -2196,6 +2198,22 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("wechatBinding", wechatBinding);
         MtxActivity activityTemp=mtxActivityService.queryForObjectByPk(activity);
         model.addAttribute("activity",activityTemp);
+        MtxActivityParticipant participant=new MtxActivityParticipant();
+        List<MtxActivityParticipant>  participantList=new ArrayList<MtxActivityParticipant>();
+        List<MtxActivityParticipant>  winList=new ArrayList<MtxActivityParticipant>();
+        if(StringUtils.isNotBlank(activity.getUuid())){
+            participant.setActivityid(activity.getUuid());
+            participantList=mtxActivityParticipantService.queryForParticipantList(participant);
+            model.addAttribute("participantList",participantList);
+            if(participantList.size()>0){
+                for(int i=0;i<participantList.size();i++){
+                    if("WIN".equals(participantList.get(i).getStatus())){
+                        winList.add(participantList.get(i));
+                    }
+                }
+            }
+            model.addAttribute("winList",winList);
+        }
         return "admin/wefamily/mtxActivityInfo";
     }
 
@@ -2203,6 +2221,22 @@ public class WeFamilyController extends BaseAdminController {
     public String updateMtxActivity(@RequestParam(value = "imgfile", required = false)MultipartFile multipartFile,MtxActivity activity, RedirectAttributes redirectAttributes, Model model,HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
+        MtxActivityParticipant participant=new MtxActivityParticipant();
+        List<MtxActivityParticipant>  participantList=new ArrayList<MtxActivityParticipant>();
+        List<MtxActivityParticipant>  winList=new ArrayList<MtxActivityParticipant>();
+        if(StringUtils.isNotBlank(activity.getUuid())){
+            participant.setActivityid(activity.getUuid());
+            participantList=mtxActivityParticipantService.queryForParticipantList(participant);
+            model.addAttribute("participantList",participantList);
+            if(participantList.size()>0){
+                for(int i=0;i<participantList.size();i++){
+                    if("WIN".equals(participantList.get(i).getStatus())){
+                        winList.add(participantList.get(i));
+                    }
+                }
+            }
+            model.addAttribute("winList",winList);
+        }
         if(null != multipartFile && !multipartFile.isEmpty()){
             String foldername = "activity";
             String filename = UploadUtils.uploadFile(multipartFile, foldername);
@@ -2261,5 +2295,46 @@ public class WeFamilyController extends BaseAdminController {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("deleteFlag", deleteFlag);
         return resultMap;
+    }
+
+    @RequestMapping(value = "/addParticipant", method = RequestMethod.POST)
+    public String addParticipant(String uuid,String users){
+        if(StringUtils.isNotBlank(uuid)){
+            MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
+            activityParticipant.setActivityid(uuid);
+            List<MtxActivityParticipant> activityParticipantList=mtxActivityParticipantService.queryForList(activityParticipant);
+            if(activityParticipantList.size()>0) {
+                for (int i = 0; i < activityParticipantList.size(); i++) {
+                    activityParticipantList.get(i).setStatus(null);
+                    mtxActivityParticipantService.update(activityParticipantList.get(i));
+                }
+            }
+        }
+        String participant[]=null;
+        List<MtxActivityParticipant> activityParticipantList=new ArrayList<MtxActivityParticipant>();
+        if(StringUtils.isNotBlank(uuid)&&StringUtils.isNotBlank(users)){
+            participant=users.split(",");
+            for(int i=0;i<participant.length;i++){
+                MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
+                activityParticipant.setUserid(participant[i]);
+                activityParticipant.setActivityid(uuid);
+                activityParticipantList=mtxActivityParticipantService.queryForList(activityParticipant);
+                activityParticipant=activityParticipantList.get(0);
+                activityParticipant.setStatus("WAIT_WIN");
+                mtxActivityParticipantService.updatePartial(activityParticipant);
+            }
+        }
+        if(StringUtils.isNotBlank(uuid)&&StringUtils.isBlank(users)){
+            MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
+            activityParticipant.setActivityid(uuid);
+            activityParticipantList=mtxActivityParticipantService.queryForList(activityParticipant);
+            if(activityParticipantList.size()>0) {
+                for (int i = 0; i < activityParticipantList.size(); i++) {
+                    activityParticipantList.get(i).setStatus("WAIT_WIN");
+                    mtxActivityParticipantService.updatePartial(activityParticipantList.get(i));
+                }
+            }
+        }
+        return "redirect:/admin/wefamily/goMtxActivity?uuid="+uuid;
     }
 }

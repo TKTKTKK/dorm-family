@@ -8,7 +8,11 @@ import com.mtx.family.entity.MtxActivityParticipant;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface MtxActivityParticipantMapper extends BaseMapper<MtxActivityParticipant> {
     public PageList<MtxActivityParticipant> selectMtxActivityParticipantList(@Param("mtxActivityParticipant") MtxActivityParticipant MtxActivityParticipant, PageBounds pageBounds);
+
+    List<MtxActivityParticipant> selectWpUserParticipantList(@Param("participant")MtxActivityParticipant participant);
 }

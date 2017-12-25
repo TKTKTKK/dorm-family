@@ -6,8 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Table;
 
 
-@Table(name = "tb_mtx_activity_participant")
-public class MtxActivityParticipant extends BaseEntity {
+@Table(name = "tb_mtx_lucky_participant")
+public class MtxLuckyParticipant extends BaseEntity {
     @Column
     private String userid;
     @Column
