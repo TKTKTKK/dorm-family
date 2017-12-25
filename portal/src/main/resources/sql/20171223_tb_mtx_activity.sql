@@ -26,6 +26,7 @@ CREATE TABLE `tb_mtx_activity_participant` (
   `uuid` varchar(32) NOT NULL,
   `userid` varchar(32) NOT NULL,
   `activityid` varchar(32) NOT NULL,
+  `status` varchar(15) DEFAULT NULL,
   `createon` varchar(23) NOT NULL,
   `createby` varchar(32) NOT NULL,
   `modifyon` varchar(23) NOT NULL,

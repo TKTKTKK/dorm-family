@@ -88,6 +88,8 @@ public class WeFamilyController extends BaseAdminController {
     private MtxActivityService mtxActivityService;
     @Autowired
     private PlatformRoleService platformRoleService;
+    @Autowired
+    private MtxActivityParticipantService mtxActivityParticipantService;
 
     /**
      * 经销商管理界面

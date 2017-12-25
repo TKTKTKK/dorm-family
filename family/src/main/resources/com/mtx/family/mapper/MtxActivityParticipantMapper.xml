@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtx.family.mapper.MtxActivityParticipantMapper">
+
+    <resultMap id="selectResultMap" type="com.mtx.family.entity.MtxActivityParticipant">
+    </resultMap>
+    <select id="selectMtxActivityParticipantList" resultMap="selectResultMap">
+        select * from tb_mtx_activity_participant
+        order by activityid desc;
+    </select>
+</mapper>

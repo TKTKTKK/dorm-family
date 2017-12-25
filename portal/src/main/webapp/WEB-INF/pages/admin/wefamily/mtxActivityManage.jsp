@@ -142,11 +142,21 @@
                                                     ${web:getCodeDesc("ACTIVITY_STATUS", activity.status)}
                                             </td>
                                             <td>
-                                                <a href="${ctx}/admin/wefamily/goMtxActivity?uuid=${activity.uuid}"
-                                                   class="btn  btn-infonew btn-sm" style="color: white">
-                                                    修改
-                                                </a>
-                                                <a href="javascript:deleteMtxActivity('${activity.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
+                                                <c:choose>
+                                                    <c:when test="${activity.status eq 'INIT'}">
+                                                        <a href="${ctx}/admin/wefamily/goMtxActivity?uuid=${activity.uuid}"
+                                                           class="btn  btn-infonew btn-sm" style="color: white">
+                                                            修改
+                                                        </a>
+                                                        <a href="javascript:deleteMtxActivity('${activity.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="${ctx}/admin/wefamily/goMtxActivity?uuid=${activity.uuid}"
+                                                           class="btn  btn-infonew btn-sm" style="color: white;background: mediumpurple;border: 1px solid mediumpurple">
+                                                            详情
+                                                        </a>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </td>
                                         </tr>
                                     </c:forEach>

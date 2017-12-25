@@ -159,7 +159,7 @@
                                     <textarea  class="form-control" data-required="true" name="detail" style="width:300px; height:100px;" data-maxlength="256">${activity.detail}</textarea>
                                 </div>
                             </div>
-                            <div>
+                            <div id="ActivityImg" class="hidden">
                                 <c:if test="${fn:length(attachmentList) < 4}">
                                     <div class="form-group" >
                                         <label class="col-sm-3 control-label">活动图片：</label>
@@ -191,6 +191,8 @@
                                         </div>
                                     </div>
                                 </c:if>
+                            </div>
+                            <div id="participantid" class="hidden">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><span class="text-danger"></span>参加活动人员名单：</label>
                                     <div class="col-sm-9 b-l bg-white">
@@ -199,71 +201,73 @@
                                                    onclick="selectAllOrNone('users','sltAll')"><i></i>
                                         </label>
                                         <br/>
-                                        <label class="checkbox m-n col-sm-6">
+                                        <label class="checkbox m-n col-sm-4">
                                             <input type="checkbox" name="users" value="${userall.uuid}"
                                                    onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
                                             ><i></i><span style="font-size: 1.8rem">何世玉</span>
                                         </label>
-                                        <label class="checkbox m-n col-sm-6">
+                                        <label class="checkbox m-n col-sm-4">
                                             <input type="checkbox" name="users" value="${userall.uuid}"
                                                    onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
                                             ><i></i><span style="font-size: 1.8rem">何世玉</span>
                                         </label>
-                                        <label class="checkbox m-n col-sm-6">
+                                        <label class="checkbox m-n col-sm-4">
                                             <input type="checkbox" name="users" value="${userall.uuid}"
                                                    onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
                                             ><i></i><span style="font-size: 1.8rem">何世玉</span>
                                         </label>
-                                        <label class="checkbox m-n col-sm-6">
+                                        <label class="checkbox m-n col-sm-4">
                                             <input type="checkbox" name="users" value="${userall.uuid}"
                                                    onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
                                             ><i></i><span style="font-size: 1.8rem">何世玉</span>
                                         </label>
-                                        <label class="checkbox m-n col-sm-6">
+                                        <label class="checkbox m-n col-sm-4">
                                             <input type="checkbox" name="users" value="${userall.uuid}"
                                                    onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
                                             ><i></i><span style="font-size: 1.8rem">何世玉</span>
                                         </label>
-                                        <label class="checkbox m-n col-sm-6">
+                                        <label class="checkbox m-n col-sm-4">
                                             <input type="checkbox" name="users" value="${userall.uuid}"
                                                    onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
                                             ><i></i><span style="font-size: 1.8rem">何世玉</span>
                                         </label>
-                                        <label class="checkbox m-n col-sm-6">
+                                        <label class="checkbox m-n col-sm-4">
                                             <input type="checkbox" name="users" value="${userall.uuid}"
                                                    onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
                                             ><i></i><span style="font-size: 1.8rem">何世玉</span>
                                         </label>
-                                        <label class="checkbox m-n col-sm-6">
+                                        <label class="checkbox m-n col-sm-4">
                                             <input type="checkbox" name="users" value="${userall.uuid}"
                                                    onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
                                             ><i></i><span style="font-size: 1.8rem">何世玉</span>
                                         </label>
-                                        <label class="checkbox m-n col-sm-6">
+                                        <label class="checkbox m-n col-sm-4">
                                             <input type="checkbox" name="users" value="${userall.uuid}"
                                                    onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
                                             ><i></i><span style="font-size: 1.8rem">何世玉</span>
                                         </label>
-                                        <label class="checkbox m-n col-sm-6">
+                                        <label class="checkbox m-n col-sm-4">
                                             <input type="checkbox" name="users" value="${userall.uuid}"
                                                    onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
                                             ><i></i><span style="font-size: 1.8rem">何世玉</span>
                                         </label>
-                                        <label class="checkbox m-n col-sm-6">
+                                        <label class="checkbox m-n col-sm-4">
                                             <input type="checkbox" name="users" value="${userall.uuid}"
                                                    onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
                                             ><i></i><span style="font-size: 1.8rem">何世玉</span>
                                         </label>
                                     </div>
                                 </div>
+                            </div>
+                            <div id="achieveid" class="hidden">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><span class="text-danger"></span>中奖人员名单：</label>
                                     <div class="col-sm-9 b-l bg-white">
-                                        <label class="col-sm-3 text-danger" style="font-size: 1.8rem">参加活动人员名单</label>
-                                        <label class="col-sm-3 text-danger" style="font-size: 1.8rem">参加活动人员名单</label>
-                                        <label class="col-sm-3 text-danger" style="font-size: 1.8rem">参加活动人员名单</label>
-                                        <label class="col-sm-3 text-danger" style="font-size: 1.8rem">参加活动人员名单</label>
-                                        <label class="col-sm-3 text-danger" style="font-size: 1.8rem">参加活动人员名单</label>
+                                        <label class="col-sm-4 text-danger" style="font-size: 1.8rem">何世玉</label>
+                                        <label class="col-sm-4 text-danger" style="font-size: 1.8rem">何世玉</label>
+                                        <label class="col-sm-4 text-danger" style="font-size: 1.8rem">何世玉</label>
+                                        <label class="col-sm-4 text-danger" style="font-size: 1.8rem">何世玉</label>
+                                        <label class="col-sm-4 text-danger" style="font-size: 1.8rem">何世玉</label>
                                     </div>
                                 </div>
                             </div>
@@ -323,6 +327,14 @@
         showParentMenu('活动中心');
         if(${activity.img!=null && activity.img!=''}){
             $('#imgDiv').removeClass('hidden');
+        }
+        if(${activity.status=='PENDING'}){
+            $('#participantid').removeClass('hidden');
+        }
+        if(${activity.status=='APP'}){
+            $('#participantid').removeClass('hidden');
+            $('#achieveid').removeClass('hidden');
+            $('#ActivityImg').removeClass('hidden');
         }
     }
     function validImg(){
