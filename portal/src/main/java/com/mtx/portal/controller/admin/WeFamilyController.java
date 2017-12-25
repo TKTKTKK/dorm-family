@@ -2197,9 +2197,14 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     @RequestMapping(value = "/updateMtxActivity",method = RequestMethod.POST)
-    public String updateMtxActivity(MtxActivity activity, RedirectAttributes redirectAttributes, Model model,HttpServletRequest request){
+    public String updateMtxActivity(@RequestParam(value = "imgfile", required = false)MultipartFile multipartFile,MtxActivity activity, RedirectAttributes redirectAttributes, Model model,HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
+        if(null != multipartFile && !multipartFile.isEmpty()){
+            String foldername = "activity";
+            String filename = UploadUtils.uploadFile(multipartFile, foldername);
+            activity.setImg(filename);
+        }
         List<Merchant> merchantList = merchantService.selectMerchantForUser();
         model.addAttribute("merchantList",merchantList);
         String[] detailImgs = request.getParameterValues("detailImg");
