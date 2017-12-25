@@ -570,7 +570,9 @@ public class MtxGuestController extends BaseGuestController{
             }
         }
         List<String> merchantList=new ArrayList<String>();
-        merchantList=merchantService.queryMerchantNameList(merchantidList);
+        if(merchantidList.size()>0){
+            merchantList=merchantService.queryMerchantNameList(merchantidList);
+        }
         model.addAttribute("merchantList",merchantList);
         return "guest/exchange";
     }
