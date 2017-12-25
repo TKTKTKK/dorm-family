@@ -81,6 +81,11 @@
         if('${Flag}'=='1'){
             closeImg();
         }
+        if('${Flag}'=='0'){
+            closeImg();
+            errorMessage.innerHTML="对不起，配件不存在！";
+            $("#chooseClose").css("display","block");
+        }
         if(${partsCenter!=null}){
             $(".content").css("display","block");
             $("#imgid").css("display","block");

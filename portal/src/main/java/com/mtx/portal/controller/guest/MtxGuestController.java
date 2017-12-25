@@ -516,8 +516,10 @@ public class MtxGuestController extends BaseGuestController{
         }//为了区分是机器还是配件
         if(StringUtils.isNotBlank(partsCenter.getUuid())){
             model.addAttribute("partsCenter",partsCenter);
+            model.addAttribute("Flag","1");
+        }else{
+            model.addAttribute("Flag","0");
         }
-        model.addAttribute("Flag","1");
         model.addAttribute("code",code);
         return "guest/parts_center";
     }

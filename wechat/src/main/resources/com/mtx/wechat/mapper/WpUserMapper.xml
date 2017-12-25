@@ -44,6 +44,9 @@
         <if test="wpUser.ifauth != null and wpUser.ifauth != ''">
             and wu.ifauth =#{wpUser.ifauth}
         </if>
+        <if test="wpUser.address != null and wpUser.address != ''">
+            and wu.address like concat("%",#{wpUser.address},"%")
+        </if>
         order by modifyon desc;
     </select>
 </mapper>

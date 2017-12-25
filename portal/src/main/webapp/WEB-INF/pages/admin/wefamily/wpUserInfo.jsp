@@ -133,7 +133,7 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <c:set var="identifyList" value="${web:queryCommonCodeList('IDENTITY_CODE')}"></c:set>
                                     <select name="type" class="form-control" id="type">
-                                        <option value="">请选择你的身份</option>
+                                        <option value="">身份类型</option>
                                         <c:forEach items="${identifyList}" var="commonCode">
                                             <option value="${commonCode.code}"
                                                     <c:if test="${wpUser.type eq commonCode.code}">
