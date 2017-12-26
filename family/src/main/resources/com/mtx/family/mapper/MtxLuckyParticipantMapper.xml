@@ -8,7 +8,7 @@
         select * from tb_mtx_lucky_participant
         order by activityid desc;
     </select>
-    <select id="selectWpUserParticipantList" resultMap="selectResultMap">
+    <select id="queryForLuckyParticipantList" resultMap="selectResultMap">
         select mlp.* ,wu.name as name ,wu.headimgurl as headimg
         from tb_mtx_lucky_participant  mlp
         inner join tb_wp_user wu on wu.uuid=mlp.userid
