@@ -164,6 +164,12 @@
                                                                 详情
                                                             </a>
                                                         </c:if>
+                                                        <c:if test="${activity.status eq 'DRAWING'}">
+                                                            <a href="${ctx}/admin/wefamily/goMtxActivity?uuid=${activity.uuid}"
+                                                               class="btn  btn-infonew btn-sm" style="color: white;background: green;border: 1px solid green">
+                                                                详情
+                                                            </a>
+                                                        </c:if>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>
