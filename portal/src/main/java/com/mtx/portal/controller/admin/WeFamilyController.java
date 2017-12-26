@@ -2213,13 +2213,8 @@ public class WeFamilyController extends BaseAdminController {
             participantList=mtxActivityParticipantService.queryForParticipantList(participant);
             model.addAttribute("participantList",participantList);
             luckyList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant);
-            if(luckyList.size()>0){
-                for(int i=0;i<luckyList.size();i++){
-                    if("WIN".equals(luckyList.get(i).getStatus())){
-                        winList.add(luckyList.get(i));
-                    }
-                }
-            }
+            luckyParticipant.setStatus("WIN");
+            winList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant);
             model.addAttribute("luckyList",luckyList);
             model.addAttribute("winList",winList);
         }
@@ -2236,18 +2231,18 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("wechatBinding", wechatBinding);
         MtxActivityParticipant participant=new MtxActivityParticipant();
         List<MtxActivityParticipant>  participantList=new ArrayList<MtxActivityParticipant>();
-        List<MtxActivityParticipant>  winList=new ArrayList<MtxActivityParticipant>();
+        List<MtxLuckyParticipant>  winList=new ArrayList<MtxLuckyParticipant>();
+        List<MtxLuckyParticipant>  luckyList=new ArrayList<MtxLuckyParticipant>();
+        MtxLuckyParticipant luckyParticipant =new MtxLuckyParticipant();
         if(StringUtils.isNotBlank(activity.getUuid())){
             participant.setActivityid(activity.getUuid());
+            luckyParticipant.setActivityid(activity.getUuid());
             participantList=mtxActivityParticipantService.queryForParticipantList(participant);
             model.addAttribute("participantList",participantList);
-            if(participantList.size()>0){
-                for(int i=0;i<participantList.size();i++){
-                    if("WIN".equals(participantList.get(i).getStatus())){
-                        winList.add(participantList.get(i));
-                    }
-                }
-            }
+            luckyList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant);
+            luckyParticipant.setStatus("WIN");
+            winList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant);
+            model.addAttribute("luckyList",luckyList);
             model.addAttribute("winList",winList);
         }
         if(null != multipartFile && !multipartFile.isEmpty()){

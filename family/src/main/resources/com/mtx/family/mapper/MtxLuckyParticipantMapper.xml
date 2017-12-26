@@ -13,6 +13,9 @@
         from tb_mtx_lucky_participant  mlp
         inner join tb_wp_user wu on wu.uuid=mlp.userid
         where mlp.activityid=#{mtxLuckyParticipant.activityid}
+        <if test="mtxLuckyParticipant.status!=null and mtxLuckyParticipant.status!=''">
+            and mlp.status=#{mtxLuckyParticipant.status}
+        </if>
         order by mlp.createon desc;
     </select>
 </mapper>

@@ -37,7 +37,7 @@
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>经销商：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <c:choose>
-                                        <c:when test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                        <c:when test="${activity.status eq 'PENDING'||activity.status eq 'APP'||activity.status eq 'DRAWING'}">
                                             <input class="form-control hidden" type="text" name="merchantid" value="${activity.merchantid}"
                                                    id="merchantid"
                                                    data-required="true">
@@ -70,7 +70,7 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <input class="form-control" type="text" name="name" value="${activity.name}"
                                            id="name" data-maxlength="64"
-                                            <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                            <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'||activity.status eq 'DRAWING'}">
                                                disabled
                                             </c:if>
                                            data-required="true">
@@ -81,7 +81,7 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <input class="form-control" type="text" name="address" value="${activity.address}"
                                            id="address" data-maxlength="90"
-                                    <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                    <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'||activity.status eq 'DRAWING'}">
                                            disabled
                                     </c:if>
                                            data-required="true">
@@ -138,7 +138,7 @@
                                            name="startdate"
                                            data-date-format="yyyy-mm-dd hh:ii:00" id="startdate"
                                            size="23" data-required="true" readonly
-                                    <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                    <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'||activity.status eq 'DRAWING'}">
                                            disabled
                                     </c:if>
                                            value="${activity.startdate}"
@@ -154,7 +154,7 @@
                                            name="enddate"
                                            data-date-format="yyyy-mm-dd hh:ii:00" id="enddate"
                                            size="23" data-required="true" readonly
-                                    <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                    <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'||activity.status eq 'DRAWING'}">
                                            disabled
                                     </c:if>
                                            value="${activity.enddate}"
@@ -166,7 +166,7 @@
                                 <div class="col-sm-9 b-l bg-white">
                                     <input class="form-control" type="text" name="password" value="${activity.password}"
                                            id="password" data-maxlength="48"
-                                    <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                    <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'||activity.status eq 'DRAWING'}">
                                            disabled
                                     </c:if>
                                            data-required="true">
@@ -176,7 +176,7 @@
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>状态：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <c:choose>
-                                        <c:when test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                        <c:when test="${activity.status eq 'PENDING'||activity.status eq 'APP'||activity.status eq 'DRAWING'}">
                                             <input class="form-control hidden" type="text" name="status" value="${activity.status}"
                                                    id="status"
                                                    data-required="true">
@@ -190,18 +190,11 @@
                                                    disabled>
                                         </c:when>
                                         <c:otherwise>
-                                            <select class="form-control" id="status" name="status" data-required="true">
-                                                <option value="">--全部--</option>
-                                                <c:set var="typeList" value="${web:queryCommonCodeList('ACTIVITY_STATUS')}"></c:set>
-                                                <c:forEach items="${typeList}" var="typeCode">
-                                                    <c:if test="${activity.status == typeCode.code}">
-                                                        <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
-                                                    </c:if>
-                                                    <c:if test="${activity.status != typeCode.code}">
-                                                        <option value="${typeCode.code}">${typeCode.codevalue}</option>
-                                                    </c:if>
-                                                </c:forEach>
-                                            </select>
+                                                    <input class="form-control" type="text" value="未开始"
+                                                           id="status" disabled
+                                                           data-required="true">
+                                                    <input class="form-control hidden" type="text" name="status" value="INIT"
+                                                           data-required="true">
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
@@ -209,7 +202,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><span class="text-danger">*</span>活动详情：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <textarea  class="form-control" data-required="true" <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
+                                    <textarea  class="form-control" data-required="true" <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'||activity.status eq 'DRAWING'}">
                                         disabled
                                     </c:if> name="detail" style="width:300px; height:100px;" data-maxlength="256">${activity.detail}</textarea>
                                 </div>
@@ -220,16 +213,18 @@
                                     <div class="col-sm-9 b-l bg-white">
                                         <label class="checkbox m-n">
                                             <input type="checkbox" name="sltAll" id="sltAll" style="width: 20px;height: 20px"
-                                                   <c:if test="${activity.status eq 'APP'}">disabled</c:if>
+                                                   <c:if test="${activity.status eq 'APP'||activity.status eq 'DRAWING'}">disabled</c:if>
                                                    onclick="selectAllOrNone('users','sltAll')"><i></i>
                                         </label>
                                         <br/>
                                         <c:forEach items="${participantList}" var="participant">
-                                            <label class="checkbox m-n col-sm-4">
+                                            <label class="checkbox m-n col-sm-2">
                                                 <input type="checkbox" name="users" value="${participant.userid}"
                                                        onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
-                                                       <c:if test="${participant.status eq 'WAIT_WIN' || participant.status eq 'WIN'}">checked</c:if>
-                                                       <c:if test="${activity.status eq 'APP'}">disabled</c:if>
+                                                        <c:forEach items="${luckyList}" var="lucky">
+                                                               <c:if test="${lucky.userid eq participant.userid}">checked</c:if>
+                                                        </c:forEach>
+                                                       <c:if test="${activity.status eq 'APP'||activity.status eq 'DRAWING'}">disabled</c:if>
                                                 ><i></i><img src="${participant.headimg}" style="border-radius:25px;" width="30px" height="30px" alt=""><span style="font-size: 1.8rem">${participant.name}</span>
                                             </label>
                                         </c:forEach>
@@ -323,9 +318,11 @@
                                     </a>
                                 </c:when>
                                 <c:otherwise>
+                                    <c:if test="${activity.status ne 'DRAWING'}">
                                     <a onclick="submitForm()" class="btn btn-submit btn-s-xs ">
                                         <i class="fa fa-check"></i>&nbsp;提&nbsp;交
                                     </a>
+                                    </c:if>
                                 </c:otherwise>
                             </c:choose>
                         </div>
@@ -352,7 +349,7 @@
         if(${activity.img!=null && activity.img!=''}){
             $('#imgDiv').removeClass('hidden');
         }
-        if(${activity.status=='PENDING'}){
+        if(${activity.status=='PENDING'||activity.status=='DRAWING'}){
             $('#participantid').removeClass('hidden');
         }
         if(${activity.status=='APP'}){
