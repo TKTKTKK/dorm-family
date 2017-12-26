@@ -214,39 +214,6 @@
                                     </c:if> name="detail" style="width:300px; height:100px;" data-maxlength="256">${activity.detail}</textarea>
                                 </div>
                             </div>
-                            <div id="ActivityImg" class="hidden">
-                                <c:if test="${fn:length(attachmentList) < 4}">
-                                    <div class="form-group" >
-                                        <label class="col-sm-3 control-label">活动图片：</label>
-                                        <div class="col-sm-9  b-l bg-white">
-                                            <div class="my-display-inline-box">
-                                                <div id="detailImgUrlContainer">
-                                                    <input type="file" id="detailImg" name="picUrl" class="filestyle"
-                                                           data-icon="false" data-classButton="btn btn-default"
-                                                           data-classInput="form-control inline v-middle input-xs"
-                                                           onchange="compressUploadPicture(this)" accept="image/*"
-                                                           style="display: none"
-                                                           data-max-count="4">
-                                                    <div id="picUrlError" class="text-danger"></div>
-                                                </div>
-                                                <div id="detailImgContainer" class="row value">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </c:if>
-                                <c:if test="${fn:length(attachmentList) > 0}">
-                                    <div class="form-group" >
-                                        <label class="col-sm-3 control-label">图片：</label>
-                                        <div class="col-sm-9  b-l bg-white">
-                                            <c:forEach items="${attachmentList}" var="attachment">
-                                                <img src="${attachment.name}" width="50" height="50"
-                                                     onclick="viewBigImage(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image"/>
-                                            </c:forEach>
-                                        </div>
-                                    </div>
-                                </c:if>
-                            </div>
                             <div id="participantid" class="hidden">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><span class="text-danger"></span>参加活动人员名单：</label>
@@ -286,6 +253,39 @@
                                         </c:if>
                                     </div>
                                 </div>
+                            </div>
+                            <div id="ActivityImg" class="hidden">
+                                <c:if test="${fn:length(attachmentList) < 4}">
+                                    <div class="form-group" >
+                                        <label class="col-sm-3 control-label">活动图片：</label>
+                                        <div class="col-sm-9  b-l bg-white">
+                                            <div class="my-display-inline-box">
+                                                <div id="detailImgUrlContainer">
+                                                    <input type="file" id="detailImg" name="picUrl" class="filestyle"
+                                                           data-icon="false" data-classButton="btn btn-default"
+                                                           data-classInput="form-control inline v-middle input-xs"
+                                                           onchange="compressUploadPicture(this)" accept="image/*"
+                                                           style="display: none"
+                                                           data-max-count="4">
+                                                    <div id="picUrlError" class="text-danger"></div>
+                                                </div>
+                                                <div id="detailImgContainer" class="row value">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:if>
+                                <c:if test="${fn:length(attachmentList) > 0}">
+                                    <div class="form-group" >
+                                        <label class="col-sm-3 control-label">图片：</label>
+                                        <div class="col-sm-9  b-l bg-white">
+                                            <c:forEach items="${attachmentList}" var="attachment">
+                                                <img src="${attachment.name}" width="50" height="50"
+                                                     onclick="viewBigImage(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image"/>
+                                            </c:forEach>
+                                        </div>
+                                    </div>
+                                </c:if>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
@@ -354,58 +354,12 @@
         }
         if(${activity.status=='PENDING'}){
             $('#participantid').removeClass('hidden');
-            setTimeout("fmPost()",1000);
         }
         if(${activity.status=='APP'}){
             $('#participantid').removeClass('hidden');
             $('#achieveid').removeClass('hidden');
             $('#ActivityImg').removeClass('hidden');
         }
-    }
-    var t=0;
-    function fmPost(){
-        if(compareEndDate('${activity.enddate}',getNowFormatDate())){
-            location.reload(true);
-        }
-    }
-    function compareEndDate(startDateStr, endDateStr) {
-        var starttimes;
-        var arr = startDateStr.split(" ");
-        if (arr != null && arr != '') {
-            var begin = arr[0].split("-");
-            var end = arr[1].split(":");
-            var bgDate = new Date(begin[0], begin[1], begin[2], end[0], end[1], end[2]);
-            starttimes= bgDate.getTime();
-        }
-        var edtimes;
-        var arrs = endDateStr.split(" ");
-        if (arrs != null && arrs != '') {
-            var begins = arrs[0].split("-");
-            var ends = arrs[1].split(":");
-            var edDate = new Date(begins[0], begins[1], begins[2], ends[0], ends[1], ends[2]);
-            edtimes = edDate.getTime();
-        }
-        if (starttimes > edtimes) {
-            return true;
-        }
-        return false;
-    }
-    function getNowFormatDate() {
-        var date = new Date();
-        var seperator1 = "-";
-        var seperator2 = ":";
-        var month = date.getMonth() + 1;
-        var strDate = date.getDate();
-        if (month >= 1 && month <= 9) {
-            month = "0" + month;
-        }
-        if (strDate >= 0 && strDate <= 9) {
-            strDate = "0" + strDate;
-        }
-        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-                + " " + date.getHours() + seperator2 + date.getMinutes()
-                + seperator2 + date.getSeconds();
-        return currentdate;
     }
 
     function validImg(){
@@ -422,6 +376,7 @@
             return true;
         }
     }
+
     function validStatus(){
         if(${activity.status==null || activity.status==''||activity.status=='INIT'}){
             return validImg();
@@ -429,6 +384,7 @@
             return true;
         }
     }
+
     function submitForm(){
         $("#frm").parsley("validate");
         if($('#frm').parsley().isValid()&&compareBeginEndDate("startdate", "enddate", "dateError")&&validStatus()){
@@ -437,12 +393,14 @@
             searchForm.submit();
         }
     }
+
     function submitParticipant(){
         var uuid='${activity.uuid}';
         var searchForm = document.getElementById("frm");
         searchForm.action = "${ctx}/admin/wefamily/addParticipant?uuid="+uuid;
         searchForm.submit();
     }
+
     $('#startdate').datetimepicker({
         weekStart: 1,
         todayBtn: 1,
@@ -452,6 +410,7 @@
         forceParse: 0,
         showMeridian: 1,
     });
+
     $('#enddate').datetimepicker({
         weekStart: 1,
         todayBtn: 1,
@@ -461,6 +420,7 @@
         forceParse: 0,
         showMeridian: 1
     });
+
     //比较起始日期和截止日期
     function compareBeginEndDate(startDateStr, endDateStr, dateError) {
         var startDateStr = document.getElementById(startDateStr);
@@ -507,6 +467,7 @@
             }
         }
     }
+
     //用户选择的个数
     function querySltCount(users){
         var user = document.getElementsByName(users);

@@ -557,7 +557,8 @@ public class MtxGuestController extends BaseGuestController{
         MtxProduct mtxProductTemp= mxtProductService.queryForObjectByPk(mtxProduct);
         model.addAttribute("mtxProduct",mtxProductTemp);
         MtxUserMachine userMachine=new MtxUserMachine();
-        userMachine.setUserid(user.getUuid());
+//        userMachine.setUserid(user.getUuid());
+        userMachine.setUserid("9ce4a31ac59c4a42a9b5daff6e552597");
         List<String> merchantidList=new ArrayList<String>();
         List<MtxUserMachine> userMachineList=mtxUserMachineService.queryForList(userMachine);
         if(userMachineList.size()>0){

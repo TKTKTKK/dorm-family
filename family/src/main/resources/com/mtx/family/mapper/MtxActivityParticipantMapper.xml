@@ -13,6 +13,6 @@
         from tb_mtx_activity_participant  map
         inner join tb_wp_user wu on wu.uuid=map.userid
         where map.activityid=#{participant.activityid}
-        order by activityid desc;
+        order by map.createon desc;
     </select>
 </mapper>

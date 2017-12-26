@@ -96,8 +96,7 @@
     function  submitForm(){
         var count=document.getElementById("count").value;
         var address=$("select[name='address'] option:selected").val();
-        var detail=document.getElementById("detail").value;
-        if(count!=null&&count!=''&&address!=null&&address!=''&&detail!=null&&detail!=''){
+        if(count!=null&&count!=''&&address!=null&&address!=''){
             if(count.length>6){
                 errorMessage.innerHTML="购买数量过多！";
                 $(".choose").css("display","block");
@@ -107,7 +106,14 @@
                 searchForm.submit();
             }
         }else{
-            errorMessage.innerHTML="信息不完整或输入有误！";
+            if(count==null||count==''){
+                errorMessage.innerHTML="数量不能为空！";
+            }
+            else if(address==null||address==''){
+                errorMessage.innerHTML="地址不能为空！";
+            }else{
+                errorMessage.innerHTML="信息输入有误！";
+            }
             $(".choose").css("display","block");
         }
     }

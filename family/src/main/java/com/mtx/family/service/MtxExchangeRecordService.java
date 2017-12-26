@@ -44,6 +44,7 @@ public class MtxExchangeRecordService extends BaseService<MtxExchangeRecordMappe
         product=mxtProductService.queryForObjectByPk(product);
         mMtxExchangeRecord.setUserid(userid);
         mMtxExchangeRecord.setProductid(productid);
+        mMtxExchangeRecord.setStatus("N_DEAL");
         this.insert(mMtxExchangeRecord);
         user=wpUserService.queryForObjectByPk(user);
         int point=user.getPoints()-mMtxExchangeRecord.getCount()*product.getPoints();
@@ -51,7 +52,9 @@ public class MtxExchangeRecordService extends BaseService<MtxExchangeRecordMappe
         wpUserService.updatePartial(user);
         MtxPoint mtxPoint=new MtxPoint();
         mtxPoint.setUserid(userid);
-        mtxPoint.setName(product.getName());
+        String name="";
+        name=product.getName()+" * "+mMtxExchangeRecord.getCount();
+        mtxPoint.setName(name);
         mtxPoint.setPoints(-mMtxExchangeRecord.getCount()*product.getPoints());
         mtxPointService.insert(mtxPoint);
     }

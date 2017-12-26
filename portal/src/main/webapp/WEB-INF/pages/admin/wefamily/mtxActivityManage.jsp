@@ -149,6 +149,7 @@
                                                             修改
                                                         </a>
                                                         <a href="javascript:deleteMtxActivity('${activity.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
+                                                        <a href="javascript:beginMtxActivity('${activity.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white;background: mediumpurple;border: 1px solid mediumpurple">开始</a>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <c:if test="${activity.status eq 'PENDING'}">
@@ -247,6 +248,21 @@
                 if(data.deleteFlag){
                     var searchForm = document.getElementById("searchForm");
                     searchForm.action = "${ctx}/admin/wefamily/mtxActivityManage?deleteFlag=1";
+                    searchForm.submit();
+                }
+            });
+        },function(){
+            //取消删除
+        });
+    }
+    function beginMtxActivity(uuid){
+        qikoo.dialog.confirm('确定开始吗？',function(){
+            //确定删除
+            $.post("${ctx}/admin/wefamily/beginMtxActivity?uuid="+uuid,function(data){
+                //删除成功
+                if(data.successFlag){
+                    var searchForm = document.getElementById("searchForm");
+                    searchForm.action = "${ctx}/admin/wefamily/mtxActivityManage?successFlag=1";
                     searchForm.submit();
                 }
             });

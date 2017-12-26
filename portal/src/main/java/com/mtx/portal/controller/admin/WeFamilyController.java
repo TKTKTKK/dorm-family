@@ -2187,11 +2187,15 @@ public class WeFamilyController extends BaseAdminController {
         if("1".equals(successFlag)){
             model.addAttribute("successFlag","删除成功");
         }
+        String beginFlag=request.getParameter("successFlag");
+        if("1".equals(beginFlag)){
+            model.addAttribute("successFlag","成功开始活动");
+        }
         return "admin/wefamily/mtxActivityManage";
     }
 
     @RequestMapping(value = "/goMtxActivity", method = RequestMethod.GET)
-    public String goMtxGood(Model model,MtxActivity activity){
+    public String goMtxGood(Model model,MtxActivity activity,HttpServletRequest request){
         List<Merchant> merchantList = merchantService.selectMerchantForUser();
         model.addAttribute("merchantList",merchantList);
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
@@ -2200,19 +2204,28 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("activity",activityTemp);
         MtxActivityParticipant participant=new MtxActivityParticipant();
         List<MtxActivityParticipant>  participantList=new ArrayList<MtxActivityParticipant>();
-        List<MtxActivityParticipant>  winList=new ArrayList<MtxActivityParticipant>();
+        List<MtxLuckyParticipant>  winList=new ArrayList<MtxLuckyParticipant>();
+        List<MtxLuckyParticipant>  luckyList=new ArrayList<MtxLuckyParticipant>();
+        MtxLuckyParticipant luckyParticipant =new MtxLuckyParticipant();
         if(StringUtils.isNotBlank(activity.getUuid())){
             participant.setActivityid(activity.getUuid());
+            luckyParticipant.setActivityid(activity.getUuid());
             participantList=mtxActivityParticipantService.queryForParticipantList(participant);
             model.addAttribute("participantList",participantList);
-            if(participantList.size()>0){
-                for(int i=0;i<participantList.size();i++){
-                    if("WIN".equals(participantList.get(i).getStatus())){
-                        winList.add(participantList.get(i));
+            luckyList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant);
+            if(luckyList.size()>0){
+                for(int i=0;i<luckyList.size();i++){
+                    if("WIN".equals(luckyList.get(i).getStatus())){
+                        winList.add(luckyList.get(i));
                     }
                 }
             }
+            model.addAttribute("luckyList",luckyList);
             model.addAttribute("winList",winList);
+        }
+        String successFlg=request.getParameter("successFlg");
+        if("1".equals(successFlg)){
+            model.addAttribute("successMessage","操作成功！");
         }
         return "admin/wefamily/mtxActivityInfo";
     }
@@ -2297,44 +2310,39 @@ public class WeFamilyController extends BaseAdminController {
         return resultMap;
     }
 
+    @RequestMapping(value = "/beginMtxActivity", method = RequestMethod.POST)
+    @ResponseBody
+    public Map beginMtxActivity(MtxActivity activity){
+        activity=mtxActivityService.queryForObjectByPk(activity);
+        activity.setStatus("PENDING");
+        mtxActivityService.updatePartial(activity);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("successFlag", "1");
+        return resultMap;
+    }
+
     @RequestMapping(value = "/addParticipant", method = RequestMethod.POST)
     public String addParticipant(String uuid,String users){
-        if(StringUtils.isNotBlank(uuid)){
-            MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
-            activityParticipant.setActivityid(uuid);
-            List<MtxActivityParticipant> activityParticipantList=mtxActivityParticipantService.queryForList(activityParticipant);
-            if(activityParticipantList.size()>0) {
-                for (int i = 0; i < activityParticipantList.size(); i++) {
-                    activityParticipantList.get(i).setStatus(null);
-                    mtxActivityParticipantService.update(activityParticipantList.get(i));
+        String participant[]=null;
+        List<MtxLuckyParticipant> luckyParticipantList=new ArrayList<MtxLuckyParticipant>();
+        if(StringUtils.isNotBlank(uuid)&&StringUtils.isNotBlank(users)){
+            MtxLuckyParticipant participantTemp=new MtxLuckyParticipant();
+            participantTemp.setActivityid(uuid);
+            luckyParticipantList=mtxLuckyParticipantService.queryForList(participantTemp);
+            if(luckyParticipantList.size()>0){
+                for(int i=0;i<luckyParticipantList.size();i++){
+                    mtxLuckyParticipantService.delete(luckyParticipantList.get(i));
                 }
             }
-        }
-        String participant[]=null;
-        List<MtxActivityParticipant> activityParticipantList=new ArrayList<MtxActivityParticipant>();
-        if(StringUtils.isNotBlank(uuid)&&StringUtils.isNotBlank(users)){
             participant=users.split(",");
             for(int i=0;i<participant.length;i++){
-                MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
-                activityParticipant.setUserid(participant[i]);
-                activityParticipant.setActivityid(uuid);
-                activityParticipantList=mtxActivityParticipantService.queryForList(activityParticipant);
-                activityParticipant=activityParticipantList.get(0);
-                activityParticipant.setStatus("WAIT_WIN");
-                mtxActivityParticipantService.updatePartial(activityParticipant);
+                MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
+                luckyParticipant.setUserid(participant[i]);
+                luckyParticipant.setActivityid(uuid);
+                luckyParticipant.setStatus("WAIT_WIN");
+                mtxLuckyParticipantService.insert(luckyParticipant);
             }
         }
-        if(StringUtils.isNotBlank(uuid)&&StringUtils.isBlank(users)){
-            MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
-            activityParticipant.setActivityid(uuid);
-            activityParticipantList=mtxActivityParticipantService.queryForList(activityParticipant);
-            if(activityParticipantList.size()>0) {
-                for (int i = 0; i < activityParticipantList.size(); i++) {
-                    activityParticipantList.get(i).setStatus("WAIT_WIN");
-                    mtxActivityParticipantService.updatePartial(activityParticipantList.get(i));
-                }
-            }
-        }
-        return "redirect:/admin/wefamily/goMtxActivity?uuid="+uuid;
+        return "redirect:/admin/wefamily/goMtxActivity?uuid="+uuid+"&successFlg=1";
     }
 }

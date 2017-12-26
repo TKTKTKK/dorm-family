@@ -27,4 +27,7 @@ public class MtxLuckyParticipantService extends BaseService<MtxLuckyParticipantM
         return mapper.selectMtxLuckyParticipantList(obj,pageBounds);
     }
 
+    public List<MtxLuckyParticipant> queryForLuckyParticipantList(MtxLuckyParticipant luckyParticipant) {
+        return mapper.queryForLuckyParticipantList(luckyParticipant);
+    }
 }

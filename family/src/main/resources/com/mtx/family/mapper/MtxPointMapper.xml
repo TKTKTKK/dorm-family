@@ -21,7 +21,7 @@
         <if test="mtxPoint.type=='N'.toString()">
             and mp.points &lt; 0
         </if>
-        order by wu.uuid,date_format(mp.createon,'%Y-%m-%d %H:%i:%s') desc;
+        order by date_format(mp.createon,'%Y-%m-%d %H:%i:%s') desc;
     </select>
     <select id="queryPointForList" resultMap="selectResultMap">
         select mp.*

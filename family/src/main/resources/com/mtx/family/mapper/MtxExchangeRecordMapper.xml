@@ -20,6 +20,6 @@
         <if test="mtxExchangeRecord.status != null and mtxExchangeRecord.status != ''">
             and mer.status =#{mtxExchangeRecord.status}
         </if>
-        order by mer.createon desc,mer.userid desc;
+        order by mer.createon desc;
     </select>
 </mapper>
