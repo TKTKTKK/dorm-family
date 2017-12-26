@@ -178,7 +178,7 @@
 
 
     function deleteMachine(machineId){
-        qikoo.dialog.confirm('确定删除该仓库？',function(){
+        qikoo.dialog.confirm('确定删除该机器？',function(){
             //确定
             $.get("${ctx}/admin/wefamily/deleteMachine?machineId="+machineId+"&version="+Math.random(),function(data,status){
                 if(undefined != data.deleteFlag){
