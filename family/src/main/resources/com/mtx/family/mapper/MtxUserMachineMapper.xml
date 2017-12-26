@@ -27,6 +27,6 @@
         <if test="mtxUserMachine.type != null and mtxUserMachine.type != ''">
             and mu.type = #{mtxUserMachine.type}
         </if>
-        order by date_format(mu.createon,'%Y-%m-%d %H:%i:%s'),mu.userid desc;
+        order by date_format(mu.createon,'%Y-%m-%d %H:%i:%s') desc;
     </select>
 </mapper>

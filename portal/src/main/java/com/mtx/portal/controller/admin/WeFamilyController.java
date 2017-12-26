@@ -2350,4 +2350,26 @@ public class WeFamilyController extends BaseAdminController {
         }
         return "redirect:/admin/wefamily/goMtxActivity?uuid="+uuid+"&successFlg=1";
     }
+
+    @RequestMapping(value = "/clickDrawing", method = RequestMethod.GET)
+    public String clickDrawing(String uuid,Model model){
+        if(StringUtils.isNotBlank(uuid)){
+            MtxActivity activity=new MtxActivity();
+            activity.setUuid(uuid);
+            activity=mtxActivityService.queryForObjectByPk(activity);
+            activity.setStatus("DRAWING");
+            mtxActivityService.updatePartial(activity);
+            MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
+            activityParticipant.setActivityid(uuid);
+            List<MtxActivityParticipant> activityParticipantList=mtxActivityParticipantService.queryForList(activityParticipant);
+            model.addAttribute("activityParticipantList",activityParticipantList);
+            MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
+            luckyParticipant.setActivityid(uuid);
+            List<MtxLuckyParticipant> luckyParticipantList=mtxLuckyParticipantService.queryForList(luckyParticipant);
+            if(luckyParticipantList.size()>0){
+                model.addAttribute("luckyParticipantList",luckyParticipantList);
+            }
+        }
+        return "admin/wefamily/mtxDrawing";
+    }
 }

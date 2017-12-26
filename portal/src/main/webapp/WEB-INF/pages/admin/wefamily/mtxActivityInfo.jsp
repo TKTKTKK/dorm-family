@@ -314,7 +314,10 @@
                             <c:choose>
                                 <c:when test="${activity.status eq 'PENDING'}">
                                     <a onclick="submitParticipant()" class="btn btn-submit btn-s-xs ">
-                                        <i class="fa fa-check"></i>&nbsp;确&nbsp;定
+                                        </i>&nbsp;确&nbsp;定
+                                    </a>
+                                    <a onclick="clickDrawing()" class="btn btn-submit btn-s-xs " style="background: red;border: 1px solid red;margin-left:100px">
+                                        </i>点击抽奖
                                     </a>
                                 </c:when>
                                 <c:otherwise>
@@ -397,7 +400,10 @@
         searchForm.action = "${ctx}/admin/wefamily/addParticipant?uuid="+uuid;
         searchForm.submit();
     }
-
+    function clickDrawing(){
+        var uuid='${activity.uuid}';
+        window.location.href="${ctx}/admin/wefamily/clickDrawing?uuid="+uuid;
+    }
     $('#startdate').datetimepicker({
         weekStart: 1,
         todayBtn: 1,
