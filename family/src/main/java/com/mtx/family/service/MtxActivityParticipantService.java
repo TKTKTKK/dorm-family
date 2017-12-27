@@ -28,4 +28,8 @@ public class MtxActivityParticipantService extends BaseService<MtxActivityPartic
     public List<MtxActivityParticipant> queryForParticipantList(MtxActivityParticipant participant) {
         return mapper.selectWpUserParticipantList(participant);
     }
+
+    public List<MtxActivityParticipant> queryForWaitDrawingList(MtxActivityParticipant activityParticipant) {
+        return mapper.queryForWaitDrawingList(activityParticipant);
+    }
 }

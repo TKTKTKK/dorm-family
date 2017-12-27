@@ -2189,7 +2189,11 @@ public class WeFamilyController extends BaseAdminController {
         }
         String beginFlag=request.getParameter("successFlag");
         if("1".equals(beginFlag)){
-            model.addAttribute("successFlag","成功开始活动");
+            model.addAttribute("successFlag","活动开始！");
+        }
+        String closeFlag=request.getParameter("closeFlag");
+        if("1".equals(closeFlag)){
+            model.addAttribute("successFlag","活动结束！");
         }
         return "admin/wefamily/mtxActivityManage";
     }
@@ -2200,6 +2204,12 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("merchantList",merchantList);
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
+        Attachment attachment=new Attachment();
+        if(StringUtils.isNotBlank(activity.getUuid())){
+            attachment.setRefid(activity.getUuid());
+            List<Attachment> attachmentList=attachmentService.queryForList(attachment);
+            model.addAttribute("attachmentList",attachmentList);
+        }
         MtxActivity activityTemp=mtxActivityService.queryForObjectByPk(activity);
         model.addAttribute("activity",activityTemp);
         MtxActivityParticipant participant=new MtxActivityParticipant();
@@ -2371,5 +2381,61 @@ public class WeFamilyController extends BaseAdminController {
             }
         }
         return "admin/wefamily/mtxDrawing";
+    }
+
+    @RequestMapping(value = "/drawing")
+    public String drawing(String uuid,Model model){
+        if(StringUtils.isNotBlank(uuid)){
+            MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
+            MtxLuckyParticipant luckyParticipantCount=new MtxLuckyParticipant();
+            luckyParticipant.setActivityid(uuid);
+            luckyParticipantCount.setActivityid(uuid);
+            luckyParticipant.setStatus("WAIT_WIN");
+            List<MtxLuckyParticipant> luckyParticipantList=mtxLuckyParticipantService.queryForList(luckyParticipant);
+            List<MtxLuckyParticipant> luckyParticipantCountList=mtxLuckyParticipantService.queryForList(luckyParticipant);
+            if(luckyParticipantCountList.size()>0){
+                if(luckyParticipantList.size()>0){
+                    String message=mtxLuckyParticipantService.synchronizationUpdate(luckyParticipantList,uuid);
+                    model.addAttribute("drawingMessage",message);
+                }else{
+                    model.addAttribute("drawingMessage","抽奖已达上限！");
+                }
+                MtxLuckyParticipant luckyP=new MtxLuckyParticipant();
+                luckyP.setActivityid(uuid);
+                luckyP.setStatus("WIN");
+                List<MtxLuckyParticipant> luckyList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyP);
+                model.addAttribute("luckyList",luckyList);
+            }else{
+                MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
+                activityParticipant.setActivityid(uuid);
+                activityParticipant.setStatus("WIN");
+                List<MtxActivityParticipant> activityParticipantList=mtxActivityParticipantService.queryForWaitDrawingList(activityParticipant);
+                if(activityParticipantList.size()>0){
+                    Random random=new Random();// 定义随机类
+                    int result=random.nextInt(activityParticipantList.size());// 返回[0,10)集合中的整数，注意不包括10
+                    activityParticipant=activityParticipantList.get(result);
+                    activityParticipant.setStatus("WIN");
+                    mtxActivityParticipantService.updatePartial(activityParticipant);
+                    model.addAttribute("drawingMessage","恭喜"+activityParticipant.getName()+"中奖！");
+                }else{
+                    model.addAttribute("drawingMessage","抽奖已达上限！");
+                }
+                List<MtxActivityParticipant> luckyList=mtxActivityParticipantService.queryForParticipantList(activityParticipant);
+                model.addAttribute("luckyList",luckyList);
+            }
+        }
+        return "admin/wefamily/mtxDrawing";
+    }
+
+    @RequestMapping(value = "/closeDrawing")
+    public String closeDrawing(String uuid){
+        if(StringUtils.isNotBlank(uuid)){
+            MtxActivity activity=new MtxActivity();
+            activity.setUuid(uuid);
+            activity=mtxActivityService.queryForObjectByPk(activity);
+            activity.setStatus("APP");
+            mtxActivityService.updatePartial(activity);
+        }
+        return "redirect:/admin/wefamily/mtxActivityManage?closeFlag=1";
     }
 }
