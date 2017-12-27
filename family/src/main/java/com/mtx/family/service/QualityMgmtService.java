@@ -4,7 +4,9 @@ import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.base.BaseService;
 import com.mtx.common.entity.Attachment;
+import com.mtx.common.entity.PlatformUser;
 import com.mtx.common.mapper.AttachmentMapper;
+import com.mtx.common.service.PlatformUserService;
 import com.mtx.common.service.SequenceService;
 import com.mtx.common.utils.StringUtils;
 import com.mtx.family.entity.*;
@@ -37,6 +39,8 @@ public class QualityMgmtService extends BaseService<QualityMgmtMapper,QualityMgm
     private WpUserMapper wpUserMapper;
     @Autowired
     private SequenceService sequenceService;
+    @Autowired
+    private PlatformUserService platformUserService;
 
 
     public void saveQualityMgmt(QualityMgmt qualityMgmt, String[] qualityMgmtImgs) {
@@ -125,7 +129,6 @@ public class QualityMgmtService extends BaseService<QualityMgmtMapper,QualityMgm
         if(StringUtils.isNotBlank(qualityMgmt.getUuid())){
             this.mapper.updatePartial(qualityMgmt);
         }else{
-            qualityMgmt.setStatus("NEW");
             if("REPAIR".equals(qualityMgmt.getType())){
                 qualityMgmt.setSnno(sequenceService.getRepairSeqNo());
             }else if("MAINTAIN".equals(qualityMgmt.getType())){
@@ -139,5 +142,24 @@ public class QualityMgmtService extends BaseService<QualityMgmtMapper,QualityMgm
 
     public PageList<QualityMgmt> queryQualityMgmtPageList(QualityMgmt qualityMgmt, String startDateTimeStr, String endDateTimeStr, PageBounds pageBounds) {
         return this.mapper.selectQualityMgmtPageList(qualityMgmt,startDateTimeStr,endDateTimeStr,pageBounds);
+    }
+
+    public void chooseWorker(QualityMgmt qualityMgmt) {
+        qualityMgmt.setStatus("REPAIRING");
+        this.mapper.updatePartial(qualityMgmt);
+
+        String workerId = qualityMgmt.getWorkerid();
+        PlatformUser platformUser = platformUserService.getPlatformUserById(workerId);
+        Worker worker = new Worker();
+        worker.setRefid(qualityMgmt.getUuid());
+        worker.setUserid(workerId);
+        List<Worker> workerList = workerService.queryForList(worker);
+        if(null != workerList && workerList.size() > 0){
+            worker = workerList.get(0);
+        }
+        worker.setName(platformUser.getName());
+        worker.setPhone(platformUser.getCellphone());
+        workerService.insert(worker);
+
     }
 }

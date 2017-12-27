@@ -20,8 +20,9 @@
     </select>
 
     <select id="selectOrderList" resultMap="selectResultMap">
-      select mo.*
+      select mo.*,mm.name as merchantname
       from tb_mtx_order mo
+      inner join tb_mtx_merchant mm on mo.merchantid = mm.uuid
       where
       mo.bindid = #{order.bindid}
         <if test="order.merchantid != null and order.merchantid != ''">

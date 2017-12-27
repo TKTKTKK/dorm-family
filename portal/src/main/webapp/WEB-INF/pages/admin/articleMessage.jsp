@@ -103,26 +103,53 @@
                                 <div class="col-sm-12">
                                     <form class="form-horizontal" data-validate="parsley" action=""
                                           method="POST" id="frmForSlt">
-                                        <div class="form-group col-sm-12">
-                                            <input type="hidden" name="mediaid" id="hidMediaId"/>
 
-                                            <div class="radio col-sm-12">
-                                                <label>
-                                                    <input type="radio" name="authType" id="authType1" value="Y" checked>已认证业主
-                                                </label>
+                                            <input type="hidden" name="mediaid" id="hidMediaId"/>
+                                        <div class="form-group col-sm-12">
+                                            <label class="col-sm-3  control-label" style="padding-top: 2px">经销商：</label>
+                                            <div class="col-sm-9 b-l bg-white">
+                                                <input type="checkbox" name="merchant" id="merchant" value="Y">
                                             </div>
-                                            <div class="radio col-sm-12">
-                                                <label>
-                                                    <input type="radio" name="authType" id="authType2" value="N" >未认证业主
-                                                </label>
+
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="col-sm-3  control-label" style="padding-top: 2px">会员：</label>
+                                            <div class="col-sm-9 b-l bg-white">
+                                                <input type="checkbox" name="user" id="user" value="Y">
                                             </div>
-                                            <div class="radio col-sm-12">
-                                                <label>
-                                                    <input type="radio" name="authType" id="authType3" value="S" ><div><textarea id="openid" name="openid" cols="40" rows="5" disabled placeholder="多个openid以;隔开"></textarea><span id="note" id="note" class="hidden text-danger">不能为空</span></div>
-                                                </label>
+
+                                        </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label" style="padding-top: 10px">地址：</label>
+                                                <div class="col-sm-9 b-l bg-white">
+                                                    <div class="col-sm-4" style="padding: 2px 15px 0 0;margin-bottom: 10px">
+                                                        <select class="form-control" name="province" id="s1">
+                                                            <option></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-4" style="padding: 2px 15px 0 0;margin-bottom: 10px">
+                                                        <select class="select form-control" name="city" id="s2">
+                                                            <option></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-4" style="margin-bottom: 10px;padding: 2px 15px 0 0">
+                                                        <select class="select form-control" name="district" id="s3">
+                                                            <option></option>
+                                                        </select>
+                                                    </div>
+                                                    <span id="addressError" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3  control-label" style="padding-top: 8px">详细地址：</label>
+                                            <div class="col-sm-9 b-l bg-white">
+                                                <input type="text" class="form-control" data-required="true" name="address" id="address"
+                                                       onblur="trimText(this)" data-maxlength="256">
                                             </div>
                                         </div>
-                                        <div class="text-right col-sm-12">
+
+                                        <div class="text-right col-sm-12" style="padding-top: 10px">
                                             <a class="btn btn-success btn-s-xs"
                                                href="javascript:sendMsgByAuthType()">发 送</a>
                                         </div>
@@ -143,7 +170,35 @@
 
 <%--<script src="${ctx}/static/admin/js/sweetalert.min.js"></script>--%>
 <script src="${ctx}/static/admin/js/qikoo/qikoo.js"></script>
+<script type="text/javascript" src="${ctx}/static/admin/geo.js"></script>
 <script type="text/javascript">
+
+    setup();
+    promptinfo();
+
+    //这个函数是必须的，因为在geo.js里每次更改地址时会调用此函数
+    function promptinfo() {
+        var address = document.getElementById('address');
+        var s1 = document.getElementById('s1');
+        var s2 = document.getElementById('s2');
+        var s3 = document.getElementById('s3');
+        address.value = s1.value + s2.value + s3.value;
+    }
+
+    //检查省市区是否合法
+    function checkIfValid() {
+        var addressError = document.getElementById("addressError");
+        addressError.innerHTML = "";
+        var province = document.getElementById("s1").value;
+        var city = document.getElementById("s2").value;
+        var district = document.getElementById("s3").value;
+        if (province === '省份' || city === '地级市' || district === '市、县级市、县') {
+            addressError.innerHTML = '省份，地级市，市、县级市、县 均为必填项';
+            return false;
+        }else{
+            return true;
+        }
+    }
 
     //输入openid
     $('#authType1').click(function(){
@@ -199,53 +254,35 @@
     function sendMsgByAuthType() {
 
         //验证openid非空
-
-
-
-        var authTypeArray = document.getElementsByName('authType');
-        var authTypeStr = '';
-        for (var i = 0; i < authTypeArray.length; i++) {
-            if (authTypeArray[i].checked) {
-                authTypeStr = authTypeArray[i].value;
-            }
+        var sendToMerchant = "";
+        var sendToUser = "";
+        var merchant =  document.getElementById("merchant");
+        if(merchant.checked){
+            sendToMerchant = "Y";
         }
-        //已认证业主
-        if(authTypeStr == 'Y'){
-            window.location.href = "${ctx}/admin/account/sendArticleMessage?mediaid="+$('#hidMediaId').val()+"&title="+$('#hidTitle').val();
-        }else if(authTypeStr == 'N'){
-            qikoo.dialog.confirm('确定发送该图文消息？',function(){
-                //确定
-                window.location.href = "${ctx}/admin/account/sendArticleMessageForUnautherized?mediaid="+$('#hidMediaId').val();
-            },function(){
-                //取消
-            });
-            <%--//未认证业主--%>
-            <%--swal({--%>
-                <%--title: "确定发送该图文消息?",--%>
-                <%--text: "你将发送此图文消息至业主!",--%>
-                <%--type: "warning",--%>
-                <%--showCancelButton: true,--%>
-                <%--confirmButtonColor: "#DD6B55",--%>
-                <%--confirmButtonText: "确定",--%>
-                <%--closeOnConfirm: false--%>
-            <%--}, function () {--%>
-                <%--window.location.href = "${ctx}/admin/account/sendArticleMessageForUnautherized?mediaid="+$('#hidMediaId').val();--%>
-            <%--});--%>
-        }else{
-            if(!$('#openid').val().trim().length == 0){
-            qikoo.dialog.confirm('确定发送该图文消息？',function(){
-                //确定
-                document.getElementById('frmForSlt').action="${ctx}/admin/account/sendArticleMessageForAssigned";
-
-                $('#frmForSlt').submit();
-
-            });
-            }else{
-//            $('#note').show();
-                $('#note').removeClass("hidden");
-//                $('#note').css("","");
-            }
+        var user = document.getElementById("user");
+        if(user.checked){
+            sendToUser = "Y";
         }
+        var province = document.getElementById("s1").value;
+        var city = document.getElementById("s2").value;
+        var district = document.getElementById("s3").value;
+        if(province == '省份'){
+            province = "";
+        }
+        if(city == '地级市'){
+            city = "";
+        }
+        if(district == '市、县级市、县'){
+            district = "";
+        }
+
+        qikoo.dialog.confirm('确定发送该图文消息？',function(){
+            //确定
+            window.location.href = "${ctx}/admin/account/sendArticleMessageForUserOrMerchant?sendToMerchant="+sendToMerchant+"&sendToUser="+sendToUser+"&province="+province+"&city="+city+"&district="+district;
+        },function(){
+            //取消
+        });
     }
 
     //保存参数信息

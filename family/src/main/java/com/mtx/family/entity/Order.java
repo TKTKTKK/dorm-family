@@ -41,12 +41,16 @@ public class Order extends BaseEntity {
     @Column
     private String fueltank;
     @Column
+    private String merchantremarks;
+    @Column
     private String status;
     @Column
     private String remarks;
 
     //状态数组
     private String[] statusArr;
+    //经销商
+    private String merchantname;
 
     public String getBindid() {
         return bindid;
@@ -160,6 +164,14 @@ public class Order extends BaseEntity {
         this.fueltank = fueltank;
     }
 
+    public String getMerchantremarks() {
+        return merchantremarks;
+    }
+
+    public void setMerchantremarks(String merchantremarks) {
+        this.merchantremarks = merchantremarks;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -182,5 +194,13 @@ public class Order extends BaseEntity {
 
     public void setStatusArr(String[] statusArr) {
         this.statusArr = statusArr;
+    }
+
+    public String getMerchantname() {
+        return merchantname;
+    }
+
+    public void setMerchantname(String merchantname) {
+        this.merchantname = merchantname;
     }
 }

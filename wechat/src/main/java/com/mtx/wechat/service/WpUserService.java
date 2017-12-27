@@ -154,4 +154,8 @@ public class WpUserService extends BaseService<WpUserMapper,WpUser> {
     public PageList<WpUser> queryForListWithPagination(WpUser obj, PageBounds pageBounds) {
         return mapper.selectWpUserList(obj,pageBounds);
     }
+
+    public List<String> queryUserOpenIds(WpUser wpUser, String mediaid) {
+        return mapper.selectUserOpenIds(wpUser,mediaid);
+    }
 }

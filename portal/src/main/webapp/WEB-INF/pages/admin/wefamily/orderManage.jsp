@@ -117,6 +117,7 @@
                                     <thead>
                                     <tr>
                                         <th class="text-center">订单编号</th>
+                                        <th class="text-center">经销商</th>
                                         <th class="text-center">机器型号</th>
                                         <th class="text-center">数量</th>
                                         <th class="text-center">运输</th>
@@ -129,7 +130,10 @@
                                     <c:forEach items="${orderList}" var="order">
                                         <tr>
                                             <td>
-                                                    ${order.snno}
+                                                    <a href="${ctx}/admin/wefamily/orderDetail?orderId=${order.uuid}" style="text-decoration: underline;">${order.snno}</a>
+                                            </td>
+                                            <td>
+                                                    ${order.merchantname}
                                             </td>
                                             <td>
                                                     ${order.machinemodel}

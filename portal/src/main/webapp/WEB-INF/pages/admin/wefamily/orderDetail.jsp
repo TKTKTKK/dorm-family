@@ -339,9 +339,15 @@
                                                                 <div class="col-md-2 col-xs-4 name detail-div" style="padding-right: 0px">20升油箱:</div>
                                                                 <div class="col-md-4 col-xs-8 value detail-div" >${web:getCodeDesc("ORDER_CHOOSE",order.fueltank)}</div>
                                                             </div>
+                                                            <c:if test="${not empty order.merchantremarks}">
+                                                                <div class="row static-info" style="margin-bottom: 0px">
+                                                                    <div class="col-md-2 col-xs-4 name detail-div" style="padding-right: 0px">经销商备注:</div>
+                                                                    <div class="col-md-10 col-xs-8 value detail-div" >${order.merchantremarks}</div>
+                                                                </div>
+                                                            </c:if>
                                                         </div>
                                                     </div>
-                                                <shiro:hasRole name="HQ_FINANCE">
+
                                                     <!--物流信息-->
                                                     <c:if test="${order.status ne 'NEW'}">
                                                         <div class="portlet red-sunglo box">
@@ -395,10 +401,12 @@
                                                                         </c:if>
                                                                     </div>
                                                                 </div>
-                                                                <c:if test="${order.status == 'INLOGISTICS' && fn:length(receiptList) == 0}">
-                                                                    <a class="btn btn-sm btn-danger" href="javascript:addLogistics()" style="color: white;margin-left: 10px;margin-bottom: 10px">添加物流信息</a>
-                                                                    <button class="hidden" data-toggle="modal" data-target=".bs-example-modal-tj-logistics" style="color: white" id="addLogistics">添加物流信息</button>
-                                                                </c:if>
+                                                                <shiro:hasRole name="HQ_FINANCE">
+                                                                    <c:if test="${order.status == 'INLOGISTICS' && fn:length(receiptList) == 0}">
+                                                                        <a class="btn btn-sm btn-danger" href="javascript:addLogistics()" style="color: white;margin-left: 10px;margin-bottom: 10px">添加物流信息</a>
+                                                                        <button class="hidden" data-toggle="modal" data-target=".bs-example-modal-tj-logistics" style="color: white" id="addLogistics">添加物流信息</button>
+                                                                    </c:if>
+                                                                </shiro:hasRole>
                                                             </div>
                                                         </div>
                                                     </c:if>
@@ -466,7 +474,7 @@
                                                             </div>
                                                         </div>
                                                     </c:if>
-                                                </shiro:hasRole>
+
                                             </div>
                                             <div class="col-md-6">
                                                 <!--机器信息-->
@@ -483,9 +491,12 @@
                                                                         <th class="text-center">机器号</th>
                                                                         <th class="text-center">发动机号</th>
                                                                         <th class="text-center">生产日期</th>
-                                                                        <c:if test="${order.status == 'NEW' || order.status == 'INPLAN'}">
-                                                                            <th class="text-center">操作</th>
-                                                                        </c:if>
+                                                                        <shiro:hasRole name="HQ_PLAN">
+                                                                            <c:if test="${order.status == 'NEW' || order.status == 'INPLAN'}">
+                                                                                <th class="text-center">操作</th>
+                                                                            </c:if>
+                                                                        </shiro:hasRole>
+
 
                                                                     </tr>
                                                                     </thead>
@@ -504,14 +515,16 @@
                                                                             <td>
                                                                                     ${machine.productiondate}
                                                                             </td>
-                                                                            <c:if test="${order.status == 'NEW' || order.status == 'INPLAN'}">
-                                                                                <td>
-                                                                                    <a href="javascript:showMachineInfo('${machine.machinename}','${machine.machinemodel}','${machine.machineno}','${machine.engineno}','${machine.productiondate}','${machine.price}','${machine.remarks}','${machine.uuid}','${machine.versionno}')"
-                                                                                       class="btn btn-sm btn-infonew a-noline" style="color: #fff">详情</a>
-                                                                                    <a href="javascript:deleteMachineForOrder('${machine.uuid}')"
-                                                                                       class="btn btn-sm btn-danger a-noline" style="color: #fff">删除</a>
-                                                                                </td>
-                                                                            </c:if>
+                                                                            <shiro:hasRole name="HQ_PLAN">
+                                                                                <c:if test="${order.status == 'NEW' || order.status == 'INPLAN'}">
+                                                                                    <td>
+                                                                                        <a href="javascript:showMachineInfo('${machine.machinename}','${machine.machinemodel}','${machine.machineno}','${machine.engineno}','${machine.productiondate}','${machine.price}','${machine.remarks}','${machine.uuid}','${machine.versionno}')"
+                                                                                           class="btn btn-sm btn-infonew a-noline" style="color: #fff">详情</a>
+                                                                                        <a href="javascript:deleteMachineForOrder('${machine.uuid}')"
+                                                                                           class="btn btn-sm btn-danger a-noline" style="color: #fff">删除</a>
+                                                                                    </td>
+                                                                                </c:if>
+                                                                            </shiro:hasRole>
                                                                         </tr>
                                                                     </c:forEach>
                                                                     </tbody>

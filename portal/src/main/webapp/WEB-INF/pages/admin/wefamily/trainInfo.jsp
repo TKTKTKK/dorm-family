@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="en" class="app">
 <head>
+    <link href="${ctx}/static/admin/css/qikoo/qikoo.css" rel="stylesheet">
     <style type="text/css">
         .permit-list{
             display: none;
@@ -294,9 +295,9 @@
                         </div>
                         <div class="panel-footer text-left bg-light lter">
                             <c:if test="${train.status ne 'FINISH'}">
-                                <button type="submit" class="btn btn-submit btn-s-xs ">
+                                <a class="btn btn-submit btn-s-xs " href="javascript:saveTrainInfo()">
                                     &nbsp;保&nbsp;存
-                                </button>
+                                </a>
                                 <c:if test="${not empty train.uuid}">
                                     <a class="btn btn-primary btn-success" href="javascript:finishTrain()" style="color: white;margin-left: 10px;">
                                         <i class="fa fa-check"></i> 完成培训
@@ -452,6 +453,29 @@
             return true;
         }
     }
+
+    function saveTrainInfo(){
+        var machinemodel = $('#machinemodel').val();
+        var machineno = $('#machineno').val();
+        var engineno = $('#engineno').val();
+
+        var searchForm = document.getElementById("frm")
+
+        var url = "${ctx}/admin/wefamily/checkMachineIfexist?machinemodel="+machinemodel+"&machineno="+machineno+"&engineno="+engineno;
+        $.get(url,function(data,status){
+            if(data.existFlag == 'N'){
+                qikoo.dialog.confirm('机器信息不存在，确定保存？',function(){
+                    //确定
+                    searchForm.submit();
+                },function(){
+                    //取消
+                });
+            }else{
+                searchForm.submit();
+            }
+        });
+    }
+
 
 </script>
 

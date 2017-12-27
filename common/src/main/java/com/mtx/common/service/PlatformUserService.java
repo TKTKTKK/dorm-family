@@ -11,11 +11,13 @@ import com.mtx.common.mapper.PlatformUserMapper;
 import com.mtx.common.mapper.PlatformUserRoleMapper;
 import com.mtx.common.utils.Digests;
 import com.mtx.common.utils.Encodes;
+import com.mtx.common.utils.StringUtils;
 import com.mtx.common.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -253,5 +255,9 @@ public class PlatformUserService  extends BaseService<PlatformUserMapper,Platfor
 
     public List<PlatformUser> queryExpressCreatePerson(String communityId) {
         return mapper.selectExpressCreatePerson(UserUtils.getUserBindId(),communityId);
+    }
+
+    public List<String> queryPlatformUserOpenIdsByAddress(String bindid, String province, String city, String district, String mediaid) {
+        return mapper.selectPlatformUserOpenIdsByAddress(bindid,province,city,district,mediaid);
     }
 }

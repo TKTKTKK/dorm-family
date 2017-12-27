@@ -24,4 +24,6 @@ public interface WpUserMapper extends BaseMapper<WpUser>{
     public PageList<WpUser> selectAllWpUsersByBindid(@Param("bindid")String bindid, PageBounds pageBounds);
 
     public PageList<WpUser> selectWpUserList(@Param("wpUser") WpUser wpUser, PageBounds pageBounds);
+
+    List<String> selectUserOpenIds(@Param("wpUser") WpUser wpUser,@Param("mediaid") String mediaid);
 }

@@ -41,6 +41,11 @@ public class Machine extends BaseEntity {
 
     private String orderno;
 
+    private String merchantname;
+
+    private String merchantid;
+
+
     public String getType() {
         return type;
     }
@@ -151,5 +156,21 @@ public class Machine extends BaseEntity {
 
     public void setOrderno(String orderno) {
         this.orderno = orderno;
+    }
+
+    public String getMerchantname() {
+        return merchantname;
+    }
+
+    public void setMerchantname(String merchantname) {
+        this.merchantname = merchantname;
+    }
+
+    public String getMerchantid() {
+        return merchantid;
+    }
+
+    public void setMerchantid(String merchantid) {
+        this.merchantid = merchantid;
     }
 }

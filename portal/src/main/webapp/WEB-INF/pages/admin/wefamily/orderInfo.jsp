@@ -203,6 +203,14 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-sm-3  control-label">备注：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <textarea class="form-control" rows="4" name="merchantremarks"
+                                              id="merchantremarks" data-maxlength="256" onblur="trimText(this)"
+                                    >${order.merchantremarks}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <div class="col-sm-12">
                                     <input type="hidden" name="uuid" class="form-control" value="${order.uuid}">
                                     <input type="hidden" name="versionno" class="form-control"

@@ -60,6 +60,13 @@ public class QualityMgmt extends BaseEntity {
 
     private String workerid;
 
+    private String merchantname;
+
+    private String worker;
+
+    //状态数组
+    private String[] statusArr;
+
     public String getWorkerid() {
         return workerid;
     }
@@ -250,5 +257,29 @@ public class QualityMgmt extends BaseEntity {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public String getMerchantname() {
+        return merchantname;
+    }
+
+    public void setMerchantname(String merchantname) {
+        this.merchantname = merchantname;
+    }
+
+    public String getWorker() {
+        return worker;
+    }
+
+    public void setWorker(String worker) {
+        this.worker = worker;
+    }
+
+    public String[] getStatusArr() {
+        return statusArr;
+    }
+
+    public void setStatusArr(String[] statusArr) {
+        this.statusArr = statusArr;
     }
 }

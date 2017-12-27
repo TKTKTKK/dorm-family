@@ -5,9 +5,37 @@
 <html lang="en" class="app">
 <head>
     <link href="${ctx}/static/admin/css/qikoo/qikoo.css" rel="stylesheet">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="${ctx}/static/admin/bootstrap-select/bootstrap-select.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="${ctx}/static/admin/bootstrap-select/bootstrap-select.min.js"></script>
+    <style>
+        @media (min-width: 768px){
+            .bootstrap-select>.dropdown-menu {
+                /*position: absolute;*/
+                top: 0;
+                left: 0;
+                /*z-index: 1000;*/
+                /*display: none;*/
+                float: left;
+                /*min-width: 160px;*/
+                padding: 5px 0;
+                margin: 2px 0 0;
+                font-size: 14px;
+                list-style: none;
+                background-color: #fff;
+                /*border: 1px solid #ccc;*/
+                /*border: 1px solid rgba(0,0,0,0.15);*/
+                /*border-radius: 4px;*/
+                /*-webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);*/
+                /*box-shadow: 0 6px 12px rgba(0,0,0,0.175);*/
+                background-clip: padding-box;
+            }
+        }
+    </style>
 </head>
-<style>
-</style>
+
 <body class="">
 
 <section id="content">
@@ -31,7 +59,8 @@
                               id="searchForm">
                             <div class="row">
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
-                                    <select class="form-control" name="merchantid" id="merchantid" <shiro:hasAnyRoles name="MERCHANT_MANAGER,MTX_MAINTAIN_WORKER,MTX_REPAIR_WORKER,MTX_TRAIN_WORKER">data-required="true"</shiro:hasAnyRoles>>
+                                    <select class="form-control " name="merchantid" id="merchantid" onchange="getDealPersonList()"
+                                            <shiro:hasAnyRoles name="MERCHANT_MANAGER,MTX_MAINTAIN_WORKER,MTX_REPAIR_WORKER,MTX_TRAIN_WORKER">data-required="true"</shiro:hasAnyRoles>>
                                         <c:if test="${fn:length(merchantList) > 1}">
                                             <option value="">经销商</option>
                                         </c:if>
@@ -41,11 +70,24 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <select  class="selectpicker show-tick form-control" name="status" id="status" multiple data-live-search="false">
+                                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_STATUS')}"></c:set>
+                                        <c:forEach items="${commonCodeList}" var="commonCode">
+                                            <option value="${commonCode.code}" <c:if test="${qualityMgmt.status == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <input type="text" class="form-control" id="snno" name="snno" onblur="trimText(this)" value="${qualityMgmt.snno}"
                                            <c:if test="${type eq 'REPAIR'}">placeholder="报修编号"</c:if>
                                            <c:if test="${type eq 'MAINTAIN'}">placeholder="保养编号"</c:if>
                                     />
                                     <input type="hidden" name="type" value="${type}">
+                                </div>
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <select  class="form-control" name="worker" id="worker">
+                                        <option value="">处理人</option>
+                                    </select>
                                 </div>
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <select class="form-control" name="machinemodel" id="machinemodel">
@@ -100,11 +142,13 @@
                                     <thead>
                                     <tr>
                                         <th class="text-center">${showType}编号</th>
+                                        <th class="text-center">经销商</th>
                                         <th class="text-center">机器型号</th>
                                         <th class="text-center">用户姓名</th>
                                         <th class="text-center">用户电话</th>
                                         <th class="text-center">${showType}日期</th>
                                         <th class="text-center">${showType}状态</th>
+                                        <th class="text-center">处理人</th>
                                         <th class="text-center">操作</th>
                                     </tr>
                                     </thead>
@@ -113,6 +157,9 @@
                                         <tr>
                                             <td>
                                                     ${qualityMgmt.snno}
+                                            </td>
+                                            <td>
+                                                    ${qualityMgmt.merchantname}
                                             </td>
                                             <td>
                                                     ${qualityMgmt.machinemodel}
@@ -128,6 +175,9 @@
                                             </td>
                                             <td>
                                                     ${web:getCodeDesc("REPAIR_STATUS",qualityMgmt.status)}
+                                            </td>
+                                            <td>
+                                                    ${qualityMgmt.worker}
                                             </td>
                                             <td>
                                                 <a href="${ctx}/admin/wefamily/qualityMgmtInfo?qualityMgmtId=${qualityMgmt.uuid}&type=${type}" class="btn  btn-infonew btn-sm" style="color: white" >处理</a>
@@ -163,6 +213,15 @@
     window.onload = function(){
         //显示父菜单
         showParentMenu('品质服务');
+
+        $("button[data-id='status']").attr('title', "状态");
+        $($("button[data-id='status']").find('span')[0]).text("状态")
+        $($("button[data-id='status']").find('span')[0]).css('color', '#555');
+
+        if('${statusStr}'.length > 0){
+            var statusArr = '${statusStr}'.split(",");
+            $('.selectpicker').selectpicker('val', statusArr);
+        }
     }
 
     //提交查询
@@ -218,6 +277,30 @@
 
     function showQualityMgmtInfo(){
         window.location.href = "${ctx}/admin/wefamily/qualityMgmtInfo?type=${type}";
+    }
+
+    //获取处理人列表
+    function getDealPersonList(){
+        var merchantId = $("select[name='merchantid'] option:selected").val();
+        if(merchantId.length > 0){
+            $.get("${ctx}/admin/wefamily/"+merchantId+"/dealQualityMgmtPerson?type=${type}",function(data,status){
+                var workerList = data.workerList;
+                initDealPersonList();
+                for(i=0;i<workerList.length;i++){
+                    $("select[name='worker']").append($("<option>").val(workerList[i].uuid).text(workerList[i].name));
+                    if('${qualityMgmt.worker}' != "" && '${qualityMgmt.worker}' == workerList[i].uuid){
+                        $("select[name='worker']").val(workerList[i].uuid);
+                    }
+                }
+            });
+        }
+    }
+    //查询处理人
+    getDealPersonList();
+
+    function initDealPersonList(){
+        $("select[name='worker']").empty();
+        $("select[name='worker']").append($("<option>").val("").text("处理人"));
     }
 
 </script>

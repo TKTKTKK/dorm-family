@@ -45,12 +45,16 @@
     </select>
 
     <select id="selectMachineList" resultMap="selectResultMap">
-        select mm.*,mo.snno as orderno
+        select mm.*,mo.snno as orderno,mc.name as merchantname
         from tb_mtx_machine mm
         left join tb_mtx_order mo on mm.orderid = mo.uuid
+        left join tb_mtx_merchant mc on mo.merchantid = mc.uuid
         where
         mm.bindid = #{machine.bindid}
         and mm.type='MACHINE'
+        <if test="machine.merchantid != null and machine.merchantid != ''">
+            and mo.merchantid = #{machine.merchantid}
+        </if>
         <if test="machine.orderno != null and machine.orderno != ''">
             and mo.snno like CONCAT('%',#{machine.orderno},'%')
         </if>

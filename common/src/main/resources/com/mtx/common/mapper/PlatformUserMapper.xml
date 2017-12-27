@@ -206,6 +206,34 @@
         order by h.uuid;
     </select>
 
+    <select id="selectPlatformUserOpenIdsByAddress" resultType="java.lang.String">
+        select distinct pu.openid
+        from tb_platform_user pu ,tb_mtx_user_merchant um,tb_mtx_merchant mm
+        where pu.bindid = #{bindid}
+        and pu.uuid = um.userid
+        and um.merchantid = mm.uuid
+        <if test="province != null and province != ''">
+            and mm.province = #{province}
+        </if>
+        <if test="city != null and city != ''">
+            and mm.city = #{city}
+        </if>
+        <if test="district != null and district != ''">
+            and mm.district = #{district}
+        </if>
+        and pu.openid not in (select ah.openid from tb_resp_article_history ah where ah.mediaid = #{mediaid})
+
+        UNION
+        select distinct pu.openid
+        from tb_platform_user pu
+        where pu.bindid = #{bindid}
+        and   not exists (select um.userid from tb_mtx_user_merchant um where um.userid = pu.uuid)
+        and pu.openid not in (select ah.openid from tb_resp_article_history ah where ah.mediaid = #{mediaid})
+
+
+
+    </select>
+
     <select id="selectUserByRoleList" resultMap="selectResultMap">
         select pu.*, uc.blknos as blknos
         from tb_platform_user pu ,tb_platform_user_role ur, tb_platform_role pr,tb_wp_user_com uc
