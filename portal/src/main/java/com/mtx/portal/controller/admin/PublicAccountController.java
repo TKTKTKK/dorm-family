@@ -3,8 +3,11 @@ package com.mtx.portal.controller.admin;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.base.CommonConstants;
+import com.mtx.common.entity.PlatformUser;
 import com.mtx.common.exception.ServiceException;
+import com.mtx.common.service.PlatformUserService;
 import com.mtx.common.utils.*;
+import com.mtx.family.entity.Merchant;
 import com.mtx.portal.PortalContants;
 import com.mtx.wechat.WechatConstants;
 import com.mtx.wechat.entity.WechatError;
@@ -45,6 +48,8 @@ public class PublicAccountController {
     private WechatTmService wechatTmService;
     @Autowired
     private RespArticleHistoryService respArticleHistoryService;
+    @Autowired
+    private PlatformUserService platformUserService;
 
     /**
      * 查询公众号
@@ -375,6 +380,71 @@ public class PublicAccountController {
             String mediaid = request.getParameter("mediaid");
             //查询未认证用户的openid
             List<String> openids = wpUserService.queryUnautherizedWpUser(wechatBinding.getUuid(), mediaid);
+            WechatBindingUtil.BatchSendMaterialNews(mediaid,openids);
+            //保存发送历史
+            respArticleHistoryService.saveRespArticleHistory(mediaid, openids);
+            sendResult = "1";
+        }
+        return "redirect:/admin/account/articleMessage?sendResult="+sendResult;
+    }
+
+    /**
+     * 给用户或经销商发送图文
+     */
+    @RequestMapping(value = "/sendArticleMessageForUserOrMerchant",method = RequestMethod.GET)
+    public String sendArticleMessageForUserOrMerchant(HttpServletRequest request,Model model){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        String sendResult = "";
+        if(null != wechatBinding){
+            String mediaid = request.getParameter("mediaid");
+            //查询openid
+            String sendToMerchant = request.getParameter("sendToMerchant");
+            String sendToUser = request.getParameter("sendToUser");
+            String province = request.getParameter("province");
+            String city = request.getParameter("city");
+            String district = request.getParameter("district");
+            List<String> openids = new ArrayList<>();
+            List<String> merchantUserOpenids = new ArrayList<>();
+            List<String> userOpenids = new ArrayList<>();
+            if(StringUtils.isNotBlank(sendToMerchant) && StringUtils.isBlank(sendToUser)){
+                //经销商账号openid
+                merchantUserOpenids = platformUserService.queryPlatformUserOpenIdsByAddress(wechatBinding.getUuid(),province,city,district,mediaid);
+
+            }else if(StringUtils.isBlank(sendToMerchant) && StringUtils.isNotBlank(sendToUser)){
+                //用户openid
+                WpUser wpUser = new WpUser();
+                wpUser.setBindid(wechatBinding.getUuid());
+                wpUser.setProvince(province);
+                wpUser.setCity(city);
+                wpUser.setDistrict(district);
+                userOpenids = wpUserService.queryUserOpenIds(wpUser,mediaid);
+
+            }else{
+                //用户openid
+                WpUser wpUser = new WpUser();
+                wpUser.setBindid(wechatBinding.getUuid());
+                wpUser.setProvince(province);
+                wpUser.setCity(city);
+                wpUser.setDistrict(district);
+                userOpenids = wpUserService.queryUserOpenIds(wpUser,mediaid);
+
+                //经销商账号openid
+                merchantUserOpenids = platformUserService.queryPlatformUserOpenIdsByAddress(wechatBinding.getUuid(),province,city,district,mediaid);
+
+
+            }
+            for(String openid : merchantUserOpenids){
+                if(!openids.contains(openid) && StringUtils.isNotBlank(openid)){
+                    openids.add(openid);
+                }
+            }
+            for(String openid : userOpenids){
+                if(!openids.contains(openid) && StringUtils.isNotBlank(openid)){
+                    openids.add(openid);
+                }
+            }
+
             WechatBindingUtil.BatchSendMaterialNews(mediaid,openids);
             //保存发送历史
             respArticleHistoryService.saveRespArticleHistory(mediaid, openids);

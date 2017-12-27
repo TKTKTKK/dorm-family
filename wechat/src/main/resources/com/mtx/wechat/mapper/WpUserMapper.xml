@@ -26,6 +26,21 @@
         and u.ifauth = 'N';
     </select>
 
+    <select id="selectUserOpenIds" resultType="java.lang.String">
+        select u.openid from tb_wp_user u
+        where u.bindid = #{wpUser.bindid}
+        <if test="wpUser.province != null and wpUser.province != ''">
+            and u.province = #{wpUser.province}
+        </if>
+        <if test="wpUser.city != null and wpUser.city != ''">
+            and u.city = #{wpUser.city}
+        </if>
+        <if test="wpUser.district != null and wpUser.district != ''">
+            and u.district = #{wpUser.district}
+        </if>
+        and u.openid not in (select ah.openid from tb_resp_article_history ah where ah.mediaid = #{mediaid})
+    </select>
+
     <select id="selectAllWpUsersByBindid"   resultMap="selectResultMap">
         select * from tb_wp_user
         where bindid = #{bindid}

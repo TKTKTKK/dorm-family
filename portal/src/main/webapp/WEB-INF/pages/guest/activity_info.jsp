@@ -43,6 +43,9 @@
         .modal-header .close{
             padding: 5px 10px !important;
         }
+        .choose .error li{
+            margin-bottom: 7px;
+        }
     </style>
 </head>
 <body class="">
@@ -104,16 +107,16 @@
 
             <div class="choose" style="display: none">
                 <div class="error">
-                    <li style="margin-bottom: 5px">
+                    <li>
                         <span>邀请码：</span>
                         <input type="text" id="inviteCode" name="inviteCode"
-                               data-required="true"  data-maxlength="32"/>
+                               data-required="true"  data-maxlength="32" placeholder="请填写邀请码"/>
                         <span id="inviteCodeError"></span>
                     </li>
-                    <li style="margin-bottom: 5px">
-                        <span>姓名：</span>
+                    <li>
+                        <span>&nbsp;&nbsp;&nbsp;姓名：</span>
                         <input type="text" id="name" name="name" value="${wpUser.name}"
-                               data-required="true"  data-maxlength="32"/>
+                               data-required="true"  data-maxlength="32" placeholder="请填写姓名"/>
                         <span id="nameError"></span>
                     </li>
 
