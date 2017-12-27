@@ -47,6 +47,9 @@
         <if test="wpUser.address != null and wpUser.address != ''">
             and wu.address like concat("%",#{wpUser.address},"%")
         </if>
+        <if test="wpUser.ifsubscribe != null and wpUser.ifsubscribe != ''">
+            and wu.ifsubscribe =#{wpUser.ifsubscribe}
+        </if>
         order by modifyon desc;
     </select>
 </mapper>

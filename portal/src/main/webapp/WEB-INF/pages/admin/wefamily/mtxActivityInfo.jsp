@@ -25,8 +25,8 @@
                     <span class="text-danger">${errorMessage}</span>
                 </div>
                 <form class="form-horizontal form-bordered" data-validate="parsley"
-                      action="" method="POST"
-                      enctype="multipart/form-data" id="frm">
+                      action="${ctx}/admin/wefamily/updateMtxActivity" method="POST"
+                      enctype="multipart/form-data" id="frm" onsubmit="return submitForm()">
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
                             <i class="fa fa-gift"></i>
@@ -202,9 +202,9 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><span class="text-danger">*</span>活动详情：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <textarea  class="form-control" data-required="true" <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'||activity.status eq 'DRAWING'}">
+                                    <textarea id="notificationContent" class="form-control" data-required="true" <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'||activity.status eq 'DRAWING'}">
                                         disabled
-                                    </c:if> name="detail" style="width:300px; height:100px;" data-maxlength="256">${activity.detail}</textarea>
+                                    </c:if> name="detail">${activity.detail}</textarea>
                                 </div>
                             </div>
                             <div id="participantid" class="hidden">
@@ -314,14 +314,20 @@
                             <c:choose>
                                 <c:when test="${activity.status eq 'PENDING'}">
                                     <a onclick="submitParticipant()" class="btn btn-submit btn-s-xs ">
-                                        <i class="fa fa-check"></i>&nbsp;确&nbsp;定
+                                        </i>&nbsp;确&nbsp;定
+                                    </a>
+                                    <a onclick="clickDrawing()" class="btn btn-submit btn-s-xs " style="background: red;border: 1px solid red;margin-left:100px">
+                                        </i>点击抽奖
                                     </a>
                                 </c:when>
                                 <c:otherwise>
                                     <c:if test="${activity.status ne 'DRAWING'}">
-                                    <a onclick="submitForm()" class="btn btn-submit btn-s-xs ">
-                                        <i class="fa fa-check"></i>&nbsp;提&nbsp;交
-                                    </a>
+                                    <%--<a onclick="submitForm()" class="btn btn-submit btn-s-xs ">--%>
+                                        <%--<i class="fa fa-check"></i>&nbsp;提&nbsp;交--%>
+                                    <%--</a>--%>
+                                        <button class="btn btn-submit btn-s-xs ">
+                                            &nbsp;提&nbsp;交
+                                        </button>
                                     </c:if>
                                 </c:otherwise>
                             </c:choose>
@@ -339,6 +345,7 @@
 </section>
 <script src="${ctx}/static/admin/js/lrz/dist/lrz.bundle.js"></script>
 <script src="${ctx}/static/admin/js/qikoo/qikoo.js"></script>
+<script charset="utf-8" src="${ctx}/static/admin/editor/kindeditor.js"></script>
 <script type="text/javascript" src="${ctx}/static/admin/js/myScript.js"></script>
 <script type="text/javascript" src="${ctx}/static/admin/geo.js"></script>
 <script type="text/javascript">
@@ -374,6 +381,20 @@
         }
     }
 
+    KindEditor.ready(function(K) {
+        window.editor = K.create('#notificationContent', {
+            uploadJson : '${ctx}/static/editor/jsp/upload_json.jsp',
+            fileManagerJson : '${ctx}/static/editor/jsp/file_manager_json.jsp',
+            items : ['fullscreen', 'source', 'undo', 'redo', 'print', 'cut', 'copy', 'paste',
+                'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'lineheight','subscript',
+                'superscript', '|', 'selectall', '-',
+                'title', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                'italic', 'underline', 'strikethrough', 'removeformat', '|', 'advtable', 'hr', 'image', 'link', 'unlink']
+        });
+
+    });
+
     function validStatus(){
         if(${activity.status==null || activity.status==''||activity.status=='INIT'}){
             return validImg();
@@ -385,9 +406,12 @@
     function submitForm(){
         $("#frm").parsley("validate");
         if($('#frm').parsley().isValid()&&compareBeginEndDate("startdate", "enddate", "dateError")&&validStatus()){
-            var searchForm = document.getElementById("frm");
-            searchForm.action = "${ctx}/admin/wefamily/updateMtxActivity";
-            searchForm.submit();
+            return true;
+            <%--var searchForm = document.getElementById("frm");--%>
+            <%--searchForm.action = "${ctx}/admin/wefamily/updateMtxActivity";--%>
+            <%--searchForm.submit();--%>
+        }else{
+            return false;
         }
     }
 
@@ -397,7 +421,10 @@
         searchForm.action = "${ctx}/admin/wefamily/addParticipant?uuid="+uuid;
         searchForm.submit();
     }
-
+    function clickDrawing(){
+        var uuid='${activity.uuid}';
+        window.location.href="${ctx}/admin/wefamily/clickDrawing?uuid="+uuid;
+    }
     $('#startdate').datetimepicker({
         weekStart: 1,
         todayBtn: 1,

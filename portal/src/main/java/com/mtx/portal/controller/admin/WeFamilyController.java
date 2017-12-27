@@ -2279,7 +2279,7 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("activity",activityTemp);
         MtxActivityParticipant participant=new MtxActivityParticipant();
         List<MtxActivityParticipant>  participantList=new ArrayList<MtxActivityParticipant>();
-        List<MtxLuckyParticipant>  winList=new ArrayList<MtxLuckyParticipant>();
+        List<MtxActivityParticipant>  winList=new ArrayList<MtxActivityParticipant>();
         List<MtxLuckyParticipant>  luckyList=new ArrayList<MtxLuckyParticipant>();
         MtxLuckyParticipant luckyParticipant =new MtxLuckyParticipant();
         if(StringUtils.isNotBlank(activity.getUuid())){
@@ -2288,8 +2288,8 @@ public class WeFamilyController extends BaseAdminController {
             participantList=mtxActivityParticipantService.queryForParticipantList(participant);
             model.addAttribute("participantList",participantList);
             luckyList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant);
-            luckyParticipant.setStatus("WIN");
-            winList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant);
+            participant.setStatus("WIN");
+            winList=mtxActivityParticipantService.queryForParticipantList(participant);
             model.addAttribute("luckyList",luckyList);
             model.addAttribute("winList",winList);
         }
@@ -2306,7 +2306,7 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("wechatBinding", wechatBinding);
         MtxActivityParticipant participant=new MtxActivityParticipant();
         List<MtxActivityParticipant>  participantList=new ArrayList<MtxActivityParticipant>();
-        List<MtxLuckyParticipant>  winList=new ArrayList<MtxLuckyParticipant>();
+        List<MtxActivityParticipant>  winList=new ArrayList<MtxActivityParticipant>();
         List<MtxLuckyParticipant>  luckyList=new ArrayList<MtxLuckyParticipant>();
         MtxLuckyParticipant luckyParticipant =new MtxLuckyParticipant();
         if(StringUtils.isNotBlank(activity.getUuid())){
@@ -2315,8 +2315,8 @@ public class WeFamilyController extends BaseAdminController {
             participantList=mtxActivityParticipantService.queryForParticipantList(participant);
             model.addAttribute("participantList",participantList);
             luckyList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant);
-            luckyParticipant.setStatus("WIN");
-            winList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant);
+            participant.setStatus("WIN");
+            winList=mtxActivityParticipantService.queryForParticipantList(participant);
             model.addAttribute("luckyList",luckyList);
             model.addAttribute("winList",winList);
         }
@@ -2413,6 +2413,38 @@ public class WeFamilyController extends BaseAdminController {
                 mtxLuckyParticipantService.insert(luckyParticipant);
             }
         }
+        if(StringUtils.isNotBlank(uuid)&&StringUtils.isBlank(users)){
+            MtxLuckyParticipant participantTemp=new MtxLuckyParticipant();
+            participantTemp.setActivityid(uuid);
+            luckyParticipantList=mtxLuckyParticipantService.queryForList(participantTemp);
+            if(luckyParticipantList.size()>0){
+                for(int i=0;i<luckyParticipantList.size();i++){
+                    mtxLuckyParticipantService.delete(luckyParticipantList.get(i));
+                }
+            }
+        }
         return "redirect:/admin/wefamily/goMtxActivity?uuid="+uuid+"&successFlg=1";
+    }
+
+    @RequestMapping(value = "/clickDrawing", method = RequestMethod.GET)
+    public String clickDrawing(String uuid,Model model){
+        if(StringUtils.isNotBlank(uuid)){
+            MtxActivity activity=new MtxActivity();
+            activity.setUuid(uuid);
+            activity=mtxActivityService.queryForObjectByPk(activity);
+            activity.setStatus("DRAWING");
+            mtxActivityService.updatePartial(activity);
+            MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
+            activityParticipant.setActivityid(uuid);
+            List<MtxActivityParticipant> activityParticipantList=mtxActivityParticipantService.queryForList(activityParticipant);
+            model.addAttribute("activityParticipantList",activityParticipantList);
+            MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
+            luckyParticipant.setActivityid(uuid);
+            List<MtxLuckyParticipant> luckyParticipantList=mtxLuckyParticipantService.queryForList(luckyParticipant);
+            if(luckyParticipantList.size()>0){
+                model.addAttribute("luckyParticipantList",luckyParticipantList);
+            }
+        }
+        return "admin/wefamily/mtxDrawing";
     }
 }

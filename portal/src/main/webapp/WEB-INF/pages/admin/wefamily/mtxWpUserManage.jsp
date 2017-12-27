@@ -52,6 +52,16 @@
                                             </select>
                                     </div>
                                 </div>
+                                <div class="col-sm-4" style="margin-top: 20px">
+                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 是否关注：</label>
+                                    <div class="col-sm-7  my-display-inline-box">
+                                        <select name="ifsubscribe" id="ifsubscribe" class="form-control">
+                                            <option value="">请选择</option>identify
+                                            <option value="Y" <c:if test="${wpUser.ifsubscribe eq 'Y'}">selected</c:if>>是</option>
+                                            <option value="N" <c:if test="${wpUser.ifsubscribe eq 'N'}">selected</c:if>>否</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div style="clear: both"></div>
                                 <div class="row col-sm-12 text-center text-white" style="margin-top: 20px">
                                     <a type="submit"  class="btn btn-submit btn-s-xs"
@@ -68,13 +78,14 @@
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
                                     <tr>
-                                        <th width="12%">姓名</th>
-                                        <th width="13%">手机号</th>
+                                        <th width="10%">姓名</th>
+                                        <th width="10%">手机号</th>
                                         <th width="15%">详细地址</th>
                                         <th width="10%">微信昵称</th>
                                         <th width="15%">微信头像</th>
                                         <th width="10%">积分</th>
-                                        <th width="10%">是否注册</th>
+                                        <th width="7%">是否注册</th>
+                                        <th width="8%">是否关注</th>
                                         <th width="15%">操作</th>
                                     </tr>
                                     </thead>
@@ -98,6 +109,16 @@
                                             </td>
                                             <td>
                                                     ${wpUser.points}
+                                            </td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${wpUser.ifsubscribe eq 'Y'}">
+                                                        是
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        否
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </td>
                                             <td>
                                                 <c:choose>
