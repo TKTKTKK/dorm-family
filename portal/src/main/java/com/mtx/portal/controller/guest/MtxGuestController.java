@@ -73,6 +73,12 @@ public class MtxGuestController extends BaseGuestController{
     private MtxProductService mtxProductService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private MtxActivityService mtxActivityService;
+    @Autowired
+    private MtxActivityParticipantService mtxActivityParticipantService;
+    @Autowired
+    private MtxLuckyParticipantService mtxLuckyParticipantService;
 
 
     @RequestMapping(value = "/product_center")
@@ -655,5 +661,73 @@ public class MtxGuestController extends BaseGuestController{
             return "guest/exchange";
         }
         return "redirect:/guest/member/good_exchange";
+    }
+
+    /**
+     * 活动列表
+     */
+    @RequestMapping(value = "/activity_list",method = RequestMethod.GET)
+    public String activity_list(Model model) {
+        MtxActivity mtxActivity = new MtxActivity();
+        mtxActivity.setOrderby("createon desc");
+        List<MtxActivity> mtxActivityList = mtxActivityService.queryForList(mtxActivity);
+        model.addAttribute("mtxActivityList",mtxActivityList);
+        return "guest/activity_list";
+    }
+
+    /**
+     * 活动详情
+     */
+    @RequestMapping(value = "/activity_info",method = RequestMethod.GET)
+    public String activity_info(Model model,HttpServletRequest request) {
+
+        WpUser wpUser = getWechatMemberInfo(request);
+        model.addAttribute("wpUser",wpUser);
+
+        String activityId = request.getParameter("activityId");
+        if(StringUtils.isNotBlank(activityId)){
+            MtxActivity mtxActivity = new MtxActivity();
+            mtxActivity.setUuid(activityId);
+            mtxActivity = mtxActivityService.queryForObjectByPk(mtxActivity);
+            model.addAttribute("mtxActivity",mtxActivity);
+
+            Attachment attachment = new Attachment();
+            attachment.setRefid(activityId);
+            List<Attachment> attachmentList = attachmentService.queryForList(attachment);
+            model.addAttribute("attachmentList",attachmentList);
+
+            if(null != mtxActivity){
+                MtxActivityParticipant mtxActivityParticipant = new MtxActivityParticipant();
+                mtxActivityParticipant.setActivityid(activityId);
+                List<MtxActivityParticipant> activityParticipantList = mtxActivityParticipantService.queryForParticipantList(mtxActivityParticipant);
+                model.addAttribute("activityParticipantList",activityParticipantList);
+
+                mtxActivityParticipant.setStatus("WIN");
+                List<MtxActivityParticipant> winParticipantList = mtxActivityParticipantService.queryForParticipantList(mtxActivityParticipant);
+                model.addAttribute("winParticipantList",winParticipantList);
+            }
+        }
+
+        return "guest/activity_info";
+    }
+
+    @RequestMapping(value = "/participate_activity",method = RequestMethod.GET)
+    public String participate_activity(HttpServletRequest request,Model model,RedirectAttributes redirectAttributes){
+
+        String activityId = request.getParameter("activityId");
+
+        WpUser wpUser = getWechatMemberInfo(request);
+        if(null != wpUser){
+            MtxActivityParticipant mtxActivityParticipant = new MtxActivityParticipant();
+            mtxActivityParticipant.setUserid(wpUser.getUuid());
+            mtxActivityParticipant.setStatus("WAIT_WIN");
+            mtxActivityParticipant.setActivityid(activityId);
+            mtxActivityParticipantService.insert(mtxActivityParticipant);
+            redirectAttributes.addFlashAttribute("successMessage","参加成功！");
+            return "redirect:/guest/activity_info?activityId="+activityId;
+        }else{
+            return "guest/participator_Info";
+        }
+
     }
 }

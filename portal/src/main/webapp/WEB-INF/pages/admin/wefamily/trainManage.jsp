@@ -34,6 +34,15 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <select  class="form-control" name="status" id="status">
+                                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_STATUS')}"></c:set>
+                                        <option value="">状态</option>
+                                        <c:forEach items="${commonCodeList}" var="commonCode">
+                                            <option value="${commonCode.code}" <c:if test="${train.status == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <input type="text" class="form-control" id="snno" name="snno" onblur="trimText(this)" value="${train.snno}"
                                            placeholder="培训编号"
                                     />
@@ -95,6 +104,7 @@
                                     <thead>
                                     <tr>
                                         <th class="text-center">编号</th>
+                                        <th class="text-center">经销商</th>
                                         <th class="text-center">机器型号</th>
                                         <th class="text-center">机器号</th>
                                         <th class="text-center">用户姓名</th>
@@ -110,6 +120,9 @@
                                         <tr>
                                             <td>
                                                     ${train.snno}
+                                            </td>
+                                            <td>
+                                                    ${train.merchantname}
                                             </td>
                                             <td>
                                                     ${train.machinemodel}
@@ -133,7 +146,7 @@
                                                     ${web:getCodeDesc("TRAIN_STATUS",train.status)}
                                             </td>
                                             <td>
-                                                <a href="${ctx}/admin/wefamily/trainInfo?trainId=${train.uuid}&merchantId=${train.merchantid}" class="btn  btn-infonew btn-sm" style="color: white" >修改</a>
+                                                <a href="${ctx}/admin/wefamily/trainInfo?trainId=${train.uuid}&merchantId=${train.merchantid}" class="btn  btn-infonew btn-sm" style="color: white" >详情</a>
                                                 <a href="javascript:deleteTrain('${train.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white" <c:if test="${train.status == 'FINISH'}">disabled="disabled" </c:if> >删除</a>
                                             </td>
                                         </tr>

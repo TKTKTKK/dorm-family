@@ -40,6 +40,8 @@ public class Train extends BaseEntity {
     @Column
     private String status;
 
+    private String merchantname;
+
     public String getSnno() {
         return snno;
     }
@@ -152,4 +154,11 @@ public class Train extends BaseEntity {
         this.status = status;
     }
 
+    public String getMerchantname() {
+        return merchantname;
+    }
+
+    public void setMerchantname(String merchantname) {
+        this.merchantname = merchantname;
+    }
 }

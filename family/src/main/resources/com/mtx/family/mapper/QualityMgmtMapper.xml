@@ -6,15 +6,30 @@
     </resultMap>
 
     <select id="selectQualityMgmtPageList" resultMap="selectResultMap">
-        select qm.*
+        select qm.*,mm.name as merchantname,mw.name as worker
         from tb_mtx_quality_management qm
+        left join tb_mtx_merchant mm on qm.merchantid = mm.uuid
+        left join tb_mtx_worker mw on qm.uuid = mw.refid
         where
         1=1
         <if test="qualityMgmt.snno != null and qualityMgmt.snno != ''">
             and qm.snno like concat("%",#{qualityMgmt.snno},"%")
         </if>
+        <if test="qualityMgmt.merchantid != null and qualityMgmt.merchantid != ''">
+            and qm.merchantid = #{qualityMgmt.merchantid}
+        </if>
+        <if test="qualityMgmt.worker != null and qualityMgmt.worker != ''">
+            and mw.userid = #{qualityMgmt.worker}
+        </if>
+        <if test="qualityMgmt.statusArr != null">
+            and qm.status in
+            <foreach item="item" index="index" collection="qualityMgmt.statusArr"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="qualityMgmt.machinemodel != null and qualityMgmt.machinemodel != ''">
-            and qm.machinemodel like = #{qualityMgmt.machinemodel}
+            and qm.machinemodel = #{qualityMgmt.machinemodel}
         </if>
         <if test="qualityMgmt.reportername != null and qualityMgmt.reportername != ''">
             and qm.reportername like concat("%",#{qualityMgmt.reportername},"%")

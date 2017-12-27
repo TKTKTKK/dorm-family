@@ -21,10 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -518,6 +515,8 @@ public class WeFamilyController extends BaseAdminController {
     public String machineManage(Model model,HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
         model.addAttribute("successMessage",request.getParameter("successMessage"));
         return "admin/wefamily/machineManage";
     }
@@ -532,6 +531,8 @@ public class WeFamilyController extends BaseAdminController {
     public String machineManage(@RequestParam(required = false,defaultValue = "1") int page,Machine machine,Model model,HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
         model.addAttribute("machine",machine);
         if(null != wechatBinding){
             String startDateStr = request.getParameter("startDateStr");
@@ -1542,6 +1543,68 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     /**
+     * 获取处理人列表
+     * @return
+     */
+    @RequestMapping(value = "/{merchantId}/dealQualityMgmtPerson", produces = "application/json")
+    public @ResponseBody Map<String, Object> finddealQualityMgmtPersonJson(@PathVariable("merchantId") String merchantId,HttpServletRequest request){
+
+        String type = request.getParameter("type");
+        List<PlatformUser> workerList = platformUserService.queryWorkersByMerchantIdAndServiveType(merchantId,type);
+
+        Map<String, Object> responseMap = new HashMap<String, Object>();
+        responseMap.put("workerList",workerList);
+        return responseMap;
+    }
+
+    //检查机器是否存在
+    @RequestMapping(value = "/checkMachineIfexist")
+    @ResponseBody
+    public Map<String, Object> checkMachineIfexist(HttpServletRequest request){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        String machinemodel = request.getParameter("machinemodel");
+        String machineno = request.getParameter("machineno");
+        String engineno = request.getParameter("engineno");
+        Machine machine = new Machine();
+        machine.setMachinemodel(machinemodel);
+        machine.setMachineno(machineno);
+        machine.setEngineno(engineno);
+        List<Machine> machineList = machineService.queryForList(machine);
+        if(machineList.size()==0){
+            resultMap.put("existFlag", "N");
+        }
+        return resultMap;
+    }
+
+    /**
+     *指派工人
+     */
+    @RequestMapping(value = "/addWorkerForQualityMgmt",method= RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> addWorkerForQualityMgmt(HttpServletRequest request){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        String qualityMgmtId = request.getParameter("qualityMgmtId");
+        String versionno = request.getParameter("versionno");
+        String workerId = request.getParameter("workerId");
+        QualityMgmt qualityMgmt = new QualityMgmt();
+        qualityMgmt.setUuid(qualityMgmtId);
+        qualityMgmt.setVersionno(Integer.valueOf(versionno));
+        qualityMgmt.setWorkerid(workerId);
+
+        try {
+            qualityMgmtService.chooseWorker(qualityMgmt);
+            resultMap.put("successMessage", "指派成功");
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            resultMap.put("errorMessage", "系统忙，稍候再试");
+        }
+
+
+        return resultMap;
+    }
+
+    /**
      * 报修管理
      * @param qualityMgmt
      * @param model
@@ -1576,6 +1639,18 @@ public class WeFamilyController extends BaseAdminController {
             if(null != endDate){
                 endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
             }
+
+            String[] statusArr = request.getParameterValues("status");
+            String statusStr = "";
+            if(null != statusArr){
+                statusStr = StringUtils.join(statusArr, ",");
+            }
+            model.addAttribute("statusStr", statusStr);
+            if(null != statusArr && statusArr.length == 1 && StringUtils.isBlank(statusArr[0])){
+                statusArr = null;
+            }
+            qualityMgmt.setStatusArr(statusArr);
+
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
             PageList<QualityMgmt> qualityMgmtList = qualityMgmtService.queryQualityMgmtPageList(qualityMgmt, startDateTimeStr, endDateTimeStr, pageBounds);
             model.addAttribute("qualityMgmtList", qualityMgmtList);
@@ -1624,7 +1699,7 @@ public class WeFamilyController extends BaseAdminController {
                 if(null != merchant){
                     qualityMgmt.setMerchantid(merchant.getUuid());
                     qualityMgmtService.updatePartial(qualityMgmt);
-                    qualityMgmt.setVersionno(qualityMgmt.getVersionno()+1);
+                    /*qualityMgmt.setVersionno(qualityMgmt.getVersionno()+1);*/
                 }
             }
             model.addAttribute("qualityMgmt",qualityMgmt);
@@ -1755,18 +1830,18 @@ public class WeFamilyController extends BaseAdminController {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
         String qualityMgmtId = request.getParameter("qualityMgmtId");
-        String versionno = request.getParameter("versionno");
+        String versionno = request.getParameter("qualityMgmtVersionno");
         qualityMgmt.setUuid(qualityMgmtId);
         qualityMgmt.setVersionno(Integer.valueOf(versionno));
 
         String workerId = request.getParameter("workerId");
         PlatformUser platformUser = platformUserService.getPlatformUserById(workerId);
         worker.setRefid(qualityMgmtId);
-        worker.setUserid(workerId);
         List<Worker> workerList = workerService.queryForList(worker);
         if(null != workerList && workerList.size() > 0){
             worker = workerList.get(0);
         }
+        worker.setUserid(workerId);
         worker.setName(platformUser.getName());
         worker.setPhone(platformUser.getCellphone());
 

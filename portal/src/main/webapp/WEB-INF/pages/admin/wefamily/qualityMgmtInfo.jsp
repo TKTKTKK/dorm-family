@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="en" class="app">
 <head>
+    <link href="${ctx}/static/admin/css/qikoo/qikoo.css" rel="stylesheet">
     <style>
         .detaildiv1 ul li {
             border: 0;
@@ -434,12 +435,7 @@
 
                                                                     <div class="panel-footer text-left bg-light lter">
                                                                         <c:if test="${qualityMgmt.status ne 'FINISH'}">
-                                                                            <a class="btn btn-primary btn-info" href="javascript:saveReportQualityMgmtInfo()" style="color: white;margin-left: 10px;margin-bottom: 10px">保存</a>
-                                                                        </c:if>
-                                                                        <c:if test="${qualityMgmt.status eq 'NEW' && not empty qualityMgmt.merchantid}">
-                                                                            <a class="btn btn-primary btn-info" href="javascript:distributeQualityMgmt()" style="color: white;margin-left: 10px;margin-bottom: 10px">
-                                                                                分配<c:if test="${type eq 'REPAIR'}">报修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>
-                                                                            </a>
+                                                                            <a class="btn btn-primary btn-info" href="javascript:checkMachineInfo()" style="color: white;margin-left: 10px;margin-bottom: 10px">保存</a>
                                                                         </c:if>
                                                                         <c:if test="${type eq 'REPAIR' && qualityMgmt.status ne 'FINISH'}">
                                                                             <a class="btn btn-primary btn-info" href="javascript:closeQualityMgmt()" style="color: white;margin-left: 10px;margin-bottom: 10px">关闭报修</a>
@@ -456,7 +452,7 @@
 
                                             <div class="col-md-6">
                                                 <!--维修信息-->
-                                                <c:if test="${order.status ne 'NEW'}">
+                                                <c:if test="${not empty qualityMgmt.merchantid}">
                                                     <div class="portlet blue-hoki box">
                                                         <div class="portlet-title">
                                                             <div class="caption"><i class="fa fa-cogs"></i>
@@ -621,10 +617,8 @@
                                                                         <span>暂无<c:if test="${type eq 'qualityMgmt'}">维修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>信息</span>
                                                                     </div>
                                                                 </div>
-                                                                <c:if test="${qualityMgmt.status eq 'DISTRIBUTED'}">
-                                                                    <a class="btn btn-sm" href="javascript:startQualityMgmt()" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
-                                                                        开始<c:if test="${type eq 'REPAIR'}">维修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>
-                                                                    </a>
+                                                                <c:if test="${not empty qualityMgmt.status && empty worker}">
+                                                                    <button class="btn btn-sm" data-toggle="modal" data-target=".bs-example-modal-tj-worker" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">派工</button>
                                                                 </c:if>
                                                             </c:if>
                                                             <div class="panel-footer text-left bg-light lter">
@@ -676,6 +670,57 @@
             </div>
             <!-- /.modal 大图 end -->
 
+            <!-- 工人modal添加 -->
+            <div class="modal fade bs-example-modal-tj-worker" tabindex="-1" role="dialog"
+                 aria-labelledby="myLargeModalLabelTj" aria-hidden="false">
+                <div class="modal-dialog modal-lg" style="margin-top: 15%">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" id="modelCloseBtnAddWorker"><span
+                                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myLargeModalLabelAddWorker">指派工人</h4>
+                        </div>
+                        <form action="${ctx}/admin/wefamily/addWorkerForQualityMgmt" method="POST" id="addWorkerFrm" data-validate="parsley">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="portlet green box">
+                                            <div class="portlet-title">
+                                                <div class="caption"><i class="fa fa-cogs"></i>工人信息</div>
+                                            </div>
+                                            <div class="portlet-body">
+                                                <div class="row static-info">
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">工人姓名:<span class="text-danger">*</span></div>
+                                                    <div class="col-md-9 col-xs-12 value">
+                                                        <div class="my-display-inline-box">
+                                                            <select  class="form-control" name="workerId" id="workerId" data-required="true">
+                                                                <option value="">请选择</option>
+                                                                <c:forEach items="${workerUserList}" var="workerUser">
+                                                                    <option value="${workerUser.uuid}" <c:if test="${worker.userid == workerUser.uuid}">selected</c:if>>${workerUser.name}</option>
+                                                                </c:forEach>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="text-align: center;border: 0;margin: 0;padding: 0 20px 20px 20px;">
+                                    <a href="javascript:submitWorkerInfo()"
+                                       class="btn btn-submit btn-s-md a-noline" style="color: #fff"
+                                       id="submitAddWorkerBtn"
+                                    >提交</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+
         </section>
     </section>
     <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen,open" data-target="#nav,html"></a>
@@ -713,6 +758,49 @@
         $('#merchantAddress').val("");
     }
 
+    //派工
+    function submitWorkerInfo(){
+        $("#addWorkerFrm").parsley("validate");
+        if($('#addWorkerFrm').parsley().isValid()){
+            $('#submitAddWorkerBtn').attr('disabled', true);
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url:"${ctx}/admin/wefamily/addWorkerForQualityMgmt?qualityMgmtId=${qualityMgmt.uuid}&versionno=${qualityMgmt.versionno}",
+                data:$('#addWorkerFrm').serialize(),// 你的formid
+                async: false,
+                error: function(request) {
+                    $('#submitAddWorkerBtn').removeAttr('disabled');
+                    qikoo.dialog.alert("系统忙，稍候再试");
+                },
+                success: function(data) {
+                    $('#modelCloseBtnAdd').click();
+                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/qualityMgmtInfo?qualityMgmtId=${qualityMgmt.uuid}&type=${type}&successMessage="+data.successMessage;
+                }
+            });
+        }
+    }
+
+    function checkMachineInfo(){
+        var machinemodel = $('#machinemodel').val();
+        var machineno = $('#machineno').val();
+        var engineno = $('#engineno').val();
+
+        var url = "${ctx}/admin/wefamily/checkMachineIfexist?machinemodel="+machinemodel+"&machineno="+machineno+"&engineno="+engineno;
+        $.get(url,function(data,status){
+            if(data.existFlag == 'N'){
+                qikoo.dialog.confirm('机器信息不存在，确定保存？',function(){
+                    //确定
+                  saveReportQualityMgmtInfo();
+                },function(){
+                    //取消
+                });
+            }else{
+                saveReportQualityMgmtInfo();
+            }
+        });
+    }
+
     function saveReportQualityMgmtInfo(){
         var machineError = document.getElementById('machineError');
         machineError.innerHTML = "";
@@ -744,7 +832,7 @@
             $.ajax({
                 cache: true,
                 type: "POST",
-                url:"${ctx}/admin/wefamily/saveQualityMgmtInfo?qualityMgmtId=${qualityMgmt.uuid}&versionno=${qualityMgmt.versionno}&saveType="+saveType,
+                url:"${ctx}/admin/wefamily/saveQualityMgmtInfo?qualityMgmtId=${qualityMgmt.uuid}&qualityMgmtVersionno=${qualityMgmt.versionno}&saveType="+saveType,
                 data:$('#qualityMgmtInfoFrm').serialize(),// 你的formid
                 async: false,
                 error: function(request) {

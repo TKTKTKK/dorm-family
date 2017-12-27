@@ -78,6 +78,7 @@
     </style>
 </head>
 <body>
+<div class="choose" id="imgDiv" style="z-index: 10;background: rgba(0,0,0,0.7);"><img src="../../../static/guest/img/help.png" alt="" onclick="closeImg()" style="width: 100%"></div>
     <div class="head">
         <a class="back" href="${ctx}/guest/member/repair_list"></a>
         <span>报修</span>
@@ -177,7 +178,6 @@
 
 
 <script src="${ctx}/static/admin/js/lrz/dist/lrz.bundle.js"></script>
-<script type="text/javascript" src="${ctx}/static/admin/geo.js"></script>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script type="text/javascript" src="${ctx}/static/admin/js/myScript.js"></script>
 <script src="${ctx}/static/js/mobiscroll_date.js" charset="gb2312"></script>
@@ -267,6 +267,10 @@
         }
     });
 
+    function closeImg(){
+        $("#imgDiv").css("display","none");
+    }
+
     function scan(){
         wechatUtil.scanQRCode({
                     success : function(res){
@@ -279,11 +283,6 @@
                 }
         );
     }
-
-
-
-
-
 
     </script>
 

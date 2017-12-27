@@ -10,7 +10,8 @@
     <section class="vbox">
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
-                满田星 / <span class="font-bold  text-shallowred"> 机器信息</span>
+                满田星 / <a href="${ctx}/admin/wefamily/machineManage">机器管理</a> /
+                <span class="font-bold  text-shallowred"> 机器信息</span>
             </header>
             <div class="col-sm-12 pos">
                 <div style="margin-bottom: 5px">
