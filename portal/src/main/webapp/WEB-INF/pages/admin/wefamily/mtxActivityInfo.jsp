@@ -202,32 +202,45 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><span class="text-danger">*</span>活动详情：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <textarea id="notificationContent" class="form-control" data-required="true" <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'||activity.status eq 'DRAWING'}">
-                                        disabled
-                                    </c:if> name="detail">${activity.detail}</textarea>
+                                    <c:choose>
+                                        <c:when test="${activity.status eq 'PENDING'||activity.status eq 'APP'||activity.status eq 'DRAWING'}">
+                                            <textarea class="form-control hidden"  name="detail">${activity.detail}</textarea>
+                                            <div class="form-control" style="background-color:#eeeeee;width: 100%;height: auto">${activity.detail}</div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <textarea id="notificationContent" class="form-control" data-required="true" name="detail">${activity.detail}</textarea>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div>
                             <div id="participantid" class="hidden">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><span class="text-danger"></span>参加活动人员名单：</label>
                                     <div class="col-sm-9 b-l bg-white">
-                                        <label class="checkbox m-n">
-                                            <input type="checkbox" name="sltAll" id="sltAll" style="width: 20px;height: 20px"
-                                                   <c:if test="${activity.status eq 'APP'||activity.status eq 'DRAWING'}">disabled</c:if>
-                                                   onclick="selectAllOrNone('users','sltAll')"><i></i>
-                                        </label>
-                                        <br/>
-                                        <c:forEach items="${participantList}" var="participant">
-                                            <label class="checkbox m-n col-sm-2">
-                                                <input type="checkbox" name="users" value="${participant.userid}"
-                                                       onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
+                                        <c:choose>
+                                            <c:when test="${fn:length(participantList)<=0}">
+                                                <input class="form-control" type="text" value="暂无人员" disabled>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <label class="checkbox m-n">
+                                                    <input type="checkbox" name="sltAll" id="sltAll" style="width: 20px;height: 20px"
+                                                           <c:if test="${activity.status eq 'APP'||activity.status eq 'DRAWING'}">disabled</c:if>
+                                                           onclick="selectAllOrNone('users','sltAll')"><i></i>
+                                                </label>
+                                                <br/>
+                                                <c:forEach items="${participantList}" var="participant">
+                                                    <label class="checkbox m-n col-sm-2">
+                                                        <input type="checkbox" name="users" value="${participant.userid}"
+                                                               onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
                                                         <c:forEach items="${luckyList}" var="lucky">
                                                                <c:if test="${lucky.userid eq participant.userid}">checked</c:if>
                                                         </c:forEach>
-                                                       <c:if test="${activity.status eq 'APP'||activity.status eq 'DRAWING'}">disabled</c:if>
-                                                ><i></i><img src="${participant.headimg}" style="border-radius:25px;" width="30px" height="30px" alt=""><span style="font-size: 1.8rem">${participant.name}</span>
-                                            </label>
-                                        </c:forEach>
+                                                               <c:if test="${activity.status eq 'APP'||activity.status eq 'DRAWING'}">disabled</c:if>
+                                                        ><i></i><img src="${participant.headimg}" style="border-radius:25px;" width="30px" height="30px" alt=""><span style="font-size: 1.8rem">${participant.name}</span>
+                                                    </label>
+                                                </c:forEach>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
                             </div>
@@ -313,21 +326,29 @@
                         <div class="panel-footer text-left bg-light lter">
                             <c:choose>
                                 <c:when test="${activity.status eq 'PENDING'}">
+                                    <c:if test="${fn:length(participantList)>0}">
                                     <a onclick="submitParticipant()" class="btn btn-submit btn-s-xs ">
                                         </i>&nbsp;确&nbsp;定
                                     </a>
                                     <a onclick="clickDrawing()" class="btn btn-submit btn-s-xs " style="background: red;border: 1px solid red;margin-left:100px">
                                         </i>点击抽奖
                                     </a>
+                                    </c:if>
                                 </c:when>
                                 <c:otherwise>
                                     <c:if test="${activity.status ne 'DRAWING'}">
-                                    <%--<a onclick="submitForm()" class="btn btn-submit btn-s-xs ">--%>
-                                        <%--<i class="fa fa-check"></i>&nbsp;提&nbsp;交--%>
-                                    <%--</a>--%>
-                                        <button class="btn btn-submit btn-s-xs ">
-                                            &nbsp;提&nbsp;交
-                                        </button>
+                                        <c:choose>
+                                            <c:when test="${activity.status eq 'APP'&&fn:length(attachmentList)==4}">
+                                                <button class="btn btn-submit btn-s-xs hidden">
+                                                    &nbsp;提&nbsp;交
+                                                </button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button class="btn btn-submit btn-s-xs ">
+                                                    &nbsp;提&nbsp;交
+                                                </button>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:if>
                                 </c:otherwise>
                             </c:choose>

@@ -15,4 +15,6 @@ public interface MtxActivityParticipantMapper extends BaseMapper<MtxActivityPart
     public PageList<MtxActivityParticipant> selectMtxActivityParticipantList(@Param("mtxActivityParticipant") MtxActivityParticipant MtxActivityParticipant, PageBounds pageBounds);
 
     List<MtxActivityParticipant> selectWpUserParticipantList(@Param("participant")MtxActivityParticipant participant);
+
+    List<MtxActivityParticipant> queryForWaitDrawingList(@Param("participant")MtxActivityParticipant participant);
 }

@@ -111,13 +111,16 @@
                                                 <a  class="btn btn-sm btn-success a-noline" data-toggle="modal"
                                                     data-target=".bs-example-modal-lg-plan-deal"
                                                     onclick="getUuid('${mtxReserve.uuid}')"
-                                                >处理
+                                                >确认
                                                 </a>
                                             </td>
                                             </c:if>
                                             <c:if test="${status eq 'C_DEAL'}">
                                                 <td>
-                                                        ${mtxReserve.remarks}
+                                                        <a  data-toggle="modal"
+                                                            data-target=".bs-example-modal-lg-plan-remark"
+                                                            onclick="getUuidAndRemark('${mtxReserve.uuid}','${mtxReserve.remarks}')"
+                                                        >${mtxReserve.remarks}</a>
                                                 </td>
                                             </c:if>
                                         </tr>
@@ -144,7 +147,7 @@
                                                                 <label class="col-sm-3 col-xs-4 control-label"
                                                                        style="padding-top: 5px;padding-right: 0px"><span class="text-danger">*</span>备注说明：</label>
                                                                 <div class="col-sm-9 col-xs-8  bg-white">
-                                                                    <textarea  class="form-control" data-required="true" data-maxlength="256" style="width: 350px;height: 150px;" id="remarks" name="remarks"></textarea>
+                                                                    <textarea  class="form-control" data-required="true" data-maxlength="256" style="width: 350px;height: 150px;" name="remarks"></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -153,6 +156,42 @@
                                                 <div class="modal-footer" style="text-align: center;">
                                                     <a  class="btn btn-submit btn-s-xs"
                                                         onclick="updateReserve(document.getElementById('uuidValue').value)"
+                                                    >
+                                                        <i class="fa fa-check"></i>&nbsp;保&nbsp;存
+                                                    </a>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade bs-example-modal-lg-plan-remark" tabindex="-1" role="dialog"
+                                     aria-labelledby="myPlanStartLargeModalLabel" aria-hidden="false">
+                                    <div class="modal-dialog modal-lg" style="margin-top: 15%">
+                                        <div class="modal-content">
+                                            <form id="remarksForm" method="post" action=""
+                                                  class="form-horizontal" data-validate="parsley"
+                                            >
+                                                <div class="modal-header mintgreen">
+                                                    <button type="button" class="close" data-dismiss="modal" id="remarksModelCloseBtn"><span
+                                                            aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                                                    <h4 class="modal-title" id="myRemarksLargeModalLabel">备注说明</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group row" style="border: 2px;background-color: #fff">
+                                                                <label class="col-sm-3 col-xs-4 control-label"
+                                                                       style="padding-top: 5px;padding-right: 0px"><span class="text-danger">*</span>备注说明：</label>
+                                                                <div class="col-sm-9 col-xs-8  bg-white">
+                                                                    <textarea  class="form-control" data-required="true" data-maxlength="256" style="width: 350px;height: 150px;" id="remarks" name="remarks"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer" style="text-align: center;">
+                                                    <a  class="btn btn-submit btn-s-xs"
+                                                        onclick="updateRemarksReserve(document.getElementById('uuidValue').value)"
                                                     >
                                                         <i class="fa fa-check"></i>&nbsp;保&nbsp;存
                                                     </a>
@@ -182,16 +221,28 @@
         //显示父菜单
         showParentMenu('咨询留言');
     }
+
     function searchMtxReserve(){
         var searchForm = document.getElementById("searchForm");
         searchForm.action = "${ctx}/admin/wefamily/mtxReserveManage";
         searchForm.submit();
     }
+
      function resubmitSearch(page){
         var searchForm = document.getElementById("searchForm");
         searchForm.action = "${ctx}/admin/wefamily/mtxReserveManage?page="+page;
         searchForm.submit();
     }
+
+    function updateRemarksReserve(uuid){
+        $("#remarksForm").parsley("validate");
+        if($('#remarksForm').parsley().isValid()){
+            var searchForm = document.getElementById("remarksForm");
+            searchForm.action = "${ctx}/admin/wefamily/updateReserve?uuid="+uuid+"&flag=1";
+            searchForm.submit();
+        }
+    }
+
     function updateReserve(uuid){
         $("#planStartFrm").parsley("validate");
         if($('#planStartFrm').parsley().isValid()){
@@ -200,8 +251,14 @@
             searchForm.submit();
         }
     }
+
     function getUuid(uuid){
         $("#uuidValue").val(uuid);
+    }
+
+    function getUuidAndRemark(uuid,remarks){
+        $("#uuidValue").val(uuid);
+        $("#remarks").val(remarks);
     }
 </script>
 </body>
