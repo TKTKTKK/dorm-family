@@ -697,6 +697,18 @@ public class MtxGuestController extends BaseGuestController{
             model.addAttribute("attachmentList",attachmentList);
 
             if(null != mtxActivity){
+
+                //判断是否已参加
+                if(null != wpUser){
+                    MtxActivityParticipant tempParticipant = new MtxActivityParticipant();
+                    tempParticipant.setUserid(wpUser.getUuid());
+                    tempParticipant.setActivityid(activityId);
+                    List<MtxActivityParticipant> tempParticipantList = mtxActivityParticipantService.queryForList(tempParticipant);
+                    if(null != tempParticipantList && tempParticipantList.size() > 0){
+                        model.addAttribute("participanted","Y");
+                    }
+                }
+
                 MtxActivityParticipant mtxActivityParticipant = new MtxActivityParticipant();
                 mtxActivityParticipant.setActivityid(activityId);
                 List<MtxActivityParticipant> activityParticipantList = mtxActivityParticipantService.queryForParticipantList(mtxActivityParticipant);
@@ -711,23 +723,16 @@ public class MtxGuestController extends BaseGuestController{
         return "guest/activity_info";
     }
 
-    @RequestMapping(value = "/participate_activity",method = RequestMethod.GET)
-    public String participate_activity(HttpServletRequest request,Model model,RedirectAttributes redirectAttributes){
+    @RequestMapping(value = "/participateActivity",method = RequestMethod.GET)
+    public String participateActivity(HttpServletRequest request){
 
         String activityId = request.getParameter("activityId");
+        String name = request.getParameter("name");
 
         WpUser wpUser = getWechatMemberInfo(request);
-        if(null != wpUser){
-            MtxActivityParticipant mtxActivityParticipant = new MtxActivityParticipant();
-            mtxActivityParticipant.setUserid(wpUser.getUuid());
-            mtxActivityParticipant.setStatus("WAIT_WIN");
-            mtxActivityParticipant.setActivityid(activityId);
-            mtxActivityParticipantService.insert(mtxActivityParticipant);
-            redirectAttributes.addFlashAttribute("successMessage","参加成功！");
-            return "redirect:/guest/activity_info?activityId="+activityId;
-        }else{
-            return "guest/participator_Info";
-        }
 
+        mtxActivityService.participateActivity(activityId,name,wpUser);
+
+        return "redirect:/guest/activity_info?activityId="+activityId;
     }
 }

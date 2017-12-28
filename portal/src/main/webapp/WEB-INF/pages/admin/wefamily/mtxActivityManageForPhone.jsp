@@ -27,13 +27,12 @@
 </head>
 <body>
 <div class="head">
-    <a class="back" href="${ctx}/guest/member/center"></a>
     <span>活动列表</span>
 </div>
 <div class="content">
     <ul>
         <c:forEach items="${mtxActivityList}" var="activity">
-            <a href="${ctx}/guest/activity_info?activityId=${activity.uuid}">
+            <a href="${ctx}/admin/wefamily/mtxActivityInfoForPhone?activityId=${activity.uuid}">
                 <li>
                     <p class="title">${activity.name}</p>
                     <div class="info">

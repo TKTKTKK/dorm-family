@@ -29,4 +29,14 @@
         </if>
         order by ma.modifyon desc;
     </select>
+
+    <select id="selectActivityListForPhone" resultMap="selectResultMap">
+        select ma.* from tb_mtx_activity ma
+        where ma.merchantid in
+        <foreach item="item" index="index" collection="merchantList" open="("
+                 separator="," close=")">
+            #{item.uuid}
+        </foreach>
+        order by ma.createon desc
+    </select>
 </mapper>

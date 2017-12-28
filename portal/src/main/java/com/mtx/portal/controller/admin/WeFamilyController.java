@@ -2392,37 +2392,33 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     @RequestMapping(value = "/addParticipant", method = RequestMethod.POST)
-    public String addParticipant(String uuid,String users){
-        String participant[]=null;
-        List<MtxLuckyParticipant> luckyParticipantList=new ArrayList<MtxLuckyParticipant>();
-        if(StringUtils.isNotBlank(uuid)&&StringUtils.isNotBlank(users)){
-            MtxLuckyParticipant participantTemp=new MtxLuckyParticipant();
-            participantTemp.setActivityid(uuid);
-            luckyParticipantList=mtxLuckyParticipantService.queryForList(participantTemp);
-            if(luckyParticipantList.size()>0){
-                for(int i=0;i<luckyParticipantList.size();i++){
-                    mtxLuckyParticipantService.delete(luckyParticipantList.get(i));
-                }
-            }
-            participant=users.split(",");
-            for(int i=0;i<participant.length;i++){
-                MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
-                luckyParticipant.setUserid(participant[i]);
-                luckyParticipant.setActivityid(uuid);
-                luckyParticipant.setStatus("WAIT_WIN");
-                mtxLuckyParticipantService.insert(luckyParticipant);
+    public String addParticipant(String uuid,HttpServletRequest request){
+        MtxLuckyParticipant participantTemp=new MtxLuckyParticipant();
+        participantTemp.setActivityid(uuid);
+        List<MtxLuckyParticipant> luckyParticipantList = mtxLuckyParticipantService.queryForList(participantTemp);
+        if(luckyParticipantList.size()>0){
+            for(int i=0;i<luckyParticipantList.size();i++){
+                mtxLuckyParticipantService.delete(luckyParticipantList.get(i));
             }
         }
-        if(StringUtils.isNotBlank(uuid)&&StringUtils.isBlank(users)){
-            MtxLuckyParticipant participantTemp=new MtxLuckyParticipant();
-            participantTemp.setActivityid(uuid);
-            luckyParticipantList=mtxLuckyParticipantService.queryForList(participantTemp);
-            if(luckyParticipantList.size()>0){
-                for(int i=0;i<luckyParticipantList.size();i++){
-                    mtxLuckyParticipantService.delete(luckyParticipantList.get(i));
+
+        String activityParticipant[] = request.getParameterValues("users");
+        if(StringUtils.isNotBlank(uuid) && null != activityParticipant){
+            MtxActivityParticipant tempActivityParticipant = new MtxActivityParticipant();
+            tempActivityParticipant.setActivityid(uuid);
+            List<MtxActivityParticipant> tempActivityParticipantList = mtxActivityParticipantService.queryForList(tempActivityParticipant);
+            if(null !=  tempActivityParticipantList && tempActivityParticipantList.size() != activityParticipant.length){
+                for(String participantId : activityParticipant){
+                    MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
+                    luckyParticipant.setUserid(participantId);
+                    luckyParticipant.setActivityid(uuid);
+                    luckyParticipant.setStatus("WAIT_WIN");
+                    mtxLuckyParticipantService.insert(luckyParticipant);
                 }
             }
+
         }
+
         return "redirect:/admin/wefamily/goMtxActivity?uuid="+uuid+"&successFlg=1";
     }
 
@@ -2446,5 +2442,57 @@ public class WeFamilyController extends BaseAdminController {
             }
         }
         return "admin/wefamily/mtxDrawing";
+    }
+
+    /**
+     * 手机活动列表
+     */
+    @RequestMapping(value = "/mtxActivityManageForPhone",method = RequestMethod.GET)
+    public String activity_list(Model model) {
+
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        List<MtxActivity> mtxActivityList = mtxActivityService.queryActivityListForPhone(merchantList);
+        model.addAttribute("mtxActivityList",mtxActivityList);
+        return "admin/wefamily/mtxActivityManageForPhone";
+    }
+
+    /**
+     * 手机活动详情
+     */
+    @RequestMapping(value = "/mtxActivityInfoForPhone",method = RequestMethod.GET)
+    public String mtxActivityInfoForPhone(Model model,HttpServletRequest request) {
+
+        String activityId = request.getParameter("activityId");
+        if(StringUtils.isNotBlank(activityId)){
+            MtxActivity mtxActivity = new MtxActivity();
+            mtxActivity.setUuid(activityId);
+            mtxActivity = mtxActivityService.queryForObjectByPk(mtxActivity);
+            model.addAttribute("mtxActivity",mtxActivity);
+
+            Attachment attachment = new Attachment();
+            attachment.setRefid(activityId);
+            List<Attachment> attachmentList = attachmentService.queryForList(attachment);
+            model.addAttribute("attachmentList",attachmentList);
+
+            if(null != mtxActivity){
+
+                MtxActivityParticipant mtxActivityParticipant = new MtxActivityParticipant();
+                mtxActivityParticipant.setActivityid(activityId);
+                List<MtxActivityParticipant> activityParticipantList = mtxActivityParticipantService.queryForParticipantList(mtxActivityParticipant);
+                model.addAttribute("activityParticipantList",activityParticipantList);
+
+                MtxLuckyParticipant luckyParticipant = new MtxLuckyParticipant();
+                luckyParticipant.setActivityid(activityId);
+                List<MtxLuckyParticipant> luckyParticipantList = mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant);
+                model.addAttribute("luckyParticipantList",luckyParticipantList);
+
+
+                mtxActivityParticipant.setStatus("WIN");
+                List<MtxActivityParticipant> winParticipantList = mtxActivityParticipantService.queryForParticipantList(mtxActivityParticipant);
+                model.addAttribute("winParticipantList",winParticipantList);
+            }
+        }
+
+        return "admin/wefamily/mtxActivityInfoForPhone";
     }
 }

@@ -38,13 +38,13 @@
 
         label {background-color: #FFF;border: 1px solid #66cc66;padding: 1rem;border-radius: 5px;display: inline-block;position: relative;margin-right: 8px;vertical-align: bottom;}
         .chk:checked + label {border: 1px solid #66cc66;}
-        .chk:checked + label:after {content: '';position: absolute;top: 0.2rem;left: 0.2rem;width: 1.6rem;height:1.6rem;text-align: center;font-size: 1.4em;vertical-align: text-top;background-image: url(do.png);background-size: 1.6rem 1.6rem;background-repeat: no-repeat;}
+        .chk:checked + label:after {content: '';position: absolute;top: 0.2rem;left: 0.2rem;width: 1.6rem;height:1.6rem;text-align: center;font-size: 1.4em;vertical-align: text-top;background-image: url("../../../../static/admin/img/do.png");background-size: 1.6rem 1.6rem;background-repeat: no-repeat;}
         .words_detail .status_now{color: #66cc66;border-radius: 10px;border: 1px solid #66cc66;padding: 2px 8px;float: right;margin-top: 5px;}
         .modal-header .close{
             padding: 5px 10px !important;
         }
         .choose .error span{
-           font-weight: bold;
+            font-weight: bold;
         }
         .choose .error li{
             margin-bottom: 15px;
@@ -54,6 +54,14 @@
         }
         #inviteCodeError{
             color: red;font-size: 1.2rem;font-weight: lighter;margin-bottom: 25px !important;
+        }
+        .checkAllButton{
+            background-color: #5bbc4e;
+            border-radius: 9px;
+            width: 5rem;
+            height: 2.6rem;
+            color: #fff;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -97,54 +105,41 @@
                         </ul>
                     </div>
                 </c:if>
-                <div class="activity_kind">
-                    <p>参加人员</p>
-                    <ul class="partman">
-                        <c:forEach items="${activityParticipantList}" var="activityParticipant">
-                            <li>
-                                <img src="${activityParticipant.headimg}" alt="">
-                            </li>
-                        </c:forEach>
-                    </ul>
-                </div>
+
+                    <div class="activity_kind">
+                        <p>参加人员</p>
+                        <%--<input type="checkbox" class="chk" name="checkall" id="checkall" onchange="checkAllParticipant()" style="display: none;">
+                        <label for="checkall"></label>
+                        <span class="all">全选</span>--%>
+                        <button class="checkAllButton" id="checkAllButton" onclick="checkAllParticipant()">全选</button>
+                        <form id="participantFrm" method="POST">
+                            <ul class="winner list" id="participants">
+                                <c:forEach items="${activityParticipantList}" var="activityParticipant">
+                                    <c:set var="showFlag" value="0" scope="page"></c:set>
+                                    <c:forEach items="${luckyParticipantList}" var="luckyParticipant">
+                                        <c:if test="${luckyParticipant.userid == activityParticipant.userid}">
+                                            <c:set var="showFlag" value="1" scope="page"></c:set>
+                                        </c:if>
+                                    </c:forEach>
+                                    <li class="first">
+                                        <input type="checkbox" class="chk" id="${activityParticipant.uuid}" name="users" onchange="checkParticipant('${activityParticipant.uuid}')" style="display: none;" <c:if test="${showFlag == 1}">checked </c:if> value="${activityParticipant.userid}">
+                                        <label for="${activityParticipant.uuid}"></label>
+                                        <img src="${activityParticipant.headimg}" alt=""><span class="name">${activityParticipant.name}</span><span class="phone">18856234569</span><span class="wechat_name">叫我小陈陈</span>
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </form>
+                    </div>
+
+            </div>
+            <div class="fixsubmit">
+                <div><a href="javascript:submitActivityInfo()">开始抽奖</a></div>
+                <div>结束抽奖</div>
             </div>
 
 
-            <c:if test="${mtxActivity.status == 'PENDING'}">
-                <c:choose>
-                    <c:when test="${participanted == 'Y'}">
-                        <div class="fixsubmit">已参加</div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="fixsubmit" onclick="openParticipateDiv()">我要参加</div>
-                    </c:otherwise>
-                </c:choose>
-
-            </c:if>
-
-            <div class="choose" id="participantDiv" style="display: none">
-                <div class="error">
-                    <li>
-                        <span>邀请码：</span>
-                        <input type="text" id="inviteCode" name="inviteCode"
-                               data-required="true"  data-maxlength="32" placeholder="请填写邀请码"/>
-
-                    </li>
-                    <li>
-                        <span>姓&nbsp;&nbsp;&nbsp;名：</span>
-                        <input type="text" id="name" name="name" value="${wpUser.name}"
-                               data-required="true"  data-maxlength="32" placeholder="请填写姓名"/>
-                    </li>
-                    <li>
-                        <span id="inviteCodeError"></span>
-                    </li>
-
-                    <button onclick="participateActivity()">参加</button>
 
 
-
-                </div>
-            </div>
 
             <div class="choose" id="Msg" style="display: none">
                 <div class="error">
@@ -157,9 +152,16 @@
         </section>
     </section>
 </section>
-</body>
+
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script type="text/javascript">
+
+    function submitActivityInfo(){
+        var participantFrm = document.getElementById("participantFrm");
+        participantFrm.action = "${ctx}/admin/wefamily/addParticipant?uuid=${mtxActivity.uuid}";
+        participantFrm.submit();
+
+    }
 
     function openParticipateDiv(){
         var errorMessage = document.getElementById("errorMessage");
@@ -191,11 +193,67 @@
             $("#participantDiv").css("display","none");
         }
 
-
-
-
     }
 
-</script>
+    function checkParticipant(participantId){
+        var checkBox = document.getElementById(participantId);
+        if(checkBox.checked){
+            checkBox.checked = true;
+        }else{
+            checkBox.checked = false;
+        }
+        var ul = document.getElementById("participants");
+        var inputs = ul.getElementsByTagName("input");
+        var count = 0;
+        if(inputs.length>0){
+            for(var i=0;i<inputs.length;i++){
+                if(inputs[i].checked) {
+                    count ++;
+                }
+            }
+        }
+        /*var checkAllButton = document.getElementById("checkAllButton");
 
+        if(count == inputs.length){
+            checkAllButton.innerHTML = "全不选";
+        }else{
+            checkAllButton.innerHTML = "全选";
+        }*/
+    }
+
+    function checkAllParticipant(){
+        var ul = document.getElementById("participants");
+        var inputs = ul.getElementsByTagName("input");
+        var ifCheck = "";
+        var count = 0;
+        if(inputs.length>0){
+            for(var i=0;i<inputs.length;i++){
+                if(!inputs[i].checked) {
+                    ifCheck = "Y";
+                }else{
+                    count ++;
+                }
+            }
+            if(ifCheck == "Y"){
+                for(var i=0;i<inputs.length;i++){
+                    inputs[i].checked = true;
+                }
+            }else{
+                for(var i=0;i<inputs.length;i++){
+                    inputs[i].checked = false;
+                }
+            }
+        }
+
+        /*var checkAllButton = document.getElementById("checkAllButton");
+
+        if(count < inputs.length){
+            checkAllButton.innerHTML = "全不选";
+        }else if(count == inputs.length){
+            checkAllButton.innerHTML = "全选";
+        }*/
+
+    }
+</script>
+</body>
 </html>
