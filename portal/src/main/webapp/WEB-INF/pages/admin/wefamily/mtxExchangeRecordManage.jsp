@@ -116,13 +116,16 @@
                                                     <a  class="btn btn-sm btn-success a-noline" data-toggle="modal"
                                                         data-target=".bs-example-modal-lg-plan-deal"
                                                         onclick="getUuid('${mtxExchangeRecord.uuid}')"
-                                                    >处理
+                                                    >确认
                                                     </a>
                                                 </td>
                                             </c:if>
                                             <c:if test="${status eq 'C_DEAL'}">
                                                 <td>
-                                                        ${mtxExchangeRecord.remarks}
+                                                    <a  data-toggle="modal"
+                                                        data-target=".bs-example-modal-lg-plan-remark"
+                                                        onclick="getUuidAndRemark('${mtxExchangeRecord.uuid}','${mtxExchangeRecord.remarks}')"
+                                                    >${mtxExchangeRecord.remarks}</a>
                                                 </td>
                                             </c:if>
                                         </tr>
@@ -149,7 +152,7 @@
                                                                 <label class="col-sm-3 col-xs-4 control-label"
                                                                        style="padding-top: 5px;padding-right: 0px"><span class="text-danger">*</span>备注说明：</label>
                                                                 <div class="col-sm-9 col-xs-8  bg-white">
-                                                                    <textarea  class="form-control" data-required="true" data-maxlength="256" style="width: 350px;height: 150px;" id="remarks" name="remarks"></textarea>
+                                                                    <textarea  class="form-control" data-required="true" data-maxlength="256" style="width: 350px;height: 150px;" name="remarks"></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -158,6 +161,42 @@
                                                 <div class="modal-footer" style="text-align: center;">
                                                     <a  class="btn btn-submit btn-s-xs"
                                                         onclick="updateExchangeRecord(document.getElementById('uuidValue').value)"
+                                                    >
+                                                        <i class="fa fa-check"></i>&nbsp;保&nbsp;存
+                                                    </a>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade bs-example-modal-lg-plan-remark" tabindex="-1" role="dialog"
+                                     aria-labelledby="myPlanStartLargeModalLabel" aria-hidden="false">
+                                    <div class="modal-dialog modal-lg" style="margin-top: 15%">
+                                        <div class="modal-content">
+                                            <form id="remarksForm" method="post" action=""
+                                                  class="form-horizontal" data-validate="parsley"
+                                            >
+                                                <div class="modal-header mintgreen">
+                                                    <button type="button" class="close" data-dismiss="modal" id="remarksModelCloseBtn"><span
+                                                            aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                                                    <h4 class="modal-title" id="myRemarksLargeModalLabel">备注说明</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group row" style="border: 2px;background-color: #fff">
+                                                                <label class="col-sm-3 col-xs-4 control-label"
+                                                                       style="padding-top: 5px;padding-right: 0px"><span class="text-danger">*</span>备注说明：</label>
+                                                                <div class="col-sm-9 col-xs-8  bg-white">
+                                                                    <textarea  class="form-control" data-required="true" data-maxlength="256" style="width: 350px;height: 150px;" id="remarks" name="remarks"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer" style="text-align: center;">
+                                                    <a  class="btn btn-submit btn-s-xs"
+                                                        onclick="updateRemarksExchangeRecord(document.getElementById('uuidValue').value)"
                                                     >
                                                         <i class="fa fa-check"></i>&nbsp;保&nbsp;存
                                                     </a>
@@ -193,6 +232,7 @@
         searchForm.action = "${ctx}/admin/wefamily/mtxExchangeRecordManage?page="+page;
         searchForm.submit();
     }
+
     function updateExchangeRecord(uuid){
         $("#planStartFrm").parsley("validate");
         if($('#planStartFrm').parsley().isValid()){
@@ -201,14 +241,31 @@
             searchForm.submit();
         }
     }
+
+    function updateRemarksExchangeRecord(uuid){
+        $("#remarksForm").parsley("validate");
+        if($('#remarksForm').parsley().isValid()){
+            var searchForm = document.getElementById("remarksForm");
+            searchForm.action = "${ctx}/admin/wefamily/updateExchangeRecord?uuid="+uuid+"&flag=1";
+            searchForm.submit();
+        }
+    }
+
     function searchExchangeRecord(){
         var searchForm = document.getElementById("searchForm");
         searchForm.action = "${ctx}/admin/wefamily/mtxExchangeRecordManage";
         searchForm.submit();
     }
+
     function getUuid(uuid){
         $("#uuidValue").val(uuid);
     }
+
+    function getUuidAndRemark(uuid,remarks){
+        $("#uuidValue").val(uuid);
+        $("#remarks").val(remarks);
+    }
+
 </script>
 </body>
 </html>

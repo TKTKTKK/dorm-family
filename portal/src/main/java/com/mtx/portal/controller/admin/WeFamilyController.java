@@ -868,12 +868,17 @@ public class WeFamilyController extends BaseAdminController {
      * 咨询管理
      */
     @RequestMapping(value = "/mtxReserveManage")
-    public String mtxReserveManage(@RequestParam(required = false, defaultValue = "1") int page, MtxReserve mtxReserve, Model model) {
+    public String mtxReserveManage(@RequestParam(required = false, defaultValue = "1") int page, MtxReserve mtxReserve, Model model,HttpServletRequest request) {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
+        String flag=request.getParameter("flag");
         if (null != wechatBinding) {
             if(StringUtils.isBlank(mtxReserve.getStatus())){
-                mtxReserve.setStatus("N_DEAL");
+                if(StringUtils.isNotBlank(flag)&&"1".equals(flag)){
+                    mtxReserve.setStatus("C_DEAL");
+                }else{
+                    mtxReserve.setStatus("N_DEAL");
+                }
             }
             model.addAttribute("status",mtxReserve.getStatus());
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
@@ -885,18 +890,18 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     @RequestMapping(value = "/updateReserve",method = RequestMethod.POST)
-    public String updateReserve(MtxReserve mtxReserve, RedirectAttributes redirectAttributes) {
+    public String updateReserve(MtxReserve mtxReserve, RedirectAttributes redirectAttributes,String flag) {
         String remarks=mtxReserve.getRemarks();
         mtxReserve=mtxReserveService.queryForObjectByPk(mtxReserve);
         if(mtxReserve!=null){
             mtxReserve.setRemarks(remarks);
             mtxReserve.setStatus("C_DEAL");
             mtxReserveService.updatePartial(mtxReserve);
-            redirectAttributes.addFlashAttribute("successMessage","处理成功！");
+            redirectAttributes.addFlashAttribute("successMessage","确认成功！");
         }else{
-            redirectAttributes.addFlashAttribute("errorMessage","处理失败！");
+            redirectAttributes.addFlashAttribute("errorMessage","确认失败！");
         }
-        return "redirect:/admin/wefamily/mtxReserveManage";
+        return "redirect:/admin/wefamily/mtxReserveManage?flag="+flag;
     }
 
     /**
@@ -2195,12 +2200,17 @@ public class WeFamilyController extends BaseAdminController {
      * 兑换记录商品
      */
     @RequestMapping(value = "/mtxExchangeRecordManage")
-    public String mtxExchangeRecordManage(@RequestParam(required = false, defaultValue = "1") int page, MtxExchangeRecord mtxExchangeRecord, Model model) {
+    public String mtxExchangeRecordManage(@RequestParam(required = false, defaultValue = "1") int page, MtxExchangeRecord mtxExchangeRecord, Model model,HttpServletRequest request) {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
+        String flag=request.getParameter("flag");
         if (null != wechatBinding) {
             if(StringUtils.isBlank(mtxExchangeRecord.getStatus())){
-                mtxExchangeRecord.setStatus("N_DEAL");
+                if(StringUtils.isNotBlank(flag)&&"1".equals(flag)){
+                    mtxExchangeRecord.setStatus("C_DEAL");
+                }else{
+                    mtxExchangeRecord.setStatus("N_DEAL");
+                }
             }
             model.addAttribute("status",mtxExchangeRecord.getStatus());
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
@@ -2212,18 +2222,18 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     @RequestMapping(value = "/updateExchangeRecord",method = RequestMethod.POST)
-    public String updateExchangeRecord(MtxExchangeRecord mtxExchangeRecord, RedirectAttributes redirectAttributes) {
+    public String updateExchangeRecord(MtxExchangeRecord mtxExchangeRecord, RedirectAttributes redirectAttributes,String flag) {
         String remarks=mtxExchangeRecord.getRemarks();
         mtxExchangeRecord=mtxExchangeRecordService.queryForObjectByPk(mtxExchangeRecord);
         if(mtxExchangeRecord!=null){
             mtxExchangeRecord.setRemarks(remarks);
             mtxExchangeRecord.setStatus("C_DEAL");
             mtxExchangeRecordService.updatePartial(mtxExchangeRecord);
-            redirectAttributes.addFlashAttribute("successMessage","处理成功！");
+            redirectAttributes.addFlashAttribute("successMessage","确认成功！");
         }else{
-            redirectAttributes.addFlashAttribute("errorMessage","处理失败！");
+            redirectAttributes.addFlashAttribute("errorMessage","确认失败！");
         }
-        return "redirect:/admin/wefamily/mtxExchangeRecordManage";
+        return "redirect:/admin/wefamily/mtxExchangeRecordManage?flag="+flag;
     }
 
     /**

@@ -15,6 +15,26 @@ public class MtxConsult extends BaseEntity {
     private String identify;
     @Column
     private String status;
+    @Column
+    private String nickname;
+    @Column
+    private String headimgurl;
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getHeadimgurl() {
+        return headimgurl;
+    }
+
+    public void setHeadimgurl(String headimgurl) {
+        this.headimgurl = headimgurl;
+    }
 
     public String getUserid() {
         return userid;

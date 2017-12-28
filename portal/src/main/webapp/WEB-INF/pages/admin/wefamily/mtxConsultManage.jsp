@@ -22,6 +22,13 @@
                         <form method="post" action="" class="form-horizontal bg-white padding20 b-t b-b b-l b-r" data-validate="parsley" id="searchForm">
                             <div class="row">
                                 <div class="col-sm-4">
+                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 微信昵称：</label>
+                                    <div class="col-sm-7  my-display-inline-box">
+                                        <input type="text" class="form-control" name="nickname" id="nickname"
+                                               onblur="trimText(this)" value="${mtxConsult.nickname}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 身份类型：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <select class="form-control" id="identify" name="identify">
@@ -55,8 +62,8 @@
                                         </select>
                                     </div>
                                 </div>
-                                <%--<div style="clear: both"></div>--%>
-                                <div class="col-sm-4 text-center text-white">
+                                <div style="clear: both"></div>
+                                <div class="row col-sm-12 text-center text-white" style="margin-top: 20px">
                                     <a type="submit"  class="btn btn-submit btn-s-xs"
                                        onclick="searchMtxConsult()"
                                        id="searchBtn" style="color: #fff">查 询</a>
@@ -70,15 +77,23 @@
                             <table class="table table-striped b-t b-light  b-l b-r b-b">
                                 <thead>
                                 <tr>
-                                    <th width="25%">身份类型</th>
-                                    <th width="25%">状态</th>
-                                    <th width="25%">提交时间</th>
-                                    <th width="25%">操作</th>
+                                    <th width="15%">微信昵称</th>
+                                    <th width="15%">微信头像</th>
+                                    <th width="15%">身份类型</th>
+                                    <th width="15%">状态</th>
+                                    <th width="20%">提交时间</th>
+                                    <th width="20%">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <c:forEach items="${mtxConsultList}" var="mtxConsult">
                                     <tr>
+                                        <td>
+                                                ${mtxConsult.nickname}
+                                        </td>
+                                        <td>
+                                                <img src="${mtxConsult.headimgurl}" alt="" width="50px" height="50px">
+                                        </td>
                                         <td>
                                                 ${web:getCodeDesc("IDENTITY_CODE", mtxConsult.identify)}
                                         </td>
