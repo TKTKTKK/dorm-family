@@ -19,6 +19,26 @@ public class MtxLuckyParticipant extends BaseEntity {
 
     private String headimg;
 
+    private String nickname;
+
+    private String contactno;
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getContactno() {
+        return contactno;
+    }
+
+    public void setContactno(String contactno) {
+        this.contactno = contactno;
+    }
+
     public String getName() {
         return name;
     }

@@ -9,7 +9,7 @@
         order by activityid desc;
     </select>
     <select id="selectWpUserParticipantList" resultMap="selectResultMap">
-        select map.* ,wu.name as name ,wu.headimgurl as headimg
+        select map.* ,wu.name as name ,wu.headimgurl as headimg ,wu.nickname as nickname ,wu.contactno as contactno
         from tb_mtx_activity_participant  map
         inner join tb_wp_user wu on wu.uuid=map.userid
         where map.activityid=#{participant.activityid}
@@ -19,7 +19,7 @@
         order by map.createon desc;
     </select>
     <select id="queryForWaitDrawingList" resultMap="selectResultMap">
-        select map.* ,wu.name as name ,wu.headimgurl as headimg
+        select map.* ,wu.name as name ,wu.headimgurl as headimg ,wu.nickname as nickname ,wu.contactno as contactno
         from tb_mtx_activity_participant  map
         inner join tb_wp_user wu on wu.uuid=map.userid
         where map.activityid=#{participant.activityid}
