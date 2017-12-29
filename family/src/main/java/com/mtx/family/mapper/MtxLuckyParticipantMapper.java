@@ -14,5 +14,5 @@ import java.util.List;
 public interface MtxLuckyParticipantMapper extends BaseMapper<MtxLuckyParticipant> {
     public PageList<MtxLuckyParticipant> selectMtxLuckyParticipantList(@Param("mtxLuckyParticipant") MtxLuckyParticipant MtxLuckyParticipant, PageBounds pageBounds);
 
-    List<MtxLuckyParticipant> queryForLuckyParticipantList(@Param("mtxLuckyParticipant")MtxLuckyParticipant luckyParticipant);
+    List<MtxLuckyParticipant> queryForLuckyParticipantList(@Param("mtxLuckyParticipant")MtxLuckyParticipant luckyParticipant,@Param("flag")String flag);
 }

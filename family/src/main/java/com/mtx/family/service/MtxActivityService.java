@@ -4,10 +4,7 @@ import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.base.BaseService;
 import com.mtx.common.utils.UserUtils;
-import com.mtx.family.entity.Merchant;
-import com.mtx.family.entity.MtxActivity;
-import com.mtx.family.entity.MtxActivityParticipant;
-import com.mtx.family.entity.MtxReserve;
+import com.mtx.family.entity.*;
 import com.mtx.family.mapper.MtxActivityMapper;
 import com.mtx.family.mapper.MtxReserveMapper;
 import com.mtx.wechat.entity.WpUser;
@@ -32,6 +29,8 @@ public class MtxActivityService extends BaseService<MtxActivityMapper,MtxActivit
     private WpUserService wpUserService;
     @Autowired
     private MtxActivityParticipantService mtxActivityParticipantService;
+    @Autowired
+    private MtxLuckyParticipantService mtxLuckyParticipantService;
 
     public PageList<MtxActivity> queryForListWithPagination(MtxActivity obj, PageBounds pageBounds) {
         return mapper.selectMtxActivityList(obj,pageBounds);
@@ -52,5 +51,36 @@ public class MtxActivityService extends BaseService<MtxActivityMapper,MtxActivit
 
     public List<MtxActivity> queryActivityListForPhone(List<Merchant> merchantList) {
         return  mapper.selectActivityListForPhone(merchantList);
+    }
+    public void updateParticipant(String uuid, String winnerId,int count) {
+        MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
+        activityParticipant.setActivityid(uuid);
+        activityParticipant.setUserid(winnerId);
+        List<MtxActivityParticipant> activityParticipantList=mtxActivityParticipantService.queryForList(activityParticipant);
+        if(activityParticipantList.size()>0){
+            activityParticipant=activityParticipantList.get(0);
+            activityParticipant.setStatus("WIN");
+            mtxActivityParticipantService.updatePartial(activityParticipant);
+        }
+        MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
+        luckyParticipant.setActivityid(uuid);
+        luckyParticipant.setUserid(winnerId);
+        List<MtxLuckyParticipant> luckList=mtxLuckyParticipantService.queryForList(luckyParticipant);
+        if(luckList.size()>0){
+            luckyParticipant=luckList.get(0);
+            luckyParticipant.setStatus("WIN");
+            mtxLuckyParticipantService.updatePartial(luckyParticipant);
+        }
+        MtxActivityParticipant participant=new MtxActivityParticipant();
+        participant.setActivityid(uuid);
+        participant.setStatus("WIN");
+        List<MtxActivityParticipant> participantList=mtxActivityParticipantService.queryForList(participant);
+        if(participantList.size()==count){
+            MtxActivity activity=new MtxActivity();
+            activity.setUuid(uuid);
+            activity=this.queryForObjectByPk(activity);
+            activity.setStatus("APP");
+            this.updatePartial(activity);
+        }
     }
 }
