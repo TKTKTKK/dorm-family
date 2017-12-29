@@ -18,7 +18,7 @@
             </div>
             <ul class="man">
                 <c:forEach items="${activityParticipantList}" var="participant">
-                    <li><img src="${participant.headimg}" alt=""><span>${participant.name}</span></li>
+                    <li><img src="${participant.headimg}" alt=""><span>${participant.nickname}</span></li>
                 </c:forEach>
             </ul>
         </div>
@@ -49,19 +49,19 @@
 <script>
     window.onload=function(){
         <c:forEach items="${winList}" var="win">
-        $('.luck-user-list').prepend("<li><div class='portrait' style='background-image:url(${win.headimg})'></div><div class='luckuserName'>${win.name}</div></li>");
+        $('.luck-user-list').prepend("<li><div class='portrait' style='background-image:url(${win.headimg})'></div><div class='luckuserName'>${win.nickname}</div></li>");
         </c:forEach>
     }
     //参与者
     var participartors = [
             <c:forEach items="${activityParticipantList}" var="participant">
-                    {id:"${participant.userid}",image:"${participant.headimg}",phone:"${participant.name}"},
+                    {id:"${participant.userid}",image:"${participant.headimg}",phone:"${participant.nickname}"},
             </c:forEach>
         ];
     //中奖白名单
     var winners = [
         <c:forEach items="${luckyParticipantList}" var="lucky">
-            {id:"${lucky.userid}",image:"${lucky.headimg}",phone:"${lucky.name}"},
+            {id:"${lucky.userid}",image:"${lucky.headimg}",phone:"${lucky.nickname}"},
         </c:forEach>
         ];
     //设置单次抽奖人数
