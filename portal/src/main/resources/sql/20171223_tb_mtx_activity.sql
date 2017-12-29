@@ -51,7 +51,7 @@ CREATE TABLE `tb_mtx_lucky_participant` (
   PRIMARY KEY (`uuid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `tb_platform_permit` VALUES ('2017122310000001', 'MENU', '活动管理', 'admin/wefamily/mtxActivityManage', '2017122110000004', '1113', 'APP', now(), 'sys', now(), 'sys', '1', 'N', '');
+INSERT INTO `tb_platform_permit` VALUES ('2017122310000001', 'MENU', '活动管理', 'admin/wefamily/mtxActivityManage', '2017121210000004', '1113', 'APP', now(), 'sys', now(), 'sys', '1', 'N', '');
 
 -- 活动状态
 INSERT INTO tb_common_code VALUES ('2017122300000001', null, null, 'ACTIVITY_STATUS', 'INIT', '未开始', null,'', '1', '2014-11-30 21:44:31', 'sys', '2014-11-30 21:44:31', 'sys', '1', '0');
