@@ -105,10 +105,9 @@
                                     <tr>
                                         <th width="15%">经销商</th>
                                         <th width="15%">活动名称</th>
-                                        <th width="10%">活动地点</th>
-                                        <th width="10%">开始时间</th>
-                                        <th width="10%">结束时间</th>
-                                        <th width="15%">详情</th>
+                                        <th width="15%">活动地点</th>
+                                        <th width="15%">开始时间</th>
+                                        <th width="15%">结束时间</th>
                                         <th width="10%">状态</th>
                                         <th width="15%">操作</th>
                                     </tr>
@@ -134,9 +133,6 @@
                                             </td>
                                             <td>
                                                     ${fn:substring(activity.enddate, 0, 19)}
-                                            </td>
-                                            <td>
-                                                    ${activity.detail}
                                             </td>
                                             <td>
                                                     ${web:getCodeDesc("ACTIVITY_STATUS", activity.status)}

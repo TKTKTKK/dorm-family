@@ -598,6 +598,33 @@ public class MtxGuestController extends BaseGuestController{
         return "guest/parts_list";
     }
 
+    /**
+     * 我的兑换
+     */
+    @RequestMapping(value = "/member/exchange_list",method = RequestMethod.GET)
+    public String exchange_list(String userid,Model model) {
+        if(StringUtils.isNotBlank(userid)){
+            MtxExchangeRecord exchangeRecord=new MtxExchangeRecord();
+            exchangeRecord.setUserid(userid);
+            List<MtxExchangeRecord> exchangeList=new ArrayList<MtxExchangeRecord>();
+            exchangeList=mtxExchangeRecordService.queryExchangeRecordList(userid);
+            if(exchangeList.size()>0){
+                for(MtxExchangeRecord e:exchangeList){
+                    if(StringUtils.isNotBlank(e.getContactno())){
+                        String phone[]=e.getContactno().split(",");
+                        if(phone.length>1){
+                            e.setContactno(phone[0]);
+                            break;
+                        }
+                    }
+                }
+            }
+            model.addAttribute("exchangeList",exchangeList);
+            model.addAttribute("userid",userid);
+        }
+        return "guest/exchange_list";
+    }
+
     @RequestMapping(value = "/parts_info",method = RequestMethod.GET)
     public String parts_info(String userid,Model model) {
         model.addAttribute("userid",userid);

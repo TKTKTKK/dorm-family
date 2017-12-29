@@ -28,7 +28,17 @@ public class MtxExchangeRecord extends BaseEntity {
 
     private String productname;
 
+    private String contactno;
+
     private Integer points;
+
+    public String getContactno() {
+        return contactno;
+    }
+
+    public void setContactno(String contactno) {
+        this.contactno = contactno;
+    }
 
     public Integer getPoints() {
         return points;

@@ -22,4 +22,13 @@
         </if>
         order by mer.createon desc;
     </select>
+    <select id="queryExchangeRecordList" resultMap="selectResultMap">
+        select mer.* ,mp.name as productname,ifnull(mp.points,0)*ifnull(mer.count,0) as points,group_concat(mm.contactno) as contactno
+        from tb_mtx_exchange_record mer
+        left join tb_mtx_product mp on mp.uuid=mer.productid
+        left join tb_mtx_merchant mm on mm.name=mer.address
+        where mer.userid=#{userid}
+        group by mer.uuid
+        order by mer.createon desc;
+    </select>
 </mapper>
