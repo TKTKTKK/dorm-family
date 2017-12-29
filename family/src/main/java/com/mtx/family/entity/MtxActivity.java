@@ -28,6 +28,26 @@ public class MtxActivity extends BaseEntity {
     private String address;
     @Column
     private String password;
+    @Column
+    private Integer totalParticipant;
+    @Column
+    private Integer everyParticipant;
+
+    public Integer getTotalParticipant() {
+        return totalParticipant;
+    }
+
+    public void setTotalParticipant(Integer totalParticipant) {
+        this.totalParticipant = totalParticipant;
+    }
+
+    public Integer getEveryParticipant() {
+        return everyParticipant;
+    }
+
+    public void setEveryParticipant(Integer everyParticipant) {
+        this.everyParticipant = everyParticipant;
+    }
 
     public String getImg() {
         return img;
