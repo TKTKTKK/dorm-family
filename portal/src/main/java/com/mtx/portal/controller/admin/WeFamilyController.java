@@ -2307,7 +2307,7 @@ public class WeFamilyController extends BaseAdminController {
             luckyParticipant.setActivityid(activity.getUuid());
             participantList=mtxActivityParticipantService.queryForParticipantList(participant);
             model.addAttribute("participantList",participantList);
-            luckyList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant);
+            luckyList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"");
             participant.setStatus("WIN");
             winList=mtxActivityParticipantService.queryForParticipantList(participant);
             model.addAttribute("luckyList",luckyList);
@@ -2334,7 +2334,7 @@ public class WeFamilyController extends BaseAdminController {
             luckyParticipant.setActivityid(activity.getUuid());
             participantList=mtxActivityParticipantService.queryForParticipantList(participant);
             model.addAttribute("participantList",participantList);
-            luckyList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant);
+            luckyList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"");
             participant.setStatus("WIN");
             winList=mtxActivityParticipantService.queryForParticipantList(participant);
             model.addAttribute("luckyList",luckyList);
@@ -2421,7 +2421,6 @@ public class WeFamilyController extends BaseAdminController {
                 mtxLuckyParticipantService.delete(luckyParticipantList.get(i));
             }
         }
-
         String activityParticipant[] = request.getParameterValues("users");
         if(StringUtils.isNotBlank(uuid) && null != activityParticipant){
             MtxActivityParticipant tempActivityParticipant = new MtxActivityParticipant();
@@ -2436,88 +2435,36 @@ public class WeFamilyController extends BaseAdminController {
                     mtxLuckyParticipantService.insert(luckyParticipant);
                 }
             }
-
         }
-
+        String fromPhone  = request.getParameter("fromPhone");
+        if("Y".equals(fromPhone)){
+            return "redirect:/admin/wefamily/mtxActivityInfoForPhone?activityId="+uuid;
+        }
         return "redirect:/admin/wefamily/goMtxActivity?uuid="+uuid+"&successFlg=1";
     }
 
-    @RequestMapping(value = "/clickDrawing", method = RequestMethod.GET)
-    public String clickDrawing(String uuid,Model model){
-        if(StringUtils.isNotBlank(uuid)){
-            MtxActivity activity=new MtxActivity();
-            activity.setUuid(uuid);
-            activity=mtxActivityService.queryForObjectByPk(activity);
-            activity.setStatus("DRAWING");
-            mtxActivityService.updatePartial(activity);
-            MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
-            activityParticipant.setActivityid(uuid);
-            List<MtxActivityParticipant> activityParticipantList=mtxActivityParticipantService.queryForList(activityParticipant);
-            model.addAttribute("activityParticipantList",activityParticipantList);
-            MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
-            luckyParticipant.setActivityid(uuid);
-            List<MtxLuckyParticipant> luckyParticipantList=mtxLuckyParticipantService.queryForList(luckyParticipant);
-            if(luckyParticipantList.size()>0){
-                model.addAttribute("luckyParticipantList",luckyParticipantList);
-            }
-        }
-        return "admin/wefamily/mtxDrawing";
-    }
-
-    @RequestMapping(value = "/drawing")
-    public String drawing(String uuid,Model model){
-        if(StringUtils.isNotBlank(uuid)){
-            MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
-            MtxLuckyParticipant luckyParticipantCount=new MtxLuckyParticipant();
-            luckyParticipant.setActivityid(uuid);
-            luckyParticipantCount.setActivityid(uuid);
-            luckyParticipant.setStatus("WAIT_WIN");
-            List<MtxLuckyParticipant> luckyParticipantList=mtxLuckyParticipantService.queryForList(luckyParticipant);
-            List<MtxLuckyParticipant> luckyParticipantCountList=mtxLuckyParticipantService.queryForList(luckyParticipant);
-            if(luckyParticipantCountList.size()>0){
-                if(luckyParticipantList.size()>0){
-                    String message=mtxLuckyParticipantService.synchronizationUpdate(luckyParticipantList,uuid);
-                    model.addAttribute("drawingMessage",message);
-                }else{
-                    model.addAttribute("drawingMessage","抽奖已达上限！");
-                }
-                MtxLuckyParticipant luckyP=new MtxLuckyParticipant();
-                luckyP.setActivityid(uuid);
-                luckyP.setStatus("WIN");
-                List<MtxLuckyParticipant> luckyList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyP);
-                model.addAttribute("luckyList",luckyList);
+    @RequestMapping(value = "/validParticipantCount", method = RequestMethod.POST)
+    @ResponseBody
+    public Boolean validParticipantCount(int totalParticipant,String uuid){
+        MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
+        luckyParticipant.setActivityid(uuid);
+        List<MtxLuckyParticipant> luckyParticipantList=mtxLuckyParticipantService.queryForList(luckyParticipant);
+        if(luckyParticipantList.size()>0){
+            if(totalParticipant>luckyParticipantList.size()){
+                return false;
             }else{
-                MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
-                activityParticipant.setActivityid(uuid);
-                activityParticipant.setStatus("WIN");
-                List<MtxActivityParticipant> activityParticipantList=mtxActivityParticipantService.queryForWaitDrawingList(activityParticipant);
-                if(activityParticipantList.size()>0){
-                    Random random=new Random();// 定义随机类
-                    int result=random.nextInt(activityParticipantList.size());// 返回[0,10)集合中的整数，注意不包括10
-                    activityParticipant=activityParticipantList.get(result);
-                    activityParticipant.setStatus("WIN");
-                    mtxActivityParticipantService.updatePartial(activityParticipant);
-                    model.addAttribute("drawingMessage","恭喜"+activityParticipant.getName()+"中奖！");
-                }else{
-                    model.addAttribute("drawingMessage","抽奖已达上限！");
-                }
-                List<MtxActivityParticipant> luckyList=mtxActivityParticipantService.queryForParticipantList(activityParticipant);
-                model.addAttribute("luckyList",luckyList);
+                return true;
+            }
+        }else{
+            MtxActivityParticipant participant=new MtxActivityParticipant();
+            participant.setActivityid(uuid);
+            List<MtxActivityParticipant> participantList=mtxActivityParticipantService.queryForList(participant);
+            if(participantList.size()>totalParticipant){
+                return true;
+            }else{
+                return false;
             }
         }
-        return "admin/wefamily/mtxDrawing";
-    }
-
-    @RequestMapping(value = "/closeDrawing")
-    public String closeDrawing(String uuid){
-        if(StringUtils.isNotBlank(uuid)){
-            MtxActivity activity=new MtxActivity();
-            activity.setUuid(uuid);
-            activity=mtxActivityService.queryForObjectByPk(activity);
-            activity.setStatus("APP");
-            mtxActivityService.updatePartial(activity);
-        }
-        return "redirect:/admin/wefamily/mtxActivityManage?closeFlag=1";
     }
 
     /**
@@ -2559,7 +2506,7 @@ public class WeFamilyController extends BaseAdminController {
 
                 MtxLuckyParticipant luckyParticipant = new MtxLuckyParticipant();
                 luckyParticipant.setActivityid(activityId);
-                List<MtxLuckyParticipant> luckyParticipantList = mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant);
+                List<MtxLuckyParticipant> luckyParticipantList = mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"");
                 model.addAttribute("luckyParticipantList",luckyParticipantList);
 
 

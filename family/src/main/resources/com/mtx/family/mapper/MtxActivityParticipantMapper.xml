@@ -24,7 +24,7 @@
         inner join tb_wp_user wu on wu.uuid=map.userid
         where map.activityid=#{participant.activityid}
         <if test="participant.status!=null and participant.status!=''">
-            and map.status!=#{participant.status}
+            and map.status is null
         </if>
         order by map.createon desc;
     </select>

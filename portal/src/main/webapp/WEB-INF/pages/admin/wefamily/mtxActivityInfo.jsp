@@ -244,6 +244,18 @@
                                     </div>
                                 </div>
                             </div>
+                            <c:if test="${activity.status eq 'PENDING'}">
+                            <div id="activityRequire">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label"><span class="text-danger"></span>活动规则：</label>
+                                    <div class="col-sm-9 b-l bg-white">
+                                        <div class=" row"><span style="margin-left: 16px"><span class="text-danger">*</span>中奖总人数:</span>&nbsp;&nbsp;<input type="number" style="width: 300px;height: 30px;margin-left: 25px" id="totalParticipant" name="totalParticipant"></div>
+                                        <div class=" row" style="margin-top: 10px"><span style="margin-left: 16px"><span class="text-danger">*</span>每轮中奖人数：</span>&nbsp;&nbsp;<input type="number" style="width: 300px;height: 30px" id="everyParticipant" name="everyParticipant" ></div>
+                                        <div class=" row" style="margin-top: 10px"><span class="text-danger" style="margin-left: 16px" id="errorCountMessage"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            </c:if>
                             <div id="achieveid" class="hidden">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><span class="text-danger"></span>中奖人员名单：</label>
@@ -370,7 +382,6 @@
 <script type="text/javascript" src="${ctx}/static/admin/js/myScript.js"></script>
 <script type="text/javascript" src="${ctx}/static/admin/geo.js"></script>
 <script type="text/javascript">
-
     window.onload = function () {
         //显示父菜单
         showParentMenu('活动中心');
@@ -428,9 +439,6 @@
         $("#frm").parsley("validate");
         if($('#frm').parsley().isValid()&&compareBeginEndDate("startdate", "enddate", "dateError")&&validStatus()){
             return true;
-            <%--var searchForm = document.getElementById("frm");--%>
-            <%--searchForm.action = "${ctx}/admin/wefamily/updateMtxActivity";--%>
-            <%--searchForm.submit();--%>
         }else{
             return false;
         }
@@ -444,7 +452,25 @@
     }
     function clickDrawing(){
         var uuid='${activity.uuid}';
-        window.location.href="${ctx}/admin/wefamily/clickDrawing?uuid="+uuid;
+        var errorCountMessage=document.getElementById("errorCountMessage");
+        errorCountMessage.innerHTML="";
+        var totalParticipant=document.getElementById("totalParticipant").value;
+        var everyParticipant=document.getElementById("everyParticipant").value;
+        if(totalParticipant==null||totalParticipant==''){
+            errorCountMessage.innerHTML="中奖总人数不能为空！";
+        }else if(everyParticipant==null||everyParticipant==''){
+            errorCountMessage.innerHTML="每轮中奖人数不能为空！";
+        }else if(totalParticipant<everyParticipant){
+            errorCountMessage.innerHTML="每轮中奖人数不能大于中奖总人数！";
+        }else{
+            $.post("${ctx}/admin/wefamily/validParticipantCount?totalParticipant="+totalParticipant+"&uuid="+uuid,function(data){
+                if(data){
+                    window.location.href="${ctx}/guest/clickDrawing?uuid="+uuid+"&everyParticipant="+everyParticipant+"&totalParticipant="+totalParticipant;
+                }else{
+                    errorCountMessage.innerHTML="设置的中奖总人数超过限制！";
+                }
+            });
+        }
     }
     $('#startdate').datetimepicker({
         weekStart: 1,

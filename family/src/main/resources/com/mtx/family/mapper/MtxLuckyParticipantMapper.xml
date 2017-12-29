@@ -13,8 +13,11 @@
         from tb_mtx_lucky_participant  mlp
         inner join tb_wp_user wu on wu.uuid=mlp.userid
         where mlp.activityid=#{mtxLuckyParticipant.activityid}
-        <if test="mtxLuckyParticipant.status!=null and mtxLuckyParticipant.status!=''">
-            and mlp.status=#{mtxLuckyParticipant.status}
+        <if test="flag=='0'.toString()">
+            and mlp.status='WAIT_WIN'
+        </if>
+        <if test="flag=='1'.toString()">
+            and mlp.status='WIN'
         </if>
         order by mlp.createon desc;
     </select>
