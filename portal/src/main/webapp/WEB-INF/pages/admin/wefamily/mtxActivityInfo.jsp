@@ -229,14 +229,14 @@
                                                 </label>
                                                 <br/>
                                                 <c:forEach items="${participantList}" var="participant">
-                                                    <label class="checkbox m-n col-sm-2">
+                                                    <label class="checkbox m-n col-sm-3">
                                                         <input type="checkbox" name="users" value="${participant.userid}"
                                                                onclick="modifySelectAllOrNone('users','sltAll')" style="width: 20px;height: 20px"
                                                         <c:forEach items="${luckyList}" var="lucky">
                                                                <c:if test="${lucky.userid eq participant.userid}">checked</c:if>
                                                         </c:forEach>
                                                                <c:if test="${activity.status eq 'APP'||activity.status eq 'DRAWING'}">disabled</c:if>
-                                                        ><i></i><img src="${participant.headimg}" style="border-radius:25px;" width="30px" height="30px" alt=""><span style="font-size: 1.8rem">${participant.name}</span>
+                                                        ><i></i><img src="${participant.headimg}" style="border-radius:25px;" width="30px" height="30px" alt=""><span style="font-size: 1.8rem">${participant.name}-${participant.contactno}</span>
                                                     </label>
                                                 </c:forEach>
                                             </c:otherwise>
@@ -264,7 +264,7 @@
                                             <c:forEach items="${winList}" var="participant">
                                                 <c:if test="${participant.status eq 'WIN'}">
                                                     <label class="col-sm-4 text-danger" style="font-size: 1.8rem">
-                                                        <img src="${participant.headimg}" style="border-radius:25px;" width="30px" height="30px" alt="">${participant.name}</label>
+                                                        <img src="${participant.headimg}" style="border-radius:25px;" width="30px" height="30px" alt="">${participant.name}-${participant.contactno}</label>
                                                 </c:if>
                                             </c:forEach>
                                         </c:if>
