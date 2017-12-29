@@ -12,4 +12,6 @@ import java.util.List;
 @Repository
 public interface MtxExchangeRecordMapper extends BaseMapper<MtxExchangeRecord> {
     public PageList<MtxExchangeRecord> selectMtxExchangeRecordList(@Param("mtxExchangeRecord") MtxExchangeRecord mtxExchangeRecord, PageBounds pageBounds);
+
+    List<MtxExchangeRecord> queryExchangeRecordList(@Param("userid")String userid);
 }

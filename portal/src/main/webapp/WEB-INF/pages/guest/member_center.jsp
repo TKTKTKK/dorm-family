@@ -51,6 +51,10 @@
         <span>我的积分</span>
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
+    <li onclick="goMyExchangeRecord()">
+        <span>我的兑换</span>
+        <img src="../../../static/guest/img/list.png" alt="">
+    </li>
     <li onclick="goMyProductRecord()">
         <span>我的产品</span>
         <img src="../../../static/guest/img/list.png" alt="">
@@ -89,6 +93,9 @@
     }
     function goMyPartRecord(){
         window.location.href="${ctx}/guest/member/parts_list?userid="+userid;
+    }
+    function goMyExchangeRecord(){
+        window.location.href="${ctx}/guest/member/exchange_list?userid="+userid;
     }
 </script>
 </html>
