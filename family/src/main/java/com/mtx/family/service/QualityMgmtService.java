@@ -68,12 +68,6 @@ public class QualityMgmtService extends BaseService<QualityMgmtMapper,QualityMgm
         saveQualityMgmtImg(qualityMgmt,qualityMgmtImgs);
     }
 
-    public int distributeQualityMgmt(QualityMgmt qualityMgmt) {
-        qualityMgmt.setStatus("DISTRIBUTED");
-        this.mapper.updatePartial(qualityMgmt);
-        return 1;
-    }
-
     public int startQualityMgmt(QualityMgmt qualityMgmt) {
         qualityMgmt.setStatus("REPAIRING");
         this.mapper.updatePartial(qualityMgmt);
@@ -134,7 +128,7 @@ public class QualityMgmtService extends BaseService<QualityMgmtMapper,QualityMgm
             }else if("MAINTAIN".equals(qualityMgmt.getType())){
                 qualityMgmt.setSnno(sequenceService.getMaintainSeqNo());
             }
-
+            qualityMgmt.setStatus("NEW");
             this.mapper.insert(qualityMgmt);
         }
         return returnMsg;

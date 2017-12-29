@@ -88,8 +88,7 @@
     </div>
 
         <form class="form-horizontal" data-validate="parsley"
-              action="${ctx}/admin/wefamily/trainInfoForPhone" method="POST"
-              enctype="multipart/form-data" id="frm">
+              action="${ctx}/admin/wefamily/trainInfoForPhone" method="POST" id="frm">
             <div class="goal_total" style="margin-top: 0px">
                 <a href="javaScript:enableUl('machineUl','machineListImg')">
                     <span>主机信息</span>

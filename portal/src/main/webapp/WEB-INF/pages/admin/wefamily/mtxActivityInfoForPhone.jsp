@@ -63,15 +63,75 @@
             color: #fff;
             margin-bottom: 10px;
         }
+        .fixsubmit a{color: #fff}
+        .showParticipantsA{
+            right: 1.25rem;
+            position: absolute;
+            width: 3rem;
+            height: 1.6rem;
+            top: 0;
+            text-align: right;
+        }
+        .showParticipantsA img{
+            position: relative;
+            float: none;
+            right: 0;
+            width: 1rem;
+            height: 1.6rem;
+            top: 0;
+        }
+        #activityImgContainer{display: inline-block;vertical-align: middle}
+        #activityImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 2rem}
+        #activityImgContainer img{width: 64px;height: 64px;margin:1rem;max-width: none}
+        .my-display-inline-box{width: auto}
+        .upload-btn-box {
+            clear: both;
+            background: #fff url("../../../../static/admin/img/upload.gif") center center no-repeat;
+            background-size: 61px 61px;
+            border: 1px solid #cfcfcf;
+            border-radius: 1px;
+            width: 64px;
+            height: 64px;
+            color: #b9b9b9;
+            text-align: center;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .upload-btn-box .upload-btn {
+            opacity: 0;
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            z-index: 1;
+            left: 0;
+            top: 0;
+        }
+        .dataRequired{
+            color: red;
+        }
+        .activityRule span{
+            font-size: 1.6rem;
+            color: #333;
+        }
+        .activityRule input{
+            font-size: 1.6rem;
+            color: #666;
+            text-align: right;
+            float: right;
+        }
+        .activityRule li{
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding: 1.17rem 2rem;
+        }
+        .required{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
     </style>
 </head>
 <body class="">
-<section id="content" class="bg-white">
-    <section class="vbox">
-        <section class="scrollable padder">
+
 
             <div class="head">
-                <a class="back" href="${ctx}/guest/activity_list"></a>
+                <a class="back" href="${ctx}/admin/wefamily/mtxActivityManageForPhone"></a>
                 <span>活动详情</span>
             </div>
             <div class="content">
@@ -87,9 +147,6 @@
                 <div class="activity_kind">
                     <p>活动详情</p>
                     <div class="edit">
-                        <c:forEach items="${attachmentList}" var="attachment">
-                            <img src="${attachment.name}" alt="">
-                        </c:forEach>
                         <p>${mtxActivity.detail}</p>
                     </div>
                 </div>
@@ -107,13 +164,16 @@
                 </c:if>
 
                     <div class="activity_kind">
-                        <p>参加人员</p>
-                        <%--<input type="checkbox" class="chk" name="checkall" id="checkall" onchange="checkAllParticipant()" style="display: none;">
-                        <label for="checkall"></label>
-                        <span class="all">全选</span>--%>
+                       <p style="position: relative">参加人员
+                           <a href="javaScript:showParticipants()" class="showParticipantsA">
+                                <img src="../../../../static/guest/img/list.png" alt="" id="participantListImg" class="down">
+                           </a>
+                       </p>
+
+
                         <button class="checkAllButton" id="checkAllButton" onclick="checkAllParticipant()">全选</button>
                         <form id="participantFrm" method="POST">
-                            <ul class="winner list" id="participants">
+                            <ul class="winner list" id="participantsUl">
                                 <c:forEach items="${activityParticipantList}" var="activityParticipant">
                                     <c:set var="showFlag" value="0" scope="page"></c:set>
                                     <c:forEach items="${luckyParticipantList}" var="luckyParticipant">
@@ -124,76 +184,162 @@
                                     <li class="first">
                                         <input type="checkbox" class="chk" id="${activityParticipant.uuid}" name="users" onchange="checkParticipant('${activityParticipant.uuid}')" style="display: none;" <c:if test="${showFlag == 1}">checked </c:if> value="${activityParticipant.userid}">
                                         <label for="${activityParticipant.uuid}"></label>
-                                        <img src="${activityParticipant.headimg}" alt=""><span class="name">${activityParticipant.name}</span><span class="phone">18856234569</span><span class="wechat_name">叫我小陈陈</span>
+                                        <img src="${activityParticipant.headimg}" alt=""><span class="name">${activityParticipant.name}</span><span class="phone">${activityParticipant.contactno}</span><span class="wechat_name">${activityParticipant.nickname}</span>
                                     </li>
                                 </c:forEach>
                             </ul>
+                            <c:if test="${mtxActivity.status == 'APP'}">
+                                <div class="activity_kind">
+                                    <p>活动照片</p>
+
+                                    <li class="list">
+                                        <div class="my-display-inline-box">
+                                            <div id="activityImgContainer" class="row value">
+                                                <c:forEach items="${attachmentList}" var="attachment">
+                                                    <img src="${attachment.name}" alt="" style="margin-top: 3px;margin-left: 10px" onclick="viewBigImageForUpload(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image">
+                                                </c:forEach>
+                                            </div>
+                                            <c:if test="${fn:length(attachmentList) < 4}">
+                                                <div id="activityImgUrlContainer" class="upload-btn-box" style="display: inline-block">
+                                                    <input type="file" id="activityImg" name="picUrl" class="upload-btn pageUpload"
+                                                           data-icon="false" data-classButton="btn btn-default"
+                                                           data-classInput="form-control inline v-middle input-xs"
+                                                           accept="image/*"
+                                                        <%--data-max_size="2000000" --%>
+                                                           data-max-count="4">
+                                                    <div id="picUrlError" class="text-danger"></div>
+                                                </div>
+                                            </c:if>
+                                        </div>
+                                    </li>
+                                </div>
+                            </c:if>
                         </form>
                     </div>
-
-            </div>
-            <div class="fixsubmit">
-                <div><a href="javascript:submitActivityInfo()">开始抽奖</a></div>
-                <div>结束抽奖</div>
             </div>
 
 
+                <c:if test="${mtxActivity.status == 'APP' && fn:length(attachmentList) < 4}">
+                    <div class="fixsubmit">
+                        <div><a href="javascript:uploadActivityImg()">上传图片</a></div>
+                    </div>
+                </c:if>
+                <c:if test="${mtxActivity.status == 'PENDING'}">
+                    <div class="fixsubmit">
+                        <div><a href="javascript:submitActivityInfo()">保存</a></div>
+                    </div>
+                </c:if>
 
 
-
-            <div class="choose" id="Msg" style="display: none">
+            <div class="choose" style="display: none">
                 <div class="error">
-                    <p id="errorMessage"></p >
-                    <button onclick="closeModel()">好的</button>
+                    <p id="Message"></p >
+                    <button onclick="closeModel()">OK</button>
                 </div>
             </div>
 
+            <!-- /.modal 大图 start -->
+            <div class="modal fade bs-example-modal-lg-image" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
 
-        </section>
-    </section>
-</section>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" id="modelCloseBtn"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myLargeModalLabel">大图</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="bs-example" data-example-id="simple-carousel">
+                                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal 大图 end -->
+
+
+
 
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript" src="${ctx}/static/admin/js/myScript.js"></script>
+<script src="${ctx}/static/admin/js/lrz/dist/lrz.bundle.js"></script>
 <script type="text/javascript">
 
-    function submitActivityInfo(){
-        var participantFrm = document.getElementById("participantFrm");
-        participantFrm.action = "${ctx}/admin/wefamily/addParticipant?uuid=${mtxActivity.uuid}";
-        participantFrm.submit();
-
-    }
-
-    function openParticipateDiv(){
-        var errorMessage = document.getElementById("errorMessage");
-        errorMessage.innerHTML = "";
-
-        if('${wpUser.ifsubscribe}' == ''){
-            $("#Msg").css("display","block");
-            errorMessage.innerHTML = "请先关注公众号！"
-        }else{
-            $("#participantDiv").css("display","block");
-        }
-    }
+    var Message = document.getElementById("Message");
+    Message.innerHTML = "";
 
     function closeModel(){
-        $("#Msg").css("display","none");
+        $(".choose").css("display","none");
     }
 
-    function participateActivity(){
-        var inviteCodeError = document.getElementById("inviteCodeError");
-        inviteCodeError.innerHTML = "";
-        var inviteCode = $("#inviteCode").val();
-        var name = $("#name").val();
-        if(inviteCode != '${mtxActivity.password}'){
-            inviteCodeError.innerHTML = "邀请码错误";
-        }else if(inviteCode.length > 0 && name.length > 0){
+    window.onload = function(){
+        showParticipants();
 
-            window.location.href="${ctx}/guest/participateActivity?activityId=${mtxActivity.uuid}&name="+name;
+        if(${successMessage != null}){
+            Message.innerHTML = "${successMessage}";
+            $(".choose").css("display","block");
+        }else if(${errorMessage != null}){
+            Message.innerHTML = "${errorMessage}";
+            $(".choose").css("display","block");
+        }
+    }
 
-            $("#participantDiv").css("display","none");
+
+    $('.pageUpload').change(function () {
+        if ($(".pageUpload").attr("readonly") == "readonly") {
+            $("#notification_bar").css("width", "60%");
+            $("#notification_bar").css("left", "20%");
+            HC.showNotification("网络较慢，请耐心等待！", 2000);
+        } else {
+            compressUploadPicture(document.getElementById("activityImg"));
+        }
+    });
+
+    function showParticipants(){
+        var participantsUl = document.getElementById("participantsUl");
+        var lis = participantsUl.getElementsByTagName("li");
+        var img = document.getElementById("participantListImg");
+        if(lis.length>4){
+            for(var i=4;i<lis.length;i++) {
+                if(lis[i].style.display == "none"){
+                    lis[i].style.display = "flex";
+                    img.className = "up";
+                }else{
+                    lis[i].style.display = "none";
+                    img.className = "down";
+                }
+            }
         }
 
     }
+
+
+    function submitActivityInfo(){
+        $("#participantFrm").parsley("validate");
+        //表单合法 单价合法性
+        if ($('#participantFrm').parsley().isValid()){
+            var participantFrm = document.getElementById("participantFrm");
+            participantFrm.action = "${ctx}/admin/wefamily/addParticipant?uuid=${mtxActivity.uuid}&fromPhone=Y";
+            participantFrm.submit();
+        }
+    }
+
+    function uploadActivityImg(){
+        $("#participantFrm").parsley("validate");
+        //表单合法 单价合法性
+        if ($('#participantFrm').parsley().isValid()){
+            var participantFrm = document.getElementById("participantFrm");
+            participantFrm.action = "${ctx}/admin/wefamily/uploadActivityImg?activityId=${mtxActivity.uuid}";
+            participantFrm.submit();
+        }
+    }
+
+
 
     function checkParticipant(participantId){
         var checkBox = document.getElementById(participantId);
@@ -202,7 +348,7 @@
         }else{
             checkBox.checked = false;
         }
-        var ul = document.getElementById("participants");
+        var ul = document.getElementById("participantsUl");
         var inputs = ul.getElementsByTagName("input");
         var count = 0;
         if(inputs.length>0){
@@ -222,7 +368,7 @@
     }
 
     function checkAllParticipant(){
-        var ul = document.getElementById("participants");
+        var ul = document.getElementById("participantsUl");
         var inputs = ul.getElementsByTagName("input");
         var ifCheck = "";
         var count = 0;

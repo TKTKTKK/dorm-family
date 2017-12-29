@@ -752,10 +752,13 @@ public class MtxGuestController extends BaseGuestController{
 
         String activityId = request.getParameter("activityId");
         String name = request.getParameter("name");
+        String contactno = request.getParameter("contactno");
 
         WpUser wpUser = getWechatMemberInfo(request);
+        wpUser.setName(name);
+        wpUser.setContactno(contactno);
 
-        mtxActivityService.participateActivity(activityId,name,wpUser);
+        mtxActivityService.participateActivity(activityId,wpUser);
 
         return "redirect:/guest/activity_info?activityId="+activityId;
     }

@@ -36,14 +36,12 @@ public class MtxActivityService extends BaseService<MtxActivityMapper,MtxActivit
         return mapper.selectMtxActivityList(obj,pageBounds);
     }
 
-    public void participateActivity(String activityId, String name, WpUser wpUser) {
+    public void participateActivity(String activityId,WpUser wpUser) {
 
-        wpUser.setName(name);
         wpUserService.updatePartial(wpUser);
 
         MtxActivityParticipant mtxActivityParticipant = new MtxActivityParticipant();
         mtxActivityParticipant.setUserid(wpUser.getUuid());
-        mtxActivityParticipant.setStatus("WAIT_WIN");
         mtxActivityParticipant.setActivityid(activityId);
         mtxActivityParticipantService.insert(mtxActivityParticipant);
 

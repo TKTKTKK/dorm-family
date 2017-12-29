@@ -472,8 +472,16 @@ public class WeFamilyController extends BaseAdminController {
                 redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");
             }
         }else{
-            //添加
+
             order.setStatus("UNSUBMIT");
+            //总部人员添加订单
+            List<PlatformRole> platformRoleList = platformRoleService.queryUserRoleListForUser();
+            for(PlatformRole pr:platformRoleList){
+                if(pr.getRolekey().split("_")[0].equals("HQ") || pr.getRolekey().equals("WP_SUPER")){
+                    order.setStatus("NEW");
+                }
+            }
+            //添加
             order.setSnno(sequenceService.getOrderSeqNo());
             orderService.insert(order);
             redirectAttributes.addFlashAttribute("successMessage", "保存成功");
@@ -1787,26 +1795,6 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     /**
-     * 分配报修
-     */
-    @RequestMapping("/distributeQualityMgmt")
-    @ResponseBody
-    public Map<String, Object> distributeQualityMgmt(HttpServletRequest request){
-        int distributeFlag = 0;
-        String qualityMgmtId = request.getParameter("qualityMgmtId");
-        String versionno = request.getParameter("versionno");
-        if(StringUtils.isNotBlank(qualityMgmtId)){
-            QualityMgmt qualityMgmt = new QualityMgmt();
-            qualityMgmt.setUuid(qualityMgmtId);
-            qualityMgmt.setVersionno(Integer.valueOf(versionno));
-            distributeFlag = qualityMgmtService.distributeQualityMgmt(qualityMgmt);
-        }
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("distributeFlag", distributeFlag);
-        return resultMap;
-    }
-
-    /**
      * 开始维修
      */
     @RequestMapping("/startQualityMgmt")
@@ -2412,7 +2400,7 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     @RequestMapping(value = "/addParticipant", method = RequestMethod.POST)
-    public String addParticipant(String uuid,HttpServletRequest request){
+    public String addParticipant(String uuid,HttpServletRequest request,RedirectAttributes redirectAttributes){
         MtxLuckyParticipant participantTemp=new MtxLuckyParticipant();
         participantTemp.setActivityid(uuid);
         List<MtxLuckyParticipant> luckyParticipantList = mtxLuckyParticipantService.queryForList(participantTemp);
@@ -2438,8 +2426,10 @@ public class WeFamilyController extends BaseAdminController {
         }
         String fromPhone  = request.getParameter("fromPhone");
         if("Y".equals(fromPhone)){
+            redirectAttributes.addFlashAttribute("successMessage","保存成功");
             return "redirect:/admin/wefamily/mtxActivityInfoForPhone?activityId="+uuid;
         }
+
         return "redirect:/admin/wefamily/goMtxActivity?uuid="+uuid+"&successFlg=1";
     }
 
@@ -2517,5 +2507,19 @@ public class WeFamilyController extends BaseAdminController {
         }
 
         return "admin/wefamily/mtxActivityInfoForPhone";
+    }
+
+    @RequestMapping(value = "/uploadActivityImg",method = RequestMethod.POST)
+    public String uploadActivityImg(HttpServletRequest request,RedirectAttributes redirectAttributes){
+        String activityId = request.getParameter("activityId");
+        String[] activityImgs = request.getParameterValues("activityImg");
+        for(String img : activityImgs){
+            Attachment attachment = new Attachment();
+            attachment.setRefid(activityId);
+            attachment.setName(img);
+            attachmentService.insert(attachment);
+        }
+        redirectAttributes.addFlashAttribute("successMessage","上传成功！");
+        return "redirect:/admin/wefamily/mtxActivityInfoForPhone?activityId="+activityId;
     }
 }

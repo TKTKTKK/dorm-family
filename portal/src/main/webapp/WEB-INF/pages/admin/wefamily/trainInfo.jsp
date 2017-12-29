@@ -81,8 +81,7 @@
                     <span class="text-danger">${errorMessage}</span>
                 </div>
                 <form class="form-horizontal form-bordered" data-validate="parsley"
-                      action="${ctx}/admin/wefamily/trainInfo" method="POST"
-                      enctype="multipart/form-data" id="frm">
+                      action="${ctx}/admin/wefamily/trainInfo" method="POST" id="frm">
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
                             <i class="fa fa-gift"></i>

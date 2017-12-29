@@ -11,6 +11,7 @@
     <meta http-equiv="x-dns-prefetch-control" content="on"><!-- 浏览器开启预解析功能 -->
     <title>活动详情</title>
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
+    <link rel="stylesheet" href="${ctx}/static/guest/css/reviewMediaSwipebox.css" type="text/css" />
     <style>
         .content{background-color: #fff;margin-bottom: 3.67rem;}
         .title{font-size:1.6rem;color: #333;font-weight: bold;margin-bottom: 1.25rem;}
@@ -20,9 +21,25 @@
         .words_detail span {vertical-align: middle;font-size: 1.2rem;color: #333;}
         .edit img{width: 100%;margin-bottom: 1rem;}
         .edit p{color: #333;font-size: 1.4rem}
-        .winner img,.partman img{width: 3.25rem}
-        .winner li{display: flex;display: -webkit-flex;justify-content: space-between;align-items: center;padding: 0.5rem 0 0.5rem 1.25rem;}
-        .winner li span{color: #333}
+        .winner img,.partman img{
+            width: 3.25rem;
+            height: 3.25rem;
+            display: block;
+            margin: auto;
+            margin-bottom: 0.5rem;
+        }
+        .winner li{
+            width: 18%;
+            display: inline-block;
+            padding: 0.5rem 0 0.5rem 0rem;
+            text-align: center;
+        }
+        .winner li span{
+            color: #333;
+            display: inline-block;
+            height: 32px;
+            overflow: hidden;
+        }
         .winner .name{width: 17%;}
         .winner .phone{width: 27%;}
         .winner	.wechat_name{width: 30%;text-align: right;}
@@ -52,9 +69,13 @@
         .choose .error button{
             font-size: 1.6rem;
         }
-        #inviteCodeError{
+        #inviteCodeError,#contactnoError{
             color: red;font-size: 1.2rem;font-weight: lighter;margin-bottom: 25px !important;
         }
+        #activityImgContainer{display: inline-block;vertical-align: middle}
+        #activityImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 2rem}
+        #activityImgContainer img{width: 64px;height: 64px;margin:1rem;max-width: none}
+        .my-display-inline-box{width: auto}
     </style>
 </head>
 <body class="">
@@ -79,9 +100,6 @@
                 <div class="activity_kind">
                     <p>活动详情</p>
                     <div class="edit">
-                        <c:forEach items="${attachmentList}" var="attachment">
-                            <img src="${attachment.name}" alt="">
-                        </c:forEach>
                         <p>${mtxActivity.detail}</p>
                     </div>
                 </div>
@@ -92,6 +110,7 @@
                             <c:forEach items="${winParticipantList}" var="winParticipant">
                                 <li>
                                     <img src="${winParticipant.headimg}" alt="">
+                                    <span>${winParticipant.nickname}</span>
                                 </li>
                             </c:forEach>
                         </ul>
@@ -107,6 +126,25 @@
                         </c:forEach>
                     </ul>
                 </div>
+
+                <c:if test="${fn:length(attachmentList) > 0}">
+                    <div class="activity_kind">
+                        <p>活动图片</p>
+                        <li class="list">
+                            <div class="my-display-inline-box">
+                                <div id="activityImgContainer" class="row value">
+                                    <c:forEach items="${attachmentList}" var="attachment">
+                                        <a class="swipebox" href= "${attachment.name}" onclick="reviewMediaShow(this)">
+                                            <img style="width:50px;height: 50px;margin-right:10px;"
+                                                 src="${attachment.name}" alt="Bottle Closeup"/>
+                                        </a>
+                                    </c:forEach>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                </c:if>
+
             </div>
 
 
@@ -136,7 +174,13 @@
                                data-required="true"  data-maxlength="32" placeholder="请填写姓名"/>
                     </li>
                     <li>
+                        <span>手&nbsp;&nbsp;&nbsp;机：</span>
+                        <input type="text" id="contactno" name="contactno" value="${wpUser.contactno}"
+                               data-required="true"  data-maxlength="32" placeholder="请填写手机"/>
+                    </li>
+                    <li>
                         <span id="inviteCodeError"></span>
+                        <span id="contactnoError"></span>
                     </li>
 
                     <button onclick="participateActivity()">参加</button>
@@ -159,6 +203,7 @@
 </section>
 </body>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript" src="${ctx}/static/js/reviewMediaJquery.swipebox.js"></script>
 <script type="text/javascript">
 
     function openParticipateDiv(){
@@ -177,22 +222,34 @@
         $("#Msg").css("display","none");
     }
 
+    function reviewMediaShow(obj){
+        var reviewMediaClass = $(obj).attr("class");
+        $( '.'+reviewMediaClass+'' ).swipebox();
+    }
+    $( '.swipebox-video' ).swipebox();
+
     function participateActivity(){
         var inviteCodeError = document.getElementById("inviteCodeError");
         inviteCodeError.innerHTML = "";
+        var contactnoError = document.getElementById("contactnoError");
+        contactnoError.innerHTML = "";
+
         var inviteCode = $("#inviteCode").val();
         var name = $("#name").val();
+        var contactno = $("#contactno").val();
+
+        var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
+
         if(inviteCode != '${mtxActivity.password}'){
             inviteCodeError.innerHTML = "邀请码错误";
+        }else if(!myreg.test(contactno)){
+            contactnoError.innerHTML = "手机号有误";
         }else if(inviteCode.length > 0 && name.length > 0){
 
-            window.location.href="${ctx}/guest/participateActivity?activityId=${mtxActivity.uuid}&name="+name;
+            window.location.href="${ctx}/guest/participateActivity?activityId=${mtxActivity.uuid}&name="+name+"&contactno="+contactno;
 
             $("#participantDiv").css("display","none");
         }
-
-
-
 
     }
 

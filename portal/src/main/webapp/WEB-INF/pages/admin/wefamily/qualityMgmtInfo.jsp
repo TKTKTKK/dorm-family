@@ -303,7 +303,7 @@
                                                         <div class="portlet-body">
                                                             <form class="form-horizontal form-bordered" data-validate="parsley"
                                                                   action="${ctx}/admin/wefamily/saveReportQualityMgmtInfo" method="POST"
-                                                                  enctype="multipart/form-data" id="reportQualityMgmtInfoFrm" style="border: 0px">
+                                                                  id="reportQualityMgmtInfoFrm" style="border: 0px">
                                                                 <div class="panel-body p-0-15">
                                                                     <span id="machineError" class="text-danger"></span>
                                                                     <div class="form-group">
@@ -463,7 +463,7 @@
                                                             <c:if test="${qualityMgmt.status eq 'REPAIRING' or qualityMgmt.status eq 'FINISH'}">
                                                                 <form class="form-horizontal form-bordered" data-validate="parsley"
                                                                       action="${ctx}/admin/wefamily/saveQualityMgmtInfo" method="POST"
-                                                                      enctype="multipart/form-data" id="qualityMgmtInfoFrm" style="border: 0px">
+                                                                      id="qualityMgmtInfoFrm" style="border: 0px">
                                                                     <div class="panel-body p-0-15">
                                                                         <div class="form-group">
                                                                             <label class="col-sm-3 control-label"><span class="text-danger">*</span><c:if test="${type eq 'REPAIR'}">维修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>工人：</label>
@@ -611,7 +611,7 @@
                                                                 </form>
                                                             </c:if>
 
-                                                            <c:if test="${empty qualityMgmt.status or qualityMgmt.status eq 'NEW' or qualityMgmt.status eq 'DISTRIBUTED'}">
+                                                            <c:if test="${empty qualityMgmt.status or qualityMgmt.status eq 'NEW'}">
                                                                 <div class="row static-info">
                                                                     <div class="col-md-12 col-xs-12 value">
                                                                         <span>暂无<c:if test="${type eq 'qualityMgmt'}">维修</c:if><c:if test="${type eq 'MAINTAIN'}">保养</c:if>信息</span>
@@ -847,14 +847,6 @@
                 }
             });
         }
-    }
-
-    function distributeQualityMgmt(){
-        $.get("${ctx}/admin/wefamily/distributeQualityMgmt?qualityMgmtId=${qualityMgmt.uuid}&versionno=${qualityMgmt.versionno}",function(data,status){
-            if(undefined != data.distributeFlag){
-                window.location.href = "<%=request.getContextPath()%>/admin/wefamily/qualityMgmtInfo?qualityMgmtId=${qualityMgmt.uuid}&distributeFlag="+data.distributeFlag+"&type=${type}";
-            }
-        });
     }
 
     function startQualityMgmt(){

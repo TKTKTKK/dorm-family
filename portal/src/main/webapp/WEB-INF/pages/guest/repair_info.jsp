@@ -69,7 +69,7 @@
         }
         #qualityMgmtImgContainer{display: inline-block;vertical-align: middle}
         #qualityMgmtImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 2rem}
-        #qualityMgmtImgContainer img{width: 64px;height: 64px;margin:1rem;max-width: none}
+        #qualityMgmtImgContainer img{width: 50px;height: 50px;margin:1rem;max-width: none}
         .my-display-inline-box{width: auto}
         .required{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
         .maxlength{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
@@ -86,8 +86,7 @@
     </div>
 
         <form class="form-horizontal form-bordered" data-validate="parsley"
-              action="${ctx}/guest/member/repair_info" method="POST"
-              enctype="multipart/form-data" id="frm">
+              action="${ctx}/guest/member/repair_info" method="POST" id="frm">
             <ul class="list">
                 <li>
                     <span>机器型号<a class="dataRequired">*</a></span>

@@ -141,7 +141,7 @@
                                                     <span id="addressError" class="text-danger"></span>
                                                 </div>
                                             </div>
-                                        <div class="form-group">
+                                        <div class="form-group hidden">
                                             <label class="col-sm-3  control-label" style="padding-top: 8px">详细地址：</label>
                                             <div class="col-sm-9 b-l bg-white">
                                                 <input type="text" class="form-control" data-required="true" name="address" id="address"

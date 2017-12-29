@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="en" class="app">
 <head>
+    <link href="${ctx}/static/admin/css/qikoo/qikoo.css" rel="stylesheet">
     <style>
         .detaildiv1 ul li {
             border: 0;
