@@ -2436,6 +2436,10 @@ public class WeFamilyController extends BaseAdminController {
                 }
             }
         }
+        String fromPhone  = request.getParameter("fromPhone");
+        if("Y".equals(fromPhone)){
+            return "redirect:/admin/wefamily/mtxActivityInfoForPhone?activityId="+uuid;
+        }
         return "redirect:/admin/wefamily/goMtxActivity?uuid="+uuid+"&successFlg=1";
     }
 
