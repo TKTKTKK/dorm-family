@@ -244,13 +244,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <c:if test="${activity.status eq 'PENDING'}">
+                            <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
                             <div id="activityRequire">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><span class="text-danger"></span>活动规则：</label>
                                     <div class="col-sm-9 b-l bg-white">
-                                        <div class=" row"><span style="margin-left: 16px"><span class="text-danger">*</span>中奖总人数:</span>&nbsp;&nbsp;<input type="number" style="width: 300px;height: 30px;margin-left: 25px" id="totalLuckyCount" name="totalLuckyCount"></div>
-                                        <div class=" row" style="margin-top: 10px"><span style="margin-left: 16px"><span class="text-danger">*</span>每轮中奖人数：</span>&nbsp;&nbsp;<input type="number" style="width: 300px;height: 30px" id="everyLuckyCount" name="everyLuckyCount" ></div>
+                                        <div class=" row"><span style="margin-left: 16px"><span class="text-danger">*</span>中奖总人数:</span>&nbsp;&nbsp;<input type="number" style="width: 300px;height: 30px;margin-left: 25px" id="totalLuckyCount" name="totalLuckyCount" value="${activity.totalLuckyCount}"
+                                        <c:if test="${activity.status eq 'APP'}">disabled</c:if>
+                                        ></div>
+                                        <div class=" row" style="margin-top: 10px"><span style="margin-left: 16px"><span class="text-danger">*</span>每轮中奖人数：</span>&nbsp;&nbsp;<input type="number" style="width: 300px;height: 30px" id="everyLuckyCount" name="everyLuckyCount" value="${activity.everyLuckyCount}" <c:if test="${activity.status eq 'APP'}">disabled</c:if>
+                                        ></div>
                                         <div class=" row" style="margin-top: 10px"><span class="text-danger" style="margin-left: 16px" id="errorCountMessage"></span></div>
                                     </div>
                                 </div>
