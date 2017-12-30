@@ -208,7 +208,7 @@
                                             <div class="form-control" style="background-color:#eeeeee;width: 100%;height: auto">${activity.detail}</div>
                                         </c:when>
                                         <c:otherwise>
-                                            <textarea id="notificationContent" class="form-control" data-required="true" name="detail">${activity.detail}</textarea>
+                                            <textarea id="notificationContent" class="form-control" data-required="true" name="detail" style="width:100%; height: 350px;">${activity.detail}</textarea>
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
@@ -249,8 +249,8 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><span class="text-danger"></span>活动规则：</label>
                                     <div class="col-sm-9 b-l bg-white">
-                                        <div class=" row"><span style="margin-left: 16px"><span class="text-danger">*</span>中奖总人数:</span>&nbsp;&nbsp;<input type="number" style="width: 300px;height: 30px;margin-left: 25px" id="totalParticipant" name="totalParticipant"></div>
-                                        <div class=" row" style="margin-top: 10px"><span style="margin-left: 16px"><span class="text-danger">*</span>每轮中奖人数：</span>&nbsp;&nbsp;<input type="number" style="width: 300px;height: 30px" id="everyParticipant" name="everyParticipant" ></div>
+                                        <div class=" row"><span style="margin-left: 16px"><span class="text-danger">*</span>中奖总人数:</span>&nbsp;&nbsp;<input type="number" style="width: 300px;height: 30px;margin-left: 25px" id="totalLuckyCount" name="totalLuckyCount"></div>
+                                        <div class=" row" style="margin-top: 10px"><span style="margin-left: 16px"><span class="text-danger">*</span>每轮中奖人数：</span>&nbsp;&nbsp;<input type="number" style="width: 300px;height: 30px" id="everyLuckyCount" name="everyLuckyCount" ></div>
                                         <div class=" row" style="margin-top: 10px"><span class="text-danger" style="margin-left: 16px" id="errorCountMessage"></span></div>
                                     </div>
                                 </div>
@@ -376,9 +376,9 @@
     </section>
     <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen,open" data-target="#nav,html"></a>
 </section>
+<script charset="utf-8" src="${ctx}/static/admin/editor/kindeditor.js"></script>
 <script src="${ctx}/static/admin/js/lrz/dist/lrz.bundle.js"></script>
 <script src="${ctx}/static/admin/js/qikoo/qikoo.js"></script>
-<script charset="utf-8" src="${ctx}/static/admin/editor/kindeditor.js"></script>
 <script type="text/javascript" src="${ctx}/static/admin/js/myScript.js"></script>
 <script type="text/javascript" src="${ctx}/static/admin/geo.js"></script>
 <script type="text/javascript">
@@ -437,7 +437,7 @@
 
     function submitForm(){
         $("#frm").parsley("validate");
-        if($('#frm').parsley().isValid()&&compareBeginEndDate("startdate", "enddate", "dateError")&&validStatus()){
+        if(compareBeginEndDate("startdate", "enddate", "dateError")&&validStatus()){
             return true;
         }else{
             return false;
@@ -454,18 +454,18 @@
         var uuid='${activity.uuid}';
         var errorCountMessage=document.getElementById("errorCountMessage");
         errorCountMessage.innerHTML="";
-        var totalParticipant=document.getElementById("totalParticipant").value;
-        var everyParticipant=document.getElementById("everyParticipant").value;
-        if(totalParticipant==null||totalParticipant==''){
+        var totalLuckyCount=document.getElementById("totalLuckyCount").value;
+        var everyLuckyCount=document.getElementById("everyLuckyCount").value;
+        if(totalLuckyCount==null||totalLuckyCount==''){
             errorCountMessage.innerHTML="中奖总人数不能为空！";
-        }else if(everyParticipant==null||everyParticipant==''){
+        }else if(everyLuckyCount==null||everyLuckyCount==''){
             errorCountMessage.innerHTML="每轮中奖人数不能为空！";
-        }else if(totalParticipant<everyParticipant){
+        }else if(totalLuckyCount<everyLuckyCount){
             errorCountMessage.innerHTML="每轮中奖人数不能大于中奖总人数！";
         }else{
-            $.post("${ctx}/admin/wefamily/validParticipantCount?totalParticipant="+totalParticipant+"&uuid="+uuid,function(data){
+            $.post("${ctx}/admin/wefamily/validParticipantCount?totalLuckyCount="+totalLuckyCount+"&uuid="+uuid,function(data){
                 if(data){
-                    window.location.href="${ctx}/guest/clickDrawing?uuid="+uuid+"&everyParticipant="+everyParticipant+"&totalParticipant="+totalParticipant;
+                    window.location.href="${ctx}/guest/clickDrawing?uuid="+uuid;
                 }else{
                     errorCountMessage.innerHTML="设置的中奖总人数超过限制！";
                 }

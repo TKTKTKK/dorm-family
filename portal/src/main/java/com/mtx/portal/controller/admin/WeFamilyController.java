@@ -2225,22 +2225,6 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     /**
-     * 购买记录
-     */
-    @RequestMapping(value = "/mtxUserMachineManage")
-    public String mtxUserMachineManage(@RequestParam(required = false, defaultValue = "1") int page, MtxUserMachine mtxUserMachine, Model model) {
-        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
-        model.addAttribute("wechatBinding", wechatBinding);
-        if (null != wechatBinding) {
-            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-            PageList<MtxUserMachine> mtxUserMachineList = mtxUserMachineService.queryForListWithPagination(mtxUserMachine, pageBounds);
-            model.addAttribute("mtxUserMachineList", mtxUserMachineList);
-            model.addAttribute("mtxUserMachine",mtxUserMachine);
-        }
-        return "admin/wefamily/mtxUserMachineManage";
-    }
-
-    /**
      * 活动管理
      */
     @RequestMapping(value = "/mtxActivityManage")
@@ -2435,21 +2419,34 @@ public class WeFamilyController extends BaseAdminController {
 
     @RequestMapping(value = "/validParticipantCount", method = RequestMethod.POST)
     @ResponseBody
-    public Boolean validParticipantCount(int totalParticipant,String uuid){
+    public Boolean validParticipantCount(int totalLuckyCount,int everyLuckyCount,String uuid){
+        MtxActivity activity=new MtxActivity();
+        activity.setUuid(uuid);
+        activity=mtxActivityService.queryForObjectByPk(activity);
         MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
         luckyParticipant.setActivityid(uuid);
         List<MtxLuckyParticipant> luckyParticipantList=mtxLuckyParticipantService.queryForList(luckyParticipant);
         if(luckyParticipantList.size()>0){
-            if(totalParticipant>luckyParticipantList.size()){
+            if(totalLuckyCount>luckyParticipantList.size()){
                 return false;
             }else{
+                if(activity!=null){
+                    activity.setEveryLuckyCount(everyLuckyCount);
+                    activity.setTotalLuckyCount(totalLuckyCount);
+                    mtxActivityService.updatePartial(activity);
+                }
                 return true;
             }
         }else{
             MtxActivityParticipant participant=new MtxActivityParticipant();
             participant.setActivityid(uuid);
             List<MtxActivityParticipant> participantList=mtxActivityParticipantService.queryForList(participant);
-            if(participantList.size()>totalParticipant){
+            if(participantList.size()>totalLuckyCount){
+                if(activity!=null){
+                    activity.setEveryLuckyCount(everyLuckyCount);
+                    activity.setTotalLuckyCount(totalLuckyCount);
+                    mtxActivityService.updatePartial(activity);
+                }
                 return true;
             }else{
                 return false;

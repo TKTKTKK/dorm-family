@@ -52,6 +52,7 @@
         $('.luck-user-list').prepend("<li><div class='portrait' style='background-image:url(${win.headimg})'></div><div class='luckuserName'>${win.nickname}</div></li>");
         </c:forEach>
     }
+    var uuid='${uuid}';
     //参与者
     var participartors = [
             <c:forEach items="${activityParticipantList}" var="participant">
@@ -64,25 +65,20 @@
             {id:"${lucky.userid}",image:"${lucky.headimg}",phone:"${lucky.nickname}"},
         </c:forEach>
         ];
-    //设置单次抽奖人数
-    var Lotterynumber = ${everyParticipant};
 
-    //设置获奖总人数
-    var Totalnumber = ${totalParticipant};
 
     var pcount = participartors.length-1;
     var wcount = winners.length-1;
 
-    if(${fn:length(winList)==totalParticipant}){
+    if(${fn:length(winList)==totalLuckyCount}){
         $('#start').text("抽奖完毕");
         $('#start').css('background-color','#999');
     }
 
     //提交获奖者，每抽中一个即请求一次
     function submitWinner(winnerId){
-        var uuid='${uuid}';
         // console.log("提交中奖者");
-         $.post( "${ctx}/guest/drawing?totalnumber="+Totalnumber+"&uuid="+uuid, {winnerId:winnerId});
+        $.post( "${ctx}/guest/drawing?totalnumber="+Totalnumber+"&uuid="+uuid, {winnerId:winnerId});
     }
 
     $(function(){
