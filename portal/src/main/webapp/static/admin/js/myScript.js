@@ -284,7 +284,7 @@ function viewBigImage(obj){
         //定位到当前图片
         if(i == $(obj).prevAll('img').length){
             $('.carousel-inner').append(
-                '<div class="item active" id="carousel-example-generic-item' + i + '">' +
+                '<div class="item active" id="carousel-example-generic-item' + i + '" name="' + $(imgs[i]).attr('name') + '">' +
                 '<img src="' + $(imgs[i]).attr('src') + '"' +
                 'style="margin: 0px auto;width: 100%">' +
                 '</div>'

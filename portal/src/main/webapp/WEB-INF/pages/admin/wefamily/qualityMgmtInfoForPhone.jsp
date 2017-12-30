@@ -67,8 +67,8 @@
         .dataRequired{
             color: red;
         }
-        #reporterImgContainer{display: inline-block;vertical-align: middle}
-        #reporterImgContainer img{width: 5rem;height: 5rem;margin:1rem}
+        #reporterImgContainer{display: inline-block;vertical-align: middle;margin-left: 2rem}
+        #reporterImgContainer img{width: 5rem;height: 5rem;margin:1rem;max-width: none}
         #qualityMgmtImgContainer{display: inline-block;vertical-align: middle}
         #qualityMgmtImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 2rem}
         #qualityMgmtImgContainer img{width: 64px;height: 64px;margin:1rem;max-width: none}
@@ -85,7 +85,9 @@
     </style>
 </head>
 <body>
-<div class="choose" id="imgDiv" style="z-index: 10;background: rgba(0,0,0,0.7);"><img src="../../../static/guest/img/help.png" alt="" onclick="closeImg()" style="width: 100%"></div>
+<c:if test="${scanedFlag ne 'Y'}">
+    <div class="choose" id="imgDiv" style="z-index: 10;background: rgba(0,0,0,0.7);"><img src="../../../static/guest/img/help.png" alt="" onclick="closeImg()" style="width: 100%"></div>
+</c:if>
     <div class="head">
         <c:if test="${qualityMgmt.type == 'REPAIR'}">
             <a class="back" href="${ctx}/admin/wefamily/repairManageForPhone"></a>
@@ -269,16 +271,6 @@
                            data-maxlength="10" onblur="validateMoney(this,'priceError')" placeholder="请填写收费金额">
                     <span id="priceError" class="text-danger" style="float: right;color: red;font-size: 1.2rem;"></span>
                 </li>
-                <li>
-                    <span>用户评价</span>
-                    <select name="evaluate" id="evaluate">
-                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
-                        <option value="">请选择</option>
-                        <c:forEach items="${commonCodeList}" var="commonCode">
-                            <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                        </c:forEach>
-                    </select>
-                </li>
                 <li style="display: flex;display: -webkit-flex;">
                     <span style="vertical-align: middle;">备注</span>
                     <textarea rows="4" name="remarks" id="remarks" data-maxlength="256"
@@ -447,6 +439,7 @@
         //表单合法 单价合法性
         if ($('#frm').parsley().isValid()){
             var searchForm = document.getElementById("frm");
+            searchForm.action = "${ctx}/admin/wefamily/qualityMgmtInfoForPhone?scanedFlag=Y"
             searchForm.submit();
         }
     }
@@ -494,7 +487,7 @@
 
             if($('#qualityMgmtImgContainer').find('img').length > 0){
                 var searchForm = document.getElementById("frm");
-                searchForm.action = "${ctx}/admin/wefamily/finishQualityMgmtForPhone?trainId=${qualityMgmt.uuid}&versionno=${qualityMgmt.versionno}"
+                searchForm.action = "${ctx}/admin/wefamily/finishQualityMgmtForPhone?trainId=${qualityMgmt.uuid}&versionno=${qualityMgmt.versionno}&scanedFlag=Y"
                 searchForm.submit();
             }else{
                 Message.innerHTML = "请上传人机合影！";
@@ -521,6 +514,14 @@
                         $("#machineno").val(paramArr[1]);
                         $("#engineno").val(paramArr[2]);
                         $("#productiondt").val(paramArr[3]);
+
+
+                        $.get("${ctx}/admin/wefamily/queryUserByMachineno?machineno="+paramArr[1],function(data,status){
+                            if(undefined != data.wpUser){
+                                $('#reportername').val(data.wpUser.name);
+                                $('#reporterphone').val(data.wpUser.contactno);
+                            }
+                        });
                     }
                 }
         );

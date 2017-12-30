@@ -361,8 +361,7 @@
                                                                         <c:if test="${fn:length(logisticsList) > 0}">
                                                                             <div class="detaildiv1"
                                                                                  style="padding: 0px 0px 0px 0px;margin-left: 0px;margin-bottom: 10px;width: 100%;">
-                                                                                <ul class="new-of-storey"
-                                                                                    style="margin-left: -35px;">
+                                                                                <ul class="new-of-storey">
                                                                                     <c:forEach var="logistics" items="${logisticsList}" varStatus="stat">
                                                                                         <li style="border:0px;padding: 0px 0px 0px 10px;border-left: 3px solid #ccc;">
                                                                                             <div>
@@ -437,7 +436,7 @@
                                                                             <div class="col-md-2 col-xs-4 name detail-div">回执图片:</div>
                                                                             <div class="col-md-10 col-xs-8 value detail-div" >
                                                                                 <c:forEach var="receiptImg" items="${attachmentList}">
-                                                                                    <img src="${receiptImg.name}" style="width: 50px;height: 50px;"
+                                                                                    <img src="${receiptImg.name}" style="width: 50px;height: 50px;" name="${receiptImg.uuid}"
                                                                                          onclick="viewBigImage(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image"
                                                                                     />
                                                                                 </c:forEach>
@@ -913,6 +912,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" id="modelCloseBtn"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                             <h4 class="modal-title" id="myLargeModalLabel">大图</h4>
+
                         </div>
                         <div class="modal-body">
                             <div class="row">
@@ -920,6 +920,12 @@
                                     <div class="bs-example" data-example-id="simple-carousel">
                                         <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                                         </div>
+
+                                    </div>
+                                    <div class="text-center">
+                                        <a  class="btn btn-submit btn-s-xs"
+                                            onclick="deletePic()">
+                                            删除</a>
                                     </div>
                                 </div>
                             </div>
@@ -943,6 +949,17 @@
             //显示父菜单
             showParentMenu('微物业');
         }
+    }
+
+    function deletePic(){
+        var div = document.getElementsByClassName("item active");
+        var attachmentId = div[0].getAttribute("name");
+        $.get("${ctx}/admin/wefamily/deletePic?attachmentId="+attachmentId,function(data,status){
+            if(undefined != data.deleteFlag){
+                window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&deleteFlag="+data.deleteFlag;
+            }
+        });
+
     }
 
     //订单添加机器
@@ -1018,7 +1035,6 @@
         }else{
             openAddMachineModal();
         }
-
     }
 
     function openAddMachineModal(){

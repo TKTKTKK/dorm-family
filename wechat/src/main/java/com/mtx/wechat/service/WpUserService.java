@@ -158,4 +158,8 @@ public class WpUserService extends BaseService<WpUserMapper,WpUser> {
     public List<String> queryUserOpenIds(WpUser wpUser, String mediaid) {
         return mapper.selectUserOpenIds(wpUser,mediaid);
     }
+
+    public List<WpUser> queryUserByMachineno(String machineno) {
+        return mapper.selectUserByMachineno(machineno);
+    }
 }

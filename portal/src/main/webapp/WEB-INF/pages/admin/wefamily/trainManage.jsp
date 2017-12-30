@@ -36,7 +36,7 @@
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <select  class="form-control" name="status" id="status">
                                         <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_STATUS')}"></c:set>
-                                        <option value="">状态</option>
+                                        <option value="">培训状态</option>
                                         <c:forEach items="${commonCodeList}" var="commonCode">
                                             <option value="${commonCode.code}" <c:if test="${train.status == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                                         </c:forEach>
@@ -79,6 +79,15 @@
                                            name="endDateStr" value="${endDateStr}"
                                            data-date-format="yyyy-mm-dd" id="endtime" placeholder="截止日期">
                                 </div>
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <select  class="form-control" name="praisestatus" id="praisestatus">
+                                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('PRAISE_STATUS')}"></c:set>
+                                        <option value="">奖励状态</option>
+                                        <c:forEach items="${commonCodeList}" var="commonCode">
+                                            <option value="${commonCode.code}" <c:if test="${train.praisestatus == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
 
                             </div>
                             <div class="row col-sm-12 text-center text-white" style="margin-top: 20px">
@@ -112,6 +121,7 @@
                                         <th class="text-center">培训类型</th>
                                         <th class="text-center">培训日期</th>
                                         <th class="text-center">培训状态</th>
+                                        <th class="text-center">奖励状态</th>
                                         <th class="text-center">操作</th>
                                     </tr>
                                     </thead>
@@ -144,6 +154,9 @@
                                             </td>
                                             <td>
                                                     ${web:getCodeDesc("TRAIN_STATUS",train.status)}
+                                            </td>
+                                            <td>
+                                                    ${web:getCodeDesc("PRAISE_STATUS",train.praisestatus)}
                                             </td>
                                             <td>
                                                 <a href="${ctx}/admin/wefamily/trainInfo?trainId=${train.uuid}&merchantId=${train.merchantid}" class="btn  btn-infonew btn-sm" style="color: white" >详情</a>

@@ -39,6 +39,10 @@ public class Train extends BaseEntity {
     private String location;
     @Column
     private String status;
+    @Column
+    private String praisestatus;
+    @Column
+    private String praiseremarks;
 
     private String merchantname;
 
@@ -160,5 +164,21 @@ public class Train extends BaseEntity {
 
     public void setMerchantname(String merchantname) {
         this.merchantname = merchantname;
+    }
+
+    public String getPraisestatus() {
+        return praisestatus;
+    }
+
+    public void setPraisestatus(String praisestatus) {
+        this.praisestatus = praisestatus;
+    }
+
+    public String getPraiseremarks() {
+        return praiseremarks;
+    }
+
+    public void setPraiseremarks(String praiseremarks) {
+        this.praiseremarks = praiseremarks;
     }
 }

@@ -81,6 +81,9 @@
     </style>
 </head>
 <body>
+<c:if test="${scanedFlag ne 'Y'}">
+    <div class="choose" id="imgDiv" style="z-index: 10;background: rgba(0,0,0,0.7);"><img src="../../../static/guest/img/help.png" alt="" onclick="closeImg()" style="width: 100%"></div>
+</c:if>
     <div class="head">
         <a class="back" href="${ctx}/admin/wefamily/trainManageForPhone"></a>
         <span>培训详情</span>
@@ -200,16 +203,6 @@
                            value="${train.traindt}" placeholder="请选择培训日期" data-required="true" data-maxlength="23">
                 </li>
                 <li>
-                    <span>培训情况<a class="dataRequired">*</a></span></span>
-                    <select name="situation" id="situation" data-required="true">
-                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_SITUATION')}"></c:set>
-                        <option value="">请选择</option>
-                        <c:forEach items="${commonCodeList}" var="commonCode">
-                            <option value="${commonCode.code}" <c:if test="${train.situation == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                        </c:forEach>
-                    </select>
-                </li>
-                <li>
                     <span>现场定位<a class="dataRequired">*</a></span></span>
                     <input type="text" name="location" id="location" value="${train.location}" data-maxlength="32" readonly onblur="initLocation()">
                     <img src="../../../../static/guest/img/location.png" id="locationImg" onclick="getLocation()" alt="" style="width: 2rem;height: 2rem;float: right">
@@ -299,6 +292,10 @@
         $(".choose").css("display","none");
     }
 
+    function closeImg(){
+        $("#imgDiv").css("display","none");
+    }
+
     window.onload = function(){
         if(${successMessage != null}){
             Message.innerHTML = "${successMessage}";
@@ -346,6 +343,7 @@
         //表单合法 单价合法性
         if ($('#frm').parsley().isValid()){
             var searchForm = document.getElementById("frm");
+            searchForm.action = "${ctx}/admin/wefamily/trainInfoForPhone?scanedFlag=Y"
             searchForm.submit();
         }
     }
@@ -391,7 +389,7 @@
         if ($('#frm').parsley().isValid()){
             if($('#trainImgContainer').find('img').length > 0){
                 var searchForm = document.getElementById("frm");
-                searchForm.action = "${ctx}/admin/wefamily/finishTrainForPhone?trainId=${train.uuid}&versionno=${train.versionno}"
+                searchForm.action = "${ctx}/admin/wefamily/finishTrainForPhone?trainId=${train.uuid}&versionno=${train.versionno}&scanedFlag=Y"
                 searchForm.submit();
             }else{
                 Message.innerHTML = "请上传人机合影！";
@@ -465,6 +463,14 @@
                         $("#machineno").val(paramArr[1]);
                         $("#engineno").val(paramArr[2]);
                         $("#productiondt").val(paramArr[3]);
+
+                        $.get("${ctx}/admin/wefamily/queryUserByMachineno?machineno="+paramArr[1],function(data,status){
+                            if(undefined != data.wpUser){
+                                $('#personname').val(data.wpUser.name);
+                                $('#personphone').val(data.wpUser.contactno);
+                            }
+                        });
+
                     }
                 }
         );

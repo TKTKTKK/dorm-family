@@ -122,7 +122,7 @@
         .activityRule li{
             justify-content: space-between;
             border-bottom: 1px solid rgba(0,0,0,0.1);
-            padding: 1.17rem 2rem;
+            padding: 1.4rem 2rem;
         }
         .required{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
     </style>
@@ -188,6 +188,26 @@
                                     </li>
                                 </c:forEach>
                             </ul>
+                            <c:if test="${mtxActivity.status == 'PENDING' or mtxActivity.status == 'DRAWING'}">
+                                <div class="activity_kind">
+                                    <p style="position: relative">活动规则</p>
+                                    <ul class="activityRule">
+                                        <li>
+                                            <span>中奖总人数<a class="dataRequired">*</a></span>
+                                            <input data-type="digits" id="totalLuckyCount" name="totalLuckyCount"
+                                                   placeholder="请填写中奖总人数" data-required="true" value="${mtxActivity.totalLuckyCount}"/>
+                                            <span id="totalLuckyCountError" style="float: right;color: red;font-size: 1.2rem;"></span>
+                                        </li>
+                                        <li>
+                                            <span>每轮中奖人数<a class="dataRequired">*</a></span>
+                                            <input data-type="digits" id="everyLuckyCount" name="everyLuckyCount"
+                                                   placeholder="请填写每轮中奖人数" data-required="true" value="${mtxActivity.everyLuckyCount}"/>
+                                            <span id="everyLuckyCountError" style="float: right;color: red;font-size: 1.2rem;"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </c:if>
+
                             <c:if test="${mtxActivity.status == 'APP'}">
                                 <div class="activity_kind">
                                     <p>活动照片</p>
@@ -224,7 +244,7 @@
                         <div><a href="javascript:uploadActivityImg()">上传图片</a></div>
                     </div>
                 </c:if>
-                <c:if test="${mtxActivity.status == 'PENDING'}">
+                <c:if test="${mtxActivity.status == 'PENDING' or mtxActivity.status == 'DRAWING'}">
                     <div class="fixsubmit">
                         <div><a href="javascript:submitActivityInfo()">保存</a></div>
                     </div>
@@ -318,13 +338,55 @@
 
     }
 
+    function checkCount(){
+        var totalLuckyCountError = document.getElementById("totalLuckyCountError");
+        totalLuckyCountError.innerHTML = "";
+        var everyLuckyCountError = document.getElementById("everyLuckyCountError");
+        everyLuckyCountError.innerHTML = "";
+
+        var totalLuckyCount = $("#totalLuckyCount").val();
+        var everyLuckyCount = $("#everyLuckyCount").val();
+
+        var ul = document.getElementById("participantsUl");
+        var inputs = ul.getElementsByTagName("input");
+        var count = 0;
+        if(inputs.length>0){
+            for(var i=0;i<inputs.length;i++){
+                if(inputs[i].checked) {
+                    count ++;
+                }
+            }
+        }
+
+        //全选、全不选
+        if(count == 0 || count == inputs.length){
+            if(totalLuckyCount > inputs.length){
+                totalLuckyCountError.innerHTML = "不能大于参与人数";
+                return false;
+            }
+        }else{
+            if(totalLuckyCount > count){
+                totalLuckyCountError.innerHTML = "不能大于参与人数";
+                return false;
+            }
+        }
+        if(everyLuckyCount > totalLuckyCount){
+            everyLuckyCountError.innerHTML = "不能大于中奖总数"
+            return false;
+        }
+        return true;
+    }
+
 
     function submitActivityInfo(){
+
+
         $("#participantFrm").parsley("validate");
         //表单合法 单价合法性
-        if ($('#participantFrm').parsley().isValid()){
+        if ($('#participantFrm').parsley().isValid() && checkCount()){
+
             var participantFrm = document.getElementById("participantFrm");
-            participantFrm.action = "${ctx}/admin/wefamily/addParticipant?uuid=${mtxActivity.uuid}&fromPhone=Y";
+            participantFrm.action = "${ctx}/admin/wefamily/addParticipant?uuid=${mtxActivity.uuid}&versionno=${mtxActivity.versionno}&fromPhone=Y";
             participantFrm.submit();
         }
     }

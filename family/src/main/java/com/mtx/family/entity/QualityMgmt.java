@@ -57,6 +57,10 @@ public class QualityMgmt extends BaseEntity {
     private String content;
     @Column
     private String remarks;
+    @Column
+    private String praisestatus;
+    @Column
+    private String praiseremarks;
 
     private String workerid;
 
@@ -281,5 +285,21 @@ public class QualityMgmt extends BaseEntity {
 
     public void setStatusArr(String[] statusArr) {
         this.statusArr = statusArr;
+    }
+
+    public String getPraisestatus() {
+        return praisestatus;
+    }
+
+    public void setPraisestatus(String praisestatus) {
+        this.praisestatus = praisestatus;
+    }
+
+    public String getPraiseremarks() {
+        return praiseremarks;
+    }
+
+    public void setPraiseremarks(String praiseremarks) {
+        this.praiseremarks = praiseremarks;
     }
 }

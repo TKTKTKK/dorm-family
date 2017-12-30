@@ -67,4 +67,13 @@
         </if>
         order by modifyon desc;
     </select>
+
+    <select id="selectUserByMachineno" resultMap="selectResultMap">
+        select wu.*
+        from tb_wp_user wu,tb_mtx_machine mm,tb_mtx_usermachine mum
+        where wu.uuid = mum.userid
+        and mm.uuid = mum.machineid
+        and mm.machineno = #{machineno}
+        order by mum.createon
+    </select>
 </mapper>
