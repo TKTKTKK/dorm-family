@@ -201,10 +201,10 @@
                                                    placeholder="请填写中奖总人数" data-required="true" value="${mtxActivity.totalLuckyCount}"/>
                                             <span id="totalLuckyCountError" style="float: right;color: red;font-size: 1.2rem;"></span>
                                         </li>
-                                        <li>
+                                        <li class="hidden">
                                             <span>每轮中奖人数<a class="dataRequired">*</a></span>
                                             <input data-type="digits" id="everyLuckyCount" name="everyLuckyCount"
-                                                   placeholder="请填写每轮中奖人数" data-required="true" value="${mtxActivity.everyLuckyCount}"/>
+                                                   placeholder="请填写每轮中奖人数" data-required="true" value="1"/>
                                             <span id="everyLuckyCountError" style="float: right;color: red;font-size: 1.2rem;"></span>
                                         </li>
                                     </ul>
@@ -344,8 +344,8 @@
     function checkCount(){
         var totalLuckyCountError = document.getElementById("totalLuckyCountError");
         totalLuckyCountError.innerHTML = "";
-        var everyLuckyCountError = document.getElementById("everyLuckyCountError");
-        everyLuckyCountError.innerHTML = "";
+       /* var everyLuckyCountError = document.getElementById("everyLuckyCountError");
+        everyLuckyCountError.innerHTML = "";*/
 
         var totalLuckyCount = $("#totalLuckyCount").val();
         var everyLuckyCount = $("#everyLuckyCount").val();
@@ -373,10 +373,10 @@
                 return false;
             }
         }
-        if(everyLuckyCount > totalLuckyCount){
+        /*if(everyLuckyCount > totalLuckyCount){
             everyLuckyCountError.innerHTML = "不能大于中奖总数"
             return false;
-        }
+        }*/
         return true;
     }
 
