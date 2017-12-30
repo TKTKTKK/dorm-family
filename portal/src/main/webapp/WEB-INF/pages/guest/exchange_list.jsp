@@ -33,10 +33,14 @@
             <p>
                 <span>兑换个数：${exchange.count}个</span><span>经销商电话：${exchange.contactno}</span>
             </p>
+            <p>
+                <span>兑换时间：</span><span>${fn:substring(exchange.createon, 0, 19)}</span>
+            </p>
         </li>
     </c:forEach>
 </ul>
 </body>
+<input  type="text" name="userid" id="userid" value="${userid}" style="display: none">
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script type="text/javascript">
     var userid=$("#userid").val();
