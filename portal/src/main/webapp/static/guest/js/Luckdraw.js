@@ -33,9 +33,14 @@ function start() {
 			}
 			//在抽奖过程中
 			if (runing) {
-				if ( pcount <= Lotterynumber ) {
-					alert("抽奖人数不足“+Lotterynumber+”人");
-				}else{
+				//if ( pcount < Lotterynumber ) {
+				//	alert("抽奖人数不足"+Lotterynumber+"人");
+				//}
+
+				if(wcount < Lotterynumber){
+					alert("奖品不足！");
+				}
+				else{
 					runing = false;
 					$('#start').text('停止');
 					startNum()
@@ -102,8 +107,6 @@ function zd() {
 
                     //判断是否已抽取单次中奖者完毕，是则退出当前定时器循环
                     if (i==Lotterynumber) {
-					    console.log(i);
-						console.log("抽奖结束");
 						window.clearInterval(stopTime);
 						$('#start').text("开始");
 						trigger = true;
@@ -111,9 +114,6 @@ function zd() {
 					
 					//判断是否已抽取所有中奖者，是则显示抽奖完毕
 					if(i+times*Lotterynumber == Totalnumber){
-					    console.log(i);
-					    console.log(times);
-						console.log("抽奖完毕");
 					    window.clearInterval(stopTime);
 						$('#start').text("抽奖完毕");
 						$('#btntxt').removeClass('stop').removeClass('start').addClass('over');

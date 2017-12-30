@@ -2463,40 +2463,45 @@ public class WeFamilyController extends BaseAdminController {
 
     @RequestMapping(value = "/addParticipant", method = RequestMethod.POST)
     public String addParticipant(String uuid,HttpServletRequest request,RedirectAttributes redirectAttributes){
-        MtxLuckyParticipant participantTemp=new MtxLuckyParticipant();
-        participantTemp.setActivityid(uuid);
-        List<MtxLuckyParticipant> luckyParticipantList = mtxLuckyParticipantService.queryForList(participantTemp);
-        if(luckyParticipantList.size()>0){
-            for(int i=0;i<luckyParticipantList.size();i++){
-                mtxLuckyParticipantService.delete(luckyParticipantList.get(i));
+        MtxActivity activity=new MtxActivity();;
+        activity.setUuid(uuid);
+        activity=mtxActivityService.queryForObjectByPk(activity);
+        if(null!=activity&&"PENDING".equals(activity.getStatus())){
+            MtxLuckyParticipant participantTemp=new MtxLuckyParticipant();
+            participantTemp.setActivityid(uuid);
+            List<MtxLuckyParticipant> luckyParticipantList = mtxLuckyParticipantService.queryForList(participantTemp);
+            if(luckyParticipantList.size()>0){
+                for(int i=0;i<luckyParticipantList.size();i++){
+                    mtxLuckyParticipantService.delete(luckyParticipantList.get(i));
+                }
             }
-        }
-        String activityParticipant[] = request.getParameterValues("users");
-        if(StringUtils.isNotBlank(uuid) && null != activityParticipant){
-            MtxActivityParticipant tempActivityParticipant = new MtxActivityParticipant();
-            tempActivityParticipant.setActivityid(uuid);
-            List<MtxActivityParticipant> tempActivityParticipantList = mtxActivityParticipantService.queryForList(tempActivityParticipant);
-            if(null !=  tempActivityParticipantList && tempActivityParticipantList.size() != activityParticipant.length){
-                for(String participantId : activityParticipant){
-                    MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
-                    luckyParticipant.setUserid(participantId);
-                    luckyParticipant.setActivityid(uuid);
-                    luckyParticipant.setStatus("WAIT_WIN");
-                    mtxLuckyParticipantService.insert(luckyParticipant);
+            String activityParticipant[] = request.getParameterValues("users");
+            if(StringUtils.isNotBlank(uuid) && null != activityParticipant){
+                MtxActivityParticipant tempActivityParticipant = new MtxActivityParticipant();
+                tempActivityParticipant.setActivityid(uuid);
+                List<MtxActivityParticipant> tempActivityParticipantList = mtxActivityParticipantService.queryForList(tempActivityParticipant);
+                if(null !=  tempActivityParticipantList && tempActivityParticipantList.size() != activityParticipant.length){
+                    for(String participantId : activityParticipant){
+                        MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
+                        luckyParticipant.setUserid(participantId);
+                        luckyParticipant.setActivityid(uuid);
+                        luckyParticipant.setStatus("WAIT_WIN");
+                        mtxLuckyParticipantService.insert(luckyParticipant);
+                    }
                 }
             }
         }
+        String totalLuckyCount = request.getParameter("totalLuckyCount");
+        String everyLuckyCount = request.getParameter("everyLuckyCount");
+        String versionno = request.getParameter("versionno");
+        MtxActivity mtxActivity = new MtxActivity();
+        mtxActivity.setUuid(uuid);
+        mtxActivity.setVersionno(Integer.valueOf(versionno));
+        mtxActivity.setTotalLuckyCount(Integer.valueOf(totalLuckyCount));
+        mtxActivity.setEveryLuckyCount(Integer.valueOf(everyLuckyCount));
+        mtxActivityService.updatePartial(mtxActivity);
         String fromPhone  = request.getParameter("fromPhone");
         if("Y".equals(fromPhone)){
-            String totalLuckyCount = request.getParameter("totalLuckyCount");
-            String everyLuckyCount = request.getParameter("everyLuckyCount");
-            String versionno = request.getParameter("versionno");
-            MtxActivity mtxActivity = new MtxActivity();
-            mtxActivity.setUuid(uuid);
-            mtxActivity.setVersionno(Integer.valueOf(versionno));
-            mtxActivity.setTotalLuckyCount(Integer.valueOf(totalLuckyCount));
-            mtxActivity.setEveryLuckyCount(Integer.valueOf(everyLuckyCount));
-            mtxActivityService.updatePartial(mtxActivity);
             redirectAttributes.addFlashAttribute("successMessage","保存成功");
             return "redirect:/admin/wefamily/mtxActivityInfoForPhone?activityId="+uuid;
         }

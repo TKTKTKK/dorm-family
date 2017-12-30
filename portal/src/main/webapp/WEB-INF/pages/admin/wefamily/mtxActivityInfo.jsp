@@ -221,10 +221,10 @@
                                     <span class="text-danger"  id="errorCountMessage"></span>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group hidden">
                                 <label class="col-sm-3 control-label"><span class="text-danger">*</span><span class="text-danger"></span>每轮中奖人数：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                   <input class="form-control" type="number"  data-required="true" id="everyLuckyCount" name="everyLuckyCount" value="${activity.everyLuckyCount}" <c:if test="${activity.status eq 'APP'}">disabled</c:if>
+                                   <input class="form-control" type="number"  data-required="true" id="everyLuckyCount" name="everyLuckyCount" value="1"
                                     >
                                 </div>
                             </div>
@@ -241,7 +241,7 @@
                                                 <label class="checkbox m-n">
                                                     <input type="checkbox" name="sltAll" id="sltAll" style="width: 20px;height: 20px"
                                                            <c:if test="${activity.status eq 'APP'||activity.status eq 'DRAWING'}">disabled</c:if>
-                                                           onclick="selectAllOrNone('users','sltAll')"><i></i>
+                                                           onclick="selectAllOrNone('users','sltAll')"><i></i>全选等同于全不选
                                                 </label>
                                                 <br/>
                                                 <c:forEach items="${participantList}" var="participant">
@@ -342,10 +342,7 @@
                         </div>
                         <div class="panel-footer text-left bg-light lter">
                             <c:choose>
-                                <c:when test="${activity.status eq 'PENDING'}">
-                                    <button class="btn btn-submit btn-s-xs" style="background-color: red;border: 1px solid red">
-                                        &nbsp;提&nbsp;交
-                                    </button>
+                                <c:when test="${activity.status eq 'PENDING'||activity.status eq 'DRAWING'}">
                                     <c:if test="${fn:length(participantList)>0}">
                                     <a onclick="submitParticipant()" class="btn btn-submit btn-s-xs ">
                                         </i>&nbsp;确&nbsp;定
