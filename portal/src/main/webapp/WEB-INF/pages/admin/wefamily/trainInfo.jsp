@@ -64,6 +64,63 @@
         #trainImgContainer{display: inline-block;vertical-align: middle}
         #trainImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 0rem}
         #trainImgContainer img{width: 5rem;height: 5rem;margin:1rem}
+        .detaildiv1 ul li {
+            border: 0;
+            padding: 0px 10px;
+            list-style: none;
+        }
+
+        .new-of-storey li {
+            position: relative;
+            padding: 15px 10px;
+            border-bottom: 1px dotted #e8e5e5;
+        }
+
+        .new-of-storey li span {
+            display: block;
+            font-size: 14px;
+            color: #6e6e6e;
+        }
+
+        .new-of-storey li .icon {
+            position: absolute;
+            top: 42%;
+            /*left: -15px;*/
+            left: -8px;
+            width: 12px;
+            height: 12px;
+            /*width: 9px;*/
+            /*height: 9px;*/
+            border-radius: 6px;
+            background-color: #dedede;
+            /*background-color: #ccc;*/
+        }
+
+        .new-of-storey li .icon.on {
+            background-color: #e4393c;
+        }
+
+        .tishiyu {
+            font-family: "微软雅黑";
+            font-size: 13px;
+            width: 100%;
+            color: #6e6e6e;
+        }
+
+        .time {
+            color: #999;
+            font-family: "微软雅黑";
+            font-size: 13px;
+        }
+
+        .panel-body .form-group .col-sm-3 {
+            padding: 15px;
+            margin: 0;
+        }
+        .panel-body .form-group .col-sm-9 {
+            padding: 10px;
+            margin: 0;
+        }
     </style>
 </head>
 <body class="">
@@ -75,238 +132,299 @@
                 满田星 / <a href="${ctx}/admin/wefamily/trainManage">培训管理</a>
                 / <span class="font-bold  text-shallowred"> 培训信息</span>
             </header>
-            <div class="col-sm-12 pos">
-                <div style="margin-bottom: 5px">
-                    <span class="text-success">${successMessage}</span>
-                    <span class="text-danger">${errorMessage}</span>
-                </div>
-                <form class="form-horizontal form-bordered" data-validate="parsley"
-                      action="${ctx}/admin/wefamily/trainInfo" method="POST" id="frm">
-                    <section class="panel panel-default">
-                        <header class="panel-heading mintgreen">
-                            <i class="fa fa-gift"></i>
-                            <span class="text-lg">培训信息：</span>
-                        </header>
-                        <div class="panel-body p-0-15">
-                            <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>经销商：</label>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" data-required="true"
-                                           value="${merchant.name}" readonly>
-                                    <input type="hidden" name="merchantid" value="${merchant.uuid}">
-                                </div>
+            <div class="tab-pane fade in active" id="detail">
+                <section class="panel panel-default" style="border-top:0">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_1">
+                            <div style="margin-bottom: 5px;padding: 15px">
+                                <span class="text-success">${successMessage}</span>
+                                <span class="text-danger">${errorMessage}</span>
                             </div>
-                            <c:if test="${not empty train.uuid}">
-                                <div class="form-group">
-                                    <label class="col-sm-3  control-label"><span class="text-danger">*</span>培训编号：</label>
-                                    <div class="col-sm-9 b-l bg-white">
-                                        <input type="text" class="form-control" data-required="true"
-                                               value="${train.snno}" readonly>
-                                    </div>
-                                </div>
-                            </c:if>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label"><span class="text-danger">*</span>机器型号：</label>
-                                <div class="col-sm-9  b-l bg-white">
-                                    <select class="form-control" name="machinemodel" id="machinemodel"
-                                            data-required="true">
-                                        <c:if test="${fn:length(machineModelList) > 1}">
-                                            <option value="">请选择机器型号</option>
-                                        </c:if>
-                                        <c:forEach items="${machineModelList}" var="machineModel">
-                                            <option value="${machineModel}" <c:if test="${train.machinemodel == machineModel}">selected</c:if>>${machineModel}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label"><span class="text-danger">*</span>机器号：</label>
-                                <div class="col-sm-9  b-l bg-white">
-                                    <div class="" style="position: relative">
-                                        <input type="text" class="form-control my-feetype-ul"  name="machineno" id="machineno"
-                                               value="${train.machineno}" data-required="true"
-                                               placeholder="请输入机器号" data-maxlength="32"
-                                        >
-                                        <input type="hidden" name="machineid" id="machineid" value="${machine.uuid}">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label"><span class="text-danger">*</span>发动机号：</label>
-                                <div class="col-sm-9  b-l bg-white">
-                                    <input type="text" class="form-control"  name="engineno" id="engineno"
-                                           value="${train.engineno}" data-required="true"
-                                           placeholder="请输入发动机号" data-maxlength="32"
-                                    >
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label"><span class="text-danger">*</span>生产日期：</label>
-                                <div class="col-sm-9  b-l bg-white">
-                                    <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
-                                           name="productiondt" value="${train.productiondt}" data-maxlength="23"
-                                           data-date-format="yyyy-mm-dd" id="productiondt" placeholder="请选择生产日期">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>会员姓名：</label>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" data-required="true" name="personname" id="personname"
-                                           data-maxlength="32" placeholder="请输入会员姓名"
-                                           onblur="trimText(this)"
-                                           value="${train.personname}">
-                                    <span id="personnameError" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>会员电话：</label>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" data-required="true" name="personphone" id="personphone"
-                                           data-maxlength="11" placeholder="请输入会员电话"
-                                           onblur="checkPhone(this.value)"
-                                           value="${train.personphone}">
-                                    <span class="text-danger" id="contactnoError"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" >
-                                <label class="col-sm-3 control-label"><span class="text-danger">*</span>培训类型：</label>
-                                <div class="col-sm-9  b-l bg-white">
-                                    <select  class="form-control" name="type" id="type" data-required="true" onchange="changeTrainProgram()">
-                                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_TYPE')}"></c:set>
-                                        <c:forEach items="${commonCodeList}" var="commonCode">
-                                            <option value="${commonCode.code}" <c:if test="${train.type == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">培训项目：</label>
-                                <div class="col-sm-9  b-l bg-white">
-                                    <div id="firstTrain">
-                                        <c:forEach items="${web:queryCommonCodeList('TRAIN_PROGRAM_FIRST')}" var="programCode">
-                                            <div class="checkbox i-checks" style="padding-left: 0px;position: relative">
-                                                <label class="checkbox m-n">
-                                                    <c:set var="showFlag" value="0" scope="page"></c:set>
-                                                    <c:forEach items="${trainProgramList}" var="program">
-                                                        <c:if test="${program == programCode.code}">
-                                                            <c:set var="showFlag" value="1" scope="page"></c:set>
+                            <div class="col-md-6 col-sm-6 ">
+                                <form class="form-horizontal form-bordered" data-validate="parsley"
+                                      action="${ctx}/admin/wefamily/trainInfo" method="POST" id="frm">
+                                    <section class="panel panel-default">
+                                        <header class="panel-heading mintgreen">
+                                            <i class="fa fa-gift"></i>
+                                            <span class="text-lg">培训信息：</span>
+                                        </header>
+                                        <div class="panel-body p-0-15">
+                                            <div class="form-group">
+                                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>经销商：</label>
+                                                <div class="col-sm-9 b-l bg-white">
+                                                    <input type="text" class="form-control" data-required="true"
+                                                           value="${merchant.name}" readonly>
+                                                    <input type="hidden" name="merchantid" value="${merchant.uuid}">
+                                                </div>
+                                            </div>
+                                            <c:if test="${not empty train.uuid}">
+                                                <div class="form-group">
+                                                    <label class="col-sm-3  control-label"><span class="text-danger">*</span>培训编号：</label>
+                                                    <div class="col-sm-9 b-l bg-white">
+                                                        <input type="text" class="form-control" data-required="true"
+                                                               value="${train.snno}" readonly>
+                                                    </div>
+                                                </div>
+                                            </c:if>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label"><span class="text-danger">*</span>机器型号：</label>
+                                                <div class="col-sm-9  b-l bg-white">
+                                                    <select class="form-control" name="machinemodel" id="machinemodel"
+                                                            data-required="true">
+                                                        <c:if test="${fn:length(machineModelList) > 1}">
+                                                            <option value="">请选择机器型号</option>
                                                         </c:if>
-                                                    </c:forEach>
-                                                    <input type="checkbox" name="programs" value="${programCode.code}" <c:if test="${showFlag == 1}">checked</c:if>>
-                                                    <i></i>
-                                                    <span>${programCode.codevalue}</span>
-                                                </label>
-                                                <div class="permit-list"></div>
+                                                        <c:forEach items="${machineModelList}" var="machineModel">
+                                                            <option value="${machineModel}" <c:if test="${train.machinemodel == machineModel}">selected</c:if>>${machineModel}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </c:forEach>
-                                    </div>
-                                    <div id="sceneTrain">
-                                        <c:forEach items="${web:queryCommonCodeList('TRAIN_PROGRAM_SCENE')}" var="programCode">
-                                            <div class="checkbox i-checks" style="padding-left: 0px;position: relative">
-                                                <label class="checkbox m-n">
-                                                    <c:set var="showFlag" value="0" scope="page"></c:set>
-                                                    <c:forEach items="${trainProgramList}" var="program">
-                                                        <c:if test="${program == programCode.code}">
-                                                            <c:set var="showFlag" value="1" scope="page"></c:set>
-                                                        </c:if>
-                                                    </c:forEach>
-                                                    <input type="checkbox" name="programs" value="${programCode.code}" <c:if test="${showFlag == 1}">checked</c:if>>
-                                                    <i></i>
-                                                    <span>${programCode.codevalue}</span>
-                                                </label>
-                                                <div class="permit-list"></div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label"><span class="text-danger">*</span>机器号：</label>
+                                                <div class="col-sm-9  b-l bg-white">
+                                                    <div class="" style="position: relative">
+                                                        <input type="text" class="form-control my-feetype-ul"  name="machineno" id="machineno"
+                                                               value="${train.machineno}" data-required="true"
+                                                               placeholder="请输入机器号" data-maxlength="32"
+                                                        >
+                                                        <input type="hidden" name="machineid" id="machineid" value="${machine.uuid}">
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </c:forEach>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div>
-                                    <label class="col-sm-3  control-label"><span class="text-danger">*</span>培训日期：</label>
-                                    <div class="col-sm-9 b-l bg-white">
-                                        <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
-                                               name="traindt" value="${train.traindt}" data-maxlength="23"
-                                               data-date-format="yyyy-mm-dd" id="traindt" placeholder="请选择培训日期">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group" >
-                                <label class="col-sm-3 control-label">培训情况：</label>
-                                <div class="col-sm-9  b-l bg-white">
-                                    <select  class="form-control" name="situation" id="situation">
-                                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_SITUATION')}"></c:set>
-                                        <option value="">--请选择--</option>
-                                        <c:forEach items="${commonCodeList}" var="commonCode">
-                                            <option value="${commonCode.code}" <c:if test="${train.situation == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                            </div>
-                            <c:if test="${fn:length(attachmentList) < 4}">
-                                <div class="form-group" >
-                                    <label class="col-sm-3 control-label">上传人机合影：</label>
-                                    <div class="col-sm-9  b-l bg-white">
-                                        <div class="my-display-inline-box">
-                                            <div id="trainImgUrlContainer">
-                                                <input type="file" id="trainImg" name="picUrl" class="filestyle"
-                                                       data-icon="false" data-classButton="btn btn-default"
-                                                       data-classInput="form-control inline v-middle input-xs"
-                                                       onchange="compressUploadPicture(this)" accept="image/*"
-                                                    <%--data-max_size="2000000" --%>
-                                                       style="display: none"
-                                                       data-max-count="4">
-                                                <div id="picUrlError" class="text-danger"></div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label"><span class="text-danger">*</span>发动机号：</label>
+                                                <div class="col-sm-9  b-l bg-white">
+                                                    <input type="text" class="form-control"  name="engineno" id="engineno"
+                                                           value="${train.engineno}" data-required="true"
+                                                           placeholder="请输入发动机号" data-maxlength="32"
+                                                    >
+                                                </div>
                                             </div>
-                                            <div id="trainImgContainer" class="row value">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label"><span class="text-danger">*</span>生产日期：</label>
+                                                <div class="col-sm-9  b-l bg-white">
+                                                    <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
+                                                           name="productiondt" value="${train.productiondt}" data-maxlength="23"
+                                                           data-date-format="yyyy-mm-dd" id="productiondt" placeholder="请选择生产日期">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>会员姓名：</label>
+                                                <div class="col-sm-9 b-l bg-white">
+                                                    <input type="text" class="form-control" data-required="true" name="personname" id="personname"
+                                                           data-maxlength="32" placeholder="请输入会员姓名"
+                                                           onblur="trimText(this)"
+                                                           value="${train.personname}">
+                                                    <span id="personnameError" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>会员电话：</label>
+                                                <div class="col-sm-9 b-l bg-white">
+                                                    <input type="text" class="form-control" data-required="true" name="personphone" id="personphone"
+                                                           data-maxlength="11" placeholder="请输入会员电话"
+                                                           onblur="checkPhone(this.value)"
+                                                           value="${train.personphone}">
+                                                    <span class="text-danger" id="contactnoError"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" >
+                                                <label class="col-sm-3 control-label"><span class="text-danger">*</span>培训类型：</label>
+                                                <div class="col-sm-9  b-l bg-white">
+                                                    <select  class="form-control" name="type" id="type" data-required="true" onchange="changeTrainProgram()">
+                                                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_TYPE')}"></c:set>
+                                                        <c:forEach items="${commonCodeList}" var="commonCode">
+                                                            <option value="${commonCode.code}" <c:if test="${train.type == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">培训项目：</label>
+                                                <div class="col-sm-9  b-l bg-white">
+                                                    <div id="firstTrain">
+                                                        <c:forEach items="${web:queryCommonCodeList('TRAIN_PROGRAM_FIRST')}" var="programCode">
+                                                            <div class="checkbox i-checks" style="padding-left: 0px;position: relative">
+                                                                <label class="checkbox m-n">
+                                                                    <c:set var="showFlag" value="0" scope="page"></c:set>
+                                                                    <c:forEach items="${trainProgramList}" var="program">
+                                                                        <c:if test="${program == programCode.code}">
+                                                                            <c:set var="showFlag" value="1" scope="page"></c:set>
+                                                                        </c:if>
+                                                                    </c:forEach>
+                                                                    <input type="checkbox" name="programs" value="${programCode.code}" <c:if test="${showFlag == 1}">checked</c:if>>
+                                                                    <i></i>
+                                                                    <span>${programCode.codevalue}</span>
+                                                                </label>
+                                                                <div class="permit-list"></div>
+                                                            </div>
+                                                        </c:forEach>
+                                                    </div>
+                                                    <div id="sceneTrain">
+                                                        <c:forEach items="${web:queryCommonCodeList('TRAIN_PROGRAM_SCENE')}" var="programCode">
+                                                            <div class="checkbox i-checks" style="padding-left: 0px;position: relative">
+                                                                <label class="checkbox m-n">
+                                                                    <c:set var="showFlag" value="0" scope="page"></c:set>
+                                                                    <c:forEach items="${trainProgramList}" var="program">
+                                                                        <c:if test="${program == programCode.code}">
+                                                                            <c:set var="showFlag" value="1" scope="page"></c:set>
+                                                                        </c:if>
+                                                                    </c:forEach>
+                                                                    <input type="checkbox" name="programs" value="${programCode.code}" <c:if test="${showFlag == 1}">checked</c:if>>
+                                                                    <i></i>
+                                                                    <span>${programCode.codevalue}</span>
+                                                                </label>
+                                                                <div class="permit-list"></div>
+                                                            </div>
+                                                        </c:forEach>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div>
+                                                    <label class="col-sm-3  control-label"><span class="text-danger">*</span>培训日期：</label>
+                                                    <div class="col-sm-9 b-l bg-white">
+                                                        <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
+                                                               name="traindt" value="${train.traindt}" data-maxlength="23"
+                                                               data-date-format="yyyy-mm-dd" id="traindt" placeholder="请选择培训日期">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <c:if test="${fn:length(attachmentList) < 4}">
+                                                <div class="form-group" >
+                                                    <label class="col-sm-3 control-label">上传人机合影：</label>
+                                                    <div class="col-sm-9  b-l bg-white">
+                                                        <div class="my-display-inline-box">
+                                                            <div id="trainImgUrlContainer">
+                                                                <input type="file" id="trainImg" name="picUrl" class="filestyle"
+                                                                       data-icon="false" data-classButton="btn btn-default"
+                                                                       data-classInput="form-control inline v-middle input-xs"
+                                                                       onchange="compressUploadPicture(this)" accept="image/*"
+                                                                    <%--data-max_size="2000000" --%>
+                                                                       style="display: none"
+                                                                       data-max-count="4">
+                                                                <div id="picUrlError" class="text-danger"></div>
+                                                            </div>
+                                                            <div id="trainImgContainer" class="row value">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c:if>
+                                            <c:if test="${fn:length(attachmentList) > 0}">
+                                                <div class="form-group" >
+                                                    <label class="col-sm-3 control-label"></label>
+                                                    <div class="col-sm-9  b-l bg-white">
+                                                        <c:forEach items="${attachmentList}" var="attachment">
+                                                            <img src="${attachment.name}" width="50" height="50"
+                                                                 onclick="viewBigImage(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image"/>
+                                                        </c:forEach>
+                                                    </div>
+                                                </div>
+                                            </c:if>
+                                            <div class="form-group">
+                                                <label class="col-sm-3  control-label">地址：</label>
+                                                <div class="col-sm-9 b-l bg-white">
+                                                    <input type="text" class="form-control" name="location" id="location"
+                                                           data-maxlength="32" readonly
+                                                           onblur="trimText(this)"
+                                                           value="${train.location}">
+                                                    <span id="locationError" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <input type="hidden" name="uuid" class="form-control" value="${train.uuid}">
+                                                    <input type="hidden" name="versionno" class="form-control"
+                                                           value="${train.versionno}">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </c:if>
-                            <c:if test="${fn:length(attachmentList) > 0}">
-                                <div class="form-group" >
-                                    <label class="col-sm-3 control-label"></label>
-                                    <div class="col-sm-9  b-l bg-white">
-                                        <c:forEach items="${attachmentList}" var="attachment">
-                                            <img src="${attachment.name}" width="50" height="50"
-                                                 onclick="viewBigImage(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image"/>
-                                        </c:forEach>
-                                    </div>
-                                </div>
-                            </c:if>
-                            <div class="form-group">
-                                <label class="col-sm-3  control-label">地址：</label>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" name="location" id="location"
-                                           data-maxlength="32" readonly
-                                           onblur="trimText(this)"
-                                           value="${train.location}">
-                                    <span id="locationError" class="text-danger"></span>
-                                </div>
+                                        <div class="panel-footer text-left bg-light lter">
+                                            <c:if test="${train.status ne 'FINISH'}">
+                                                <a class="btn btn-submit btn-s-xs " href="javascript:saveTrainInfo()">
+                                                    &nbsp;保&nbsp;存
+                                                </a>
+                                                <c:if test="${not empty train.uuid}">
+                                                    <a class="btn btn-primary btn-success" href="javascript:finishTrain()" style="color: white;margin-left: 10px;">
+                                                        <i class="fa fa-check"></i> 完成培训
+                                                    </a>
+                                                </c:if>
+                                            </c:if>
+                                        </div>
+                                    </section>
+                                </form>
+
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <input type="hidden" name="uuid" class="form-control" value="${train.uuid}">
-                                    <input type="hidden" name="versionno" class="form-control"
-                                           value="${train.versionno}">
-                                </div>
+                            <div class="col-md-6 col-sm-6 ">
+                                <form class="form-horizontal form-bordered" data-validate="parsley"
+                                      action="${ctx}/admin/wefamily/saveTrainPraiseInfo" method="POST" id="praiseInfoFrm">
+                                    <section class="panel panel-default">
+                                        <header class="panel-heading mintgreen">
+                                            <i class="fa fa-gift"></i>
+                                            <span class="text-lg">奖励信息：</span>
+                                        </header>
+                                        <div class="panel-body p-0-15">
+
+                                            <div class="form-group" >
+                                                <label class="col-sm-3 control-label">培训情况：</label>
+                                                <div class="col-sm-9  b-l bg-white">
+                                                    <select  class="form-control" name="situation" id="situation">
+                                                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_SITUATION')}"></c:set>
+                                                        <option value="">请选择</option>
+                                                        <c:forEach items="${commonCodeList}" var="commonCode">
+                                                            <option value="${commonCode.code}" <c:if test="${train.situation == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" >
+                                                <label class="col-sm-3 control-label">奖励状态：</label>
+                                                <div class="col-sm-9  b-l bg-white">
+                                                    <select  class="form-control" name="praisestatus" id="praisestatus">
+                                                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('PRAISE_STATUS')}"></c:set>
+                                                        <option value="">请选择</option>
+                                                        <c:forEach items="${commonCodeList}" var="commonCode">
+                                                            <option value="${commonCode.code}" <c:if test="${train.praisestatus == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3  control-label">备注：</label>
+                                                <div class="col-sm-9 b-l bg-white">
+                                                    <textarea class="form-control" rows="4" name="praiseremarks"
+                                                              id="praiseremarks" data-maxlength="256" onblur="trimText(this)"
+                                                    >${train.praiseremarks}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <input type="hidden" name="uuid" class="form-control" value="${train.uuid}">
+                                                    <input type="hidden" name="versionno" class="form-control" value="${train.versionno}">
+                                                    <input type="hidden" name="merchantid" value="${merchant.uuid}">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="panel-footer text-left bg-light lter">
+                                            <c:if test="${train.status eq 'FINISH'}">
+                                                <a class="btn btn-submit btn-s-xs " href="javascript:saveTrainPraiseInfo()">
+                                                    &nbsp;保&nbsp;存
+                                                </a>
+                                            </c:if>
+                                        </div>
+                                    </section>
+                                </form>
                             </div>
                         </div>
-                        <div class="panel-footer text-left bg-light lter">
-                            <c:if test="${train.status ne 'FINISH'}">
-                                <a class="btn btn-submit btn-s-xs " href="javascript:saveTrainInfo()">
-                                    &nbsp;保&nbsp;存
-                                </a>
-                                <c:if test="${not empty train.uuid}">
-                                    <a class="btn btn-primary btn-success" href="javascript:finishTrain()" style="color: white;margin-left: 10px;">
-                                        <i class="fa fa-check"></i> 完成培训
-                                    </a>
-                                </c:if>
-                            </c:if>
-                        </div>
-                    </section>
-                </form>
+                    </div>
+                </section>
             </div>
+
+
+
 
             <!-- /.modal 大图 start -->
             <div class="modal fade bs-example-modal-lg-image" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -473,6 +591,12 @@
                 searchForm.submit();
             }
         });
+    }
+
+    function saveTrainPraiseInfo(){
+        var searchForm = document.getElementById("praiseInfoFrm")
+        searchForm.submit();
+
     }
 
 

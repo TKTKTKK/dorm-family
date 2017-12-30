@@ -849,6 +849,24 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     /**
+     * 删除图片
+     */
+    @RequestMapping("/deletePic")
+    @ResponseBody
+    public Map<String, Object> deletePic(HttpServletRequest request){
+        int deleteFlag = 0;
+        String attachmentId = request.getParameter("attachmentId");
+        if(StringUtils.isNotBlank(attachmentId)){
+            Attachment attachment = new Attachment();
+            attachment.setUuid(attachmentId);
+            deleteFlag = attachmentService.delete(attachment);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
+    }
+
+    /**
      * 订单结束
      */
     @RequestMapping("/finishOrder")
@@ -1316,6 +1334,15 @@ public class WeFamilyController extends BaseAdminController {
         return "redirect:trainInfo?trainId=" + train.getUuid() + "&merchantId="+ train.getMerchantid();
     }
 
+    //保存培训奖励情况
+    @RequestMapping(value = "/saveTrainPraiseInfo")
+    public String saveTrainPraiseInfo(Train train,RedirectAttributes redirectAttributes){
+
+        trainService.updatePartial(train);
+        redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+        return "redirect:trainInfo?trainId=" + train.getUuid() + "&merchantId="+ train.getMerchantid();
+    }
+
     //自动查询机器列表
     @RequestMapping(value = "/queryMachineList")
     @ResponseBody
@@ -1406,7 +1433,7 @@ public class WeFamilyController extends BaseAdminController {
             trainService.saveFinishTrain(train,trainImgs);
             redirectAttributes.addFlashAttribute("successMessage", "培训结束");
         }
-
+        redirectAttributes.addFlashAttribute("scanedFlag",request.getParameter("scanedFlag"));
         return "redirect:trainInfoForPhone?trainId=" + train.getUuid();
     }
 
@@ -1522,7 +1549,24 @@ public class WeFamilyController extends BaseAdminController {
             redirectAttributes.addFlashAttribute("successMessage", "保存成功");
         }
 
+        redirectAttributes.addFlashAttribute("scanedFlag",request.getParameter("scanedFlag"));
         return "redirect:trainInfoForPhone?trainId=" + train.getUuid();
+    }
+
+    /**
+     * 根据机器号查询用户
+     */
+    @RequestMapping(value = "/queryUserByMachineno", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> queryUserByMachineno(HttpServletRequest request){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        String machineno = request.getParameter("machineno");
+        List<WpUser> wpUserList = wpUserService.queryUserByMachineno(machineno);
+       if(null != wpUserList && wpUserList.size() > 0){
+           WpUser wpUser = wpUserList.get(0);
+           resultMap.put("wpUser", wpUser);
+       }
+        return resultMap;
     }
 
     /**
@@ -1678,6 +1722,26 @@ public class WeFamilyController extends BaseAdminController {
         }
 
         return "admin/wefamily/qualityMgmtManage";
+    }
+
+    /**
+     * 删除订单
+     * @param request
+     * @return
+     */
+    @RequestMapping("/deleteQualityMgmt")
+    @ResponseBody
+    public Map<String, Object> deleteQualityMgmt(HttpServletRequest request){
+        int deleteFlag = 0;
+        String qualityMgmtId = request.getParameter("qualityMgmtId");
+        if(StringUtils.isNotBlank(qualityMgmtId)){
+            QualityMgmt qualityMgmt = new QualityMgmt();
+            qualityMgmt.setUuid(qualityMgmtId);
+            deleteFlag = qualityMgmtService.delete(qualityMgmt);
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
     }
 
     /**
@@ -1853,6 +1917,16 @@ public class WeFamilyController extends BaseAdminController {
         return resultMap;
     }
 
+    //保存保养、维修奖励情况
+    @RequestMapping(value = "/saveQualityMgmtPraiseInfo")
+    public String saveQualityMgmtPraiseInfo(QualityMgmt qualityMgmt,RedirectAttributes redirectAttributes,HttpServletRequest request){
+
+        String type = request.getParameter("type");
+        qualityMgmtService.updatePartial(qualityMgmt);
+        redirectAttributes.addFlashAttribute("saveSuccessMessage", "保存成功");
+        return "redirect:qualityMgmtInfo?qualityMgmtId=" + qualityMgmt.getUuid() + "&type="+ type;
+    }
+
     /**
      * 维修结束
      */
@@ -1973,7 +2047,7 @@ public class WeFamilyController extends BaseAdminController {
                 redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");
             }
         }
-
+        redirectAttributes.addFlashAttribute("scanedFlag",request.getParameter("scanedFlag"));
         return "redirect:qualityMgmtInfoForPhone?qualityMgmtId=" + qualityMgmt.getUuid();
     }
 
@@ -2002,7 +2076,7 @@ public class WeFamilyController extends BaseAdminController {
                 redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试");
             }
         }
-
+        redirectAttributes.addFlashAttribute("scanedFlag",request.getParameter("scanedFlag"));
         return "redirect:qualityMgmtInfoForPhone?qualityMgmtId=" + qualityMgmt.getUuid();
     }
 
@@ -2426,6 +2500,15 @@ public class WeFamilyController extends BaseAdminController {
         }
         String fromPhone  = request.getParameter("fromPhone");
         if("Y".equals(fromPhone)){
+            String totalLuckyCount = request.getParameter("totalLuckyCount");
+            String everyLuckyCount = request.getParameter("everyLuckyCount");
+            String versionno = request.getParameter("versionno");
+            MtxActivity mtxActivity = new MtxActivity();
+            mtxActivity.setUuid(uuid);
+            mtxActivity.setVersionno(Integer.valueOf(versionno));
+            mtxActivity.setTotalLuckyCount(Integer.valueOf(totalLuckyCount));
+            mtxActivity.setEveryLuckyCount(Integer.valueOf(everyLuckyCount));
+            mtxActivityService.updatePartial(mtxActivity);
             redirectAttributes.addFlashAttribute("successMessage","保存成功");
             return "redirect:/admin/wefamily/mtxActivityInfoForPhone?activityId="+uuid;
         }

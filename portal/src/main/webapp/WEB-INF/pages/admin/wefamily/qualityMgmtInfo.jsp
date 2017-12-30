@@ -287,7 +287,8 @@
                 <div class="col-sm-12 pos">
                     <div id="myTabContent" class="tab-content">
                         <div class="tab-pane fade in active" id="detail">
-                            <div class="b-l b-r">
+                            <div style="margin-bottom: 5px;padding: 15px">
+                                <span class="text-success">${saveSuccessMessage}</span>
                                 <span class="text-success">${successMessage}</span>
                                 <span class="text-danger">${errorMessage}</span>
                             </div>
@@ -563,18 +564,6 @@
                                                                                     <span id="priceError" class="text-danger"></span>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="form-group" >
-                                                                            <label class="col-sm-3 control-label">用户评价：</label>
-                                                                            <div class="col-sm-9  b-l bg-white">
-                                                                                <select  class="form-control" name="evaluate" id="evaluate">
-                                                                                    <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
-                                                                                    <option value="">--请选择--</option>
-                                                                                    <c:forEach items="${commonCodeList}" var="commonCode">
-                                                                                        <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                                                                                    </c:forEach>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
                                                                         <c:if test="${qualityMgmt.status ne 'FINISH'}">
                                                                             <div class="form-group" >
                                                                                 <label class="col-sm-3 control-label">上传人机合影：</label>
@@ -635,6 +624,67 @@
                                                         </div>
                                                     </div>
                                                 </c:if>
+                                                <c:if test="${qualityMgmt.status eq 'FINISH'}">
+                                                    <form class="form-horizontal form-bordered" data-validate="parsley"
+                                                          action="${ctx}/admin/wefamily/saveQualityMgmtPraiseInfo" method="POST" id="praiseInfoFrm">
+                                                        <section class="panel panel-default">
+                                                            <header class="panel-heading mintgreen">
+                                                                <i class="fa fa-gift"></i>
+                                                                <span class="text-lg">奖励信息：</span>
+                                                            </header>
+                                                            <div class="panel-body p-0-15">
+                                                                <div class="form-group" >
+                                                                    <label class="col-sm-3 control-label">评价：</label>
+                                                                    <div class="col-sm-9  b-l bg-white">
+                                                                        <select  class="form-control" name="evaluate" id="evaluate">
+                                                                            <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
+                                                                            <option value="">请选择</option>
+                                                                            <c:forEach items="${commonCodeList}" var="commonCode">
+                                                                                <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group" >
+                                                                    <label class="col-sm-3 control-label">奖励状态：</label>
+                                                                    <div class="col-sm-9  b-l bg-white">
+                                                                        <select  class="form-control" name="praisestatus" id="praisestatus">
+                                                                            <c:set var="commonCodeList" value="${web:queryCommonCodeList('PRAISE_STATUS')}"></c:set>
+                                                                            <option value="">请选择</option>
+                                                                            <c:forEach items="${commonCodeList}" var="commonCode">
+                                                                                <option value="${commonCode.code}" <c:if test="${qualityMgmt.praisestatus == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-3  control-label">备注：</label>
+                                                                    <div class="col-sm-9 b-l bg-white">
+                                                                        <textarea class="form-control" rows="4" name="praiseremarks"
+                                                                                  id="praiseremarks" data-maxlength="256" onblur="trimText(this)"
+                                                                        >${qualityMgmt.praiseremarks}</textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-12">
+                                                                        <input type="hidden" name="uuid" class="form-control" value="${qualityMgmt.uuid}">
+                                                                        <input type="hidden" name="versionno" class="form-control" value="${qualityMgmt.versionno}">
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="panel-footer text-left bg-light lter">
+                                                                <c:if test="${qualityMgmt.status eq 'FINISH'}">
+                                                                    <a class="btn btn-submit btn-s-xs " href="javascript:saveQualityMgmtPraiseInfo()">
+                                                                        &nbsp;保&nbsp;存
+                                                                    </a>
+                                                                </c:if>
+                                                            </div>
+                                                        </section>
+                                                    </form>
+                                                </c:if>
+
                                             </div>
                                         </div>
                                     </div>
@@ -738,6 +788,13 @@
 
         queryMerchantById();
     }
+
+    function saveQualityMgmtPraiseInfo(){
+        var searchForm = document.getElementById("praiseInfoFrm")
+        searchForm.action = "${ctx}/admin/wefamily/saveQualityMgmtPraiseInfo?type=${type}"
+        searchForm.submit();
+    }
+
 
     //根据id查询经销商
     function queryMerchantById(){

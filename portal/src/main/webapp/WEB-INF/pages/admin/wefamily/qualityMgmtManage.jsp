@@ -109,6 +109,16 @@
                                 </div>
 
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <select  class="form-control" name="praisestatus" id="praisestatus">
+                                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('PRAISE_STATUS')}"></c:set>
+                                        <option value="">奖励状态</option>
+                                        <c:forEach items="${commonCodeList}" var="commonCode">
+                                            <option value="${commonCode.code}" <c:if test="${train.praisestatus == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
                                            name="startDateStr" value="${startDateStr}"
                                            data-date-format="yyyy-mm-dd" id="starttime" placeholder="起始日期">
@@ -149,6 +159,7 @@
                                         <th class="text-center">${showType}日期</th>
                                         <th class="text-center">${showType}状态</th>
                                         <th class="text-center">处理人</th>
+                                        <th class="text-center">奖励状态</th>
                                         <th class="text-center">操作</th>
                                     </tr>
                                     </thead>
@@ -180,7 +191,14 @@
                                                     ${qualityMgmt.worker}
                                             </td>
                                             <td>
+                                                    ${web:getCodeDesc("PRAISE_STATUS",qualityMgmt.praisestatus)}
+                                            </td>
+                                            <td>
                                                 <a href="${ctx}/admin/wefamily/qualityMgmtInfo?qualityMgmtId=${qualityMgmt.uuid}&type=${type}" class="btn  btn-infonew btn-sm" style="color: white" >处理</a>
+                                                <c:if test="${type == 'MAINTAIN' && qualityMgmt.status == 'NEW'}">
+                                                    <a href="javascript:deleteQualityMgmt('${qualityMgmt.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
+                                                </c:if>
+
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -222,6 +240,22 @@
             var statusArr = '${statusStr}'.split(",");
             $('.selectpicker').selectpicker('val', statusArr);
         }
+    }
+
+    function deleteQualityMgmt(qualityMgmtId){
+        qikoo.dialog.confirm('确定删除该保养？',function(){
+            //确定
+            $.get("${ctx}/admin/wefamily/deleteQualityMgmt?qualityMgmtId="+qualityMgmtId+"&version="+Math.random(),function(data,status){
+                if(undefined != data.deleteFlag){
+                    var searchForm = document.getElementById("searchForm");
+                    searchForm.action = "${ctx}/admin/wefamily/qualityMgmtManage?deleteFlag=" + data.deleteFlag;
+                    searchForm.submit();
+                }
+            });
+        },function(){
+            //取消
+        });
+
     }
 
     //提交查询

@@ -243,7 +243,7 @@
 
 
     function deleteOrder(orderId){
-        qikoo.dialog.confirm('确定删除该仓库？',function(){
+        qikoo.dialog.confirm('确定删除该订单？',function(){
             //确定
             $.get("${ctx}/admin/wefamily/deleteOrder?orderId="+orderId+"&version="+Math.random(),function(data,status){
                 if(undefined != data.deleteFlag){

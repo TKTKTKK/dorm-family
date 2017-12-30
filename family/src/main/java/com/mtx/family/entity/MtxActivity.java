@@ -29,24 +29,24 @@ public class MtxActivity extends BaseEntity {
     @Column
     private String password;
     @Column
-    private Integer totalParticipant;
+    private Integer totalLuckyCount;
     @Column
-    private Integer everyParticipant;
+    private Integer everyLuckyCount;
 
-    public Integer getTotalParticipant() {
-        return totalParticipant;
+    public Integer getTotalLuckyCount() {
+        return totalLuckyCount;
     }
 
-    public void setTotalParticipant(Integer totalParticipant) {
-        this.totalParticipant = totalParticipant;
+    public void setTotalLuckyCount(Integer totalLuckyCount) {
+        this.totalLuckyCount = totalLuckyCount;
     }
 
-    public Integer getEveryParticipant() {
-        return everyParticipant;
+    public Integer getEveryLuckyCount() {
+        return everyLuckyCount;
     }
 
-    public void setEveryParticipant(Integer everyParticipant) {
-        this.everyParticipant = everyParticipant;
+    public void setEveryLuckyCount(Integer everyLuckyCount) {
+        this.everyLuckyCount = everyLuckyCount;
     }
 
     public String getImg() {
