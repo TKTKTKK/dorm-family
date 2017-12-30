@@ -46,11 +46,13 @@ public class SubscribeService implements MessageProcessService {
                 //todo
             }
         }
-
+        WechatUser wechatUser = WechatBindingUtil.getWechatUser(wechatBinding.getUuid(), reqMessage.getFromUserName());
         WpUser wpUser = new WpUser();
         wpUser.setOpenid(reqMessage.getFromUserName());
         wpUser = wpUserService.queryForObjectByUniqueKey(wpUser);
         if(null != wpUser){
+            wpUser.setNickname(wechatUser.getNickname());
+            wpUser.setHeadimgurl(wechatUser.getHeadimgurl());
             wpUser.setIfsubscribe("Y");
             try {
                 wpUserService.updatePartial(wpUser);
@@ -58,7 +60,6 @@ public class SubscribeService implements MessageProcessService {
                 logger.error(e.getMessage(),e);
             }
         }else{
-            WechatUser wechatUser = WechatBindingUtil.getWechatUser(wechatBinding.getUuid(), reqMessage.getFromUserName());
             wpUser = new WpUser();
             wpUser.setBindid(wechatBinding.getUuid());
             wpUser.setOpenid(reqMessage.getFromUserName());
