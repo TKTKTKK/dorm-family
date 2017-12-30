@@ -443,7 +443,11 @@
     function submitForm(){
         $("#frm").parsley("validate");
         if(compareBeginEndDate("startdate", "enddate", "dateError")&&validStatus()){
-            return validRegular();
+            if(${activity.status=='APP'}){
+                return true;
+            }else{
+                return validRegular();
+            }
         }else{
             return false;
         }
