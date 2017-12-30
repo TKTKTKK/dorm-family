@@ -2504,43 +2504,6 @@ public class WeFamilyController extends BaseAdminController {
         return "redirect:/admin/wefamily/goMtxActivity?uuid="+uuid+"&successFlg=1";
     }
 
-    @RequestMapping(value = "/validParticipantCount", method = RequestMethod.POST)
-    @ResponseBody
-    public Boolean validParticipantCount(int totalLuckyCount,int everyLuckyCount,String uuid){
-        MtxActivity activity=new MtxActivity();
-        activity.setUuid(uuid);
-        activity=mtxActivityService.queryForObjectByPk(activity);
-        MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
-        luckyParticipant.setActivityid(uuid);
-        List<MtxLuckyParticipant> luckyParticipantList=mtxLuckyParticipantService.queryForList(luckyParticipant);
-        if(luckyParticipantList.size()>0){
-            if(totalLuckyCount>luckyParticipantList.size()){
-                return false;
-            }else{
-                if(activity!=null){
-                    activity.setEveryLuckyCount(everyLuckyCount);
-                    activity.setTotalLuckyCount(totalLuckyCount);
-                    mtxActivityService.updatePartial(activity);
-                }
-                return true;
-            }
-        }else{
-            MtxActivityParticipant participant=new MtxActivityParticipant();
-            participant.setActivityid(uuid);
-            List<MtxActivityParticipant> participantList=mtxActivityParticipantService.queryForList(participant);
-            if(participantList.size()>totalLuckyCount){
-                if(activity!=null){
-                    activity.setEveryLuckyCount(everyLuckyCount);
-                    activity.setTotalLuckyCount(totalLuckyCount);
-                    mtxActivityService.updatePartial(activity);
-                }
-                return true;
-            }else{
-                return false;
-            }
-        }
-    }
-
     /**
      * 手机活动列表
      */
