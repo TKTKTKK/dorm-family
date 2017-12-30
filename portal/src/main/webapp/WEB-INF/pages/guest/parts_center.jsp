@@ -29,7 +29,7 @@
 </head>
 <body>
 <div class="choose" id="imgDiv" style="z-index: 10;background: rgba(0,0,0,0.7);"><img src="../../../static/guest/img/help.png" alt="" onclick="closeImg()" style="width: 100%"></div>
-<div class="choose" id="moneyDiv" style="z-index: 10;background: rgba(0,0,0,0.7);display: none"><img src="../../../static/guest/img/erweima.png" alt="" onclick="closeImg()" style="width: 100%"></div>
+<div class="choose" id="moneyDiv" style="z-index: 10;background: rgba(0,0,0,0.7);display: none"><img src="../../../static/guest/img/erweima.jpg" alt="" onclick="closeImg()" style="width: 100%"></div>
 <div class="head">
     <span>配件中心</span>
     <img src="../../../static/guest/img/sao.png" alt="" onclick="scan()">

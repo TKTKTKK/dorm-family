@@ -5,7 +5,11 @@ var runing = true;//运行标记
 var trigger = true;//打印中奖者标记  判断当前是否在显示中奖人的过程中
 var num = 0;//当今中奖者标记
 var times=0;
+//设置单次抽奖人数
+var Lotterynumber = 0;
 
+//设置获奖总人数
+var Totalnumber = 0;
 
 
 
@@ -19,33 +23,40 @@ $(function () {
 
 // 开始停止
 function start() {
-    //抽奖完毕则无需开始
-    if($('#start').text()=="抽奖完毕"){
-       return;
-    }
-    //在抽奖过程中
-	if (runing) {
-		if ( pcount <= Lotterynumber ) {
-			alert("抽奖人数不足“+Lotterynumber+”人");
-		}else{
-			runing = false;
-			$('#start').text('停止');
-			startNum()
-		}
+	$.post("/guest/getTotalLuckyParticipant?uuid="+uuid,function(data){
+		if(data){
+			Lotterynumber = data.everyLuckyCount;
+			Totalnumber = data.totalLuckyCount;
+			//抽奖完毕则无需开始
+			if($('#start').text()=="抽奖完毕"){
+				return;
+			}
+			//在抽奖过程中
+			if (runing) {
+				if ( pcount <= Lotterynumber ) {
+					alert("抽奖人数不足“+Lotterynumber+”人");
+				}else{
+					runing = false;
+					$('#start').text('停止');
+					startNum()
+				}
 
-	} 
-	//不在抽奖过程中
-	else {
-	    //人数判断，看剩余可抽奖人数是否满足设定的单次抽奖人数
-	    if(Totalnumber-times*Lotterynumber>Lotterynumber){
-	        $('#start').text('自动抽取中('+ Lotterynumber+')');
-	    }else{
-	        $('#start').text('自动抽取中('+ (Totalnumber-times*Lotterynumber) +')');
-	    }
-		//开始抽奖
-		zd();
-	}
-	
+			}
+			//不在抽奖过程中
+			else {
+				//人数判断，看剩余可抽奖人数是否满足设定的单次抽奖人数
+				if(Totalnumber-times*Lotterynumber>Lotterynumber){
+					$('#start').text('自动抽取中('+ Lotterynumber+')');
+				}else{
+					$('#start').text('自动抽取中('+ (Totalnumber-times*Lotterynumber) +')');
+				}
+				//开始抽奖
+				zd();
+			}
+		}
+	});
+
+
 }
 
 // 循环参加名单
