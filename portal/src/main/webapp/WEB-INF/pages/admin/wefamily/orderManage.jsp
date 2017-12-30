@@ -75,7 +75,14 @@
                                 </div>
 
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
-                                    <input type="text" class="form-control" id="machinemodel" name="machinemodel" onblur="trimText(this)" value="${order.machinemodel}"  placeholder="机器型号"/>
+                                    <select class="form-control" name="machinemodel" id="machinemodel">
+                                        <c:if test="${fn:length(machineModelList) > 1}">
+                                            <option value="">机器型号</option>
+                                        </c:if>
+                                        <c:forEach items="${machineModelList}" var="machineModel">
+                                            <option value="${machineModel}" <c:if test="${order.machinemodel == machineModel}">selected</c:if>>${machineModel}</option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
 
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">

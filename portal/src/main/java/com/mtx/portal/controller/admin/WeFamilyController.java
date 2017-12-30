@@ -305,6 +305,8 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("wechatBinding", wechatBinding);
         List<Merchant> merchantList = merchantService.selectMerchantForUser();
         model.addAttribute("merchantList",merchantList);
+        List<String> machineModelList = getModel();
+        model.addAttribute("machineModelList",machineModelList);
         model.addAttribute("successMessage",request.getParameter("successMessage"));
         return "admin/wefamily/orderManage";
     }
@@ -321,6 +323,8 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("wechatBinding", wechatBinding);
         List<Merchant> merchantList = merchantService.selectMerchantForUser();
         model.addAttribute("merchantList",merchantList);
+        List<String> machineModelList = getModel();
+        model.addAttribute("machineModelList",machineModelList);
         model.addAttribute("order",order);
         if(null != wechatBinding){
             String startDateStr = request.getParameter("startDateStr");
