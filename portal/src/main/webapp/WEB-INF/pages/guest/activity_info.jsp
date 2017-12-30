@@ -60,6 +60,10 @@
         .modal-header .close{
             padding: 5px 10px !important;
         }
+        .choose .error{
+            left: 10%;
+            width: 80%;
+        }
         .choose .error span{
            font-weight: bold;
         }
