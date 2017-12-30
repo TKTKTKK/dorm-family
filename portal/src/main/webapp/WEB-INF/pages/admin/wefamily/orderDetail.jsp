@@ -922,11 +922,13 @@
                                         </div>
 
                                     </div>
-                                    <div class="text-center">
-                                        <a  class="btn btn-submit btn-s-xs"
-                                            onclick="deletePic()">
-                                            删除</a>
-                                    </div>
+                                    <c:if test="${order.status ne 'FILED'}">
+                                        <div class="text-center">
+                                            <a  class="btn btn-submit btn-s-xs"
+                                                onclick="deletePic()">
+                                                删除</a>
+                                        </div>
+                                    </c:if>
                                 </div>
                             </div>
                         </div>

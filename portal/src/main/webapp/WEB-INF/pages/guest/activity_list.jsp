@@ -27,7 +27,6 @@
 </head>
 <body>
 <div class="head">
-    <a class="back" href="${ctx}/guest/member/center"></a>
     <span>活动列表</span>
 </div>
 <div class="content">

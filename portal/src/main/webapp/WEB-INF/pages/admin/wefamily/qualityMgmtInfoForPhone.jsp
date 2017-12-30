@@ -244,7 +244,7 @@
                 </li>
                 <li>
                     <span>损坏分类</span>
-                    <select name="damagecategory" id="damagecategory">
+                    <select name="damagecategory" id="damagecategory" <c:if test="${qualityMgmt.type == 'REPAIR'}"></c:if>>
                         <c:set var="commonCodeList" value="${web:queryCommonCodeList('DAMAGE_CATEGORY')}"></c:set>
                         <option value="">请选择</option>
                         <c:forEach items="${commonCodeList}" var="commonCode">
