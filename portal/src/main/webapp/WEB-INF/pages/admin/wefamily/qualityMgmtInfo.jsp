@@ -287,7 +287,7 @@
                 <div class="col-sm-12 pos">
                     <div id="myTabContent" class="tab-content">
                         <div class="tab-pane fade in active" id="detail">
-                            <div style="margin-bottom: 5px;padding: 15px">
+                            <div style="margin-bottom: 5px;padding-left: 15px">
                                 <span class="text-success">${saveSuccessMessage}</span>
                                 <span class="text-success">${successMessage}</span>
                                 <span class="text-danger">${errorMessage}</span>

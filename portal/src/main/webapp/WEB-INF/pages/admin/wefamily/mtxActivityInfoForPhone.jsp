@@ -170,8 +170,9 @@
                            </a>
                        </p>
 
-
-                        <button class="checkAllButton" id="checkAllButton" onclick="checkAllParticipant()">全选</button>
+                        <c:if test="${mtxActivity.status == 'PENDING'}">
+                            <button class="checkAllButton" id="checkAllButton" onclick="checkAllParticipant()">全选</button>
+                        </c:if>
                         <form id="participantFrm" method="POST">
                             <ul class="winner list" id="participantsUl">
                                 <c:forEach items="${activityParticipantList}" var="activityParticipant">
@@ -183,7 +184,9 @@
                                     </c:forEach>
                                     <li class="first">
                                         <input type="checkbox" class="chk" id="${activityParticipant.uuid}" name="users" onchange="checkParticipant('${activityParticipant.uuid}')" style="display: none;" <c:if test="${showFlag == 1}">checked </c:if> value="${activityParticipant.userid}">
-                                        <label for="${activityParticipant.uuid}"></label>
+                                        <c:if test="${mtxActivity.status == 'PENDING'}">
+                                            <label for="${activityParticipant.uuid}"></label>
+                                        </c:if>
                                         <img src="${activityParticipant.headimg}" alt=""><span class="name">${activityParticipant.name}</span><span class="phone">${activityParticipant.contactno}</span><span class="wechat_name">${activityParticipant.nickname}</span>
                                     </li>
                                 </c:forEach>

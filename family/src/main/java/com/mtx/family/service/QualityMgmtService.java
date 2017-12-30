@@ -45,6 +45,15 @@ public class QualityMgmtService extends BaseService<QualityMgmtMapper,QualityMgm
 
     public void saveQualityMgmt(QualityMgmt qualityMgmt, String[] qualityMgmtImgs) {
 
+        Machine machine = new Machine();
+        machine.setMachinemodel(qualityMgmt.getMachinemodel());
+        machine.setMachineno(qualityMgmt.getMachineno());
+        machine.setEngineno(qualityMgmt.getEngineno());
+        Merchant merchant = merchantService.queryMerchantByMachineInfo(machine);
+        if(null != merchant){
+            qualityMgmt.setMerchantid(merchant.getUuid());
+        }
+
         this.mapper.insert(qualityMgmt);
 
         saveQualityMgmtImg(qualityMgmt,qualityMgmtImgs);
@@ -60,12 +69,6 @@ public class QualityMgmtService extends BaseService<QualityMgmtMapper,QualityMgm
                 attachmentMapper.insert(attachment);
             }
         }
-    }
-
-    public void updateQualityMgmt(QualityMgmt qualityMgmt, String[] qualityMgmtImgs) {
-        this.mapper.updatePartial(qualityMgmt);
-
-        saveQualityMgmtImg(qualityMgmt,qualityMgmtImgs);
     }
 
     public int startQualityMgmt(QualityMgmt qualityMgmt) {
