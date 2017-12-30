@@ -456,6 +456,7 @@ INSERT INTO `tb_platform_permit` VALUES ('2015110210000001', 'MENU', '权限管�
 
 INSERT INTO `tb_platform_permit` VALUES ('2017121210000001', 'MENU', '产品中心', '产品中心', null, '1081', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', 'icon-screen-desktop');
 INSERT INTO `tb_platform_permit` VALUES ('2017120410000002', 'MENU', '产品管理', 'admin/wefamily/MtxProduct', '2017121210000001', '1102', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
+INSERT INTO `tb_platform_permit` VALUES ('2017120610000001', 'MENU', '机器管理', 'admin/wefamily/machineManage', '2017121210000001', '1103', 'APP', now(), 'sys', now(), 'sys', '1', 'N', '');
 
 INSERT INTO `tb_platform_permit` VALUES ('2017121210000002', 'MENU', '会员中心', '会员中心', null, '1082', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', 'icon-users');
 INSERT INTO `tb_platform_permit` VALUES ('2017120810000001', 'MENU', '会员管理', 'admin/wefamily/mtxWpUserManage', '2017121210000002', '1106', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
@@ -465,7 +466,6 @@ INSERT INTO `tb_platform_permit` VALUES ('2017120910000002', 'MENU', '商品兑�
 INSERT INTO `tb_platform_permit` VALUES ('2015050510000011', 'MENU', '销售服务', '销售服务', null, '1090', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', 'icon-bar-chart');
 INSERT INTO `tb_platform_permit` VALUES ('2015050510000012', 'MENU', '经销商管理', 'admin/wefamily/merchant', '2015050510000011', '1100', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', '');
 INSERT INTO `tb_platform_permit` VALUES ('2017120410000001', 'MENU', '订单管理', 'admin/wefamily/orderManage', '2015050510000011', '1101', 'APP', now(), 'sys', now(), 'sys', '1', 'N', '');
-INSERT INTO `tb_platform_permit` VALUES ('2017120610000001', 'MENU', '机器管理', 'admin/wefamily/machineManage', '2015050510000011', '1103', 'APP', now(), 'sys', now(), 'sys', '1', 'N', '');
 
 INSERT INTO `tb_platform_permit` VALUES ('2017120510000001', 'MENU', '品质服务', '品质服务', null, '1200', 'APP', '2015-05-20 19:31:10', 'sys', '2015-05-20 19:31:10', 'sys', '1', 'N', 'icon-wrench');
 INSERT INTO `tb_platform_permit` VALUES ('2017120510000002', 'MENU', '培训管理', 'admin/wefamily/trainManage', '2017120510000001', '1201', 'APP', now(), 'sys', now(), 'sys', '1', 'N', '');
