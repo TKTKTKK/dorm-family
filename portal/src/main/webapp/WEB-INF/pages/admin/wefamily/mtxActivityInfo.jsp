@@ -213,6 +213,22 @@
                                     </c:choose>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"><span class="text-danger">*</span><span class="text-danger"></span>中奖总人数：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <input class="form-control" type="number" data-required="true" id="totalLuckyCount" name="totalLuckyCount" value="${activity.totalLuckyCount}"
+                                           <c:if test="${activity.status eq 'APP'}">disabled</c:if>>
+                                    <span class="text-danger"  id="errorCountMessage"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"><span class="text-danger">*</span><span class="text-danger"></span>每轮中奖人数：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                   <input class="form-control" type="number"  data-required="true" id="everyLuckyCount" name="everyLuckyCount" value="${activity.everyLuckyCount}" <c:if test="${activity.status eq 'APP'}">disabled</c:if>
+                                    >
+                                </div>
+                            </div>
+
                             <div id="participantid" class="hidden">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><span class="text-danger"></span>参加活动人员名单：</label>
@@ -244,21 +260,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <c:if test="${activity.status eq 'PENDING'||activity.status eq 'APP'}">
-                            <div id="activityRequire">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label"><span class="text-danger"></span>活动规则：</label>
-                                    <div class="col-sm-9 b-l bg-white">
-                                        <div class=" row"><span style="margin-left: 16px"><span class="text-danger">*</span>中奖总人数:</span>&nbsp;&nbsp;<input type="number" style="width: 300px;height: 30px;margin-left: 25px" id="totalLuckyCount" name="totalLuckyCount" value="${activity.totalLuckyCount}"
-                                        <c:if test="${activity.status eq 'APP'}">disabled</c:if>
-                                        ></div>
-                                        <div class=" row" style="margin-top: 10px"><span style="margin-left: 16px"><span class="text-danger">*</span>每轮中奖人数：</span>&nbsp;&nbsp;<input type="number" style="width: 300px;height: 30px" id="everyLuckyCount" name="everyLuckyCount" value="${activity.everyLuckyCount}" <c:if test="${activity.status eq 'APP'}">disabled</c:if>
-                                        ></div>
-                                        <div class=" row" style="margin-top: 10px"><span class="text-danger" style="margin-left: 16px" id="errorCountMessage"></span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            </c:if>
+
                             <div id="achieveid" class="hidden">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><span class="text-danger"></span>中奖人员名单：</label>
@@ -341,12 +343,12 @@
                         <div class="panel-footer text-left bg-light lter">
                             <c:choose>
                                 <c:when test="${activity.status eq 'PENDING'}">
+                                    <button class="btn btn-submit btn-s-xs" style="background-color: red;border: 1px solid red">
+                                        &nbsp;提&nbsp;交
+                                    </button>
                                     <c:if test="${fn:length(participantList)>0}">
                                     <a onclick="submitParticipant()" class="btn btn-submit btn-s-xs ">
                                         </i>&nbsp;确&nbsp;定
-                                    </a>
-                                    <a onclick="clickDrawing()" class="btn btn-submit btn-s-xs " style="background: red;border: 1px solid red;margin-left:100px">
-                                        </i>点击抽奖
                                     </a>
                                     </c:if>
                                 </c:when>
@@ -441,7 +443,7 @@
     function submitForm(){
         $("#frm").parsley("validate");
         if(compareBeginEndDate("startdate", "enddate", "dateError")&&validStatus()){
-            return true;
+            return validRegular();
         }else{
             return false;
         }
@@ -453,26 +455,41 @@
         searchForm.action = "${ctx}/admin/wefamily/addParticipant?uuid="+uuid;
         searchForm.submit();
     }
-    function clickDrawing(){
+    function validRegular(){
+        var participantList=${fn:length(participantList)};
+        var luckyList=${fn:length(luckyList)};
+        var winList=${fn:length(winList)};
         var uuid='${activity.uuid}';
         var errorCountMessage=document.getElementById("errorCountMessage");
         errorCountMessage.innerHTML="";
         var totalLuckyCount=document.getElementById("totalLuckyCount").value;
         var everyLuckyCount=document.getElementById("everyLuckyCount").value;
-        if(totalLuckyCount==null||totalLuckyCount==''){
-            errorCountMessage.innerHTML="中奖总人数不能为空！";
-        }else if(everyLuckyCount==null||everyLuckyCount==''){
-            errorCountMessage.innerHTML="每轮中奖人数不能为空！";
-        }else if(totalLuckyCount<everyLuckyCount){
+        if(totalLuckyCount<everyLuckyCount){
             errorCountMessage.innerHTML="每轮中奖人数不能大于中奖总人数！";
+            return false;
         }else{
-            $.post("${ctx}/admin/wefamily/validParticipantCount?totalLuckyCount="+totalLuckyCount+"&uuid="+uuid,function(data){
-                if(data){
-                    window.location.href="${ctx}/guest/clickDrawing?uuid="+uuid;
+            if(luckyList>0){
+                if(totalLuckyCount>luckyList){
+                    errorCountMessage.innerHTML="设置的中奖人数超过限制！";
+                    return false;
                 }else{
-                    errorCountMessage.innerHTML="设置的中奖总人数超过限制！";
+                    if((totalLuckyCount-winList)>=everyLuckyCount){
+                        return true;
+                    }else{
+                        errorCountMessage.innerHTML="剩余人数超过限制！";
+                        return false;
+                    }
                 }
-            });
+            }else if(participantList<=0){
+                return true;
+            }else{
+                if((participantList>=totalLuckyCount)&&(totalLuckyCount-winList)>=everyLuckyCount){
+                    return true;
+                }else{
+                    errorCountMessage.innerHTML="设置的中奖人数超过限制！";
+                    return false;
+                }
+            }
         }
     }
     $('#startdate').datetimepicker({

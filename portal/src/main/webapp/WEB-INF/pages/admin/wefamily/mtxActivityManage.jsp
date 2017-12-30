@@ -153,6 +153,9 @@
                                                                class="btn  btn-infonew btn-sm" style="color: white;background: mediumpurple;border: 1px solid mediumpurple">
                                                                 详情
                                                             </a>
+                                                            <a href="${ctx}/guest/clickDrawing?uuid=${activity.uuid}" class="btn  btn-infonew btn-sm" style="color: white">
+                                                                </i>开始抽奖
+                                                            </a>
                                                         </c:if>
                                                         <c:if test="${activity.status eq 'APP'}">
                                                             <a href="${ctx}/admin/wefamily/goMtxActivity?uuid=${activity.uuid}"
@@ -164,6 +167,9 @@
                                                             <a href="${ctx}/admin/wefamily/goMtxActivity?uuid=${activity.uuid}"
                                                                class="btn  btn-infonew btn-sm" style="color: white;background: green;border: 1px solid green">
                                                                 详情
+                                                            </a>
+                                                            <a href="${ctx}/guest/clickDrawing?uuid=${activity.uuid}" class="btn  btn-infonew btn-sm" style="color: white">
+                                                                </i>返回抽奖
                                                             </a>
                                                         </c:if>
                                                     </c:otherwise>
