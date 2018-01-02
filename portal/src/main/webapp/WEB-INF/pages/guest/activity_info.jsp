@@ -96,7 +96,7 @@
                 <div class="activity_kind">
                     <p>活动信息</p>
                     <div class="words_detail">
-                        <p><img src="../../../../static/guest/img/time.png" alt=""><span>${fn:substring(mtxActivity.startdate, 0,10 )}—${fn:substring(mtxActivity.enddate, 0,10 )}</span></p>
+                        <p><img src="../../../../static/guest/img/time.png" alt=""><span>${fn:substring(mtxActivity.startdate, 0,16 )}至${fn:substring(mtxActivity.enddate, 0,16 )}</span></p>
                         <p><img src="../../../../static/guest/img/address.png" alt=""><span>${mtxActivity.address}</span></p>
                         <p><img src="../../../../static/guest/img/company.png" alt=""><span>满田星公司</span><span class="status_now">${web:getCodeDesc("ACTIVITY_STATUS",mtxActivity.status)}</span></p>
                     </div>

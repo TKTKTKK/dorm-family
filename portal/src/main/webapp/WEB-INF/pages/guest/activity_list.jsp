@@ -38,7 +38,7 @@
                     <div class="info">
                         <img src="${activity.img}" alt="">
                         <div class="actvity_detail">
-                            <p><img src="../../../../static/guest/img/time.png" alt=""><span>${fn:substring(activity.startdate, 0,10 )}—${fn:substring(activity.enddate, 0,10 )}</span></p>
+                            <p><img src="../../../../static/guest/img/time.png" alt=""><span>${fn:substring(activity.startdate, 0,10 )}至${fn:substring(activity.enddate, 0,10 )}</span></p>
                             <p><img src="../../../../static/guest/img/address.png" alt=""><span>${activity.address}</span></p>
                             <p><img src="../../../../static/guest/img/company.png" alt=""><span>满田星公司</span><span class="status_now">${web:getCodeDesc("ACTIVITY_STATUS",activity.status)}</span></p>
                         </div>
