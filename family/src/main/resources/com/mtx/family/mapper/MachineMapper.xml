@@ -29,7 +29,7 @@
         <if test="machine.machinename != null and machine.machinename != ''">
             and mm.machinename like CONCAT('%',#{machine.machinename},'%')
         </if>
-        order by mm.createon desc
+        order by mm.machinemodel asc
         ;
     </select>
 

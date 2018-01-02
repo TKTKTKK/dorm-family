@@ -22,13 +22,6 @@
                         <form method="post" action="" class="form-horizontal bg-white padding20 b-t b-b b-l b-r" data-validate="parsley" id="searchForm">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">物料编码：</label>
-                                    <div class="col-sm-7  my-display-inline-box">
-                                        <input type="text" class="form-control" name="machineno" id="machineno" data-maxlength="64"
-                                               onblur="trimText(this)" value="${machine.machineno}">
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span>适用机型：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <select class="form-control" id="machinemodel" name="machinemodel">
@@ -45,7 +38,15 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 名称：</label>
+                                    <label class="control-label col-sm-4  my-display-inline-lbl" style="padding-top: 7px">物料编码：</label>
+                                    <div class="col-sm-7  my-display-inline-box">
+                                        <input type="text" class="form-control" name="machineno" id="machineno" data-maxlength="64"
+                                               onblur="trimText(this)" value="${machine.machineno}">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 配件名称：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <input type="text" class="form-control" name="machinename" id="machinename" data-maxlength="48"
                                                onblur="trimText(this)" value="${machine.machinename}">
@@ -67,10 +68,11 @@
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
                                     <tr>
-                                        <th width="20%">物料编码</th>
-                                        <th width="20%">适用机型</th>
-                                        <th width="20%">名称</th>
-                                        <th width="20%">地址</th>
+                                        <th width="15%">适用机型</th>
+                                        <th width="15%">物料编码</th>
+                                        <th width="15%">配件名称</th>
+                                        <th width="15%">产地</th>
+                                        <th width="20%">备注</th>
                                         <th width="20%">操作</th>
                                     </tr>
                                     </thead>
@@ -78,16 +80,19 @@
                                     <c:forEach items="${machineList}" var="machine">
                                         <tr>
                                             <td>
-                                                    ${machine.machineno}
+                                                    ${machine.machinemodel}
                                             </td>
                                             <td>
-                                                    ${machine.machinemodel}
+                                                    ${machine.machineno}
                                             </td>
                                             <td>
                                                     ${machine.machinename}
                                             </td>
                                             <td>
                                                     ${machine.address}
+                                            </td>
+                                            <td>
+                                                    ${machine.remarks}
                                             </td>
                                             <td>
                                                 <a href="${ctx}/admin/wefamily/goMtxPartsCenter?uuid=${machine.uuid}"

@@ -43,7 +43,7 @@ html,body{padding: 0; margin: 0; font-family: 14px; font-family: "微软雅黑";
 .man li img{width: 60px;height:60px;border-radius: 60px;vertical-align: middle;}
 .man li span{vertical-align: middle;padding: 10px;vertical-align: middle;display: inline-block;width: 70%;}
 .total-user{position: absolute; left: 20px; top: 20px; bottom: 20px; width: 240px; background-color: rgba(255,255,255,.2); border-radius: 5px;overflow: hidden}
-.total-luck-content{position: absolute; top: 5%; bottom:5%; right:3%; padding: 20px; border-radius: 5px; padding-right:260px;}
+.total-luck-content{position: absolute; top: 5%; bottom:3%; right:3%; padding: 20px; border-radius: 5px; padding-right:260px;overflow:hidden}
 .total-user-title span{width: 90%;display: block;text-align: center;line-height: 40px;left: 5%;color: #f5b43a;font-weight: bold;}
 .total-user-title::before{position: absolute; content: ""; top: 100%; left: 0; width: 100%; background:-webkit-linear-gradient(left,rgba(248,215,59,0),#f0d03a,rgba(248,215,59,0)); height:1px;}
 .total-user-title::after{position: absolute; content: ""; top: 0%; left: 0; width: 100%; background:-webkit-linear-gradient(left,rgba(248,215,59,0),#f0d03a,rgba(248,215,59,0)); height:1px;}

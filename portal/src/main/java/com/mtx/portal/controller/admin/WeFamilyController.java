@@ -2349,15 +2349,15 @@ public class WeFamilyController extends BaseAdminController {
         List<MtxActivityParticipant>  winList=new ArrayList<MtxActivityParticipant>();
         List<MtxLuckyParticipant>  luckyList=new ArrayList<MtxLuckyParticipant>();
         MtxLuckyParticipant luckyParticipant =new MtxLuckyParticipant();
+
         String participantname=request.getParameter("participantname");
         String participantphone=request.getParameter("participantphone");
-        String flag=request.getParameter("flag");
-        if(StringUtils.isNotBlank(flag)&&"true".equals(flag)){
-            model.addAttribute("flag","true");
-        }
         if(StringUtils.isNotBlank(activity.getUuid())){
             participant.setActivityid(activity.getUuid());
             luckyParticipant.setActivityid(activity.getUuid());
+            //查询所有参加人数
+            List<MtxActivityParticipant> totalList=mtxActivityParticipantService.queryForParticipantList(participant);
+            model.addAttribute("totalList",totalList);
             if(StringUtils.isNotBlank(participantname)){
                 participant.setName(participantname);
                 model.addAttribute("participantname",participantname);

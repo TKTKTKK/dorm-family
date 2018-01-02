@@ -45,7 +45,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>名称：</label>
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>产品名称：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="text" class="form-control" data-required="true" name="name" id="name"
                                            data-maxlength="60"
@@ -110,12 +110,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-3 control-label"><span class="text-danger">*</span>价格：</div>
+                                <div class="col-sm-3 control-label"><span class="text-danger"></span>指导价：</div>
                                 <div class="col-sm-9 b-l bg-white">
                                     <div class="col-sm-8 col-xs-11" style="padding-left: 0">
                                         <input class="form-control" type="text" name="price" value="${mtxProduct.price}"
                                                id="price"
-                                               data-required="true"
                                                data-maxlength="10"
                                                onblur="validateMoney(this,'priceError')">
                                         <div class="text-danger" id="priceError"></div>
