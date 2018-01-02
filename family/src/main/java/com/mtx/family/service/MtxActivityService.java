@@ -3,6 +3,7 @@ package com.mtx.family.service;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.base.BaseService;
+import com.mtx.common.utils.StringUtils;
 import com.mtx.common.utils.UserUtils;
 import com.mtx.family.entity.*;
 import com.mtx.family.mapper.MtxActivityMapper;
@@ -51,6 +52,14 @@ public class MtxActivityService extends BaseService<MtxActivityMapper,MtxActivit
         return  mapper.selectActivityListForPhone(merchantList);
     }
     public void updateParticipant(String uuid, String winnerId,int count) {
+        MtxActivity mtxActivity=new MtxActivity();
+        mtxActivity.setUuid(uuid);
+        mtxActivity=this.queryForObjectByPk(mtxActivity);
+        if(mtxActivity.getCurrentLuckyCount()==null){
+            mtxActivity.setCurrentLuckyCount(1);
+        }
+        mtxActivity.setCurrentLuckyCount(mtxActivity.getCurrentLuckyCount()+1);
+        this.updatePartial(mtxActivity);
         MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
         activityParticipant.setActivityid(uuid);
         activityParticipant.setUserid(winnerId);
@@ -69,16 +78,10 @@ public class MtxActivityService extends BaseService<MtxActivityMapper,MtxActivit
             luckyParticipant.setStatus("WIN");
             mtxLuckyParticipantService.updatePartial(luckyParticipant);
         }
-        MtxActivityParticipant participant=new MtxActivityParticipant();
-        participant.setActivityid(uuid);
-        participant.setStatus("WIN");
-        List<MtxActivityParticipant> participantList=mtxActivityParticipantService.queryForList(participant);
-        if(participantList.size()==count){
-            MtxActivity activity=new MtxActivity();
-            activity.setUuid(uuid);
-            activity=this.queryForObjectByPk(activity);
-            activity.setStatus("APP");
-            this.updatePartial(activity);
+        if(mtxActivity.getCurrentLuckyCount()==count){
+            mtxActivity=this.queryForObjectByPk(mtxActivity);
+            mtxActivity.setStatus("APP");
+            this.updatePartial(mtxActivity);
         }
     }
 }

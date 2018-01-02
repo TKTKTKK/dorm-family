@@ -32,6 +32,16 @@ public class MtxActivity extends BaseEntity {
     private Integer totalLuckyCount;
     @Column
     private Integer everyLuckyCount;
+    @Column
+    private Integer currentLuckyCount;
+
+    public Integer getCurrentLuckyCount() {
+        return currentLuckyCount;
+    }
+
+    public void setCurrentLuckyCount(Integer currentLuckyCount) {
+        this.currentLuckyCount = currentLuckyCount;
+    }
 
     public Integer getTotalLuckyCount() {
         return totalLuckyCount;

@@ -820,6 +820,7 @@ public class MtxGuestController extends BaseGuestController{
         if(null!=activity){
             resultMap.put("totalLuckyCount", activity.getTotalLuckyCount());
             resultMap.put("everyLuckyCount", activity.getEveryLuckyCount());
+            resultMap.put("currentLuckyCount", activity.getCurrentLuckyCount());
         }
         return resultMap;
     }

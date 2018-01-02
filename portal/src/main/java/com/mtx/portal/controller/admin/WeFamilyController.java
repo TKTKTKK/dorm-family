@@ -2322,13 +2322,13 @@ public class WeFamilyController extends BaseAdminController {
         if("1".equals(successFlag)){
             model.addAttribute("successFlag","删除成功");
         }
+        String stopFlag=request.getParameter("stopFlag");
+        if("1".equals(stopFlag)){
+            model.addAttribute("successFlag","结束成功");
+        }
         String beginFlag=request.getParameter("successFlag");
         if("1".equals(beginFlag)){
             model.addAttribute("successFlag","活动开始！");
-        }
-        String closeFlag=request.getParameter("closeFlag");
-        if("1".equals(closeFlag)){
-            model.addAttribute("successFlag","活动结束！");
         }
         return "admin/wefamily/mtxActivityManage";
     }
@@ -2447,6 +2447,17 @@ public class WeFamilyController extends BaseAdminController {
         int deleteFlag=mtxActivityService.delete(activity);
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
+    }
+
+    @RequestMapping(value = "/stopMtxActivity", method = RequestMethod.POST)
+    @ResponseBody
+    public Map stopMtxActivity(MtxActivity activity){
+        activity=mtxActivityService.queryForObjectByPk(activity);
+        activity.setStatus("APP");
+        mtxActivityService.updatePartial(activity);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("stopFlag", "1");
         return resultMap;
     }
 

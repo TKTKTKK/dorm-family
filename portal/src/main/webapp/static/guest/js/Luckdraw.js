@@ -4,7 +4,7 @@ var phonetxt = $('.name');
 var runing = true;//运行标记
 var trigger = true;//打印中奖者标记  判断当前是否在显示中奖人的过程中
 var num = 0;//当今中奖者标记
-var times=0;
+var currentLuckyCount=0;
 //设置单次抽奖人数
 var Lotterynumber = 0;
 
@@ -21,42 +21,45 @@ $(function () {
 	phonetxt.html(participartors[0].phone);
 });//初始化
 
-// 开始停止
+// 开始/停止
 function start() {
 	$.post("/guest/getTotalLuckyParticipant?uuid="+uuid,function(data){
 		if(data){
 			Lotterynumber = data.everyLuckyCount;
 			Totalnumber = data.totalLuckyCount;
-			//抽奖完毕则无需开始
-			if($('#start').text()=="抽奖完毕"){
-				return;
-			}
-			//在抽奖过程中
-			if (runing) {
-				//if ( pcount < Lotterynumber ) {
-				//	alert("抽奖人数不足"+Lotterynumber+"人");
-				//}
-
-				if(wcount < Lotterynumber){
-					alert("奖品不足！");
+			currentLuckyCount=data.currentLuckyCount;
+			if(Totalnumber==currentLuckyCount){
+				window.clearInterval(stopTime);
+				$('#start').text("抽奖完毕");
+				$('#btntxt').removeClass('stop').removeClass('start').addClass('over');
+				$('#start').css('background-color','#999');
+			}else{
+				//抽奖完毕则无需开始
+				if($('#start').text()=="抽奖完毕"){
+					return;
 				}
-				else{
-					runing = false;
-					$('#start').text('停止');
-					startNum()
+				//在抽奖过程中
+				if (runing) {
+					if(wcount < 0){
+						alert("奖品不足！");
+					}
+					else{
+						runing = false;
+						$('#start').text('停止');
+						startNum()
+					}
 				}
-
-			}
-			//不在抽奖过程中
-			else {
-				//人数判断，看剩余可抽奖人数是否满足设定的单次抽奖人数
-				if(Totalnumber-times*Lotterynumber>Lotterynumber){
-					$('#start').text('自动抽取中('+ Lotterynumber+')');
-				}else{
-					$('#start').text('自动抽取中('+ (Totalnumber-times*Lotterynumber) +')');
+				//不在抽奖过程中
+				else {
+					//人数判断，看剩余可抽奖人数是否满足设定的单次抽奖人数
+					if(Totalnumber-currentLuckyCount>Lotterynumber){
+						$('#start').text('自动抽取中('+ Lotterynumber+')');
+					}else{
+						$('#start').text('自动抽取中('+ (Totalnumber-currentLuckyCount) +')');
+					}
+					//开始抽奖
+					zd();
 				}
-				//开始抽奖
-				zd();
 			}
 		}
 	});
@@ -83,7 +86,6 @@ function stop() {
 function zd() {
 	var a=document.getElementById("lucky");
 	var lis = a.getElementsByTagName("li");
-	times=Math.floor(lis.length/Lotterynumber);//批次标记
 	if (trigger) {
 		trigger = false;
 		var i = 0;
@@ -113,17 +115,12 @@ function zd() {
 					};
 					
 					//判断是否已抽取所有中奖者，是则显示抽奖完毕
-					if(i+times*Lotterynumber == Totalnumber){
+					if(i+currentLuckyCount == Totalnumber){
 					    window.clearInterval(stopTime);
 						$('#start').text("抽奖完毕");
 						$('#btntxt').removeClass('stop').removeClass('start').addClass('over');
 						$('#start').css('background-color','#999');
 					}
-					
-					//如果已抽取单次中奖者完毕，批次标记加1
-					if (i==Lotterynumber) {
-						times++;
-					};
 
                     //提交中奖者
                     submitWinner(winners[num].id);
@@ -131,7 +128,7 @@ function zd() {
 					$('.luck-user-list').prepend("<li><div class='portrait' style='background-image:url("+winners[num].image+")'></div><div class='luckuserName'>"+winners[num].phone+"</div></li>");
 					$('.modality-list ul').append("<li><div class='luck-img' style='background-image:url("+winners[num].image+")'></div><p>"+winners[num].phone+"</p></li>");
 					//将已中奖者从参与者名单和白名单中"删除",防止二次中奖
-					participartors.splice($.inArray(winners[num], participartors), 1);
+					//participartors.splice($.inArray(winners[num], participartors), 1);
 					winners.splice($.inArray(winners[num], winners), 1);
 					
 				}
