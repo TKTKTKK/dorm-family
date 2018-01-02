@@ -156,6 +156,7 @@
                                                             <a href="${ctx}/guest/clickDrawing?uuid=${activity.uuid}" class="btn  btn-infonew btn-sm" style="color: white">
                                                                 </i>开始抽奖
                                                             </a>
+                                                            <a href="javascript:stopMtxActivity('${activity.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">结束</a>
                                                         </c:if>
                                                         <c:if test="${activity.status eq 'APP'}">
                                                             <a href="${ctx}/admin/wefamily/goMtxActivity?uuid=${activity.uuid}"
@@ -171,6 +172,7 @@
                                                             <a href="${ctx}/guest/clickDrawing?uuid=${activity.uuid}" class="btn  btn-infonew btn-sm" style="color: white">
                                                                 </i>返回抽奖
                                                             </a>
+                                                            <a href="javascript:stopMtxActivity('${activity.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">结束</a>
                                                         </c:if>
                                                     </c:otherwise>
                                                 </c:choose>
@@ -201,6 +203,7 @@
         //显示父菜单
         showParentMenu('活动中心');
     }
+
     $('#startdate').datetimepicker({
         weekStart: 1,
         todayBtn: 1,
@@ -210,6 +213,7 @@
         forceParse: 0,
         showMeridian: 1,
     });
+
     $('#enddate').datetimepicker({
         weekStart: 1,
         todayBtn: 1,
@@ -219,6 +223,7 @@
         forceParse: 0,
         showMeridian: 1
     });
+
     //比较起始日期和截止日期
     function compareBeginEndDate(startDateStr, endDateStr, dateError) {
         var startDateStr = document.getElementById(startDateStr);
@@ -248,6 +253,7 @@
         }
         return true;
     }
+
     function deleteMtxActivity(uuid){
         qikoo.dialog.confirm('确定要删除吗？',function(){
             //确定删除
@@ -263,6 +269,23 @@
             //取消删除
         });
     }
+
+    function stopMtxActivity(uuid){
+        qikoo.dialog.confirm('确定要结束活动吗？',function(){
+            //确定结束
+            $.post("${ctx}/admin/wefamily/stopMtxActivity?uuid="+uuid,function(data){
+                //成功
+                if(data.stopFlag){
+                    var searchForm = document.getElementById("searchForm");
+                    searchForm.action = "${ctx}/admin/wefamily/mtxActivityManage?stopFlag=1";
+                    searchForm.submit();
+                }
+            });
+        },function(){
+            //取消删除
+        });
+    }
+
     function beginMtxActivity(uuid){
         qikoo.dialog.confirm('确定开始吗？',function(){
             //确定删除
@@ -278,6 +301,7 @@
             //取消删除
         });
     }
+
     function resubmitSearch(page){
         var searchForm = document.getElementById("searchForm");
         searchForm.action = "${ctx}/admin/wefamily/mtxActivityManage?page="+page;
@@ -288,6 +312,7 @@
     function showMtxActivityInfo(){
         window.location.href = "<%=request.getContextPath()%>/admin/wefamily/goMtxActivity";
     }
+
     function searchMtxActivity(){
         if(compareBeginEndDate("startdate", "enddate", "dateError")){
             var searchForm = document.getElementById("searchForm");

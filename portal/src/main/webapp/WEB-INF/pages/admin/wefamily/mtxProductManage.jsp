@@ -22,7 +22,7 @@
                         <form method="post" action="" class="form-horizontal bg-white padding20 b-t b-b b-l b-r" data-validate="parsley" id="searchForm">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 型号：</label>
+                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 产品型号：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <select class="form-control" id="model" name="model">
                                             <option value="">--全部--</option>
@@ -38,7 +38,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 名称：</label>
+                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 产品名称：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <input type="text" class="form-control" name="name" id="name" data-maxlength="90"
                                                onblur="trimText(this)" value="${mtxProduct.name}">
@@ -77,10 +77,11 @@
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
                                     <tr>
-                                        <th width="20%">产品型号</th>
-                                        <th width="20%">名称</th>
-                                        <th width="20%">状态</th>
-                                        <th width="20%">图片</th>
+                                        <th width="16%">产品型号</th>
+                                        <th width="16%">产品名称</th>
+                                        <th width="16%">指导价</th>
+                                        <th width="16%">状态</th>
+                                        <th width="16%">图片</th>
                                         <th width="20%">操作</th>
                                     </tr>
                                     </thead>
@@ -92,6 +93,9 @@
                                             </td>
                                             <td>
                                                     ${mtxProduct.name}
+                                            </td>
+                                            <td>
+                                                    ${mtxProduct.price}
                                             </td>
                                             <td>
                                                 ${web:getCodeDesc("PRODUCT_STATUS", mtxProduct.status)}

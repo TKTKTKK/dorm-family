@@ -221,11 +221,11 @@
                                     <span class="text-danger"  id="errorCountMessage"></span>
                                 </div>
                             </div>
-                            <div class="form-group hidden">
+                            <div class="form-group">
                                 <label class="col-sm-3 control-label"><span class="text-danger">*</span><span class="text-danger"></span>每轮中奖人数：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                   <input class="form-control" type="number"  data-required="true" id="everyLuckyCount" name="everyLuckyCount" value="1"
-                                    >
+                                   <input class="form-control" type="number"  data-required="true" id="everyLuckyCount" name="everyLuckyCount" value="${activity.everyLuckyCount}"
+                                          <c:if test="${activity.status eq 'APP'}">disabled</c:if>>
                                 </div>
                             </div>
 
@@ -233,9 +233,19 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><span class="text-danger"></span>参加活动人员名单：</label>
                                     <div class="col-sm-9 b-l bg-white">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                姓名：<input type="text" id="participantname" name="participantname" style="height: 34px" value="${participantname}"/></div>
+                                            <div class="col-sm-3">
+                                                手机号：<input type="text" id="participantphone" name="participantphone" style="height: 34px" value="${participantphone}"/></div>
+                                            <div class="col-sm-3">
+                                                <a type="submit"  class="btn btn-submit btn-s-xs"
+                                                   onclick="searchUser()"
+                                                   id="searchBtn" style="color: #fff">查 询</a></div>
+                                        </div>
                                         <c:choose>
                                             <c:when test="${fn:length(participantList)<=0}">
-                                                <input class="form-control" type="text" value="暂无人员" disabled>
+                                                <input class="form-control" type="text" value="暂无人员" disabled style="margin-top: 20px">
                                             </c:when>
                                             <c:otherwise>
                                                 <label class="checkbox m-n">
@@ -450,16 +460,31 @@
         }
     }
 
+    function searchUser(){
+        var uuid='${activity.uuid}';
+        var participantname=document.getElementById("participantname").value;
+        var participantphone=document.getElementById("participantphone").value;
+        window.location.href="${ctx}/admin/wefamily/goMtxActivity?uuid="+uuid+"&participantname="+participantname+"&participantphone="+participantphone;
+    }
+
     function submitParticipant(){
         var uuid='${activity.uuid}';
-        var searchForm = document.getElementById("frm");
-        searchForm.action = "${ctx}/admin/wefamily/addParticipant?uuid="+uuid;
-        searchForm.submit();
+        var participantname=document.getElementById("participantname").value;
+        var participantphone=document.getElementById("participantphone").value;
+        if((participantname!=''&&participantname!=null)||(participantphone!=''&&participantphone!=null)){
+            var searchForm = document.getElementById("frm");
+            searchForm.action = "${ctx}/admin/wefamily/addParticipant?uuid="+uuid+"&participantname="+participantname+"&participantphone="+participantphone;
+            searchForm.submit();
+        }else{
+            if(validRegular()){
+                var searchForm = document.getElementById("frm");
+                searchForm.action = "${ctx}/admin/wefamily/addParticipant?uuid="+uuid;
+                searchForm.submit();
+            }
+        }
     }
     function validRegular(){
-        var participantList=${fn:length(participantList)};
-        var luckyList=${fn:length(luckyList)};
-        var winList=${fn:length(winList)};
+        var totalList=${fn:length(totalList)};
         var uuid='${activity.uuid}';
         var errorCountMessage=document.getElementById("errorCountMessage");
         errorCountMessage.innerHTML="";
@@ -469,26 +494,13 @@
             errorCountMessage.innerHTML="每轮中奖人数不能大于中奖总人数！";
             return false;
         }else{
-            if(luckyList>0){
-                if(totalLuckyCount>luckyList){
-                    errorCountMessage.innerHTML="设置的中奖人数超过限制！";
-                    return false;
-                }else{
-                    if((totalLuckyCount-winList)>=everyLuckyCount){
-                        return true;
-                    }else{
-                        errorCountMessage.innerHTML="剩余人数超过限制！";
-                        return false;
-                    }
-                }
-            }else if(participantList<=0){
+            if(totalList<=0){
                 return true;
             }else{
-                if((participantList>=totalLuckyCount)&&(totalLuckyCount-winList)>=everyLuckyCount){
-                    return true;
+                if(totalList<totalLuckyCount){
+                    errorCountMessage.innerHTML="总人数超过限制！";
                 }else{
-                    errorCountMessage.innerHTML="设置的中奖人数超过限制！";
-                    return false;
+                    return true;
                 }
             }
         }

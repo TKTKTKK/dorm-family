@@ -38,25 +38,6 @@
                         </header>
                         <div class="panel-body p-0-15">
                             <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>物料编码：</label>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" data-required="true" name="machineno" id="machineno"
-                                           data-maxlength="64"
-                                           onblur="trimText(this)"
-                                           value="${machine.machineno}">
-                                    <sapn id="codeError" class="text-danger"></sapn>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>名称：</label>
-                                <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" data-required="true" name="machinename" id="machinename"
-                                           data-maxlength="48"
-                                           onblur="trimText(this)"
-                                           value="${machine.machinename}">
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>适用机型：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <select class="form-control" id="machinemodel" name="machinemodel" data-required="true">
@@ -72,6 +53,26 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>物料编码：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <input type="text" class="form-control" data-required="true" name="machineno" id="machineno"
+                                           data-maxlength="64"
+                                           onblur="trimText(this)"
+                                           value="${machine.machineno}">
+                                    <sapn id="codeError" class="text-danger"></sapn>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>配件名称：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <input type="text" class="form-control" data-required="true" name="machinename" id="machinename"
+                                           data-maxlength="48"
+                                           onblur="trimText(this)"
+                                           value="${machine.machinename}">
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>价格：</label>
                                 <div class="col-sm-9 b-l bg-white">
@@ -97,6 +98,15 @@
                                            data-maxlength="256"
                                            onblur="trimText(this)"
                                            value="${machine.address}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>备注：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <textarea type="text" class="form-control" data-required="true" name="remarks" id="remarks"
+                                           data-maxlength="256"
+                                           onblur="trimText(this)"
+                                          >${machine.remarks}</textarea>
                                 </div>
                             </div>
                             <c:if test="${fn:length(attachmentList) < 4}">

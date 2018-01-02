@@ -2399,13 +2399,13 @@ public class WeFamilyController extends BaseAdminController {
         if("1".equals(successFlag)){
             model.addAttribute("successFlag","删除成功");
         }
+        String stopFlag=request.getParameter("stopFlag");
+        if("1".equals(stopFlag)){
+            model.addAttribute("successFlag","结束成功");
+        }
         String beginFlag=request.getParameter("successFlag");
         if("1".equals(beginFlag)){
             model.addAttribute("successFlag","活动开始！");
-        }
-        String closeFlag=request.getParameter("closeFlag");
-        if("1".equals(closeFlag)){
-            model.addAttribute("successFlag","活动结束！");
         }
         return "admin/wefamily/mtxActivityManage";
     }
@@ -2429,9 +2429,23 @@ public class WeFamilyController extends BaseAdminController {
         List<MtxActivityParticipant>  winList=new ArrayList<MtxActivityParticipant>();
         List<MtxLuckyParticipant>  luckyList=new ArrayList<MtxLuckyParticipant>();
         MtxLuckyParticipant luckyParticipant =new MtxLuckyParticipant();
+
+        String participantname=request.getParameter("participantname");
+        String participantphone=request.getParameter("participantphone");
         if(StringUtils.isNotBlank(activity.getUuid())){
             participant.setActivityid(activity.getUuid());
             luckyParticipant.setActivityid(activity.getUuid());
+            //查询所有参加人数
+            List<MtxActivityParticipant> totalList=mtxActivityParticipantService.queryForParticipantList(participant);
+            model.addAttribute("totalList",totalList);
+            if(StringUtils.isNotBlank(participantname)){
+                participant.setName(participantname);
+                model.addAttribute("participantname",participantname);
+            }
+            if(StringUtils.isNotBlank(participantphone)){
+                participant.setContactno(participantphone);
+                model.addAttribute("participantphone",participantphone);
+            }
             participantList=mtxActivityParticipantService.queryForParticipantList(participant);
             model.addAttribute("participantList",participantList);
             luckyList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"");
@@ -2524,6 +2538,17 @@ public class WeFamilyController extends BaseAdminController {
         int deleteFlag=mtxActivityService.delete(activity);
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
+    }
+
+    @RequestMapping(value = "/stopMtxActivity", method = RequestMethod.POST)
+    @ResponseBody
+    public Map stopMtxActivity(MtxActivity activity){
+        activity=mtxActivityService.queryForObjectByPk(activity);
+        activity.setStatus("APP");
+        mtxActivityService.updatePartial(activity);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("stopFlag", "1");
         return resultMap;
     }
 
@@ -2713,4 +2738,5 @@ public class WeFamilyController extends BaseAdminController {
         redirectAttributes.addFlashAttribute("successMessage","上传成功！");
         return "redirect:/admin/wefamily/mtxActivityInfoForPhone?activityId="+activityId;
     }
+
 }
