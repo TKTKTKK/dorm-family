@@ -29,9 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.HashMap;
 
-/**
- * 微物业
- */
+
 @Controller
 @RequestMapping(value = "/admin/wefamily")
 public class WeFamilyController extends BaseAdminController {
@@ -149,7 +147,6 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     /**
-     * 修改/添加小区信息
      *
      * @return
      */
