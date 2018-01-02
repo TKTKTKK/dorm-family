@@ -291,7 +291,7 @@ function viewBigImage(obj){
             );
         }else{
             $('.carousel-inner').append(
-                '<div class="item" id="carousel-example-generic-item' + i + '">' +
+                '<div class="item" id="carousel-example-generic-item' + i + '" name="' + $(imgs[i]).attr('name') + '">' +
                 '<img src="' + $(imgs[i]).attr('src') + '"' +
                 'style="margin: 0px auto;width: 100%">' +
                 '</div>'
