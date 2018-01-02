@@ -84,7 +84,7 @@
     $(function(){
         $(".man").slideUp();
         var length=$(".man").find("img").length;
-        $(".total-user").css("height",(length-1)*60);
+        $(".total-user").css("height",(length-2)*60);
     })
 
 </script>
