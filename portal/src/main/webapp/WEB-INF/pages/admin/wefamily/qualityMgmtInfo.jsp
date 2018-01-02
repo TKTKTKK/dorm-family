@@ -645,6 +645,14 @@
                                                                         </select>
                                                                     </div>
                                                                 </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-3  control-label">评价备注：</label>
+                                                                    <div class="col-sm-9 b-l bg-white">
+                                                                        <textarea class="form-control" rows="3" name="evaluateremarks"
+                                                                                  id="evaluateremarks" data-maxlength="256" onblur="trimText(this)"
+                                                                        >${qualityMgmt.evaluateremarks}</textarea>
+                                                                    </div>
+                                                                </div>
 
                                                                 <div class="form-group" >
                                                                     <label class="col-sm-3 control-label">奖励状态：</label>
@@ -661,7 +669,7 @@
                                                                 <div class="form-group">
                                                                     <label class="col-sm-3  control-label">备注：</label>
                                                                     <div class="col-sm-9 b-l bg-white">
-                                                                        <textarea class="form-control" rows="4" name="praiseremarks"
+                                                                        <textarea class="form-control" rows="3" name="praiseremarks"
                                                                                   id="praiseremarks" data-maxlength="256" onblur="trimText(this)"
                                                                         >${qualityMgmt.praiseremarks}</textarea>
                                                                     </div>

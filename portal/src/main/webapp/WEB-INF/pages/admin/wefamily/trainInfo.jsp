@@ -357,67 +357,78 @@
                                 </form>
 
                             </div>
-                            <div class="col-md-6 col-sm-6 ">
-                                <form class="form-horizontal form-bordered" data-validate="parsley"
-                                      action="${ctx}/admin/wefamily/saveTrainPraiseInfo" method="POST" id="praiseInfoFrm">
-                                    <section class="panel panel-default">
-                                        <header class="panel-heading mintgreen">
-                                            <i class="fa fa-gift"></i>
-                                            <span class="text-lg">奖励信息：</span>
-                                        </header>
-                                        <div class="panel-body p-0-15">
+                            <c:if test="${train.status == 'FINISH'}">
+                                <div class="col-md-6 col-sm-6 ">
+                                    <form class="form-horizontal form-bordered" data-validate="parsley"
+                                          action="${ctx}/admin/wefamily/saveTrainPraiseInfo" method="POST" id="praiseInfoFrm">
+                                        <section class="panel panel-default">
+                                            <header class="panel-heading mintgreen">
+                                                <i class="fa fa-gift"></i>
+                                                <span class="text-lg">奖励信息：</span>
+                                            </header>
+                                            <div class="panel-body p-0-15">
 
-                                            <div class="form-group" >
-                                                <label class="col-sm-3 control-label">培训情况：</label>
-                                                <div class="col-sm-9  b-l bg-white">
-                                                    <select  class="form-control" name="situation" id="situation">
-                                                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_SITUATION')}"></c:set>
-                                                        <option value="">请选择</option>
-                                                        <c:forEach items="${commonCodeList}" var="commonCode">
-                                                            <option value="${commonCode.code}" <c:if test="${train.situation == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                                                        </c:forEach>
-                                                    </select>
+                                                <div class="form-group" >
+                                                    <label class="col-sm-3 control-label">用户评价：</label>
+                                                    <div class="col-sm-9  b-l bg-white">
+                                                        <select  class="form-control" name="situation" id="situation">
+                                                            <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_SITUATION')}"></c:set>
+                                                            <option value="">请选择</option>
+                                                            <c:forEach items="${commonCodeList}" var="commonCode">
+                                                                <option value="${commonCode.code}" <c:if test="${train.situation == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                                            </c:forEach>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group" >
-                                                <label class="col-sm-3 control-label">奖励状态：</label>
-                                                <div class="col-sm-9  b-l bg-white">
-                                                    <select  class="form-control" name="praisestatus" id="praisestatus">
-                                                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('PRAISE_STATUS')}"></c:set>
-                                                        <option value="">请选择</option>
-                                                        <c:forEach items="${commonCodeList}" var="commonCode">
-                                                            <option value="${commonCode.code}" <c:if test="${train.praisestatus == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                                                        </c:forEach>
-                                                    </select>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3  control-label">评价备注：</label>
+                                                    <div class="col-sm-9 b-l bg-white">
+                                                    <textarea class="form-control" rows="3" name="situationremarks"
+                                                              id="situationremarks" data-maxlength="256" onblur="trimText(this)"
+                                                    >${train.situationremarks}</textarea>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-3  control-label">备注：</label>
-                                                <div class="col-sm-9 b-l bg-white">
-                                                    <textarea class="form-control" rows="4" name="praiseremarks"
+                                                <div class="form-group" >
+                                                    <label class="col-sm-3 control-label">奖励状态：</label>
+                                                    <div class="col-sm-9  b-l bg-white">
+                                                        <select  class="form-control" name="praisestatus" id="praisestatus">
+                                                            <c:set var="commonCodeList" value="${web:queryCommonCodeList('PRAISE_STATUS')}"></c:set>
+                                                            <option value="">请选择</option>
+                                                            <c:forEach items="${commonCodeList}" var="commonCode">
+                                                                <option value="${commonCode.code}" <c:if test="${train.praisestatus == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                                            </c:forEach>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3  control-label">备注：</label>
+                                                    <div class="col-sm-9 b-l bg-white">
+                                                    <textarea class="form-control" rows="3" name="praiseremarks"
                                                               id="praiseremarks" data-maxlength="256" onblur="trimText(this)"
                                                     >${train.praiseremarks}</textarea>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="col-sm-12">
-                                                    <input type="hidden" name="uuid" class="form-control" value="${train.uuid}">
-                                                    <input type="hidden" name="versionno" class="form-control" value="${train.versionno}">
-                                                    <input type="hidden" name="merchantid" value="${merchant.uuid}">
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <input type="hidden" name="uuid" class="form-control" value="${train.uuid}">
+                                                        <input type="hidden" name="versionno" class="form-control" value="${train.versionno}">
+                                                        <input type="hidden" name="merchantid" value="${merchant.uuid}">
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                        </div>
-                                        <div class="panel-footer text-left bg-light lter">
-                                            <c:if test="${train.status eq 'FINISH'}">
-                                                <a class="btn btn-submit btn-s-xs " href="javascript:saveTrainPraiseInfo()">
-                                                    &nbsp;保&nbsp;存
-                                                </a>
-                                            </c:if>
-                                        </div>
-                                    </section>
-                                </form>
-                            </div>
+                                            </div>
+                                            <div class="panel-footer text-left bg-light lter">
+                                                <c:if test="${train.status eq 'FINISH'}">
+                                                    <a class="btn btn-submit btn-s-xs " href="javascript:saveTrainPraiseInfo()">
+                                                        &nbsp;保&nbsp;存
+                                                    </a>
+                                                </c:if>
+                                            </div>
+                                        </section>
+                                    </form>
+                                </div>
+                            </c:if>
+
                         </div>
                     </div>
                 </section>

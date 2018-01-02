@@ -73,8 +73,7 @@
         .required{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
         .maxlength{padding: 0 !important;border: 0 !important;color: tomato;text-align: right;}
         .fixsubmit{background-color: none;display: flex;display: -webkit-flex}
-        .fixsubmit>a:nth-of-type(1){left: 0;background: #5bbc4e;width: 70%;color: white}
-        .fixsubmit>a:nth-of-type(2){right: 0;background: #f0d439;width: 30%;color: white}
+        .fixsubmit>a:nth-of-type(1){left: 0;background: #5bbc4e;width: 100%;color: white}
     </style>
 </head>
 <body>
@@ -88,14 +87,6 @@
             <span>保养详情</span>
         </c:if>
     </div>
-    <div class="b-l b-r" style="padding-left: 1.25rem">
-        <span class="text-success">${successMessage}</span>
-        <span class="text-danger">${errorMessage}</span>
-    </div>
-
-        <form class="form-horizontal" data-validate="parsley"
-              action="${ctx}/admin/wefamily/qualityMgmtInfoForPhone" method="POST"
-              enctype="multipart/form-data" id="frm">
             <div class="goal_total" style="margin-top: 0px">
                     <span>主机信息</span>
                     <img src="../../../../static/guest/img/list.png" alt="" id="machineListImg" class="up">
@@ -104,22 +95,22 @@
                 <li>
                     <span>机器型号</span>
                     <input type="text" id="machinemodel" name="machinemodel" value="${qualityMgmt.machinemodel}"
-                           data-required="true"  data-maxlength="32"/>
+                           data-required="true"  data-maxlength="32" readonly/>
                 </li>
                 <li>
                     <span>发动机号</span>
                     <input type="text" id="engineno" name="engineno" value="${qualityMgmt.engineno}"
-                           data-required="true"  data-maxlength="32"/>
+                           data-required="true"  data-maxlength="32" readonly/>
                 </li>
                 <li>
                     <span>机器号</span>
                     <input type="text" id="machineno" name="machineno" value="${qualityMgmt.machineno}"
-                           data-required="true"  data-maxlength="32"/>
+                           data-required="true"  data-maxlength="32" readonly/>
                 </li>
                 <li>
                     <span>生产日期</span>
                     <input class="Wdate" type="text" name="productiondt" id="productiondt" value="${qualityMgmt.productiondt}" onClick="WdatePicker()"
-                           data-required="true"  data-maxlength="23">
+                           data-required="true"  data-maxlength="23" readonly>
                 </li>
                 <c:if test="${qualityMgmt.type == 'REPAIR'}">
                     <li style="display: flex;display: -webkit-flex;">
@@ -143,43 +134,6 @@
                     </li>
                 </c:if>
             </ul>
-            <%--<div class="goal_total">
-                    <span>用户信息</span>
-                    <img src="../../../../static/guest/img/list.png" alt="" id="personListImg" class="up">
-            </div>
-            <ul class="list" id="personUl">
-                <li>
-                    <span>姓名<a class="dataRequired">*</a></span>
-                    <input type="text"  value="${qualityMgmt.reportername}" name="reportername" id="reportername"
-                           data-required="true" data-maxlength="32">
-                </li>
-                <li>
-                    <span>手机号码<a class="dataRequired">*</a></span>
-                    <input type="text"  value="${qualityMgmt.reporterphone}" name="reporterphone" id="reporterphone"
-                           data-required="true" data-maxlength="11">
-                </li>
-            </ul>
-            <div class="goal_total">
-                    <span>经销商信息</span>
-                    <img src="../../../../static/guest/img/list.png" alt="" id="merchantListImg" class="up">
-            </div>
-            <ul class="list" id="merchantUl">
-                <li>
-                    <span>经销商</span>
-                    <input type="text"  value="${merchant.name}"
-                           data-required="true" data-maxlength="32" readonly>
-                </li>
-                <li>
-                    <span>联系电话</span>
-                    <input type="text"  value="${merchant.contactno}"
-                           data-required="true" data-maxlength="32" readonly>
-                </li>
-                <li>
-                    <span>地址</span>
-                    <input type="text"  value="${merchant.address}"
-                           data-required="true" data-maxlength="32" readonly>
-                </li>
-            </ul>--%>
             <div class="goal_total">
                     <span><c:if test="${qualityMgmt.type == 'REPAIR'}">维修</c:if><c:if test="${qualityMgmt.type == 'MAINTAIN'}">保养</c:if>工人信息</span>
                     <img src="../../../../static/guest/img/list.png" alt="" id="workerListImg" class="up">
@@ -188,14 +142,14 @@
                 <li>
                     <span>姓名</span>
                     <input type="text"  value="${workerList[0].name}" name="name" id="name"
-                           data-required="true" data-maxlength="32">
+                           data-required="true" data-maxlength="32" readonly>
                     <input type="hidden" name="workerid" value="${workerList[0].uuid}">
                     <input type="hidden" name="workerversionno" value="${workerList[0].versionno}">
                 </li>
                 <li>
                     <span>手机号码</span>
                     <input type="text"  value="${workerList[0].phone}" name="phone" id="phone"
-                           data-required="true" data-maxlength="11">
+                           data-required="true" data-maxlength="11" readonly>
                 </li>
             </ul>
             <div class="goal_total">
@@ -206,36 +160,21 @@
                 <li>
                     <span>损坏项目</span>
                     <input type="text"  value="${qualityMgmt.program}" name="program" id="program"
-                           data-required="true" data-maxlength="50">
+                           data-required="true" data-maxlength="50" readonly>
                 </li>
                 <li>
                     <span>处理配件</span>
                     <input type="text"  value="${qualityMgmt.parts}" name="parts" id="parts"
-                           data-required="true" data-maxlength="32">
+                           data-required="true" data-maxlength="32" readonly>
                 </li>
-                <%--<li>
-                    <span>现场地点</span>
-                    <input type="text"  name="location" id="location" value="${qualityMgmt.location}" data-maxlength="32">
-                    &lt;%&ndash;<img src="../../../../static/guest/img/location.png" alt="" style="width: 2rem;height: 2rem">&ndash;%&gt;
-                </li>
-                <li>
-                    <span>已作业面积</span>
-                    <input type="text" name="workarea" id="workarea" value="${qualityMgmt.workarea}"
-                           data-maxlength="20" onblur="trimText(this)" >
-                </li>
-                <li>
-                    <span>效果如何</span>
-                    <input type="text"  value="${qualityMgmt.effect}" name="effect" id="effect"
-                            data-maxlength="32">
-                </li>--%>
                 <li>
                     <span>损坏分类</span>
                     <c:if test="${empty qualityMgmt.damagecategory}">
-                        <input type="text"  value="未损坏"
+                        <input type="text"  value="未损坏" readonly
                                >
                     </c:if>
                     <c:if test="${not empty qualityMgmt.damagecategory}">
-                        <select name="damagecategory" id="damagecategory">
+                        <select name="damagecategory" id="damagecategory" disabled>
                             <c:set var="commonCodeList" value="${web:queryCommonCodeList('DAMAGE_CATEGORY')}"></c:set>
                             <option value="">请选择</option>
                             <c:forEach items="${commonCodeList}" var="commonCode">
@@ -244,59 +183,57 @@
                         </select>
                     </c:if>
                 </li>
-                <%--<li>
-                    <span>到达所用时间</span>
-                    <input type="text" name="arrivetime" value="${qualityMgmt.arrivetime}"
-                           data-maxlength="20"  onblur="trimText(this)" id="arrivetime">
-                </li>--%>
                 <li>
                     <span><c:if test="${qualityMgmt.type == 'REPAIR'}">维修</c:if><c:if test="${qualityMgmt.type == 'MAINTAIN'}">保养</c:if>日期</span>
                     <input class="Wdate" type="text" name="servicedt" id="servicedt" onClick="WdatePicker()"
-                           value="${qualityMgmt.servicedt}"  data-required="true" data-maxlength="23">
+                           value="${qualityMgmt.servicedt}"  data-required="true" data-maxlength="23" disabled>
                 </li>
                 <li>
                     <span>收费金额</span>
                     <input name="price" id="price" value="${qualityMgmt.price}" size="24"
-                           data-maxlength="10" onblur="validateMoney(this,'priceError')" >
+                           data-maxlength="10" readonly>
                     <span id="priceError" class="text-danger" style="float: right;color: red;font-size: 1.2rem;"></span>
                 </li>
-                <%--<li>
-                    <span>用户评价</span>
-                    <select name="evaluate" id="evaluate">
-                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
-                        <option value="">请选择</option>
-                        <c:forEach items="${commonCodeList}" var="commonCode">
-                            <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                        </c:forEach>
-                    </select>
-                </li>
-                <li style="display: flex;display: -webkit-flex;">
-                    <span style="vertical-align: middle;">备注</span>
-                    <textarea rows="4" name="remarks" id="remarks" data-maxlength="256"
-                              style=" width: 16rem;vertical-align: middle;text-align: right">${qualityMgmt.remarks}</textarea>
-                </li>--%>
-                <li style="border: 0">
-                    <span>人机合影</span>
-                </li>
-                <li>
-                    <div class="my-display-inline-box">
-                        <div id="qualityMgmtImgContainer" class="row value">
-                            <c:forEach items="${workerAttachmentList}" var="attachment">
-                                <a class="swipebox" id="swipebox" href= "${attachment.name}" onclick="reviewMediaShow(this)">
-                                    <img style="width:50px;height: 50px;margin-right:10px;"
-                                         src="${attachment.name}" alt="Bottle Closeup"/>
-                                </a>
-                                <%--<img src="${attachment.name}" alt="" style="margin-top: 3px;margin-left: 10px" onclick="viewBigImageForUpload(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image">--%>
-
+            <form class="form-horizontal" data-validate="parsley"
+                      action="" method="POST" id="frm">
+                <c:if test="${qualityMgmt.status == 'FINISH'}">
+                    <li>
+                        <span>用户评价</span>
+                        <select name="evaluate" id="evaluate">
+                            <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
+                            <option value="">请选择</option>
+                            <c:forEach items="${commonCodeList}" var="commonCode">
+                                <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
                             </c:forEach>
-                        </div>
-                    </div>
-                </li>
+                        </select>
+                    </li>
+                    <li style="display: flex;display: -webkit-flex;">
+                        <span style="vertical-align: middle;">备注</span>
+                    <textarea rows="4" name="evaluateremarks" id="evaluateremarks" data-maxlength="256"
+                              style=" width: 16rem;vertical-align: middle;text-align: right">${qualityMgmt.evaluateremarks}</textarea>
+                    </li>
+                </c:if>
+
             </ul>
             <input type="hidden" name="uuid" class="form-control" value="${qualityMgmt.uuid}">
             <input type="hidden" name="versionno" class="form-control"
                    value="${qualityMgmt.versionno}">
+            <input type="hidden" name="workerid" value="${workerList[0].uuid}">
+            <input type="hidden" name="workerversionno" value="${workerList[0].versionno}">
         </form>
+
+    <c:if test="${qualityMgmt.status eq 'FINISH' && empty qualityMgmt.evaluate}">
+        <div class="fixsubmit">
+            <a href="javascript:saveEvaluateInfo()">保存</a>
+        </div>
+    </c:if>
+
+    <div class="choose" style="display: none">
+        <div class="error">
+            <p id="Message"></p >
+            <button onclick="closeModel()">OK</button>
+        </div>
+    </div>
 
 <script src="${ctx}/static/admin/js/lrz/dist/lrz.bundle.js"></script>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
@@ -306,33 +243,29 @@
 <script type="text/javascript" src="${ctx}/static/js/reviewMediaJquery.swipebox.js"></script>
 <script type="text/javascript">
 
-    function submitQualityMgmtInfo(){
-        $("#frm").parsley("validate");
-        //表单合法 单价合法性
-        if ($('#frm').parsley().isValid()){
-            var searchForm = document.getElementById("frm");
-            searchForm.submit();
-        }
+    var Message = document.getElementById("Message");
+    Message.innerHTML = "";
+
+    function closeModel(){
+        $(".choose").css("display","none");
     }
 
 
-    $('.pageUpload').change(function () {
-        if ($(".pageUpload").attr("readonly") == "readonly") {
-            $("#notification_bar").css("width", "60%");
-            $("#notification_bar").css("left", "20%");
-            HC.showNotification("网络较慢，请耐心等待！", 2000);
-        } else {
-            compressUploadPicture(document.getElementById("qualityMgmtImg"));
-        }
-    });
+    window.onload = function(){
 
-    function checkProgram(programCode){
-        var checkBox = document.getElementById(programCode);
-        if(checkBox.checked){
-            checkBox.checked = true;
-        }else{
-            checkBox.checked = false;
+        if(${successMessage != null}){
+            Message.innerHTML = "${successMessage}";
+            $(".choose").css("display","block");
+        }else if(${errorMessage != null}){
+            Message.innerHTML = "${errorMessage}";
+            $(".choose").css("display","block");
         }
+    }
+
+    function saveEvaluateInfo(){
+        var searchForm = document.getElementById("frm");
+        searchForm.action = "${ctx}/guest/saveEvaluateInfo"
+        searchForm.submit();
     }
 
     function enableUl(ulId,imgId){
@@ -350,21 +283,7 @@
         }
     }
 
-    function finishTrain(){
 
-            //确定
-            $.get("${ctx}/admin/wefamily/finishTrain?trainId=${train.uuid}&versionno=${train.versionno}",function(data,status){
-                if(undefined != data.finishFlag){
-                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/trainInfoForPhone?trainId=${train.uuid}&finishFlag="+data.finishFlag;
-                }
-            });
-    }
-
-    /*wechatUtil.getLocation({
-        success : function(res){
-            alert("latitude : " + res.latitude + " longitude " + res.longitude);
-        }
-    });*/
 
     function reviewMediaShow(obj){
         var reviewMediaClass = $(obj).attr("class");

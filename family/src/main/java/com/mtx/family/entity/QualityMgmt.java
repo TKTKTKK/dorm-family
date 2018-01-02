@@ -50,6 +50,8 @@ public class QualityMgmt extends BaseEntity {
     @Column
     private String evaluate;
     @Column
+    private String evaluateremarks;
+    @Column
     private String location;
     @Column
     private String status;
@@ -70,6 +72,10 @@ public class QualityMgmt extends BaseEntity {
 
     //状态数组
     private String[] statusArr;
+
+    private String statusDesc;
+
+    private String praisestatusDesc;
 
     public String getWorkerid() {
         return workerid;
@@ -231,6 +237,14 @@ public class QualityMgmt extends BaseEntity {
         this.evaluate = evaluate;
     }
 
+    public String getEvaluateremarks() {
+        return evaluateremarks;
+    }
+
+    public void setEvaluateremarks(String evaluateremarks) {
+        this.evaluateremarks = evaluateremarks;
+    }
+
     public String getLocation() {
         return location;
     }
@@ -301,5 +315,21 @@ public class QualityMgmt extends BaseEntity {
 
     public void setPraiseremarks(String praiseremarks) {
         this.praiseremarks = praiseremarks;
+    }
+
+    public String getStatusDesc() {
+        return statusDesc;
+    }
+
+    public void setStatusDesc(String statusDesc) {
+        this.statusDesc = statusDesc;
+    }
+
+    public String getPraisestatusDesc() {
+        return praisestatusDesc;
+    }
+
+    public void setPraisestatusDesc(String praisestatusDesc) {
+        this.praisestatusDesc = praisestatusDesc;
     }
 }

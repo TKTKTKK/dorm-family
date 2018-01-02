@@ -76,6 +76,8 @@ public class MtxGuestController extends BaseGuestController{
     private MtxActivityParticipantService mtxActivityParticipantService;
     @Autowired
     private MtxLuckyParticipantService mtxLuckyParticipantService;
+    @Autowired
+    private TrainService trainService;
 
 
     @RequestMapping(value = "/product_center")
@@ -389,6 +391,16 @@ public class MtxGuestController extends BaseGuestController{
     }
 
     /**
+     * 保存保养、报修用户评价
+     */
+    @RequestMapping(value = "/saveEvaluateInfo",method = RequestMethod.POST)
+    public String saveEvaluateInfo(QualityMgmt qualityMgmt,RedirectAttributes redirectAttributes){
+        qualityMgmtService.updatePartial(qualityMgmt);
+        redirectAttributes.addFlashAttribute("successMessage","评价完成！");
+        return "redirect:/guest/qualityMgmt_info?qualityMgmtId="+qualityMgmt.getUuid();
+    }
+
+    /**
      * 报修列表
      */
     @RequestMapping(value = "/member/repair_list",method = RequestMethod.GET)
@@ -404,6 +416,68 @@ public class MtxGuestController extends BaseGuestController{
         List<QualityMgmt> qualityMgmtList = qualityMgmtService.queryForList(qualityMgmt);
         model.addAttribute("qualityMgmtList",qualityMgmtList);
         return "guest/qualityMgmt_list";
+    }
+
+    /**
+     * 培训列表
+     */
+    @RequestMapping(value = "/member/train_list",method = RequestMethod.GET)
+    public String train_list(HttpServletRequest request,Model model){
+
+        WpUser wpUser = getWechatMemberInfo(request);
+        model.addAttribute("wpUser",wpUser);
+        Train train = new Train();
+        train.setPerson(wpUser.getUuid());
+        train.setOrderby("createon desc");
+        List<Train> trainList = trainService.queryForList(train);
+        model.addAttribute("trainList",trainList);
+        return "guest/train_list";
+    }
+
+    /**
+     * 培训信息
+     */
+    @RequestMapping(value = "/member/train_info",method = RequestMethod.GET)
+    public String train_info(HttpServletRequest request,Model model){
+        String trainId= request.getParameter("trainId");
+        if(StringUtils.isNotBlank(trainId)){
+            Train train = new Train();
+            train.setUuid(trainId);
+            train = trainService.queryForObjectByPk(train);
+            model.addAttribute("train", train);
+
+            if(null != train){
+
+                if(StringUtils.isNotBlank(train.getProgram())){
+                    String[] trainPrograms= train.getProgram().split(",");
+                    if(null != trainPrograms){
+                        List<String> trainProgramList = new ArrayList<>();
+                        for(String program : trainPrograms){
+                            trainProgramList.add(program);
+                        }
+                        model.addAttribute("trainProgramList",trainProgramList);
+                    }
+                }
+            }
+
+            Attachment attachment = new Attachment();
+            attachment.setRefid(trainId);
+            List<Attachment> attachmentList = attachmentService.queryForList(attachment);
+            model.addAttribute("attachmentList",attachmentList);
+
+        }
+
+        return "guest/train_info";
+    }
+
+    /**
+     * 保存培训评价
+     */
+    @RequestMapping(value = "/saveSituationInfo",method = RequestMethod.POST)
+    public String saveSituationInfo(Train train,RedirectAttributes redirectAttributes){
+        trainService.updatePartial(train);
+        redirectAttributes.addFlashAttribute("successMessage","评价完成！");
+        return "redirect:/guest/member/train_info?trainId="+train.getUuid();
     }
 
     /**

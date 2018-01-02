@@ -62,6 +62,17 @@
             height: 2.6rem;
             color: #fff;
             margin-bottom: 10px;
+            margin-top: 10px;
+        }
+        .searchButton{
+            background-color: #5bbc4e;
+            border-radius: 9px;
+            width: 5rem;
+            height: 2.6rem;
+            color: #fff;
+            margin-bottom: 10px;
+            margin-top: 10px;
+            float: right;
         }
         .fixsubmit a{color: #fff}
         .showParticipantsA{
@@ -169,7 +180,18 @@
                                 <img src="../../../../static/guest/img/list.png" alt="" id="participantListImg" class="down">
                            </a>
                        </p>
+                        <ul class="activityRule">
+                            <li>
+                                <span>姓名</span>
+                                <input type="text" class="searchInput" name="participantname" id="participantname" placeholder="请输入姓名" value="${participantname}">
+                            </li>
+                            <li>
+                                <span>手机</span>
+                                <input type="text" class="searchInput" name="participantphone" id="participantphone" placeholder="请输入手机号码" value="${participantphone}">
+                            </li>
+                        </ul>
 
+                        <button class="searchButton" id="searchButton" onclick="searchParticipant()">查询</button>
                         <c:if test="${mtxActivity.status == 'PENDING'}">
                             <button class="checkAllButton" id="checkAllButton" onclick="checkAllParticipant()">全选</button>
                         </c:if>
@@ -201,7 +223,7 @@
                                                    placeholder="请填写中奖总人数" data-required="true" value="${mtxActivity.totalLuckyCount}"/>
                                             <span id="totalLuckyCountError" style="float: right;color: red;font-size: 1.2rem;"></span>
                                         </li>
-                                        <li class="hidden">
+                                        <li>
                                             <span>每轮中奖人数<a class="dataRequired">*</a></span>
                                             <input data-type="digits" id="everyLuckyCount" name="everyLuckyCount"
                                                    placeholder="请填写每轮中奖人数" data-required="true" value="1"/>
@@ -344,8 +366,8 @@
     function checkCount(){
         var totalLuckyCountError = document.getElementById("totalLuckyCountError");
         totalLuckyCountError.innerHTML = "";
-       /* var everyLuckyCountError = document.getElementById("everyLuckyCountError");
-        everyLuckyCountError.innerHTML = "";*/
+        var everyLuckyCountError = document.getElementById("everyLuckyCountError");
+        everyLuckyCountError.innerHTML = "";
 
         var totalLuckyCount = $("#totalLuckyCount").val();
         var everyLuckyCount = $("#everyLuckyCount").val();
@@ -361,37 +383,50 @@
             }
         }
 
-        //全选、全不选
-        if(count == 0 || count == inputs.length){
-            if(totalLuckyCount > inputs.length){
-                totalLuckyCountError.innerHTML = "不能大于参与人数";
-                return false;
-            }
-        }else{
-            if(totalLuckyCount > count){
-                totalLuckyCountError.innerHTML = "不能大于参与人数";
-                return false;
+        var participantname = $("#participantname").val();
+        var participantphone = $("#participantphone").val();
+        if(participantname.length == 0 && participantphone.length ==0){
+            //全选、全不选
+            if(count == 0 || count == inputs.length){
+                if(totalLuckyCount > inputs.length){
+                    totalLuckyCountError.innerHTML = "不能大于参与人数";
+                    return false;
+                }
+            }else{
+                if(totalLuckyCount > count){
+                    totalLuckyCountError.innerHTML = "不能大于参与人数";
+                    return false;
+                }
             }
         }
-        /*if(everyLuckyCount > totalLuckyCount){
+
+        if(everyLuckyCount > totalLuckyCount){
             everyLuckyCountError.innerHTML = "不能大于中奖总数"
             return false;
-        }*/
+        }
         return true;
     }
 
 
     function submitActivityInfo(){
-
+        var participantname = $("#participantname").val();
+        var participantphone = $("#participantphone").val();
 
         $("#participantFrm").parsley("validate");
         //表单合法 单价合法性
         if ($('#participantFrm').parsley().isValid() && checkCount()){
 
             var participantFrm = document.getElementById("participantFrm");
-            participantFrm.action = "${ctx}/admin/wefamily/addParticipant?uuid=${mtxActivity.uuid}&versionno=${mtxActivity.versionno}&fromPhone=Y";
+            participantFrm.action = "${ctx}/admin/wefamily/addParticipant?uuid=${mtxActivity.uuid}&versionno=${mtxActivity.versionno}&fromPhone=Y&participantname="+participantname+"&participantphone="+participantphone;
             participantFrm.submit();
         }
+    }
+
+    function searchParticipant(){
+        var participantname = $("#participantname").val();
+        var participantphone = $("#participantphone").val();
+        window.location.href="${ctx}/admin/wefamily/mtxActivityInfoForPhone?activityId=${mtxActivity.uuid}&participantname="+participantname+"&participantphone="+participantphone;
+
     }
 
     function uploadActivityImg(){

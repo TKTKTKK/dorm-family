@@ -71,6 +71,10 @@
         <span>我的维修</span>
         <img src="../../../static/guest/img/list.png" alt="">
     </li>
+    <li onclick="goMyTrainRecord()">
+        <span>我的培训</span>
+        <img src="../../../static/guest/img/list.png" alt="">
+    </li>
 </ul>
 </body>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
@@ -96,6 +100,9 @@
     }
     function goMyExchangeRecord(){
         window.location.href="${ctx}/guest/member/exchange_list?userid="+userid;
+    }
+    function goMyTrainRecord(){
+        window.location.href="${ctx}/guest/member/train_list";
     }
 </script>
 </html>

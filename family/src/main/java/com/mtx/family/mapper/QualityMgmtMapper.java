@@ -15,4 +15,6 @@ public interface QualityMgmtMapper extends BaseMapper<QualityMgmt> {
     List<QualityMgmt> selectQualityMgmtListForPhone(@Param("qualityMgmt") QualityMgmt qualityMgmt);
 
     PageList<QualityMgmt> selectQualityMgmtPageList(@Param("qualityMgmt") QualityMgmt qualityMgmt, @Param("startTime") String startDateTimeStr, @Param("endTime") String endDateTimeStr, PageBounds pageBounds);
+
+    List<QualityMgmt> selectQualityMgmtListForExport(@Param("qualityMgmt") QualityMgmt qualityMgmt, @Param("startTime") String startDateStr, @Param("endTime") String endDateStr);
 }

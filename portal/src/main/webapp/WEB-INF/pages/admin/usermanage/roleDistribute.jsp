@@ -95,7 +95,7 @@
                                         id="submitBtn"
                                         onclick="submitInfo()">查 询
                                 </button>
-                                <a href="javascript:showUserInfo()" class="btn btn-primary btn-s-xs"  style="color: #fff">创建用户</a>
+                                <a href="javascript:showUserInfo()" class="btn btn-primary btn-s-xs"  style="color: #fff">新建用户</a>
                                 <div class="col-sm-1 text-right" style="float: right">
                                     <c:if test="${not empty staffqrcode}">
                                         <img src="${staffqrcode}" style="width: 100px;height: 100px;margin-top: -56px;"

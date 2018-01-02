@@ -18,4 +18,6 @@ public interface TrainMapper extends BaseMapper<Train> {
     PageList<Train> selectTrainList(@Param("train") Train train,@Param("startTime") String startDateTimeStr,@Param("endTime") String endDateTimeStr, PageBounds pageBounds);
 
     List<Train> selectTrainListForPhone(@Param("train") Train train,@Param("merchantList") List<Merchant> merchantList);
+
+    List<Train> selectTrainListForExport(@Param("train") Train train,@Param("startTime") String startDateTimeStr,@Param("endTime") String endDateTimeStr);
 }

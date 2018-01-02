@@ -12,6 +12,7 @@ import com.mtx.common.utils.UserUtils;
 import com.mtx.family.entity.*;
 import com.mtx.family.service.*;
 import com.mtx.portal.PortalContants;
+import com.mtx.portal.utils.ExportUtil;
 import com.mtx.wechat.entity.WpUser;
 import com.mtx.wechat.entity.admin.WechatBinding;
 import com.mtx.wechat.service.WechatBindingService;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.HashMap;
 
@@ -1238,6 +1240,36 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     /**
+     * 导出培训查询结果
+     */
+    @RequestMapping(value = "/exportTrainList",method = RequestMethod.POST)
+    public void exportTrainList(Train train, HttpServletRequest request, HttpServletResponse response){
+        Map<String,List> beanParams = new HashMap<String, List>();
+
+        String startDateStr = request.getParameter("startDateStr");
+        String endDateStr = request.getParameter("endDateStr");
+        Date startDate = DateUtils.parseDate(startDateStr);
+        Date endDate = DateUtils.parseDate(endDateStr);
+        startDate = DateUtils.getDateStart(startDate);
+        endDate = DateUtils.getDateEnd(endDate);
+        String startDateTimeStr = "";
+        if(null != startDate){
+            startDateTimeStr = DateUtils.formatDate(startDate, "yyyy-MM-dd HH:mm:ss");
+        }
+        String endDateTimeStr = "";
+        if(null != endDate){
+            endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
+        }
+
+        List<Train> trainListForExport = trainService.queryTrainListForExport(train,startDateTimeStr,endDateTimeStr);
+
+        beanParams.put("trainListForExport", trainListForExport);
+
+        //导出
+        ExportUtil.exportExcel(beanParams, "/tpl/train.xls", response);
+    }
+
+    /**
      * 培训信息（界面）
      * @param request
      * @param model
@@ -1723,6 +1755,54 @@ public class WeFamilyController extends BaseAdminController {
         }
 
         return "admin/wefamily/qualityMgmtManage";
+    }
+
+    /**
+     * 导出报修、保养查询结果
+     */
+    @RequestMapping(value = "/exportQualityMgmtList",method = RequestMethod.POST)
+    public void exportQualityMgmtList(QualityMgmt qualityMgmt, HttpServletRequest request, HttpServletResponse response){
+        Map<String,List> beanParams = new HashMap<String, List>();
+
+        String type = request.getParameter("type");
+        qualityMgmt.setType(type);
+
+        String startDateStr = request.getParameter("startDateStr");
+        String endDateStr = request.getParameter("endDateStr");
+        Date startDate = DateUtils.parseDate(startDateStr);
+        Date endDate = DateUtils.parseDate(endDateStr);
+        startDate = DateUtils.getDateStart(startDate);
+        endDate = DateUtils.getDateEnd(endDate);
+        String startDateTimeStr = "";
+        if(null != startDate){
+            startDateTimeStr = DateUtils.formatDate(startDate, "yyyy-MM-dd HH:mm:ss");
+        }
+        String endDateTimeStr = "";
+        if(null != endDate){
+            endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
+        }
+
+        String[] statusArr = request.getParameterValues("status");
+        String statusStr = "";
+        if(null != statusArr){
+            statusStr = StringUtils.join(statusArr, ",");
+        }
+        if(null != statusArr && statusArr.length == 1 && StringUtils.isBlank(statusArr[0])){
+            statusArr = null;
+        }
+        qualityMgmt.setStatusArr(statusArr);
+
+        List<QualityMgmt> qualityMgmtListForExport = qualityMgmtService.queryQualityMgmtListForExport(qualityMgmt,startDateStr,endDateStr);
+        beanParams.put("qualityMgmtListForExport", qualityMgmtListForExport);
+
+
+        //导出
+        if("REPAIR".equals(type)){
+            ExportUtil.exportExcel(beanParams, "/tpl/repair.xls", response);
+        }else{
+            ExportUtil.exportExcel(beanParams, "/tpl/maintain.xls", response);
+        }
+
     }
 
     /**
@@ -2460,34 +2540,90 @@ public class WeFamilyController extends BaseAdminController {
 
     @RequestMapping(value = "/addParticipant", method = RequestMethod.POST)
     public String addParticipant(String uuid,HttpServletRequest request,RedirectAttributes redirectAttributes){
-        MtxActivity activity=new MtxActivity();;
-        activity.setUuid(uuid);
-        activity=mtxActivityService.queryForObjectByPk(activity);
-        if(null!=activity&&"PENDING".equals(activity.getStatus())){
-            MtxLuckyParticipant participantTemp=new MtxLuckyParticipant();
-            participantTemp.setActivityid(uuid);
-            List<MtxLuckyParticipant> luckyParticipantList = mtxLuckyParticipantService.queryForList(participantTemp);
-            if(luckyParticipantList.size()>0){
-                for(int i=0;i<luckyParticipantList.size();i++){
-                    mtxLuckyParticipantService.delete(luckyParticipantList.get(i));
+        String participantname=request.getParameter("participantname");
+        redirectAttributes.addAttribute("participantname",participantname);
+        String participantphone=request.getParameter("participantphone");
+        redirectAttributes.addAttribute("participantphone",participantphone);
+        if(StringUtils.isNotBlank(participantname)||StringUtils.isNotBlank(participantphone)){
+            MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
+            activityParticipant.setActivityid(uuid);
+            activityParticipant.setName(participantname);
+            activityParticipant.setContactno(participantphone);
+
+            List<MtxActivityParticipant> activityParticipantList=mtxActivityParticipantService.queryForParticipantList(activityParticipant);
+            String participants[] = request.getParameterValues("users");
+            String existFlag="N";
+            if(null != participants){
+                for(int i=0;i<activityParticipantList.size();i++){
+                    for(String p:participants){
+                        if(activityParticipantList.get(i).getUserid().equals(p)){
+                            existFlag="Y";
+                            MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
+                            luckyParticipant.setActivityid(uuid);
+                            luckyParticipant.setUserid(p);
+                            List<MtxLuckyParticipant> luckList=mtxLuckyParticipantService.queryForList(luckyParticipant);
+                            if(luckList==null||luckList.size()==0){
+                                luckyParticipant.setStatus("WAIT_WIN");
+                                mtxLuckyParticipantService.insert(luckyParticipant);
+                            }
+                            break;
+                        }
+
+                    }
+                    if("N".equals(existFlag)){
+                        MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
+                        luckyParticipant.setActivityid(uuid);
+                        luckyParticipant.setUserid(activityParticipantList.get(i).getUserid());
+                        List<MtxLuckyParticipant> luckList=mtxLuckyParticipantService.queryForList(luckyParticipant);
+                        if(luckList.size()>0){
+                            luckyParticipant=luckList.get(0);
+                            mtxLuckyParticipantService.delete(luckyParticipant);
+                        }
+                    }
+                }
+            }else{
+                for(MtxActivityParticipant p:activityParticipantList ){
+                    MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
+                    luckyParticipant.setActivityid(uuid);
+                    luckyParticipant.setUserid(p.getUserid());
+                    List<MtxLuckyParticipant> luckList=mtxLuckyParticipantService.queryForList(luckyParticipant);
+                    if(luckList.size()>0){
+                        luckyParticipant=luckList.get(0);
+                        mtxLuckyParticipantService.delete(luckyParticipant);
+                    }
                 }
             }
-            String activityParticipant[] = request.getParameterValues("users");
-            if(StringUtils.isNotBlank(uuid) && null != activityParticipant){
-                MtxActivityParticipant tempActivityParticipant = new MtxActivityParticipant();
-                tempActivityParticipant.setActivityid(uuid);
-                List<MtxActivityParticipant> tempActivityParticipantList = mtxActivityParticipantService.queryForList(tempActivityParticipant);
-                if(null !=  tempActivityParticipantList && tempActivityParticipantList.size() != activityParticipant.length){
-                    for(String participantId : activityParticipant){
-                        MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
-                        luckyParticipant.setUserid(participantId);
-                        luckyParticipant.setActivityid(uuid);
-                        luckyParticipant.setStatus("WAIT_WIN");
-                        mtxLuckyParticipantService.insert(luckyParticipant);
+        }else{
+            MtxActivity activity=new MtxActivity();
+            activity.setUuid(uuid);
+            activity=mtxActivityService.queryForObjectByPk(activity);
+            if(null!=activity&&"PENDING".equals(activity.getStatus())){
+                MtxLuckyParticipant participantTemp=new MtxLuckyParticipant();
+                participantTemp.setActivityid(uuid);
+                List<MtxLuckyParticipant> luckyParticipantList = mtxLuckyParticipantService.queryForList(participantTemp);
+                if(luckyParticipantList.size()>0){
+                    for(int i=0;i<luckyParticipantList.size();i++){
+                        mtxLuckyParticipantService.delete(luckyParticipantList.get(i));
+                    }
+                }
+                String activityParticipant[] = request.getParameterValues("users");
+                if(StringUtils.isNotBlank(uuid) && null != activityParticipant){
+                    MtxActivityParticipant tempActivityParticipant = new MtxActivityParticipant();
+                    tempActivityParticipant.setActivityid(uuid);
+                    List<MtxActivityParticipant> tempActivityParticipantList = mtxActivityParticipantService.queryForList(tempActivityParticipant);
+                    if(null !=  tempActivityParticipantList && tempActivityParticipantList.size() != activityParticipant.length){
+                        for(String participantId : activityParticipant){
+                            MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
+                            luckyParticipant.setUserid(participantId);
+                            luckyParticipant.setActivityid(uuid);
+                            luckyParticipant.setStatus("WAIT_WIN");
+                            mtxLuckyParticipantService.insert(luckyParticipant);
+                        }
                     }
                 }
             }
         }
+
         String totalLuckyCount = request.getParameter("totalLuckyCount");
         String everyLuckyCount = request.getParameter("everyLuckyCount");
         String versionno = request.getParameter("versionno");
@@ -2525,6 +2661,10 @@ public class WeFamilyController extends BaseAdminController {
     public String mtxActivityInfoForPhone(Model model,HttpServletRequest request) {
 
         String activityId = request.getParameter("activityId");
+        String participantname = request.getParameter("participantname");
+        model.addAttribute("participantname",participantname);
+        String participantphone = request.getParameter("participantphone");
+        model.addAttribute("participantphone",participantphone);
         if(StringUtils.isNotBlank(activityId)){
             MtxActivity mtxActivity = new MtxActivity();
             mtxActivity.setUuid(activityId);
@@ -2540,6 +2680,8 @@ public class WeFamilyController extends BaseAdminController {
 
                 MtxActivityParticipant mtxActivityParticipant = new MtxActivityParticipant();
                 mtxActivityParticipant.setActivityid(activityId);
+                mtxActivityParticipant.setName(participantname);
+                mtxActivityParticipant.setContactno(participantphone);
                 List<MtxActivityParticipant> activityParticipantList = mtxActivityParticipantService.queryForParticipantList(mtxActivityParticipant);
                 model.addAttribute("activityParticipantList",activityParticipantList);
 

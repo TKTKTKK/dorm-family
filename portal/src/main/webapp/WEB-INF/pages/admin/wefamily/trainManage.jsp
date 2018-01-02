@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="bg-white closel">
                     <div class="col-sm-12 no-padder">
-                        <form method="post" action="${ctx}/admin/wefamily/trainManage" class="form-horizontal b-l b-r b-b padding20"
+                        <form method="post" action="${ctx}/admin/wefamily/trainManage" class="form-horizontal b-l b-r b-b b-t padding20"
                               data-validate="parsley"
                               id="searchForm">
                             <div class="row">
@@ -112,7 +112,7 @@
 
                                     <thead>
                                     <tr>
-                                        <th class="text-center">编号</th>
+                                        <th class="text-center">培训任务单编号</th>
                                         <th class="text-center">经销商</th>
                                         <th class="text-center">机器型号</th>
                                         <th class="text-center">机器号</th>
@@ -172,7 +172,9 @@
                             </div>
                         <div class="navbar-left">
                             <a class="btn btn-sm btn-info" href="javascript:showTrainInfo()"
-                               style="color:white">添加培训</a>
+                               style="color:white">添加培训任务单</a>
+
+                            <button class="btn btn-sm btn-submit" onclick="exportTrainList()">导出</button>
                         </div>
                         <div style="clear: both"></div>
                     </c:if>
@@ -193,6 +195,16 @@
     window.onload = function(){
         //显示父菜单
         showParentMenu('品质服务');
+    }
+
+    function exportTrainList(){
+        $("#searchForm").parsley("validate");
+        if ($('#searchForm').parsley().isValid() && compareBeginEndDate('starttime', 'endtime', 'dateError')){
+            var searchForm = document.getElementById("searchForm");
+            searchForm.action = "${ctx}/admin/wefamily/exportTrainList";
+            searchForm.submit();
+            searchForm.action = "${ctx}/admin/wefamily/trainManage";
+        }
     }
 
     //提交查询

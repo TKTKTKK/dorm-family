@@ -54,7 +54,7 @@
             <div class="row">
                 <div class="bg-white closel">
                     <div class="col-sm-12 no-padder">
-                        <form method="post" action="${ctx}/admin/wefamily/qualityMgmtManage" class="form-horizontal b-l b-r b-b padding20"
+                        <form method="post" action="${ctx}/admin/wefamily/qualityMgmtManage" class="form-horizontal b-l b-r b-b b-t padding20"
                               data-validate="parsley"
                               id="searchForm">
                             <div class="row">
@@ -151,7 +151,7 @@
                                 <table class="table table-striped b-light b-a text-center">
                                     <thead>
                                     <tr>
-                                        <th class="text-center">${showType}编号</th>
+                                        <th class="text-center">${showType}任务单编号</th>
                                         <th class="text-center">经销商</th>
                                         <th class="text-center">机器型号</th>
                                         <th class="text-center">用户姓名</th>
@@ -210,7 +210,9 @@
                             </div>
                         <div class="navbar-left">
                             <a class="btn btn-sm btn-info" href="javascript:showQualityMgmtInfo()"
-                               style="color:white">添加${showType}</a>
+                               style="color:white">添加${showType}任务单</a>
+
+                            <button class="btn btn-sm btn-submit" onclick="exportQualityMgmtList()">导出</button>
                         </div>
                         <div style="clear: both"></div>
                     </c:if>
@@ -268,6 +270,18 @@
             //ui block
             pleaseWait();
             document.getElementById('searchForm').submit();
+        }
+    }
+
+    function exportQualityMgmtList(){
+        $("#searchForm").parsley("validate");
+        //比较起始日期和截止日期 且 表单合法
+        if (compareBeginEndDate('starttime', 'endtime', 'dateError')
+                && $('#searchForm').parsley().isValid()) {
+            var searchForm = document.getElementById("searchForm");
+            searchForm.action = "${ctx}/admin/wefamily/exportQualityMgmtList?type=${type}";
+            searchForm.submit();
+            searchForm.action = "${ctx}/admin/wefamily/qualityMgmtManage";
         }
     }
 

@@ -24,6 +24,8 @@ public class Train extends BaseEntity {
     @Column
     private String productiondt;
     @Column
+    private String person;
+    @Column
     private String personname;
     @Column
     private String personphone;
@@ -36,6 +38,8 @@ public class Train extends BaseEntity {
     @Column
     private String situation;
     @Column
+    private String situationremarks;
+    @Column
     private String location;
     @Column
     private String status;
@@ -45,6 +49,12 @@ public class Train extends BaseEntity {
     private String praiseremarks;
 
     private String merchantname;
+
+    private String typeDesc;
+
+    private String statusDesc;
+
+    private String praisestatusDesc;
 
     public String getSnno() {
         return snno;
@@ -92,6 +102,14 @@ public class Train extends BaseEntity {
 
     public void setProductiondt(String productiondt) {
         this.productiondt = productiondt;
+    }
+
+    public String getPerson() {
+        return person;
+    }
+
+    public void setPerson(String person) {
+        this.person = person;
     }
 
     public String getPersonname() {
@@ -142,6 +160,14 @@ public class Train extends BaseEntity {
         this.situation = situation;
     }
 
+    public String getSituationremarks() {
+        return situationremarks;
+    }
+
+    public void setSituationremarks(String situationremarks) {
+        this.situationremarks = situationremarks;
+    }
+
     public String getLocation() {
         return location;
     }
@@ -180,5 +206,29 @@ public class Train extends BaseEntity {
 
     public void setPraiseremarks(String praiseremarks) {
         this.praiseremarks = praiseremarks;
+    }
+
+    public String getTypeDesc() {
+        return typeDesc;
+    }
+
+    public void setTypeDesc(String typeDesc) {
+        this.typeDesc = typeDesc;
+    }
+
+    public String getStatusDesc() {
+        return statusDesc;
+    }
+
+    public void setStatusDesc(String statusDesc) {
+        this.statusDesc = statusDesc;
+    }
+
+    public String getPraisestatusDesc() {
+        return praisestatusDesc;
+    }
+
+    public void setPraisestatusDesc(String praisestatusDesc) {
+        this.praisestatusDesc = praisestatusDesc;
     }
 }

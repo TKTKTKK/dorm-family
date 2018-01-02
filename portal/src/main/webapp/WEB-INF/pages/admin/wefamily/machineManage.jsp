@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="bg-white closel">
                     <div class="col-sm-12 no-padder">
-                        <form method="post" action="${ctx}/admin/wefamily/machineManage" class="form-horizontal b-l b-r b-b padding20"
+                        <form method="post" action="${ctx}/admin/wefamily/machineManage" class="form-horizontal b-l b-r b-b b-t padding20"
                               data-validate="parsley"
                               id="searchForm">
                             <div class="row">

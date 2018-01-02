@@ -16,6 +16,12 @@
         <if test="participant.status!=null and participant.status!=''">
             and map.status=#{participant.status}
         </if>
+        <if test="participant.name!=null and participant.name!=''">
+            and wu.name=#{participant.name}
+        </if>
+        <if test="participant.contactno!=null and participant.contactno!=''">
+            and wu.contactno=#{participant.contactno}
+        </if>
         order by map.createon desc;
     </select>
     <select id="queryForWaitDrawingList" resultMap="selectResultMap">
