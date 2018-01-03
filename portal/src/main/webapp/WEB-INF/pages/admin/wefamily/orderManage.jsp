@@ -200,7 +200,7 @@
 
     window.onload = function(){
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('销售服务');
 
         $("button[data-id='status']").attr('title', "状态");
         $($("button[data-id='status']").find('span')[0]).text("状态")

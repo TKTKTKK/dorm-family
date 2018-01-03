@@ -235,7 +235,7 @@
 
     window.onload = function () {
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('销售服务');
     }
 
 
