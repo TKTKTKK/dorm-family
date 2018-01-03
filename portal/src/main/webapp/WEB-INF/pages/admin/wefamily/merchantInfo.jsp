@@ -11,7 +11,7 @@
     <section class="vbox">
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
-                满田星 / <span class="font-bold  text-shallowred"> 经销商</span>
+                满田星 / <a href="${ctx}/admin/wefamily/merchant"><span class="font-bold  text-shallowred"> 经销商</span></a>
             </header>
             <div class="col-sm-12 pos">
                 <div style="margin-bottom: 5px">
@@ -28,7 +28,7 @@
                         </header>
                         <div class="panel-body p-0-15">
                             <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>机构名称：</label>
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>经销商名称：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="text" class="form-control" data-required="true" name="name" id="name"
                                            data-maxlength="48"
@@ -51,6 +51,18 @@
                                     <span id="contactnoError" class="text-danger"></span>
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>常用联系人：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <input type="text" class="form-control" data-required="true" name="frequentcontacts" id="frequentcontacts"
+                                           data-maxlength="48"
+                                           onblur="trimText(this)"
+                                           value="${merchant.frequentcontacts}">
+                                    <span id="frequentcontactsError" class="text-danger"></span>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><span class="text-danger">*</span>地址：</label>
 
@@ -77,7 +89,46 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label">法人代表：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <input type="text" class="form-control" data-required="true" name="legalperson" id="legalperson"
+                                           data-maxlength="48"
+                                           onblur="trimText(this)"
+                                           value="${merchant.legalperson}">
+                                    <span id="legalpersonError" class="text-danger"></span>
+                                </div>
+                            </div>
 
+                            <div class="form-group" >
+                                <label class="col-sm-3 control-label">营业执照：</label>
+                                <div class="col-sm-9  b-l bg-white">
+                                    <div class="my-display-inline-box">
+                                        <div id="licenseImgUrlContainer">
+                                            <input type="file" id="licenseImg" name="picUrl" class="filestyle"
+                                                   data-icon="false" data-classButton="btn btn-default"
+                                                   data-classInput="form-control inline v-middle input-xs"
+                                                   onchange="compressUploadPicture(this)" accept="image/*"
+                                            <%--data-max_size="2000000" --%>
+                                                   style="display: none"
+                                                   data-max-count="4">
+                                            <div id="picUrlError" class="text-danger"></div>
+                                        </div>
+                                        <div id="licenseImgContainer" class="row value">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <c:if test="${not empty merchant.license}">
+                                <div class="form-group" >
+                                    <label class="col-sm-3 control-label"></label>
+                                    <div class="col-sm-9  b-l bg-white">
+                                        <img src="${merchant.license}" width="50" height="50"
+                                             onclick="viewBigImage(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image"/>
+                                    </div>
+                                </div>
+                            </c:if>
 
 
                             <div class="form-group">
@@ -103,16 +154,41 @@
                     </div>
                 </form>
             </div>
+
+            <!-- /.modal 大图 start -->
+            <div class="modal fade bs-example-modal-lg-image" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" id="modelCloseBtn"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myLargeModalLabel">大图</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="bs-example" data-example-id="simple-carousel">
+                                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal 大图 end -->
         </section>
     </section>
     <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen,open" data-target="#nav,html"></a>
 </section>
 <script type="text/javascript" src="${ctx}/static/admin/geo.js"></script>
+<script src="${ctx}/static/admin/js/lrz/dist/lrz.bundle.js"></script>
 <script type="text/javascript">
 
     window.onload = function () {
         //显示父菜单
-        showParentMenu('满田星');
+        showParentMenu('销售服务');
     }
 
     setup();

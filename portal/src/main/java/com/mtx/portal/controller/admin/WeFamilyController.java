@@ -128,6 +128,31 @@ public class WeFamilyController extends BaseAdminController {
         return "admin/wefamily/merchantManage";
     }
 
+    /**
+     * 经销商管理
+     */
+    @RequestMapping(value = "/merchantManage")
+    public String merchantManage(@RequestParam(required = false, defaultValue = "1") int page, Model model,Merchant merchant){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        merchant.setBindid(wechatBinding.getUuid());
+        merchant.setOrderby("modifyon desc");
+        //设置分页参数
+        String userid = UserUtils.getUserId();
+        List<Merchant> merchantList = merchantService.selectAssignedMerchantForUser();
+        String topAccount = "";
+        if (merchantList == null || merchantList.isEmpty()) {
+            topAccount = "Y";
+        }
+        model.addAttribute("topAccount", topAccount);
+        model.addAttribute("merchant",merchant);
+        PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+        PageList<Merchant> mtxMerchantList = merchantService.selectMerchantForUserWithPagination(userid, topAccount, merchant, pageBounds);
+        model.addAttribute("merchantList", mtxMerchantList);
+
+        return "admin/wefamily/merchantManage";
+    }
+
 
     /**
      * 经销商信息界面
@@ -153,18 +178,29 @@ public class WeFamilyController extends BaseAdminController {
      * @return
      */
     @RequestMapping(value = "/merchantInfo", method = RequestMethod.POST)
-    public String addMerchantInfo(@RequestParam(value = "picUrl", required = false) MultipartFile multipartFile, Merchant merchant, Model model) {
+    public String addMerchantInfo(Merchant merchant, Model model,HttpServletRequest request) {
         //检查是否重名
         Merchant merchantForRepeat = merchantService.selectMerchantForSave(merchant);
         if (null != merchantForRepeat) {
             model.addAttribute("errorMessage", "抱歉，该经销商已存在！");
         } else {
+
+            String[] licenseImgs = request.getParameterValues("licenseImg");
+            String licenseImg = "";
+            if(null != licenseImgs){
+                licenseImg = licenseImgs[0];
+            }
             //修改
             if (StringUtils.isNotBlank(merchant.getUuid())) {
                 Merchant merchantForMod = merchantService.queryForObjectByPk(merchant);
                 merchantForMod.setName(merchant.getName());
                 String contactno = merchant.getContactno().replaceAll("，", ",");
                 merchantForMod.setContactno(contactno);
+                merchantForMod.setLegalperson(merchant.getLegalperson());
+                if(StringUtils.isNotBlank(licenseImg)){
+                    merchantForMod.setLicense(licenseImg);
+                }
+                merchantForMod.setFrequentcontacts(merchant.getFrequentcontacts());
                 merchantForMod.setAddress(merchant.getAddress());
                 merchantForMod.setVersionno(merchant.getVersionno());
                 merchantForMod.setProvince(merchant.getProvince());
@@ -181,6 +217,9 @@ public class WeFamilyController extends BaseAdminController {
                 //添加
                 WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
                 merchant.setBindid(wechatBinding.getUuid());
+                if(StringUtils.isNotBlank(licenseImg)){
+                    merchant.setLicense(licenseImg);
+                }
                 merchantService.insert(merchant);
                 model.addAttribute("successMessage", "保存成功！");
             }

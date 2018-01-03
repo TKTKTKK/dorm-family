@@ -91,7 +91,7 @@
                  separator="," close=")">
             #{item.uuid}
         </foreach>
-        order by mt.modifyon desc
+        order by mt.status desc
     </select>
 
 </mapper>

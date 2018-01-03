@@ -56,27 +56,28 @@
                 <div class="bg-white pos wrapper-md" style="padding: 20px">
                     <c:if test="${not empty wechatBinding}">
                         <ul id="myTab" class="nav nav-tabs">
-                            <c:choose>
+                            <%--<c:choose>
                                 <c:when test="${empty queryType || 'url' eq queryType}">
                                     <li class="active" onclick="toggleTab('url')"><a data-toggle="tab">URL转换</a></li>
                                     <li onclick="toggleTab('wechat')"><a data-toggle="tab">公众号页面</a></li>
                                 </c:when>
                                 <c:when test="${empty queryType || 'wechat' eq queryType}">
                                     <li onclick="toggleTab('url')"><a data-toggle="tab">URL转换</a></li>
-                                    <li class="active" onclick="toggleTab('wechat')"><a data-toggle="tab">公众号页面</a></li>
+
                                 </c:when>
-                            </c:choose>
+                            </c:choose>--%>
+                            <li class="active" onclick="toggleTab('wechat')"><a data-toggle="tab">公众号页面</a></li>
                         </ul>
 
-                        <c:if test="${empty queryType || 'url' eq queryType}">
+                        <%--<c:if test="${empty queryType || 'url' eq queryType}">
                                     <div>
                                         <span class="text-success">${successMessage}</span>
                                         <span class="text-danger">${errorMessage}</span>
                                     </div>
                                     <section class="panel panel-default" >
-                                        <%--<header class="panel-heading">--%>
-                                            <%--<strong>URL转换：</strong>--%>
-                                        <%--</header>--%>
+                                        &lt;%&ndash;<header class="panel-heading">&ndash;%&gt;
+                                            &lt;%&ndash;<strong>URL转换：</strong>&ndash;%&gt;
+                                        &lt;%&ndash;</header>&ndash;%&gt;
                                         <form id="frm" action="${ctx}/admin/account/exchangeUrl" method="POST" class="b-l b-r b-b form-horizontal">
                                         <div class="panel-body p-0-15">
                                             <div class="form-group" style="border-bottom: 1px solid #efefef">
@@ -110,7 +111,7 @@
                                             </div>
                                         </form>
                                     </section>
-                        </c:if>
+                        </c:if>--%>
 
                         <c:if test="${'wechat' eq queryType}">
                                 <div class="col-sm-12 pos no-padder" style="height: 800px;margin-top: 0;">

@@ -23,6 +23,12 @@ public class Merchant extends BaseEntity {
     private String contactno;
     @Column
     private String address;
+    @Column
+    private String legalperson;
+    @Column
+    private String license;
+    @Column
+    private String frequentcontacts;
 
 
     public String getBindid() {
@@ -81,4 +87,27 @@ public class Merchant extends BaseEntity {
         this.district = district;
     }
 
+    public String getLegalperson() {
+        return legalperson;
+    }
+
+    public void setLegalperson(String legalperson) {
+        this.legalperson = legalperson;
+    }
+
+    public String getLicense() {
+        return license;
+    }
+
+    public void setLicense(String license) {
+        this.license = license;
+    }
+
+    public String getFrequentcontacts() {
+        return frequentcontacts;
+    }
+
+    public void setFrequentcontacts(String frequentcontacts) {
+        this.frequentcontacts = frequentcontacts;
+    }
 }

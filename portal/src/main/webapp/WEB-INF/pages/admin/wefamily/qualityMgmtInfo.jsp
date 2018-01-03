@@ -267,6 +267,12 @@
                 text-align: right;
             }
         }
+        .mod-dialog-bg {
+            z-index: 1050;
+        }
+        .mod-dialog {
+            z-index: 1051;
+        }
     </style>
 </head>
 <body class="">
@@ -931,14 +937,16 @@
         }else{
             $("#reportQualityMgmtInfoFrm").parsley("validate");
             if($('#reportQualityMgmtInfoFrm').parsley().isValid() && validateContactno('reporter')){
-                if(confirm('确定关闭维修？')){
+                qikoo.dialog.confirm('确定关闭维修？',function(){
                     //确定
                     $.get("${ctx}/admin/wefamily/finishQualityMgmt?qualityMgmtId=${qualityMgmt.uuid}&versionno=${qualityMgmt.versionno}&remarks="+remarks,function(data,status){
                         if(undefined != data.finishFlag){
                             window.location.href = "<%=request.getContextPath()%>/admin/wefamily/qualityMgmtInfo?qualityMgmtId=${qualityMgmt.uuid}&finishFlag="+data.finishFlag+"&type=${type}";
                         }
                     });
-                }
+                },function(){
+                    //取消
+                });
             }
         }
     }

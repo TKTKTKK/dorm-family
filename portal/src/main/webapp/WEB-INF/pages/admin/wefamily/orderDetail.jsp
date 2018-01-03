@@ -266,6 +266,12 @@
         #receiptImgContainer{display: inline-block;vertical-align: middle}
         #receiptImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 0rem}
         #receiptImgContainer img{width: 5rem;height: 5rem;margin:1rem}
+        .mod-dialog-bg {
+            z-index: 1050;
+        }
+        .mod-dialog {
+            z-index: 1051;
+        }
     </style>
 </head>
 <body class="">
@@ -956,13 +962,18 @@
     }
 
     function deletePic(){
-        var div = document.getElementsByClassName("item active");
-        var attachmentId = div[0].getAttribute("name");
-        $.get("${ctx}/admin/wefamily/deletePic?attachmentId="+attachmentId,function(data,status){
-            if(undefined != data.deleteFlag){
-                window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&deleteFlag="+data.deleteFlag;
-            }
+        qikoo.dialog.confirm('确定删除该回执？',function(){
+            var div = document.getElementsByClassName("item active");
+            var attachmentId = div[0].getAttribute("name");
+            $.get("${ctx}/admin/wefamily/deletePic?attachmentId="+attachmentId,function(data,status){
+                if(undefined != data.deleteFlag){
+                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&deleteFlag="+data.deleteFlag;
+                }
+            });
+        },function(){
+            //取消
         });
+
 
     }
 
@@ -998,10 +1009,14 @@
 
     //订单删除机器
     function deleteMachineForOrder(machineId){
-        $.get("${ctx}/admin/wefamily/deleteMachineForOrder?machineId="+machineId,function(data,status){
-            if(undefined != data.deleteFlag){
-                   window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&deleteFlag="+data.deleteFlag;
-            }
+        qikoo.dialog.confirm('确定删除此机器？',function(){
+            $.get("${ctx}/admin/wefamily/deleteMachineForOrder?machineId="+machineId,function(data,status){
+                if(undefined != data.deleteFlag){
+                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&deleteFlag="+data.deleteFlag;
+                }
+            });
+        },function(){
+            //取消
         });
     }
 
@@ -1033,9 +1048,11 @@
 
     function addMachine(){
         if(${fn:length(machineList) >= order.quantity}){
-            if(confirm('已达到订单数量，继续添加？')){
+            qikoo.dialog.confirm('已达到订单数量，继续添加？',function(){
                 openAddMachineModal();
-            }
+            },function(){
+                //取消
+            });
         }else{
             openAddMachineModal();
         }
@@ -1132,14 +1149,16 @@
     }
 
     function finishOrder(){
-        if(confirm('确定完成订单？')){
+        qikoo.dialog.confirm('确定完成？',function(){
             //确定
             $.get("${ctx}/admin/wefamily/finishOrder?orderId=${order.uuid}&versionno=${order.versionno}&remarks="+$('#remarksForOrder').val(),function(data,status){
                 if(undefined != data.finishFlag){
                     window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&finishFlag="+data.finishFlag;
                 }
             });
-        }
+        },function(){
+            //取消
+        });
     }
 
     //验证联系号码
