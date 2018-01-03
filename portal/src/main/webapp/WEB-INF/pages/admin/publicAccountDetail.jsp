@@ -61,7 +61,7 @@
                                                    value="${wechatBinding.wechatid}">
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <%--<div class="form-group">
                                     <label class="col-sm-3 control-label">社区总称：</label>
                                     <div class="col-sm-9  b-l bg-white">
                                         <input type="text" class="form-control" name="brand_name" id="brand_name" data-maxlength="60"
@@ -69,7 +69,7 @@
                                                value="${wechatBinding.brand_name}">
                                         <span id="brand_nameError" class="text-danger"></span>
                                     </div>
-                                </div>
+                                </div>--%>
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                         <input type="hidden" name="uuid" class="form-control" value="${wechatBinding.uuid}">
@@ -100,9 +100,9 @@
     function checkPubAcc(){
         //公众号名称
         var wechatnameValid = validateChineseText(48, document.getElementById('wechatname').value, 'wechatnameError');
-        //社区总称
-        var brand_nameValid = validateChineseText(60, document.getElementById('brand_name').value, 'brand_nameError');
-        return wechatnameValid && brand_nameValid;
+        /*//社区总称
+        var brand_nameValid = validateChineseText(60, document.getElementById('brand_name').value, 'brand_nameError');*/
+        return wechatnameValid;
     }
 </script>
 </body>

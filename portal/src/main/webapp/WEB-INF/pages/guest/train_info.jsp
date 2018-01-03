@@ -96,17 +96,17 @@
                 <li>
                     <span>机器型号<a class="dataRequired">*</a></span>
                     <input type="text" id="machinemodel" name="machinemodel" value="${train.machinemodel}"
-                           data-required="true" placeholder="请填写机器型号" data-maxlength="32"/>
+                           data-required="true" placeholder="请填写机器型号" data-maxlength="32" readonly/>
                 </li>
                 <li>
                     <span>机器号<a class="dataRequired">*</a></span>
                     <input type="text" id="machineno" name="machineno" value="${train.machineno}"
-                           data-required="true" placeholder="请填写机器号" data-maxlength="32"/>
+                           data-required="true" placeholder="请填写机器号" data-maxlength="32" readonly/>
                 </li>
                 <li>
                     <span>发动机号<a class="dataRequired">*</a></span>
                     <input type="text" id="engineno" name="engineno" value="${train.engineno}"
-                           data-required="true" placeholder="请填写发动机号" data-maxlength="32"/>
+                           data-required="true" placeholder="请填写发动机号" data-maxlength="32" readonly/>
                 </li>
                 <li>
                     <span>生产日期<a class="dataRequired">*</a></span>
@@ -120,7 +120,7 @@
             <ul class="list" id="programUl">
                 <li>
                     <span>培训类型<a class="dataRequired">*</a></span>
-                    <select name="type" id="type" data-required="true" onchange="changeTrainProgram()">
+                    <select name="type" id="type" data-required="true" onchange="changeTrainProgram()" disabled>
                         <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_TYPE')}"></c:set>
                         <c:forEach items="${commonCodeList}" var="commonCode">
                             <option value="${commonCode.code}" <c:if test="${train.type == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>

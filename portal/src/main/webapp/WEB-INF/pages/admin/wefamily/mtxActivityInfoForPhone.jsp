@@ -180,19 +180,19 @@
                                 <img src="../../../../static/guest/img/list.png" alt="" id="participantListImg" class="down">
                            </a>
                        </p>
-                        <ul class="activityRule">
-                            <li>
-                                <span>姓名</span>
-                                <input type="text" class="searchInput" name="participantname" id="participantname" placeholder="请输入姓名" value="${participantname}">
-                            </li>
-                            <li>
-                                <span>手机</span>
-                                <input type="text" class="searchInput" name="participantphone" id="participantphone" placeholder="请输入手机号码" value="${participantphone}">
-                            </li>
-                        </ul>
-
-                        <button class="searchButton" id="searchButton" onclick="searchParticipant()">查询</button>
                         <c:if test="${mtxActivity.status == 'PENDING'}">
+                            <ul class="activityRule">
+                                <li>
+                                    <span>姓名</span>
+                                    <input type="text" class="searchInput" name="participantname" id="participantname" placeholder="请输入姓名" value="${participantname}">
+                                </li>
+                                <li>
+                                    <span>手机</span>
+                                    <input type="text" class="searchInput" name="participantphone" id="participantphone" placeholder="请输入手机号码" value="${participantphone}">
+                                </li>
+                            </ul>
+
+                            <button class="searchButton" id="searchButton" onclick="searchParticipant()">查询</button>
                             <button class="checkAllButton" id="checkAllButton" onclick="checkAllParticipant()">全选</button>
                         </c:if>
                         <form id="participantFrm" method="POST">

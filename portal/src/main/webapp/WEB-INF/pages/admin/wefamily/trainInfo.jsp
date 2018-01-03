@@ -371,7 +371,7 @@
                                                 <div class="form-group" >
                                                     <label class="col-sm-3 control-label">用户评价：</label>
                                                     <div class="col-sm-9  b-l bg-white">
-                                                        <select  class="form-control" name="situation" id="situation">
+                                                        <select  class="form-control" name="situation" id="situation" <c:if test="${not empty train.situation}">disabled</c:if>>
                                                             <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_SITUATION')}"></c:set>
                                                             <option value="">请选择</option>
                                                             <c:forEach items="${commonCodeList}" var="commonCode">
@@ -383,7 +383,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3  control-label">评价备注：</label>
                                                     <div class="col-sm-9 b-l bg-white">
-                                                    <textarea class="form-control" rows="3" name="situationremarks"
+                                                    <textarea class="form-control" rows="3" name="situationremarks" <c:if test="${not empty train.situation}">readonly</c:if>
                                                               id="situationremarks" data-maxlength="256" onblur="trimText(this)"
                                                     >${train.situationremarks}</textarea>
                                                     </div>

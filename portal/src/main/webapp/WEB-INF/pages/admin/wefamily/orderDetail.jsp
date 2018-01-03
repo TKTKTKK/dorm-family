@@ -951,7 +951,7 @@
         if($(window).width()>500){
             document.getElementById('sugInfoDiv').style.height = (document.documentElement.clientHeight - 85 / 985 * document.documentElement.clientHeight) + "px";
             //显示父菜单
-            showParentMenu('微物业');
+            showParentMenu('销售服务');
         }
     }
 

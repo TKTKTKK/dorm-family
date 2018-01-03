@@ -634,9 +634,9 @@
                                                             </header>
                                                             <div class="panel-body p-0-15">
                                                                 <div class="form-group" >
-                                                                    <label class="col-sm-3 control-label">评价：</label>
+                                                                    <label class="col-sm-3 control-label">用户评价：</label>
                                                                     <div class="col-sm-9  b-l bg-white">
-                                                                        <select  class="form-control" name="evaluate" id="evaluate">
+                                                                        <select  class="form-control" name="evaluate" id="evaluate" <c:if test="${not empty qualityMgmt.evaluate}">disabled</c:if>>
                                                                             <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
                                                                             <option value="">请选择</option>
                                                                             <c:forEach items="${commonCodeList}" var="commonCode">
@@ -648,7 +648,7 @@
                                                                 <div class="form-group">
                                                                     <label class="col-sm-3  control-label">评价备注：</label>
                                                                     <div class="col-sm-9 b-l bg-white">
-                                                                        <textarea class="form-control" rows="3" name="evaluateremarks"
+                                                                        <textarea class="form-control" rows="3" name="evaluateremarks" <c:if test="${not empty qualityMgmt.evaluate}">readonly</c:if>
                                                                                   id="evaluateremarks" data-maxlength="256" onblur="trimText(this)"
                                                                         >${qualityMgmt.evaluateremarks}</textarea>
                                                                     </div>
