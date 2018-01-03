@@ -2303,7 +2303,7 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     @RequestMapping(value = "/goMtxPartsCenter", method = RequestMethod.GET)
-    public String goMtxPartsCenter(Model model,Machine machine){
+    public String goMtxPartsCenter(Model model,Machine machine,HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         Machine machineTemp=machineService.queryForObjectByPk(machine);
@@ -2315,6 +2315,13 @@ public class WeFamilyController extends BaseAdminController {
         List<String> modelList=getModel();
         model.addAttribute("modelList",modelList);
         model.addAttribute("attachmentList",attachmentList);
+        String deleteFlag = request.getParameter("deleteFlag");
+        if("1".equals(deleteFlag)){
+            model.addAttribute("successMessage", "删除成功");
+        }else if("0".equals(deleteFlag)){
+            model.addAttribute("errorMessage", "删除失败");
+        }
+
         return "admin/wefamily/mtxPartsCenterInfo";
     }
 

@@ -12,7 +12,7 @@
     <meta http-equiv="x-dns-prefetch-control" content="on"><!-- 浏览器开启预解析功能 -->
     <title>配件中心</title>
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
-
+    <link rel="stylesheet" href="${ctx}/static/guest/css/reviewMediaSwipebox.css" type="text/css" />
     <style>
         .parts_num{background-color: rgba(91,188,78,0.4);height: 4.5rem;padding:1rem;box-sizing: border-box;display: -webkit-flex;display: flex;justify-content: space-around;}
         .parts_num span {color: #fff;font-size: 1.5rem;vertical-align: middle;line-height: 2.5rem}
@@ -57,7 +57,10 @@
                 <p>配件图片</p>
                     <ul class="parts_img">
                         <c:forEach items="${attachmentList}" var="attachment">
-                            <li><img src="${attachment.name}" alt=""></li>
+                            <a class="swipebox" id="swipebox" href= "${attachment.name}" onclick="reviewMediaShow(this)">
+                                <li><img src="${attachment.name}" alt=""></li>
+                            </a>
+
                         </c:forEach>
                     </ul>
             </div>
@@ -75,6 +78,7 @@
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script src="${ctx}/static/js/wechatUtil.js?20171201"></script>
+<script type="text/javascript" src="${ctx}/static/js/reviewMediaJquery.swipebox.js"></script>
 <script type="text/javascript">
     var errorMessage = document.getElementById("errorMessage");
     errorMessage.innerHTML = "";
@@ -155,5 +159,12 @@
             $("#chooseClose").css("display","block");
         }
     }
+
+    function reviewMediaShow(obj){
+        var reviewMediaClass = $(obj).attr("class");
+        $( '.'+reviewMediaClass+'' ).swipebox();
+    }
+    $( '.swipebox-video' ).swipebox();
+
 </script>
 </html>

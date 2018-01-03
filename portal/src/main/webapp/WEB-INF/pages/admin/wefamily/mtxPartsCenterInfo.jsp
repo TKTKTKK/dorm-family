@@ -3,10 +3,41 @@
 <!DOCTYPE html>
 <html lang="en" class="app">
 <head>
+    <link href="${ctx}/static/admin/css/qikoo/qikoo.css" rel="stylesheet">
 <style>
     .li{
         position: absolute;
         margin-top: 33px;
+    }
+    .mod-dialog {
+        background-color: #fff;
+        border: solid 1px #82c92f;
+        border-top: none;
+        min-width: 300px;
+        position: absolute;
+        z-index: 1051;
+    }
+    .mod-dialog-bg {
+        background: #000;
+        opacity: .5;
+        filter: alpha(opacity=50);
+        height: 100%;
+        left: 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1050;
+    }
+    .modal {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1040;
+        display: none;
+        overflow: auto;
+        overflow-y: scroll;
     }
     #detailImgContainer{display: inline-block;vertical-align: middle}
     #detailImgUrlContainer{display: inline-block;vertical-align: middle;margin-left: 0rem}
@@ -135,7 +166,7 @@
                                     <label class="col-sm-3 control-label">图片：</label>
                                     <div class="col-sm-9  b-l bg-white">
                                         <c:forEach items="${attachmentList}" var="attachment">
-                                            <img src="${attachment.name}" width="50" height="50"
+                                            <img src="${attachment.name}" width="50" height="50" name="${attachment.uuid}"
                                                  onclick="viewBigImage(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image"/>
                                         </c:forEach>
                                     </div>
@@ -170,6 +201,11 @@
                                             <div class="bs-example" data-example-id="simple-carousel">
                                                 <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                                                 </div>
+                                                <div class="text-center" style="margin-top: 10px">
+                                                    <a  class="btn btn-submit btn-s-xs"
+                                                        onclick="deletePic()">
+                                                        删除</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -191,6 +227,7 @@
 <script type="text/javascript" src="${ctx}/static/admin/geo.js"></script>
 <script src="${ctx}/static/admin/js/qikoo/qikoo.js"></script>
 <script type="text/javascript" src="${ctx}/static/admin/js/myScript.js"></script>
+<script src="${ctx}/static/admin/js/jquery.blockui.min.js"></script>
 <script type="text/javascript">
 
     window.onload = function () {
@@ -200,6 +237,7 @@
             formatMoney(document.getElementById('price'));
         }
     }
+
     //检查物料编码是否存在
     function ifMaterialCodeExist(){
         var codeError=document.getElementById("codeError");
@@ -216,11 +254,28 @@
             }
         });
     }
+
     function submitForm(){
         $("#frm").parsley("validate");
         if(validateMoney(document.getElementById('price'),'priceError') && $('#frm').parsley().isValid()){
             ifMaterialCodeExist();
         }
+    }
+
+    function deletePic(){
+        var div = document.getElementsByClassName("item active");
+        var attachmentId = div[0].getAttribute("name");
+        qikoo.dialog.confirm('确定要删除吗？',function(){
+            //确定删除
+            $.get("${ctx}/admin/wefamily/deletePic?attachmentId="+attachmentId,function(data,status){
+                if(undefined != data.deleteFlag){
+                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/goMtxPartsCenter?uuid=${machine.uuid}&deleteFlag="+data.deleteFlag;
+                }
+            });
+        },function(){
+            //取消删除
+        });
+
     }
 </script>
 

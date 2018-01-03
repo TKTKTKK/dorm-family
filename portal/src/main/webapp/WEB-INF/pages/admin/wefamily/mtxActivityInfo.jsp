@@ -234,11 +234,11 @@
                                     <label class="col-sm-3 control-label"><span class="text-danger"></span>参加活动人员名单：</label>
                                     <div class="col-sm-9 b-l bg-white">
                                         <div class="row">
-                                            <div class="col-sm-3">
-                                                姓名：<input type="text" id="participantname" name="participantname" style="height: 34px" value="${participantname}"/></div>
-                                            <div class="col-sm-3">
-                                                手机号：<input type="text" id="participantphone" name="participantphone" style="height: 34px" value="${participantphone}"/></div>
-                                            <div class="col-sm-3">
+                                            <div class="col-sm-2">
+                                                <input type="text" placeholder="姓名：" id="participantname" name="participantname" style="width:100%;height: 34px" value="${participantname}"/></div>
+                                            <div class="col-sm-2">
+                                                <input type="text" placeholder="手机号：" id="participantphone" name="participantphone" style="width:100%;height: 34px" value="${participantphone}"/></div>
+                                            <div class="col-sm-2">
                                                 <a type="submit"  class="btn btn-submit btn-s-xs"
                                                    onclick="searchUser()"
                                                    id="searchBtn" style="color: #fff">查 询</a></div>
