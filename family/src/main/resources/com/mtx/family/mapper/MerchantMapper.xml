@@ -34,6 +34,15 @@
         select c.*
         from tb_mtx_merchant c
         where bindid = #{merchant.bindid}
+        <if test="merchant.name != null and merchant.name != ''">
+            and c.name  like concat("%",#{merchant.name},"%")
+        </if>
+        <if test="merchant.address != null and merchant.address != ''">
+            and c.address  like concat("%",#{merchant.address},"%")
+        </if>
+        <if test="merchant.legalperson != null and merchant.legalperson != ''">
+            and c.legalperson  like concat("%",#{merchant.legalperson},"%")
+        </if>
         <if test="topAccount == ''">
             and c.uuid in (select c.uuid
             from tb_platform_user a, tb_mtx_user_merchant b, tb_mtx_merchant c

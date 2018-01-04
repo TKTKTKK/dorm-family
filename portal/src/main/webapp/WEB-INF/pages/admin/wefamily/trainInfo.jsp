@@ -121,6 +121,12 @@
             padding: 10px;
             margin: 0;
         }
+        .mod-dialog-bg {
+            z-index: 1050;
+        }
+        .mod-dialog {
+            z-index: 1051;
+        }
     </style>
 </head>
 <body class="">
@@ -559,14 +565,16 @@
     }
 
     function finishTrain(){
-        if(confirm('确定完成培训？')){
+        qikoo.dialog.confirm('确定完成培训？',function(){
             //确定
             $.get("${ctx}/admin/wefamily/finishTrain?trainId=${train.uuid}&versionno=${train.versionno}",function(data,status){
                 if(undefined != data.finishFlag){
-                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/trainInfo?trainId=${train.uuid}&finishFlag="+data.finishFlag;
+                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/trainInfo?trainId=${train.uuid}&merchantId=${train.merchantid}&finishFlag="+data.finishFlag;
                 }
             });
-        }
+        },function(){
+            //取消
+        });
     }
 
     function checkPhone(phone) {

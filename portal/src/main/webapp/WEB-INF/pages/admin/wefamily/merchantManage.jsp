@@ -17,6 +17,39 @@
         </header>
         <section class="scrollable padder">
             <div class="row">
+
+                <div class="bg-white closel">
+                    <div class="col-sm-12 no-padder">
+                        <form method="post" action="${ctx}/admin/wefamily/merchantManage" class="form-horizontal b-l b-r b-b b-t padding20"
+                              data-validate="parsley"
+                              id="searchForm">
+                            <div class="row">
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <input type="text" class="form-control" id="name" name="name" onblur="trimText(this)" value="${merchant.name}"
+                                           placeholder="经销商名称"
+                                    />
+                                </div>
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <input type="text" class="form-control" id="address" name="address" onblur="trimText(this)" value="${merchant.address}"
+                                           placeholder="地址"
+                                    />
+                                </div>
+
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <input type="text" class="form-control" id="legalperson" name="legalperson" onblur="trimText(this)" value="${merchant.legalperson}"
+                                           placeholder="法人代表"
+                                    />
+                                </div>
+
+                            </div>
+                            <div class="row col-sm-12 text-center text-white" style="margin-top: 20px">
+                                <a class="btn btn-submit btn-s-xs " onclick="submitSearch()"
+                                   id="searchBtn" style="color: white">查 询
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 <div class="bg-white closel newclosel">
                     <c:if test="${not empty wechatBinding}">
                             <div>
@@ -28,14 +61,16 @@
                                 </c:if>
                             </div>
                             <div class="table-responsive" >
-                                <table class="table table-striped b-t b-light  b-l b-r b-b">
+                                <table class="table table-striped b-t b-light  b-l b-r b-b text-center">
 
                                     <thead>
                                     <tr>
-                                        <th width="25%">经销商名称</th>
-                                        <th width="50%">地址</th>
-                                        <th width="10%">电话</th>
-                                        <th width="15%">操作</th>
+                                        <th class="text-center">经销商名称</th>
+                                        <th class="text-center">地址</th>
+                                        <th class="text-center">法人代表</th>
+                                        <th class="text-center">常用联系人</th>
+                                        <th class="text-center">电话</th>
+                                        <th class="text-center">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -46,6 +81,12 @@
                                             </td>
                                             <td>
                                                     ${merchant.address}
+                                            </td>
+                                            <td>
+                                                    ${merchant.legalperson}
+                                            </td>
+                                            <td>
+                                                    ${merchant.frequentcontacts}
                                             </td>
                                             <td>
                                                     ${merchant.contactno}
@@ -62,7 +103,7 @@
                                     </c:forEach>
                                     </tbody>
                                 </table>
-                                <web:pagination pageList="${merchantList}"/>
+                                <web:pagination pageList="${merchantList}" postParam="true"/>
                                 <c:if test="${topAccount == 'Y'}">
                                     <button class="btn btn-sm btn-submit" onclick="showMerchantIdInfo()"> 添加</button>
                                 </c:if>
@@ -87,15 +128,36 @@
         showParentMenu('销售服务');
     }
 
+    //提交查询
+    function submitSearch() {
+        $("#searchForm").parsley("validate");
+        //比较起始日期和截止日期 且 表单合法
+        if ($('#searchForm').parsley().isValid()) {
+            $('#searchBtn').attr('disabled', true);
+            //ui block
+            pleaseWait();
+            document.getElementById('searchForm').submit();
+        }
+    }
+
+    function resubmitSearch(page){
+        $("#searchForm").parsley("validate");
+        //比较起始日期和截止日期 且 表单合法
+        if ($('#searchForm').parsley().isValid()) {
+            $('#searchBtn').attr('disabled', true);
+            //ui block
+            pleaseWait();
+            var searchForm = document.getElementById("searchForm");
+            searchForm.action = "${ctx}/admin/wefamily/merchantManage?page=" + page;
+            searchForm.submit();
+        }
+    }
+
 
     function deleteMerchant(merchantId){
         if(confirm("确认删除？")){
             window.location.href = "<%=request.getContextPath()%>/admin/wefamily/deleteMerchant?merchantId="+merchantId;
         }
-    }
-
-    function resubmitSearch(page){
-        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/merchant?page=" + page;
     }
 
 

@@ -109,7 +109,7 @@
         inner join tb_mtx_worker mw on mw.refid = qm.uuid
         where qm.type = #{qualityMgmt.type}
         and mw.userid = #{qualityMgmt.workerid}
-        order by qm.modifyon desc
+        order by qm.status desc
     </select>
 
 </mapper>
