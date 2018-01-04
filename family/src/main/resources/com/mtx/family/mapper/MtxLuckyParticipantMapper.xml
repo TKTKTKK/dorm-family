@@ -19,6 +19,9 @@
         <if test="flag=='1'.toString()">
             and mlp.status='WIN'
         </if>
+        <if test="mtxLuckyParticipant.userid!=null and mtxLuckyParticipant.userid!=''">
+            and mlp.userid=#{mtxLuckyParticipant.userid}
+        </if>
         order by mlp.createon desc;
     </select>
 </mapper>
