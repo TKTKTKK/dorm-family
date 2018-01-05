@@ -30,7 +30,7 @@ public class Machine extends BaseEntity {
     @Column
     private String type;
     @Column
-    private String address;
+    private String instruction;
     @Column
     private String format;
     @Column
@@ -54,12 +54,12 @@ public class Machine extends BaseEntity {
         this.type = type;
     }
 
-    public String getAddress() {
-        return address;
+    public String getInstruction() {
+        return instruction;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setInstruction(String instruction) {
+        this.instruction = instruction;
     }
 
     public String getFormat() {
