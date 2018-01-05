@@ -180,7 +180,6 @@
                                 <img src="../../../../static/guest/img/list.png" alt="" id="participantListImg" class="down">
                            </a>
                        </p>
-                        <c:if test="${mtxActivity.status == 'PENDING'}">
                             <ul class="activityRule">
                                 <li>
                                     <span>姓名</span>
@@ -194,7 +193,6 @@
 
                             <button class="searchButton" id="searchButton" onclick="searchParticipant()">查询</button>
                             <button class="checkAllButton" id="checkAllButton" onclick="checkAllParticipant()">全选</button>
-                        </c:if>
                         <form id="participantFrm" method="POST">
                             <ul class="winner list" id="participantsUl">
                                 <c:forEach items="${activityParticipantList}" var="activityParticipant">
@@ -206,7 +204,7 @@
                                     </c:forEach>
                                     <li class="first">
                                         <input type="checkbox" class="chk" id="${activityParticipant.uuid}" name="users" onchange="checkParticipant('${activityParticipant.uuid}')" style="display: none;" <c:if test="${showFlag == 1}">checked </c:if> value="${activityParticipant.userid}">
-                                        <c:if test="${mtxActivity.status == 'PENDING'}">
+                                        <c:if test="${mtxActivity.status == 'PENDING' || (mtxActivity.status == 'DRAWING' && not empty participantname || not empty participantphone)}">
                                             <label for="${activityParticipant.uuid}"></label>
                                         </c:if>
                                         <img src="${activityParticipant.headimg}" alt=""><span class="name">${activityParticipant.name}</span><span class="phone">${activityParticipant.contactno}</span><span class="wechat_name">${activityParticipant.nickname}</span>
@@ -226,7 +224,7 @@
                                         <li>
                                             <span>每轮中奖人数<a class="dataRequired">*</a></span>
                                             <input data-type="digits" id="everyLuckyCount" name="everyLuckyCount"
-                                                   placeholder="请填写每轮中奖人数" data-required="true" value="1"/>
+                                                   placeholder="请填写每轮中奖人数" data-required="true" value="${mtxActivity.everyLuckyCount}"/>
                                             <span id="everyLuckyCountError" style="float: right;color: red;font-size: 1.2rem;"></span>
                                         </li>
                                     </ul>
@@ -279,7 +277,7 @@
             <div class="choose" style="display: none">
                 <div class="error">
                     <p id="Message"></p >
-                    <button onclick="closeModel()">OK</button>
+                    <button onclick="closeModel()">朕知道了</button>
                 </div>
             </div>
 
@@ -324,14 +322,19 @@
 
     window.onload = function(){
         showParticipants();
-
-        if(${successMessage != null}){
-            Message.innerHTML = "${successMessage}";
+        if(${fn:length(message) > 0}){
+            Message.innerHTML = "${message}";
             $(".choose").css("display","block");
-        }else if(${errorMessage != null}){
-            Message.innerHTML = "${errorMessage}";
-            $(".choose").css("display","block");
+        }else{
+            if(${successMessage != null}){
+                Message.innerHTML = "${successMessage}";
+                $(".choose").css("display","block");
+            }else if(${errorMessage != null}){
+                Message.innerHTML = "${errorMessage}";
+                $(".choose").css("display","block");
+            }
         }
+
     }
 
 
