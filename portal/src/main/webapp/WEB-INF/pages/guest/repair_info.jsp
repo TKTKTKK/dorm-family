@@ -104,9 +104,14 @@
                            data-required="true" placeholder="请填写发动机号" data-maxlength="32" onblur="trimText(this)"/>
                 </li>
                 <li>
-                    <span>生产日期<a class="dataRequired">*</a></span>
+                    <span>生产日期</span>
                     <input class="input" type="text" name="productiondt" id="productiondt" value="${qualityMgmt.productiondt}" readonly
                            data-required="true" placeholder="请选择生产日期" data-maxlength="23" onblur="trimText(this)">
+                </li>
+                <li>
+                    <span>报修位置<a class="dataRequired">*</a></span>
+                    <input type="text" name="reportlocation" id="reportlocation" value="${qualityMgmt.reportlocation}" data-maxlength="32" readonly onblur="initReportlocation()">
+                    <img src="../../../../static/guest/img/location.png" id="reportlocationImg" onclick="getReportlocation()" alt="" style="width: 2rem;height: 2rem;float: right">
                 </li>
                 <li style="display: flex;display: -webkit-flex;">
                     <span style="vertical-align: middle;">问题描述<a class="dataRequired">*</a></span>
@@ -142,19 +147,6 @@
                     </div>
                 </li>
 
-                <c:if test="${qualityMgmt.status eq 'FINISH'}">
-                    <li>
-                        <span>维修评价</span>
-                        <select name="evaluate" id="evaluate">
-                            <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
-                            <option value="">请选择</option>
-                            <c:forEach items="${commonCodeList}" var="commonCode">
-                                <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                            </c:forEach>
-                        </select>
-                    </li>
-                </c:if>
-
             </ul>
             <input type="hidden" name="uuid" class="form-control" value="${qualityMgmt.uuid}">
             <input type="hidden" name="versionno" class="form-control"
@@ -164,7 +156,7 @@
         <div class="choose" style="display: none">
             <div class="error">
                 <p id="errorMessage"></p >
-                <button onclick="closeModel()">我知道了</button>
+                <button onclick="closeModel()">朕知道了</button>
             </div>
         </div>
 
@@ -191,6 +183,46 @@
     function trimText(obj){
         if(obj.value.length > 0){
             obj.value = obj.value.replace(/(^\s*)|(\s*$)/g, "");
+        }
+    }
+
+    window.onload = function(){
+        var reportlocation = $('#reportlocation').val();
+        if(reportlocation.length > 0){
+            $('#reportlocation').show();
+            $('#reportlocationImg').hide();
+        }else{
+            getReportlocation();
+        }
+    }
+
+    function getReportlocation(){
+        $('#reportlocation').show();
+        wechatUtil.getLocation({
+            success : function(res){
+                var gcj02tobd09 = coordtransform.gcj02tobd09(res.longitude,res.latitude);
+                wechatUtil.requestFormattedAddress({
+                    latitude:gcj02tobd09[1],
+                    longitude:gcj02tobd09[0],
+                    success:function(data){
+                        $('#reportlocation').val(data.address);
+                    }
+
+                })
+            }
+        });
+
+        $('#reportlocationImg').hide();
+    }
+
+    function initReportlocation(){
+        var reportlocation = $('#reportlocation').val();
+        if(reportlocation.length > 0){
+            $('#reportlocation').show();
+            $('#reportlocationImg').hide();
+        }else{
+            $('#reportlocation').hide();
+            $('#reportlocationImg').show();
         }
     }
 

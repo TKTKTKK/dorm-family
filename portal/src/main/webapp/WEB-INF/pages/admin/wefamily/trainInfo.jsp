@@ -135,7 +135,7 @@
     <section class="vbox">
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
-                满田星 / <a href="${ctx}/admin/wefamily/trainManage">培训管理</a>
+                品质服务 / <a href="${ctx}/admin/wefamily/trainManage">培训管理</a>
                 / <span class="font-bold  text-shallowred"> 培训信息</span>
             </header>
             <div class="tab-pane fade in active" id="detail">
@@ -165,7 +165,7 @@
                                             </div>
                                             <c:if test="${not empty train.uuid}">
                                                 <div class="form-group">
-                                                    <label class="col-sm-3  control-label"><span class="text-danger">*</span>培训编号：</label>
+                                                    <label class="col-sm-3  control-label"><span class="text-danger">*</span>培训任务单编号：</label>
                                                     <div class="col-sm-9 b-l bg-white">
                                                         <input type="text" class="form-control" data-required="true"
                                                                value="${train.snno}" readonly>

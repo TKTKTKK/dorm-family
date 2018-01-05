@@ -85,7 +85,7 @@
     </style>
 </head>
 <body>
-<c:if test="${scanedFlag ne 'Y'}">
+<c:if test="${empty qualityMgmt.machinemodel && empty qualityMgmt.machineno}">
     <div class="choose" id="imgDiv" style="z-index: 10;background: rgba(0,0,0,0.7);"><img src="../../../static/guest/img/help.png" alt="" onclick="closeImg()" style="width: 100%"></div>
 </c:if>
     <div class="head">
@@ -126,9 +126,14 @@
                            data-required="true" placeholder="请填写机器号" data-maxlength="32"/>
                 </li>
                 <li>
-                    <span>生产日期<a class="dataRequired">*</a></span>
+                    <span>生产日期</span>
                     <input class="input" type="text" name="productiondt" id="productiondt" value="${qualityMgmt.productiondt}" readonly
-                           data-required="true" placeholder="请选择生产日期" data-maxlength="23">
+                           placeholder="请选择生产日期" data-maxlength="23">
+                </li>
+                <li>
+                    <span>报修位置</span>
+                    <input type="text" id="reportlocation" name="reportlocation" value="${qualityMgmt.reportlocation}" readonly
+                           placeholder="请填写报修位置" data-maxlength="32"/>
                 </li>
                 <c:if test="${qualityMgmt.type == 'REPAIR'}">
                     <li style="display: flex;display: -webkit-flex;">
@@ -244,7 +249,7 @@
                 </li>
                 <li>
                     <span>损坏分类</span>
-                    <select name="damagecategory" id="damagecategory" <c:if test="${qualityMgmt.type == 'REPAIR'}"></c:if>>
+                    <select name="damagecategory" id="damagecategory" <c:if test="${qualityMgmt.type == 'REPAIR'}">data-required="true"</c:if>>
                         <c:set var="commonCodeList" value="${web:queryCommonCodeList('DAMAGE_CATEGORY')}"></c:set>
                         <option value="">请选择</option>
                         <c:forEach items="${commonCodeList}" var="commonCode">
@@ -308,7 +313,7 @@
     <div class="choose" style="display: none">
         <div class="error">
             <p id="Message"></p >
-            <button onclick="closeModel()">OK</button>
+            <button onclick="closeModel()">朕知道了</button>
         </div>
     </div>
 

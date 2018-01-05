@@ -22,6 +22,8 @@ public class QualityMgmt extends BaseEntity {
     @Column
     private String productiondt;
     @Column
+    private String reportlocation;
+    @Column
     private String reporter;
     @Column
     private String reportername;
@@ -123,6 +125,14 @@ public class QualityMgmt extends BaseEntity {
 
     public void setProductiondt(String productiondt) {
         this.productiondt = productiondt;
+    }
+
+    public String getReportlocation() {
+        return reportlocation;
+    }
+
+    public void setReportlocation(String reportlocation) {
+        this.reportlocation = reportlocation;
     }
 
     public String getReporter() {

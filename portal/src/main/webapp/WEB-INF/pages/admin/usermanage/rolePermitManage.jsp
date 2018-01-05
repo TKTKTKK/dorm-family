@@ -11,7 +11,7 @@
     <section class="vbox">
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
-                系统 / <span class="font-bold  text-shallowred">权限管理</span>
+                用户 / <span class="font-bold  text-shallowred">权限管理</span>
             </header>
             <div class="bg-white closel">
                 <div class="col-sm-12 clearfix no-padder">
@@ -23,19 +23,19 @@
                     <ul id="myTab" class="nav nav-tabs text-md">
                         <c:choose>
                             <c:when test="${'role' eq signType}">
-                                <li class="active" onclick="toggleTab('role')"><a data-toggle="tab">角色</a></li>
-                                <li onclick="toggleTab('permit')"><a data-toggle="tab">资源</a></li>
-                                <li onclick="toggleTab('rolepermit')"><a data-toggle="tab">权限</a></li>
+                                <li class="active" onclick="toggleTab('role')"><a data-toggle="tab">角色配置</a></li>
+                                <li onclick="toggleTab('permit')"><a data-toggle="tab">资源对应</a></li>
+                                <li onclick="toggleTab('rolepermit')"><a data-toggle="tab">权限配置</a></li>
                             </c:when>
                             <c:when test="${'permit' eq signType}">
-                                <li onclick="toggleTab('role')"><a data-toggle="tab">角色</a></li>
-                                <li class="active" onclick="toggleTab('permit')"><a data-toggle="tab">资源</a></li>
-                                <li onclick="toggleTab('rolepermit')"><a data-toggle="tab">权限</a></li>
+                                <li onclick="toggleTab('role')"><a data-toggle="tab">角色配置</a></li>
+                                <li class="active" onclick="toggleTab('permit')"><a data-toggle="tab">资源对应</a></li>
+                                <li onclick="toggleTab('rolepermit')"><a data-toggle="tab">权限配置</a></li>
                             </c:when>
                             <c:when test="${'rolepermit' eq signType}">
-                                <li onclick="toggleTab('role')"><a data-toggle="tab">角色</a></li>
-                                <li onclick="toggleTab('permit')"><a data-toggle="tab">资源</a></li>
-                                <li class="active" onclick="toggleTab('rolepermit')"><a data-toggle="tab">权限</a></li>
+                                <li onclick="toggleTab('role')"><a data-toggle="tab">角色配置</a></li>
+                                <li onclick="toggleTab('permit')"><a data-toggle="tab">资源对应</a></li>
+                                <li class="active" onclick="toggleTab('rolepermit')"><a data-toggle="tab">权限配置</a></li>
                             </c:when>
                         </c:choose>
                     </ul>

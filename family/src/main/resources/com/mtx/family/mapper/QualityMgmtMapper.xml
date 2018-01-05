@@ -15,9 +15,16 @@
         <if test="qualityMgmt.snno != null and qualityMgmt.snno != ''">
             and qm.snno like concat("%",#{qualityMgmt.snno},"%")
         </if>
-        <if test="qualityMgmt.merchantid != null and qualityMgmt.merchantid != ''">
-            and qm.merchantid = #{qualityMgmt.merchantid}
-        </if>
+        <choose>
+            <when test="qualityMgmt.merchantid == 'Y'.toString()">
+                and qm.merchantid is null
+            </when>
+            <otherwise>
+                <if test="qualityMgmt.merchantid != null and qualityMgmt.merchantid != ''">
+                    and qm.merchantid = #{qualityMgmt.merchantid}
+                </if>
+            </otherwise>
+        </choose>
         <if test="qualityMgmt.worker != null and qualityMgmt.worker != ''">
             and mw.userid = #{qualityMgmt.worker}
         </if>
@@ -65,9 +72,16 @@
         <if test="qualityMgmt.snno != null and qualityMgmt.snno != ''">
             and qm.snno like concat("%",#{qualityMgmt.snno},"%")
         </if>
-        <if test="qualityMgmt.merchantid != null and qualityMgmt.merchantid != ''">
-            and qm.merchantid = #{qualityMgmt.merchantid}
-        </if>
+        <choose>
+            <when test="qualityMgmt.merchantid == 'Y'.toString()">
+                and qm.merchantid is null
+            </when>
+            <otherwise>
+                <if test="qualityMgmt.merchantid != null and qualityMgmt.merchantid != ''">
+                    and qm.merchantid = #{qualityMgmt.merchantid}
+                </if>
+            </otherwise>
+        </choose>
         <if test="qualityMgmt.worker != null and qualityMgmt.worker != ''">
             and mw.userid = #{qualityMgmt.worker}
         </if>
@@ -109,7 +123,23 @@
         inner join tb_mtx_worker mw on mw.refid = qm.uuid
         where qm.type = #{qualityMgmt.type}
         and mw.userid = #{qualityMgmt.workerid}
-        order by qm.status desc
+        order by qm.status desc,qm.createon desc
+    </select>
+
+    <select id="selectQualityMgmtAsy" resultMap="selectResultMap">
+        select qm.*
+        from tb_mtx_quality_management qm
+        where qm.type = #{qualityMgmt.type}
+        and qm.status = #{qualityMgmt.status}
+        <choose>
+            <when test="qualityMgmt.merchantid == null or qualityMgmt.merchantid ==''">
+                and qm.merchantid is null
+            </when>
+            <otherwise>
+                and qm.merchantid = #{qualityMgmt.merchantid}
+            </otherwise>
+        </choose>
+
     </select>
 
 </mapper>

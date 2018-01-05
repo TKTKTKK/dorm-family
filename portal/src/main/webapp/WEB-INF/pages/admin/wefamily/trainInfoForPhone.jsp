@@ -81,7 +81,7 @@
     </style>
 </head>
 <body>
-<c:if test="${scanedFlag ne 'Y'}">
+<c:if test="${empty train.machinemodel && empty train.machineno}">
     <div class="choose" id="imgDiv" style="z-index: 10;background: rgba(0,0,0,0.7);"><img src="../../../static/guest/img/help.png" alt="" onclick="closeImg()" style="width: 100%"></div>
 </c:if>
     <div class="head">
@@ -239,7 +239,7 @@
     <div class="choose" style="display: none">
         <div class="error">
             <p id="Message"></p >
-            <button onclick="closeModel()">OK</button>
+            <button onclick="closeModel()">朕知道了</button>
         </div>
     </div>
 

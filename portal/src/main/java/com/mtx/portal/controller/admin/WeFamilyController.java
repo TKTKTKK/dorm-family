@@ -425,6 +425,39 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     /**
+     *首页点击到订单管理
+     */
+    @RequestMapping(value = "/goOrderManage",method = RequestMethod.GET)
+    public String goOrderManage(@RequestParam(required = false,defaultValue = "1") int page,Order order,Model model,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
+        List<String> machineModelList = getModel();
+        model.addAttribute("machineModelList",machineModelList);
+        model.addAttribute("order",order);
+        if(null != wechatBinding) {
+            String ifHqUser = "";
+            List<PlatformRole> platformRoleList = platformRoleService.queryUserRoleListForUser();
+            for (PlatformRole pr : platformRoleList) {
+                if (pr.getRolekey().split("_")[0].equals("HQ") || pr.getRolekey().equals("WP_SUPER")) {
+                    ifHqUser = "Y";
+                }
+            }
+            String startDateTimeStr = "";
+            String endDateTimeStr = "";
+            String[] statusArr = request.getParameterValues("status");
+            order.setStatusArr(statusArr);
+            model.addAttribute("statusStr", statusArr[0]);
+            order.setBindid(wechatBinding.getUuid());
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<Order> orderList = orderService.queryOrderList(order, ifHqUser, startDateTimeStr, endDateTimeStr, pageBounds);
+            model.addAttribute("orderList", orderList);
+        }
+        return "admin/wefamily/orderManage";
+    }
+
+    /**
      * 删除订单
      * @param request
      * @return
@@ -814,6 +847,16 @@ public class WeFamilyController extends BaseAdminController {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("deleteFlag", deleteFlag);
         return resultMap;
+    }
+
+    /**
+     *订单添加物流价格
+     */
+    @RequestMapping(value = "/saveFreightForOrder",method= RequestMethod.GET)
+    public String saveFreightForOrder(HttpServletRequest request,Order order,RedirectAttributes redirectAttributes){
+        orderService.updatePartial(order);
+        redirectAttributes.addAttribute("successMessage","保存成功！");
+        return "redirect:orderDetail?orderId=" + order.getUuid();
     }
 
     /**
@@ -1739,7 +1782,7 @@ public class WeFamilyController extends BaseAdminController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "/qualityMgmtManage",method = RequestMethod.POST)
+    @RequestMapping(value = "/qualityMgmtManage")
     public String qualityMgmtManage(@RequestParam(required = false,defaultValue = "1") int page, QualityMgmt qualityMgmt, Model model, HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
@@ -1751,6 +1794,12 @@ public class WeFamilyController extends BaseAdminController {
         String type = request.getParameter("type");
         model.addAttribute("type",type);
         qualityMgmt.setType(type);
+        //首页点击查询未分配任务
+        String unDistributed = request.getParameter("unDistributed");
+        if("Y".equals(unDistributed)){
+            qualityMgmt.setMerchantid(unDistributed);
+            model.addAttribute("unDistributed",unDistributed);
+        }
         if(null != wechatBinding){
             String startDateStr = request.getParameter("startDateStr");
             model.addAttribute("startDateStr", startDateStr);
@@ -1830,6 +1879,10 @@ public class WeFamilyController extends BaseAdminController {
             statusArr = null;
         }
         qualityMgmt.setStatusArr(statusArr);
+        String unDistributed = request.getParameter("unDistributed");
+        if("Y".equals(unDistributed)){
+            qualityMgmt.setMerchantid(unDistributed);
+        }
 
         List<QualityMgmt> qualityMgmtListForExport = qualityMgmtService.queryQualityMgmtListForExport(qualityMgmt,startDateStr,endDateStr);
         beanParams.put("qualityMgmtListForExport", qualityMgmtListForExport);
@@ -2611,6 +2664,7 @@ public class WeFamilyController extends BaseAdminController {
 
     @RequestMapping(value = "/addParticipant", method = RequestMethod.POST)
     public String addParticipant(String uuid,HttpServletRequest request,RedirectAttributes redirectAttributes){
+        String message="";
         String participantname=request.getParameter("participantname");
         redirectAttributes.addAttribute("participantname",participantname);
         String participantphone=request.getParameter("participantphone");
@@ -2645,10 +2699,14 @@ public class WeFamilyController extends BaseAdminController {
                         MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
                         luckyParticipant.setActivityid(uuid);
                         luckyParticipant.setUserid(activityParticipantList.get(i).getUserid());
-                        List<MtxLuckyParticipant> luckList=mtxLuckyParticipantService.queryForList(luckyParticipant);
+                        List<MtxLuckyParticipant> luckList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"");
                         if(luckList.size()>0){
                             luckyParticipant=luckList.get(0);
-                            mtxLuckyParticipantService.delete(luckyParticipant);
+                            if("WIN".equals(luckyParticipant.getStatus())){
+                                message+=luckyParticipant.getName()+"已中奖！";
+                            }else{
+                                mtxLuckyParticipantService.delete(luckyParticipant);
+                            }
                         }
                     }
                 }
@@ -2657,10 +2715,14 @@ public class WeFamilyController extends BaseAdminController {
                     MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
                     luckyParticipant.setActivityid(uuid);
                     luckyParticipant.setUserid(p.getUserid());
-                    List<MtxLuckyParticipant> luckList=mtxLuckyParticipantService.queryForList(luckyParticipant);
+                    List<MtxLuckyParticipant> luckList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"");
                     if(luckList.size()>0){
                         luckyParticipant=luckList.get(0);
-                        mtxLuckyParticipantService.delete(luckyParticipant);
+                        if("WIN".equals(luckyParticipant.getStatus())){
+                            message+=luckyParticipant.getName()+"已中奖！";
+                        }else{
+                            mtxLuckyParticipantService.delete(luckyParticipant);
+                        }
                     }
                 }
             }
@@ -2705,11 +2767,13 @@ public class WeFamilyController extends BaseAdminController {
         mtxActivity.setEveryLuckyCount(Integer.valueOf(everyLuckyCount));
         mtxActivityService.updatePartial(mtxActivity);
         String fromPhone  = request.getParameter("fromPhone");
+        if(StringUtils.isNotBlank(message)){
+            redirectAttributes.addFlashAttribute("message",message);
+        }
         if("Y".equals(fromPhone)){
             redirectAttributes.addFlashAttribute("successMessage","保存成功");
             return "redirect:/admin/wefamily/mtxActivityInfoForPhone?activityId="+uuid;
         }
-
         return "redirect:/admin/wefamily/goMtxActivity?uuid="+uuid+"&successFlg=1";
     }
 
@@ -2783,6 +2847,46 @@ public class WeFamilyController extends BaseAdminController {
         }
         redirectAttributes.addFlashAttribute("successMessage","上传成功！");
         return "redirect:/admin/wefamily/mtxActivityInfoForPhone?activityId="+activityId;
+    }
+
+    /**
+     * 查询首页报修数据
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/qualityMgmtAsy", method = RequestMethod.GET)
+    @ResponseBody
+    public int qualityMgmtAsy(HttpServletRequest request){
+        String merchantId = request.getParameter("merchantId");
+        String status = request.getParameter("status");
+        String type = request.getParameter("type");
+
+        QualityMgmt qualityMgmt = new QualityMgmt();
+        qualityMgmt.setMerchantid(merchantId);
+        qualityMgmt.setStatus(status);
+        qualityMgmt.setType(type);
+        List<QualityMgmt> qualityMgmtList = qualityMgmtService.queryQualityMgmtAsy(qualityMgmt);
+        int count = qualityMgmtList.size();
+        return count;
+    }
+
+    /**
+     * 查询首页订单数据
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/orderAsy", method = RequestMethod.GET)
+    @ResponseBody
+    public int orderAsy(HttpServletRequest request){
+        String merchantId = request.getParameter("merchantId");
+        String status = request.getParameter("status");
+
+        Order order = new Order();
+        order.setMerchantid(merchantId);
+        order.setStatus(status);
+        List<Order> orderList = orderService.queryOrderListForHomeData(order);
+        int count = orderList.size();
+        return count;
     }
 
 }

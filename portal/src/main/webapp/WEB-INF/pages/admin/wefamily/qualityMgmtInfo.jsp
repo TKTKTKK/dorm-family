@@ -281,7 +281,7 @@
         <section class="scrollable padder">
             <div class="row" id="sugInfoDiv" style="overflow-x: hidden;overflow-y: auto;">
                 <header class="panel-heading bg-white text-md b-b">
-                    满田星 /
+                    品质服务 /
                     <c:if test="${type eq 'REPAIR'}">
                         <a href="${ctx}/admin/wefamily/repairManage"><span class="font-bold text-shallowred">报修管理</span></a>
                     </c:if>
@@ -370,13 +370,23 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-3 control-label"><span class="text-danger">*</span>生产日期：</label>
+                                                                        <label class="col-sm-3 control-label">生产日期：</label>
                                                                         <div class="col-sm-9  b-l bg-white">
                                                                             <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
                                                                                    name="productiondt" value="${qualityMgmt.productiondt}" data-maxlength="23" onblur="trimText(this)"
-                                                                                   data-date-format="yyyy-mm-dd" id="productiondt" placeholder="请选择生产日期" data-required="true">
+                                                                                   data-date-format="yyyy-mm-dd" id="productiondt" placeholder="请选择生产日期">
                                                                         </div>
                                                                     </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-3 control-label">报修位置：</label>
+                                                                        <div class="col-sm-9  b-l bg-white">
+                                                                            <input type="text" class="form-control"  name="reportlocation" id="reportlocation"
+                                                                                   value="${qualityMgmt.reportlocation}" onblur="trimText(this)"
+                                                                                   placeholder="请输入报修位置" data-maxlength="32"
+                                                                            >
+                                                                        </div>
+                                                                    </div>
+
                                                                     <div class="form-group">
                                                                         <label class="col-sm-3 control-label"><span class="text-danger">*</span>经销商：</label>
                                                                         <div class="col-sm-9  b-l bg-white">

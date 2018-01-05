@@ -57,4 +57,10 @@
         order by mo.modifyon desc
     </select>
 
+    <select id="selectOrderListForHomeData" resultMap="selectResultMap">
+        select * from tb_mtx_order mo
+        where mo.merchantid = #{order.merchantid}
+        and mo.status = #{order.status}
+    </select>
+
 </mapper>

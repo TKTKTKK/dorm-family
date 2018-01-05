@@ -47,7 +47,7 @@
             <c:set var="showType" value="保养" scope="page"></c:set>
         </c:if>
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred">
+            品质服务 / <span class="font-bold  text-shallowred">
             ${showType}管理</span>
         </header>
         <section class="scrollable padder">
@@ -79,8 +79,8 @@
                                 </div>
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <input type="text" class="form-control" id="snno" name="snno" onblur="trimText(this)" value="${qualityMgmt.snno}"
-                                           <c:if test="${type eq 'REPAIR'}">placeholder="报修编号"</c:if>
-                                           <c:if test="${type eq 'MAINTAIN'}">placeholder="保养编号"</c:if>
+                                           <c:if test="${type eq 'REPAIR'}">placeholder="报修任务单编号"</c:if>
+                                           <c:if test="${type eq 'MAINTAIN'}">placeholder="保养任务单编号"</c:if>
                                     />
                                     <input type="hidden" name="type" value="${type}">
                                 </div>
@@ -279,7 +279,7 @@
         if (compareBeginEndDate('starttime', 'endtime', 'dateError')
                 && $('#searchForm').parsley().isValid()) {
             var searchForm = document.getElementById("searchForm");
-            searchForm.action = "${ctx}/admin/wefamily/exportQualityMgmtList?type=${type}";
+            searchForm.action = "${ctx}/admin/wefamily/exportQualityMgmtList?type=${type}&unDistributed=${unDistributed}";
             searchForm.submit();
             searchForm.action = "${ctx}/admin/wefamily/qualityMgmtManage";
         }

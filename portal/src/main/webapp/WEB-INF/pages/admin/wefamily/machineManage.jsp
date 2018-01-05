@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            产品管理 / <span class="font-bold  text-shallowred"> 机器管理</span>
+            销售服务 / <span class="font-bold  text-shallowred"> 机器管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
@@ -151,7 +151,7 @@
 
     window.onload = function(){
         //显示父菜单
-        showParentMenu('产品中心');
+        showParentMenu('销售服务');
     }
 
     //提交查询

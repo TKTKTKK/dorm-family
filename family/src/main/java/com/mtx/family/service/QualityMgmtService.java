@@ -163,4 +163,8 @@ public class QualityMgmtService extends BaseService<QualityMgmtMapper,QualityMgm
     public List<QualityMgmt> queryQualityMgmtListForExport(QualityMgmt qualityMgmt, String startDateStr, String endDateStr) {
         return this.mapper.selectQualityMgmtListForExport(qualityMgmt,startDateStr,endDateStr);
     }
+
+    public List<QualityMgmt> queryQualityMgmtAsy(QualityMgmt qualityMgmt) {
+        return this.mapper.selectQualityMgmtAsy(qualityMgmt);
+    }
 }
