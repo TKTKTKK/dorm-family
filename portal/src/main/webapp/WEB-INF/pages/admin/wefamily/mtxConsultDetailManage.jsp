@@ -69,7 +69,7 @@
                                         </c:when>
                                         <c:otherwise>
                                             <div class="myquestion rotatey">
-                                                <img src="../../../static/admin/img/qrcode.png" alt="" class="rotatey">
+                                                <img src="../../../static/guest/img/logohead.jpg" alt="" class="rotatey">
                                                 <div class="sanjiaor"></div>
                                                 <div class="enquiry_words rotatey right">
                                                     <p class="time">${fn:substring(mtxConsultDetail.createon, 0, 19)}</p>

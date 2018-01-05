@@ -25,4 +25,8 @@ public interface MachineMapper extends BaseMapper<Machine> {
     List<Machine> selectMachineForEngineNoRepeat(@Param("machine") Machine machine);
 
     PageList<Machine> queryForListWithPagination(@Param("machine")Machine machine, PageBounds pageBounds);
+
+    void batchInsert(@Param("list")List<Machine> machineList);
+
+    void deleteAll();
 }

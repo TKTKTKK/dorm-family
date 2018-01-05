@@ -24,6 +24,16 @@ public class MtxProduct extends BaseEntity {
     private Integer points;
     @Column
     private String type;
+    @Column
+    private String watchornot;
+
+    public String getWatchornot() {
+        return watchornot;
+    }
+
+    public void setWatchornot(String watchornot) {
+        this.watchornot = watchornot;
+    }
 
     public String getType() {
         return type;

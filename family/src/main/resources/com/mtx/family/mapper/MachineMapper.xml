@@ -94,4 +94,15 @@
         order by mm.createon desc;
     </select>
 
+    <select id="batchInsert">
+        insert into tb_mtx_machine(uuid, bindid,machinemodel,machineno,machinename,price,format,instruction,remarks,type,
+         createon,createby,modifyon,modifyby,versionno,delind) VALUES
+        <foreach collection="list"  item="item" separator=",">
+            (#{item.uuid},#{item.bindid},#{item.machinemodel},#{item.machineno},#{item.machinename},#{item.price},#{item.format},#{item.instruction},#{item.remarks},#{item.type},
+            #{item.createon},#{item.createby},#{item.modifyon},#{item.modifyby},#{item.versionno},#{item.delind})
+        </foreach>
+    </select>
+    <select id="deleteAll">
+        delete from tb_mtx_machine where type='PARTS';
+    </select>
 </mapper>

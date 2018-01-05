@@ -21,7 +21,10 @@
             </header>
             <div class="col-sm-12 pos">
                 <div style="margin-bottom: 5px">
-                    <span class="text-success">${successMessage}</span>
+                    <c:if test="${message==null ||message==''}">
+                        <span class="text-success">${successMessage}</span>
+                    </c:if>
+                    <span class="text-danger">${message}</span>
                     <span class="text-danger">${errorMessage}</span>
                 </div>
                 <form class="form-horizontal form-bordered" data-validate="parsley"
@@ -236,6 +239,8 @@
                                         <div class="row">
                                             <div class="col-sm-2">
                                                 <input type="text" placeholder="姓名：" id="participantname" name="participantname" style="width:100%;height: 34px" value="${participantname}"/></div>
+
+                                            <span class="text-danger"  id="participantnameMessage" style="position: absolute;margin-top: 32px;margin-left: -190px"></span>
                                             <div class="col-sm-2">
                                                 <input type="text" placeholder="手机号：" id="participantphone" name="participantphone" style="width:100%;height: 34px" value="${participantphone}"/></div>
                                             <div class="col-sm-2">
@@ -248,11 +253,13 @@
                                                 <input class="form-control" type="text" value="暂无人员" disabled style="margin-top: 20px">
                                             </c:when>
                                             <c:otherwise>
+                                                <div style="margin-top: 20px">
                                                 <label class="checkbox m-n">
-                                                    <input type="checkbox" name="sltAll" id="sltAll" style="width: 20px;height: 20px"
-                                                           <c:if test="${activity.status eq 'APP'||activity.status eq 'DRAWING'}">disabled</c:if>
+                                                    <input type="checkbox" name="sltAll" id="sltAll" style="width: 20px;height: 20px;"
+                                                           <c:if test="${activity.status eq 'APP'||(activity.status eq 'DRAWING' && empty participantname && empty participantphone)}">disabled</c:if>
                                                            onclick="selectAllOrNone('users','sltAll')"><i></i>全选等同于全不选
                                                 </label>
+                                                </div>
                                                 <br/>
                                                 <c:forEach items="${participantList}" var="participant">
                                                     <label class="checkbox m-n col-sm-3">
@@ -261,7 +268,7 @@
                                                         <c:forEach items="${luckyList}" var="lucky">
                                                                <c:if test="${lucky.userid eq participant.userid}">checked</c:if>
                                                         </c:forEach>
-                                                               <c:if test="${activity.status eq 'APP'||activity.status eq 'DRAWING'}">disabled</c:if>
+                                                               <c:if test="${activity.status eq 'APP'||(activity.status eq 'DRAWING' && empty participantname && empty participantphone)}">disabled</c:if>
                                                         ><i></i><img src="${participant.headimg}" style="border-radius:25px;" width="30px" height="30px" alt=""><span style="font-size: 1.8rem">${participant.name}-${participant.contactno}</span>
                                                     </label>
                                                 </c:forEach>
@@ -461,10 +468,17 @@
     }
 
     function searchUser(){
+        participantnameMessage
+        var participantnameMessage=document.getElementById("participantnameMessage");
+        participantnameMessage.innerHTML="";
         var uuid='${activity.uuid}';
         var participantname=document.getElementById("participantname").value;
         var participantphone=document.getElementById("participantphone").value;
-        window.location.href="${ctx}/admin/wefamily/goMtxActivity?uuid="+uuid+"&participantname="+participantname+"&participantphone="+participantphone;
+        if((participantname==null||participantname=='')&&(participantphone==null||participantphone=='')){
+            participantnameMessage.innerHTML="姓名手机号至少填一个！";
+        }else{
+            window.location.href="${ctx}/admin/wefamily/goMtxActivity?uuid="+uuid+"&participantname="+participantname+"&participantphone="+participantphone;
+        }
     }
 
     function submitParticipant(){

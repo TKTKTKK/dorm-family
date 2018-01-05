@@ -21,13 +21,13 @@ import java.util.List;
 public class MtxMemberService {
 
     @Autowired
-    private MachineService machineService;
-    @Autowired
     private MtxPointService mtxPointService;
     @Autowired
     private WpUserService wpUserService;
     @Autowired
     private MtxUserMachineService mtxUserMachineService;
+    @Autowired
+    private MtxProductService mtxProductService;
 
     public void insertMemberAndPoint(WpUser wpUser, WpUser wpUserTemp,Machine machine) {
         MtxPoint point = new MtxPoint();
@@ -49,8 +49,11 @@ public class MtxMemberService {
         List<MtxUserMachine> userMachineTempList=mtxUserMachineService.queryForList(userMachineTemp);
         if(userMachineTempList.size()<=0){
             int p=0;
-            if(machine.getPrice()!=null){
-                p = machine.getPrice().intValue();
+            MtxProduct product=new MtxProduct();
+            product.setModel(machine.getMachinemodel());
+            product=mtxProductService.queryForObjectByUniqueKey(product);
+            if(null!=product && product.getPoints()!=null){
+                p=product.getPoints();
             }
             wpUserTemp.setPoints(p);
             point.setPoints(p);

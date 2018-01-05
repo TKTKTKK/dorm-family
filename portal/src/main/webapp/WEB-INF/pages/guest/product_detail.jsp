@@ -36,8 +36,11 @@
     <div class="goods_parm">
         <img src="${mtxProduct.img}" alt="">
         <ul class="parm_list">
-            <li><span>产品型式：</span><span>${mtxProduct.name}</span></li>
+            <li><span>产品名称：</span><span>${mtxProduct.name}</span></li>
             <li><span>产品型号：</span><span>${mtxProduct.model}</span></li>
+            <c:if test="${mtxProduct.watchornot eq 'Y'}">
+            <li><span>指导价格：</span><span>${mtxProduct.price}</span></li>
+            </c:if>
             <!-- 				<li><span>工作行数：</span><span>6</span></li>
                             <li><span>标准功率：</span><span>3.3KW3600n/min</span></li> -->
         </ul>

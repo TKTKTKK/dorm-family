@@ -39,15 +39,8 @@
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 状态：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <select class="form-control" id="status" name="status">
-                                            <c:set var="typeList" value="${web:queryCommonCodeList('DEAL_STATUS')}"></c:set>
-                                            <c:forEach items="${typeList}" var="typeCode">
-                                                <c:if test="${mtxReserve.status == typeCode.code}">
-                                                    <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
-                                                </c:if>
-                                                <c:if test="${mtxReserve.status != typeCode.code}">
-                                                    <option value="${typeCode.code}">${typeCode.codevalue}</option>
-                                                </c:if>
-                                            </c:forEach>
+                                            <option value="CHANGE" <c:if test="${mtxReserve.status == 'CHANGE'}">selected</c:if>>未联系</option>
+                                            <option value="C_DEAL" <c:if test="${mtxReserve.status == 'C_DEAL'}">selected</c:if>>已联系</option>
                                         </select>
                                     </div>
                                 </div>
@@ -73,77 +66,68 @@
                             <span class="text-success">${successMessage}</span>
                             <span class="text-danger">${errorMessage}</span>
                         </div>
-                            <div class="table-responsive" >
-                                <table class="table table-striped b-t b-light  b-l b-r b-b">
-                                    <thead>
+                        <div class="table-responsive" >
+                            <table class="table table-striped b-t b-light  b-l b-r b-b">
+                                <thead>
+                                <tr>
+                                    <th width="10%">姓名</th>
+                                    <th width="10%">电话</th>
+                                    <th width="10%">所在地区</th>
+                                    <th width="10%">详细地址</th>
+                                    <th width="10%">详细信息</th>
+                                    <th width="10%">经销商</th>
+                                    <th width="10%">机型</th>
+                                    <th width="10%">状态</th>
+                                    <th width="10%">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach items="${mtxReserveList}" var="mtxReserve">
                                     <tr>
-                                        <th width="10%">姓名</th>
-                                        <th width="10%">电话</th>
-                                        <c:if test="${mtxReserve.status eq 'CHANGE'||mtxReserve.status eq 'C_DEAL'}">
-                                            <th width="10%">所在地区</th>
-                                            <th width="10%">详细地址</th>
-                                            <th width="10%">详细信息</th>
-                                            <th width="10%">经销商</th>
-                                        </c:if>
-                                        <c:if test="${mtxReserve.status eq 'N_DEAL'}">
-                                        <th width="20%">所在地区</th>
-                                        <th width="15%">详细地址</th>
-                                        <th width="15%">详细信息</th>
-                                        </c:if>
-                                        <th width="10%">机型</th>
-                                        <th width="10%">状态</th>
-                                        <th width="10%">操作</th>
+                                        <td>
+                                                ${mtxReserve.name}
+                                        </td>
+                                        <td>
+                                                ${mtxReserve.phone}
+                                        </td>
+                                        <td>
+                                                ${mtxReserve.province}${mtxReserve.city}${mtxReserve.district}
+                                        </td>
+                                        <td>
+                                                ${mtxReserve.address}
+                                        </td>
+
+                                        <td>
+                                                ${mtxReserve.detail}
+                                        </td>
+                                        <td>
+                                                ${mtxReserve.merchantname}
+                                        </td>
+                                        <td>
+                                                ${mtxReserve.model}
+                                        </td>
+                                        <td>
+                                            <c:if test="${mtxReserve.status == 'CHANGE'}">未联系</c:if>
+                                            <c:if test="${mtxReserve.status == 'C_DEAL'}">已联系</c:if>
+                                        </td>
+
+                                        <td>
+                                            <a href="${ctx}/admin/wefamily/goReserveMerchant?uuid=${mtxReserve.uuid}"
+                                               class="btn  btn-infonew btn-sm" style="color: white">
+                                                <c:if test="${mtxReserve.status eq 'CHANGE'}">
+                                                    处理
+                                                </c:if>
+                                                <c:if test="${mtxReserve.status eq 'C_DEAL'}">
+                                                    详情
+                                                </c:if>
+                                            </a>
+                                        </td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                    <c:forEach items="${mtxReserveList}" var="mtxReserve">
-                                        <tr>
-                                            <td>
-                                                    ${mtxReserve.name}
-                                            </td>
-                                            <td>
-                                                    ${mtxReserve.phone}
-                                            </td>
-                                            <td>
-                                                    ${mtxReserve.province}${mtxReserve.city}${mtxReserve.district}
-                                            </td>
-                                            <td>
-                                                    ${mtxReserve.address}
-                                            </td>
-
-                                            <td>
-                                                    ${mtxReserve.detail}
-                                            </td>
-                                            <c:if test="${mtxReserve.status eq 'CHANGE'||mtxReserve.status eq 'C_DEAL'}">
-                                                <td>
-                                                        ${mtxReserve.merchantname}
-                                                </td>
-                                            </c:if>
-                                            <td>
-                                                    ${mtxReserve.model}
-                                            </td>
-                                            <td>
-                                                    ${web:getCodeDesc("DEAL_STATUS", mtxReserve.status)}
-                                            </td>
-
-                                            <td>
-                                                <a href="${ctx}/admin/wefamily/goMtxReserve?uuid=${mtxReserve.uuid}"
-                                                   class="btn  btn-infonew btn-sm" style="color: white">
-                                                    <c:if test="${mtxReserve.status eq 'N_DEAL'}">
-                                                        处理
-                                                    </c:if>
-                                                    <c:if test="${mtxReserve.status eq 'C_DEAL'||mtxReserve.status eq 'CHANGE'}">
-                                                        详情
-                                                    </c:if>
-                                                </a>
-                                            </td>
-
-                                        </tr>
-                                    </c:forEach>
-                                    </tbody>
-                                </table>
-                                <web:pagination pageList="${mtxReserveList}" postParam="true"/>
-                            </div>
+                                </c:forEach>
+                                </tbody>
+                            </table>
+                            <web:pagination pageList="${mtxReserveList}" postParam="true"/>
+                        </div>
                     </c:if>
                     <c:if test="${empty wechatBinding}">
                         <span>您还没有添加公众号，请先去</span>
@@ -170,7 +154,7 @@
         searchForm.submit();
     }
 
-     function resubmitSearch(page){
+    function resubmitSearch(page){
         var searchForm = document.getElementById("searchForm");
         searchForm.action = "${ctx}/admin/wefamily/mtxReserveManage?page="+page;
         searchForm.submit();

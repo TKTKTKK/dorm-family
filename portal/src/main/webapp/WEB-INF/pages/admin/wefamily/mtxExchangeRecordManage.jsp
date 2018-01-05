@@ -39,7 +39,7 @@
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 状态：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <select class="form-control" id="status" name="status">
-                                            <c:set var="typeList" value="${web:queryCommonCodeList('DEAL_STATUS')}"></c:set>
+                                            <c:set var="typeList" value="${web:queryCommonCodeList('CONFIRM_STATUS')}"></c:set>
                                             <c:forEach items="${typeList}" var="typeCode">
                                                 <c:if test="${mtxExchangeRecord.status == typeCode.code}">
                                                     <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
@@ -106,7 +106,7 @@
                                                     ${mtxExchangeRecord.points}
                                             </td>
                                             <td>
-                                                ${web:getCodeDesc("DEAL_STATUS", mtxExchangeRecord.status)}
+                                                ${web:getCodeDesc("CONFIRM_STATUS", mtxExchangeRecord.status)}
                                             </td>
                                             <td>
                                                     ${fn:substring(mtxExchangeRecord.createon, 0, 19)}
@@ -116,7 +116,7 @@
                                                     <a  class="btn btn-sm btn-success a-noline" data-toggle="modal"
                                                         data-target=".bs-example-modal-lg-plan-deal"
                                                         onclick="getUuid('${mtxExchangeRecord.uuid}')"
-                                                    >确认
+                                                    >处理
                                                     </a>
                                                 </td>
                                             </c:if>

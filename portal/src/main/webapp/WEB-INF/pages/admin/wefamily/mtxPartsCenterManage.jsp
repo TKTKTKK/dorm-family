@@ -64,6 +64,21 @@
                                 <span class="text-success">${successMessage}</span>
                                 <span class="text-success">${successFlag}</span>
                             </div>
+                            <div class="row col-sm-12">
+                                <div style="margin-bottom: 5px">
+                                    <div class="text-success">${successMessages}</div>
+                                    <div class="text-danger">${errorMessage}</div>
+                                    <div class="text-danger">${fileEmptyMsg}</div>
+                                    <div class="text-danger">${modelErrorMsg}</div>
+                                    <div class="text-danger">${machinenoErrorMsg}</div>
+                                    <div class="text-danger">${nameErrorMsg}</div>
+                                    <div class="text-danger">${priceErrorMsg}</div>
+                                    <div class="text-danger">${formatErrorMsg}</div>
+                                    <div class="text-danger">${instructionErrorMsg}</div>
+                                    <div class="text-danger">${remarksErrorMsg}</div>
+                                    <div class="text-danger">${uniqueErrorMsg}</div>
+                                </div>
+                            </div>
                             <div class="table-responsive" >
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
@@ -71,7 +86,7 @@
                                         <th width="15%">适用机型</th>
                                         <th width="15%">物料编码</th>
                                         <th width="15%">配件名称</th>
-                                        <th width="15%">产地</th>
+                                        <th width="15%">说明书版本</th>
                                         <th width="20%">备注</th>
                                         <th width="20%">操作</th>
                                     </tr>
@@ -89,7 +104,7 @@
                                                     ${machine.machinename}
                                             </td>
                                             <td>
-                                                    ${machine.address}
+                                                    ${machine.instruction}
                                             </td>
                                             <td>
                                                     ${machine.remarks}
@@ -105,14 +120,60 @@
                                     </c:forEach>
                                     </tbody>
                                 </table>
+                                <c:if test="${fn:length(machineList)>0}">
                                 <web:pagination pageList="${machineList}" postParam="true"/>
+                                </c:if>
                                 <button class="btn btn-sm btn-submit" onclick="showMtxPartsCenterInfo()"> 添加</button>
+                                <button class="btn btn-sm btn-submit" onclick="downloadMachinePartTpl()">下载导入模板</button>
+                                <button class="btn btn-sm btn-default"
+                                        data-toggle="modal" data-target=".bs-example-modal-lg-import-machine">导入
+                                </button>
                             </div>
                     </c:if>
                     <c:if test="${empty wechatBinding}">
                         <span>您还没有添加公众号，请先去</span>
                         <a href="${ctx}/admin/account/search" class="text-info">添加公众号</a>
                     </c:if>
+                </div>
+                <div class="modal fade bs-example-modal-lg-import-machine" tabindex="-1" role="dialog"
+                     aria-labelledby="myLargeModalLabelForImport" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" style="margin-top: 15%">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="modelCloseBtnForImport"><span
+                                        aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myLargeModalLabelForImport">导入</h4>
+                            </div>
+                            <form class="form-horizontal" data-validate="parsley" action="${ctx}/admin/wefamily/importPartsInfo"
+                                  method="POST"
+                                  enctype="multipart/form-data" id="frms"
+                                  onsubmit="return checkFileTypes()">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group" style="border:0">
+                                                <label class="col-sm-3 control-label" style="padding-top: 0">文件：</label>
+
+                                                <div class="col-sm-9">
+                                                    <input type="file" name="fileUrl" id="fileIds">
+
+                                                    <div id="picUrlErrors" class="text-danger"></div>
+                                                    <input type="text" class="hidden" value="${querytype}" name="querytype">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer text-center" style="text-align: center">
+                                    <button type="submit" class="btn btn-submit btn-s-md">提 交</button>
+                                </div>
+
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
                 </div>
             </div>
         </section>
@@ -133,14 +194,17 @@
         searchForm.action = "${ctx}/admin/wefamily/mtxPartsCenterManage?page="+page;
         searchForm.submit();
     }
+
     function searchMtxPartsCenter(){
         var searchForm = document.getElementById("searchForm");
         searchForm.action = "${ctx}/admin/wefamily/mtxPartsCenterManage";
         searchForm.submit();
     }
+
     function showMtxPartsCenterInfo(){
         window.location.href = "<%=request.getContextPath()%>/admin/wefamily/goMtxPartsCenter";
     }
+
     function deleteMtxPartsCenter(uuid){
         qikoo.dialog.confirm('确定要删除吗？',function(){
             //确定删除
@@ -155,6 +219,31 @@
         },function(){
             //取消删除
         });
+    }
+
+    function downloadMachinePartTpl(){
+        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/downloadMachinePartTpl";
+    }
+
+    function checkFileTypes() {
+        var pictureError = document.getElementById('picUrlErrors');
+        pictureError.innerHTML = '';
+
+        var fl = document.getElementById('fileIds').value;
+        if (fl.length <= 0) {
+            pictureError.innerHTML = "该项为必填项";
+            return false;
+        }
+        var type = fl.substr(fl.lastIndexOf('.') + 1);
+        //格式：xls，xlsx。
+        if (type != '' && type != 'xls') {
+            pictureError.innerHTML = "文件格式不合法。（格式只允许：xls）";
+            return false;
+        }
+
+        //关闭模态框
+        document.getElementById('modelCloseBtnForImport').click();
+        return true;
     }
 </script>
 </body>

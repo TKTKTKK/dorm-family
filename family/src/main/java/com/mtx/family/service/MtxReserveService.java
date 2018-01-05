@@ -22,4 +22,12 @@ public class MtxReserveService extends BaseService<MtxReserveMapper,MtxReserve> 
     public PageList<MtxReserve> queryForListWithPagination(MtxReserve obj, PageBounds pageBounds) {
         return mapper.selectMtxReserveList(obj,pageBounds);
     }
+
+    public PageList<MtxReserve> queryMerchantReserve(MtxReserve mtxReserve, PageBounds pageBounds,String bindid) {
+        return mapper.queryMerchantReserve(mtxReserve,pageBounds,bindid);
+    }
+
+    public MtxReserve queryByPK(MtxReserve mtxReserve) {
+        return mapper.queryByPK(mtxReserve);
+    }
 }

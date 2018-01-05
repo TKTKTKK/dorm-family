@@ -28,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 import java.util.*;
 import java.util.HashMap;
 
@@ -89,6 +90,8 @@ public class WeFamilyController extends BaseAdminController {
     private MtxActivityParticipantService mtxActivityParticipantService;
     @Autowired
     private MtxLuckyParticipantService mtxLuckyParticipantService;
+    @Autowired
+    private PartsImportService partsImportService;
 
     /**
      * 经销商管理界面
@@ -299,11 +302,26 @@ public class WeFamilyController extends BaseAdminController {
                         p  = mtxProduct.getPrice().intValue();
                         mtxProduct.setPoints(p);
                     }
+                    if(StringUtils.isNotBlank(mtxProduct.getWatchornot())){
+                        mtxProduct.setWatchornot("Y");
+                    }else{
+                        mtxProduct.setWatchornot("N");
+                    }
                     mxtProductService.insert(mtxProduct);
                     model.addAttribute("mtxProduct", mtxProduct);
                     model.addAttribute("successMessage", "保存成功！");
                 } else {
                     try {
+                        if(StringUtils.isNotBlank(mtxProduct.getWatchornot())){
+                            mtxProduct.setWatchornot("Y");
+                        }else{
+                            mtxProduct.setWatchornot("N");
+                        }
+                        int p=0;
+                        if(mtxProduct.getPrice()!=null){
+                            p  = mtxProduct.getPrice().intValue();
+                            mtxProduct.setPoints(p);
+                        }
                         mxtProductService.updatePartial(mtxProduct);
                         MtxProduct mtxProductTemp = mxtProductService.queryForObjectByPk(mtxProduct);
                         model.addAttribute("mtxProduct", mtxProductTemp);
@@ -939,37 +957,93 @@ public class WeFamilyController extends BaseAdminController {
     public String mtxReserveManage(@RequestParam(required = false, defaultValue = "1") int page, MtxReserve mtxReserve, Model model,HttpServletRequest request) {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
-        String flag=request.getParameter("flag");
-        if (null != wechatBinding) {
-            if(StringUtils.isBlank(mtxReserve.getStatus())){
-                if(StringUtils.isNotBlank(flag)&&"1".equals(flag)){
-                    mtxReserve.setStatus("C_DEAL");
-                }else{
-                    mtxReserve.setStatus("N_DEAL");
+        Boolean identify=false;
+        List<PlatformRole> platformRoleList = platformRoleService.queryUserRoleListForUser();
+        if(platformRoleList.size()>0){
+            for(int i=0;i<platformRoleList.size();i++){
+                if("WP_SUPER".equals(platformRoleList.get(i).getRolekey())){
+                    identify=true;
+                    break;
                 }
             }
-            model.addAttribute("status",mtxReserve.getStatus());
+        }
+        if(identify){
+            Merchant merchant=new Merchant();
+            List<Merchant> merchantList=merchantService.queryForList(merchant);
+            model.addAttribute("merchantList",merchantList);
+            if(StringUtils.isBlank(mtxReserve.getStatus())){
+                mtxReserve.setStatus("N_DEAL");
+            }
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
             PageList<MtxReserve> mtxReserveList = mtxReserveService.queryForListWithPagination(mtxReserve, pageBounds);
             model.addAttribute("mtxReserveList", mtxReserveList);
             model.addAttribute("mtxReserve",mtxReserve);
+
+            return "admin/wefamily/mtxReserveManage";
+        }else{
+            Merchant merchant=new Merchant();
+            merchant.setBindid(UserUtils.getUserBindId());
+            List<Merchant> merchantList=merchantService.queryForList(merchant);
+            model.addAttribute("merchantList",merchantList);
+            if(StringUtils.isBlank(mtxReserve.getStatus())){
+                mtxReserve.setStatus("CHANGE");
+            }
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<MtxReserve> mtxReserveList = mtxReserveService.queryMerchantReserve(mtxReserve, pageBounds,UserUtils.getUserBindId());
+            model.addAttribute("mtxReserveList", mtxReserveList);
+            model.addAttribute("mtxReserve",mtxReserve);
+            return "admin/wefamily/mtxReserveMerchant";
         }
-        return "admin/wefamily/mtxReserveManage";
+
     }
 
-    @RequestMapping(value = "/updateReserve",method = RequestMethod.POST)
-    public String updateReserve(MtxReserve mtxReserve, RedirectAttributes redirectAttributes,String flag) {
-        String remarks=mtxReserve.getRemarks();
-        mtxReserve=mtxReserveService.queryForObjectByPk(mtxReserve);
-        if(mtxReserve!=null){
-            mtxReserve.setRemarks(remarks);
-            mtxReserve.setStatus("C_DEAL");
+    @RequestMapping(value = "/goMtxReserve",method = RequestMethod.GET)
+    public String goMtxReserve(MtxReserve mtxReserve,Model model){
+        Merchant merchant=new Merchant();
+        List<Merchant> merchantList=merchantService.queryForList(merchant);
+        model.addAttribute("merchantList",merchantList);
+        mtxReserve=mtxReserveService.queryByPK(mtxReserve);
+        model.addAttribute("mtxReserve",mtxReserve);
+        return "admin/wefamily/mtxReserveInfo";
+    }
+
+    @RequestMapping(value = "/goReserveMerchant",method = RequestMethod.GET)
+    public String goReserveMerchant(MtxReserve mtxReserve,Model model){
+        Merchant merchant=new Merchant();
+        merchant.setBindid(UserUtils.getUserBindId());
+        List<Merchant> merchantList=merchantService.queryForList(merchant);
+        model.addAttribute("merchantList",merchantList);
+        mtxReserve=mtxReserveService.queryByPK(mtxReserve);
+        model.addAttribute("mtxReserve",mtxReserve);
+        return "admin/wefamily/mtxReserveMerchantInfo";
+    }
+
+    @RequestMapping(value = "/updateMtxReserve",method = RequestMethod.POST)
+    public String updateMtxReserve(MtxReserve mtxReserve, RedirectAttributes redirectAttributes, Model model,String flag){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        Merchant merchant=new Merchant();
+        List<Merchant> merchantList=merchantService.queryForList(merchant);
+        model.addAttribute("merchantList",merchantList);
+        try {
             mtxReserveService.updatePartial(mtxReserve);
-            redirectAttributes.addFlashAttribute("successMessage","确认成功！");
-        }else{
-            redirectAttributes.addFlashAttribute("errorMessage","确认失败！");
+            mtxReserve=mtxReserveService.queryByPK(mtxReserve);
+            model.addAttribute("mtxReserve",mtxReserve);
+        } catch (ServiceException e) {
+            logger.error(e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("errorMessage", "数据已修改，请重试！");
+            if(StringUtils.isNotBlank(flag)){
+                return "redirect:/admin/wefamily/goReserveMerchant?uuid=" + mtxReserve.getUuid();
+            }else{
+                return "redirect:/admin/wefamily/goMtxReserve?uuid=" + mtxReserve.getUuid();
+            }
         }
-        return "redirect:/admin/wefamily/mtxReserveManage?flag="+flag;
+        model.addAttribute("successMessage", "保存成功！");
+        if(StringUtils.isNotBlank(flag)){
+            return "admin/wefamily/mtxReserveMerchantInfo";
+        }else{
+            return "admin/wefamily/mtxReserveInfo";
+        }
     }
 
     /**
@@ -1149,6 +1223,7 @@ public class WeFamilyController extends BaseAdminController {
         }
         return "admin/wefamily/mtxGoodInfo";
     }
+
     @RequestMapping(value = "/deleteMtxGood", method = RequestMethod.POST)
     @ResponseBody
     public Map deleteMtxGood(MtxProduct mtxProduct){
@@ -2611,6 +2686,7 @@ public class WeFamilyController extends BaseAdminController {
 
     @RequestMapping(value = "/addParticipant", method = RequestMethod.POST)
     public String addParticipant(String uuid,HttpServletRequest request,RedirectAttributes redirectAttributes){
+        String message="";
         String participantname=request.getParameter("participantname");
         redirectAttributes.addAttribute("participantname",participantname);
         String participantphone=request.getParameter("participantphone");
@@ -2645,10 +2721,14 @@ public class WeFamilyController extends BaseAdminController {
                         MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
                         luckyParticipant.setActivityid(uuid);
                         luckyParticipant.setUserid(activityParticipantList.get(i).getUserid());
-                        List<MtxLuckyParticipant> luckList=mtxLuckyParticipantService.queryForList(luckyParticipant);
+                        List<MtxLuckyParticipant> luckList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"");
                         if(luckList.size()>0){
                             luckyParticipant=luckList.get(0);
-                            mtxLuckyParticipantService.delete(luckyParticipant);
+                            if("WIN".equals(luckyParticipant.getStatus())){
+                                message+=luckyParticipant.getName()+"已中奖！";
+                            }else{
+                                mtxLuckyParticipantService.delete(luckyParticipant);
+                            }
                         }
                     }
                 }
@@ -2657,10 +2737,14 @@ public class WeFamilyController extends BaseAdminController {
                     MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
                     luckyParticipant.setActivityid(uuid);
                     luckyParticipant.setUserid(p.getUserid());
-                    List<MtxLuckyParticipant> luckList=mtxLuckyParticipantService.queryForList(luckyParticipant);
+                    List<MtxLuckyParticipant> luckList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"");
                     if(luckList.size()>0){
                         luckyParticipant=luckList.get(0);
-                        mtxLuckyParticipantService.delete(luckyParticipant);
+                        if("WIN".equals(luckyParticipant.getStatus())){
+                            message+=luckyParticipant.getName()+"已中奖！";
+                        }else{
+                            mtxLuckyParticipantService.delete(luckyParticipant);
+                        }
                     }
                 }
             }
@@ -2705,11 +2789,13 @@ public class WeFamilyController extends BaseAdminController {
         mtxActivity.setEveryLuckyCount(Integer.valueOf(everyLuckyCount));
         mtxActivityService.updatePartial(mtxActivity);
         String fromPhone  = request.getParameter("fromPhone");
+        if(StringUtils.isNotBlank(message)){
+            redirectAttributes.addFlashAttribute("message",message);
+        }
         if("Y".equals(fromPhone)){
             redirectAttributes.addFlashAttribute("successMessage","保存成功");
             return "redirect:/admin/wefamily/mtxActivityInfoForPhone?activityId="+uuid;
         }
-
         return "redirect:/admin/wefamily/goMtxActivity?uuid="+uuid+"&successFlg=1";
     }
 
@@ -2785,4 +2871,53 @@ public class WeFamilyController extends BaseAdminController {
         return "redirect:/admin/wefamily/mtxActivityInfoForPhone?activityId="+activityId;
     }
 
+    @RequestMapping(value = "/downloadMachinePartTpl")
+    public void downloadMachinePartTpl(HttpServletRequest request, HttpServletResponse response){
+        Map<String,List> beanParams = new HashMap<String, List>();
+        Machine machine=new Machine();
+        List<Machine> machineList = new ArrayList<>();
+        machineList.add(machine);
+        beanParams.put("machine", machineList);
+        //导出
+        ExportUtil.exportExcel(beanParams, "/tpl/partsTpl.xls", response);
+    }
+
+    @RequestMapping(value = "/importPartsInfo", method = RequestMethod.POST)
+    public String importPartsInfo(@RequestParam(value = "fileUrl", required = false)MultipartFile multipartFile,
+                                     Model model,RedirectAttributes redirectAttributes){
+        Map<String, Object> resultMap = new HashMap<>();
+        if(!multipartFile.isEmpty()){
+            try {
+                InputStream inputStream = multipartFile.getInputStream();
+                partsImportService.importPartsData(inputStream,resultMap);
+                if(null != resultMap.get("fileEmptyMsg")||null!=resultMap.get("modelErrorMsg")
+                        || null != resultMap.get("machinenoErrorMsg") || null != resultMap.get("uniqueErrorMsg")
+                        || null != resultMap.get("formatErrorMsg") || null != resultMap.get("nameErrorMsg")
+                        || null != resultMap.get("priceErrorMsg") || null != resultMap.get("instructionErrorMsg")
+                        || null != resultMap.get("remarksErrorMsg")){
+                    model.addAttribute("fileEmptyMsg", resultMap.get("fileEmptyMsg"));
+                    model.addAttribute("modelErrorMsg", resultMap.get("modelErrorMsg"));
+                    model.addAttribute("machinenoErrorMsg", resultMap.get("machinenoErrorMsg"));
+                    model.addAttribute("formatErrorMsg", resultMap.get("formatErrorMsg"));
+                    model.addAttribute("nameErrorMsg", resultMap.get("nameErrorMsg"));
+                    model.addAttribute("instructionErrorMsg", resultMap.get("instructionErrorMsg"));
+                    model.addAttribute("uniqueErrorMsg", resultMap.get("uniqueErrorMsg"));
+                    model.addAttribute("priceErrorMsg",resultMap.get("priceErrorMsg"));
+                    model.addAttribute("remarksErrorMsg",resultMap.get("remarksErrorMsg"));
+                    WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+                    model.addAttribute("wechatBinding", wechatBinding);
+                    return "admin/wefamily/mtxPartsCenterManage";
+                }else{
+                    redirectAttributes.addFlashAttribute("successMessages", "导入成功");
+                }
+            } catch (Exception e) {
+                model.addAttribute("errorMessage", "导入失败");
+                model.addAttribute("uniqueErrorMsg", resultMap.get("uniqueErrorMsg"));
+                WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+                model.addAttribute("wechatBinding", wechatBinding);
+                return "admin/wefamily/mtxPartsCenterManage";
+            }
+        }
+        return "redirect:/admin/wefamily/mtxPartsCenterManage";
+    }
 }

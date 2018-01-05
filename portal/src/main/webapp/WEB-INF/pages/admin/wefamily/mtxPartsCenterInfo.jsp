@@ -123,18 +123,18 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>产地：</label>
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>说明书版本：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <input type="text" class="form-control" data-required="true" name="address" id="address"
-                                           data-maxlength="256"
+                                    <input type="text" class="form-control" data-required="true" name="instruction" id="instruction"
+                                           data-maxlength="64"
                                            onblur="trimText(this)"
-                                           value="${machine.address}">
+                                           value="${machine.instruction}">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>备注：</label>
+                                <label class="col-sm-3  control-label"><span class="text-danger"></span>备注：</label>
                                 <div class="col-sm-9 b-l bg-white">
-                                    <textarea type="text" class="form-control" data-required="true" name="remarks" id="remarks"
+                                    <textarea type="text" class="form-control" name="remarks" id="remarks"
                                            data-maxlength="256"
                                            onblur="trimText(this)"
                                           >${machine.remarks}</textarea>

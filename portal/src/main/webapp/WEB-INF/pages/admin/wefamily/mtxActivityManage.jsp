@@ -100,16 +100,16 @@
                                 <span class="text-success">${successFlag}</span>
                             </div>
                             <div class="table-responsive" >
-                                <table class="table table-striped b-t b-light  b-l b-r b-b">
+                                <table class="table table-striped b-t b-light  b-l b-r b-b ">
                                     <thead>
                                     <tr>
-                                        <th width="15%">经销商</th>
-                                        <th width="15%">活动名称</th>
-                                        <th width="15%">活动地点</th>
-                                        <th width="15%">开始时间</th>
-                                        <th width="15%">结束时间</th>
-                                        <th width="10%">状态</th>
-                                        <th width="15%">操作</th>
+                                        <th width="14%">经销商</th>
+                                        <th width="14%">活动名称</th>
+                                        <th width="14%">活动地点</th>
+                                        <th width="14%">开始时间</th>
+                                        <th width="14%">结束时间</th>
+                                        <th width="9%">状态</th>
+                                        <th width="21%">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -176,6 +176,9 @@
                                                         </c:if>
                                                     </c:otherwise>
                                                 </c:choose>
+                                                <a href="${ctx}/guest/goBuyUser?uuid=${activity.uuid}" class="btn  btn-infonew btn-sm" style="color: white">
+                                                    </i>购机用户
+                                                </a>
                                             </td>
                                         </tr>
                                     </c:forEach>

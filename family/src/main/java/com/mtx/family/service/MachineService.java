@@ -5,10 +5,7 @@ import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.base.BaseService;
 import com.mtx.common.utils.StringUtils;
 import com.mtx.common.utils.UserUtils;
-import com.mtx.family.entity.Logistics;
-import com.mtx.family.entity.Machine;
-import com.mtx.family.entity.MtxPoint;
-import com.mtx.family.entity.MtxUserMachine;
+import com.mtx.family.entity.*;
 import com.mtx.family.mapper.LogisticsMapper;
 import com.mtx.family.mapper.MachineMapper;
 import com.mtx.wechat.entity.WpUser;
@@ -34,6 +31,8 @@ public class MachineService extends BaseService<MachineMapper,Machine> {
     private MtxUserMachineService mtxUserMachineService;
     @Autowired
     private WpUserService wpUserService;
+    @Autowired
+    private MtxProductService mtxProductService;
 
     public List<Machine> queryMachineForNoRepeat(Machine machine) {
         return this.mapper.selectMachineForMachineNoRepeat(machine);
@@ -56,7 +55,7 @@ public class MachineService extends BaseService<MachineMapper,Machine> {
         return this.mapper.queryForListWithPagination(machine,pageBounds);
     }
 
-    public String addUserMachine(Machine machine, String userid) {
+    public String addUserMachine(Machine machine, String userid,String type) {
         String message="";
         if(StringUtils.isNotBlank(userid)&&StringUtils.isNotBlank(machine.getMachineno())){
             Machine machineTemp=new Machine();
@@ -78,20 +77,28 @@ public class MachineService extends BaseService<MachineMapper,Machine> {
                         MtxPoint point =new MtxPoint();
                         point.setUserid(userid);
                         point.setName(machine.getMachinename());
-                        int p=0;
-                        double pp=machine.getPrice();
-                        p=(int)pp;
-                        point.setPoints(p);
-                        WpUser user=new WpUser();
-                        user.setUuid(userid);
-                        user=wpUserService.queryForObjectByPk(user);
-                        if(user!=null){
-                            user.setPoints(user.getPoints()+p);
+                        MtxProduct product=new MtxProduct();
+                        product.setModel(machine.getMachinemodel());
+                        product=mtxProductService.queryForObjectByUniqueKey(product);
+                        if(product!=null){
+                            point.setPoints(product.getPoints());
+                            WpUser user=new WpUser();
+                            user.setUuid(userid);
+                            user=wpUserService.queryForObjectByPk(user);
+                            if(user!=null){
+                                user.setPoints(user.getPoints()+product.getPoints());
+                            }
+                            wpUserService.updatePartial(user);
+                        }else{
+                            point.setPoints(0);
                         }
-                        wpUserService.updatePartial(user);
                         mtxPointService.insert(point);
                     }
-                    mtxUserMachine.setType("PARTS");
+                    if("PARTS".equals(type)){
+                        mtxUserMachine.setType("PARTS");
+                    }else{
+                        mtxUserMachine.setType("MACHINE");
+                    }
                     mtxUserMachineService.insert(mtxUserMachine);
                     message="添加成功！";
                     return message;
@@ -100,5 +107,13 @@ public class MachineService extends BaseService<MachineMapper,Machine> {
         }
         message="添加失败！";
         return message;
+    }
+
+    public void batchInsert(List<Machine> machineList) {
+        this.mapper.batchInsert(machineList);
+    }
+
+    public void deleteAll() {
+        this.mapper.deleteAll();
     }
 }

@@ -12,6 +12,8 @@ public class MtxReserve extends BaseEntity {
     @Column
     private String productid;
     @Column
+    private String merchantid;
+    @Column
     private String name;
     @Column
     private String phone;
@@ -33,6 +35,24 @@ public class MtxReserve extends BaseEntity {
     private String remarks;
 
     private String model;
+
+    private String merchantname;
+
+    public String getMerchantname() {
+        return merchantname;
+    }
+
+    public void setMerchantname(String merchantname) {
+        this.merchantname = merchantname;
+    }
+
+    public String getMerchantid() {
+        return merchantid;
+    }
+
+    public void setMerchantid(String merchantid) {
+        this.merchantid = merchantid;
+    }
 
     public String getStatus() {
         return status;

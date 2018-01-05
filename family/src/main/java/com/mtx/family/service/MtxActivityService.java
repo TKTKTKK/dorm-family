@@ -57,8 +57,9 @@ public class MtxActivityService extends BaseService<MtxActivityMapper,MtxActivit
         mtxActivity=this.queryForObjectByPk(mtxActivity);
         if(mtxActivity.getCurrentLuckyCount()==null){
             mtxActivity.setCurrentLuckyCount(1);
+        }else{
+            mtxActivity.setCurrentLuckyCount(mtxActivity.getCurrentLuckyCount()+1);
         }
-        mtxActivity.setCurrentLuckyCount(mtxActivity.getCurrentLuckyCount()+1);
         this.updatePartial(mtxActivity);
         MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
         activityParticipant.setActivityid(uuid);

@@ -68,7 +68,7 @@
             </c:when>
             <c:otherwise>
                 <div class="myquestion">
-                    <img src="../../../static/admin/img/qrcode.png" alt="">
+                    <img src="../../../static/guest/img/logohead.jpg" alt="">
                     <div class="sanjiaol"></div>
                     <div class="enquiry_words left">
                         <p class="time">${fn:substring(mtxConsultDetail.createon, 0, 19)}</p>

@@ -11,9 +11,9 @@ var Lotterynumber = 0;
 //设置获奖总人数
 var Totalnumber = 0;
 
+var luckyParticipantList;
 
-
-
+var list=[];
 
 
 $(function () {
@@ -28,6 +28,12 @@ function start() {
 			Lotterynumber = data.everyLuckyCount;
 			Totalnumber = data.totalLuckyCount;
 			currentLuckyCount=data.currentLuckyCount;
+			luckyParticipantList=data.luckyParticipantList;
+			for(var i=0;i<luckyParticipantList.length;i++){
+				list[i]={id: luckyParticipantList[i].userid,image:luckyParticipantList[i].headimg,phone:luckyParticipantList[i].nickname}
+			}
+			winners = list;
+			wcount = winners.length-1;
 			if(Totalnumber==currentLuckyCount){
 				window.clearInterval(stopTime);
 				$('#start').text("抽奖完毕");

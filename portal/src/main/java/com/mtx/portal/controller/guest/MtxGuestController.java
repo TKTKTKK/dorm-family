@@ -322,7 +322,7 @@ public class MtxGuestController extends BaseGuestController{
             machineTemp.setMachineno(machine.getMachineno());
             machineTemp=machineService.queryForObjectByUniqueKey(machineTemp);
             if(machineTemp!=null){
-                message=mxtProductService.addUserMachine(machine,userid);
+                message=machineService.addUserMachine(machine,userid,"MACHINE");
             }else{
                 model.addAttribute("machine",machine);
                 message="该机器不存在！请重试！";
@@ -713,7 +713,7 @@ public class MtxGuestController extends BaseGuestController{
             machineTemp.setMachineno(machine.getMachineno());
             machineTemp=machineService.queryForObjectByUniqueKey(machineTemp);
             if(machineTemp!=null){
-                message=machineService.addUserMachine(machine,userid);
+                message=machineService.addUserMachine(machine,userid,"PARTS");
             }else{
                 model.addAttribute("machine",machine);
                 message="该机器不存在！请重试！";
@@ -891,11 +891,42 @@ public class MtxGuestController extends BaseGuestController{
     public Map getTotalLuckyParticipant(MtxActivity activity){
         activity=mtxActivityService.queryForObjectByPk(activity);
         Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        MtxActivityParticipant participant=new MtxActivityParticipant();
+        participant.setActivityid(activity.getUuid());
+        participant.setStatus("WIN");
+        //待抽奖人
+        List<MtxActivityParticipant> otherWaitPList=mtxActivityParticipantService.queryForWaitDrawingList(participant);
+
+        MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
+        luckyParticipant.setActivityid(activity.getUuid());
+        luckyParticipant.setStatus("WIN");
+        List<MtxLuckyParticipant> luckyParticipantList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"0");
+
+
         if(null!=activity){
             resultMap.put("totalLuckyCount", activity.getTotalLuckyCount());
             resultMap.put("everyLuckyCount", activity.getEveryLuckyCount());
             resultMap.put("currentLuckyCount", activity.getCurrentLuckyCount());
+            if(luckyParticipantList.size()>0){
+                resultMap.put("luckyParticipantList", luckyParticipantList);
+            }else{
+                resultMap.put("luckyParticipantList", otherWaitPList);
+            }
         }
         return resultMap;
     }
+
+    @RequestMapping(value = "/goBuyUser", method = RequestMethod.GET)
+    public String goBuyUser(String uuid,Model model){
+
+        if(StringUtils.isNotBlank(uuid)) {
+            MtxLuckyParticipant luck=new MtxLuckyParticipant();;
+            luck.setActivityid(uuid);
+            List<MtxLuckyParticipant> luckList=mtxLuckyParticipantService.queryForLuckyParticipantList(luck,"");
+            model.addAttribute("luckList",luckList);
+        }
+        return "guest/activity_center_buy";
+    }
+
 }
