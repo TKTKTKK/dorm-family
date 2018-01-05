@@ -11,7 +11,7 @@
     <section class="vbox">
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
-                满田星 / <a href="${ctx}/admin/wefamily/merchant"><span class="font-bold  text-shallowred"> 经销商</span></a>
+                销售服务 / <a href="${ctx}/admin/wefamily/merchant"><span class="font-bold  text-shallowred"> 经销商</span></a>
             </header>
             <div class="col-sm-12 pos">
                 <div style="margin-bottom: 5px">

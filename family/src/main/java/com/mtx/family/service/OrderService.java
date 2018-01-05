@@ -124,4 +124,8 @@ public class OrderService extends BaseService<OrderMapper,Order> {
         this.mapper.updatePartial(order);
         return 1;
     }
+
+    public List<Order> queryOrderListForHomeData(Order order) {
+        return this.mapper.selectOrderListForHomeData(order);
+    }
 }

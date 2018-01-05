@@ -43,6 +43,8 @@ public class Order extends BaseEntity {
     @Column
     private String merchantremarks;
     @Column
+    private double freight;
+    @Column
     private String status;
     @Column
     private String remarks;
@@ -170,6 +172,14 @@ public class Order extends BaseEntity {
 
     public void setMerchantremarks(String merchantremarks) {
         this.merchantremarks = merchantremarks;
+    }
+
+    public double getFreight() {
+        return freight;
+    }
+
+    public void setFreight(double freight) {
+        this.freight = freight;
     }
 
     public String getStatus() {

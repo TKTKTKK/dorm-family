@@ -98,91 +98,16 @@
                            data-required="true"  data-maxlength="32" readonly/>
                 </li>
                 <li>
-                    <span>发动机号</span>
-                    <input type="text" id="engineno" name="engineno" value="${qualityMgmt.engineno}"
-                           data-required="true"  data-maxlength="32" readonly/>
-                </li>
-                <li>
                     <span>机器号</span>
                     <input type="text" id="machineno" name="machineno" value="${qualityMgmt.machineno}"
                            data-required="true"  data-maxlength="32" readonly/>
-                </li>
-                <li>
-                    <span>生产日期</span>
-                    <input class="Wdate" type="text" name="productiondt" id="productiondt" value="${qualityMgmt.productiondt}" onClick="WdatePicker()"
-                           data-required="true"  data-maxlength="23" readonly>
-                </li>
-                <c:if test="${qualityMgmt.type == 'REPAIR'}">
-                    <li style="display: flex;display: -webkit-flex;">
-                        <span style="vertical-align: middle;">问题描述</span>
-                    <textarea rows="4" name="content" id="content" data-maxlength="256"
-                              style=" width: 16rem;vertical-align: middle;text-align: right" readonly>${qualityMgmt.content}</textarea>
-                    </li>
-                </c:if>
-                <c:if test="${fn:length(reporterAttachmentList) > 0}">
-                    <li>
-                        <div class="my-display-inline-box">
-                            <div id="reporterImgContainer" class="row value">
-                                <c:forEach items="${reporterAttachmentList}" var="attachment">
-                                    <a class="swipebox" id="swipebox" href= "${attachment.name}" onclick="reviewMediaShow(this)">
-                                        <img style="width:50px;height: 50px;margin-right:10px;"
-                                             src="${attachment.name}" alt="Bottle Closeup"/>
-                                    </a>
-                                </c:forEach>
-                            </div>
-                        </div>
-                    </li>
-                </c:if>
-            </ul>
-            <div class="goal_total">
-                    <span><c:if test="${qualityMgmt.type == 'REPAIR'}">维修</c:if><c:if test="${qualityMgmt.type == 'MAINTAIN'}">保养</c:if>工人信息</span>
-                    <img src="../../../../static/guest/img/list.png" alt="" id="workerListImg" class="up">
-            </div>
-            <ul class="list" id="workerUl">
-                <li>
-                    <span>姓名</span>
-                    <input type="text"  value="${workerList[0].name}" name="name" id="name"
-                           data-required="true" data-maxlength="32" readonly>
-                    <input type="hidden" name="workerid" value="${workerList[0].uuid}">
-                    <input type="hidden" name="workerversionno" value="${workerList[0].versionno}">
-                </li>
-                <li>
-                    <span>手机号码</span>
-                    <input type="text"  value="${workerList[0].phone}" name="phone" id="phone"
-                           data-required="true" data-maxlength="11" readonly>
                 </li>
             </ul>
             <div class="goal_total">
                     <span>现场情况</span>
                     <img src="../../../../static/guest/img/list.png" alt="" id="situationListImg" class="up">
             </div>
-            <ul class="list" id="situationUl">
-                <li>
-                    <span>损坏项目</span>
-                    <input type="text"  value="${qualityMgmt.program}" name="program" id="program"
-                           data-required="true" data-maxlength="50" readonly>
-                </li>
-                <li>
-                    <span>处理配件</span>
-                    <input type="text"  value="${qualityMgmt.parts}" name="parts" id="parts"
-                           data-required="true" data-maxlength="32" readonly>
-                </li>
-                <li>
-                    <span>损坏分类</span>
-                    <c:if test="${empty qualityMgmt.damagecategory}">
-                        <input type="text"  value="未损坏" readonly
-                               >
-                    </c:if>
-                    <c:if test="${not empty qualityMgmt.damagecategory}">
-                        <select name="damagecategory" id="damagecategory" disabled>
-                            <c:set var="commonCodeList" value="${web:queryCommonCodeList('DAMAGE_CATEGORY')}"></c:set>
-                            <option value="">请选择</option>
-                            <c:forEach items="${commonCodeList}" var="commonCode">
-                                <option value="${commonCode.code}" <c:if test="${qualityMgmt.damagecategory == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                            </c:forEach>
-                        </select>
-                    </c:if>
-                </li>
+            <ul class="list" id="situationUl" style="margin-bottom: 0px;">
                 <li>
                     <span><c:if test="${qualityMgmt.type == 'REPAIR'}">维修</c:if><c:if test="${qualityMgmt.type == 'MAINTAIN'}">保养</c:if>日期</span>
                     <input class="Wdate" type="text" name="servicedt" id="servicedt" onClick="WdatePicker()"
@@ -194,27 +119,35 @@
                            data-maxlength="10" readonly>
                     <span id="priceError" class="text-danger" style="float: right;color: red;font-size: 1.2rem;"></span>
                 </li>
+            </ul>
             <form class="form-horizontal" data-validate="parsley"
                       action="" method="POST" id="frm">
                 <c:if test="${qualityMgmt.status == 'FINISH'}">
-                    <li>
-                        <span>用户评价</span>
-                        <select name="evaluate" id="evaluate">
-                            <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
-                            <option value="">请选择</option>
-                            <c:forEach items="${commonCodeList}" var="commonCode">
-                                <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                            </c:forEach>
-                        </select>
-                    </li>
-                    <li style="display: flex;display: -webkit-flex;">
-                        <span style="vertical-align: middle;">备注</span>
+                    <div class="goal_total">
+                        <span>评价</span>
+                        <img src="../../../../static/guest/img/list.png" alt="" id="situationListImg" class="up">
+                    </div>
+                    <ul class="list">
+                        <li>
+                            <span>用户评价</span>
+                            <select name="evaluate" id="evaluate">
+                                <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
+                                <option value="">请选择</option>
+                                <c:forEach items="${commonCodeList}" var="commonCode">
+                                    <option value="${commonCode.code}" <c:if test="${qualityMgmt.evaluate == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
+                                </c:forEach>
+                            </select>
+                        </li>
+                        <li style="display: flex;display: -webkit-flex;">
+                            <span style="vertical-align: middle;">备注</span>
                     <textarea rows="4" name="evaluateremarks" id="evaluateremarks" data-maxlength="256"
                               style=" width: 16rem;vertical-align: middle;text-align: right">${qualityMgmt.evaluateremarks}</textarea>
-                    </li>
+                        </li>
+                    </ul>
+
                 </c:if>
 
-            </ul>
+
             <input type="hidden" name="uuid" class="form-control" value="${qualityMgmt.uuid}">
             <input type="hidden" name="versionno" class="form-control"
                    value="${qualityMgmt.versionno}">
@@ -231,7 +164,7 @@
     <div class="choose" style="display: none">
         <div class="error">
             <p id="Message"></p >
-            <button onclick="closeModel()">OK</button>
+            <button onclick="closeModel()">朕知道了</button>
         </div>
     </div>
 

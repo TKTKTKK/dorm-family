@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 培训管理</span>
+            品质服务 / <span class="font-bold  text-shallowred"> 培训管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <input type="text" class="form-control" id="snno" name="snno" onblur="trimText(this)" value="${train.snno}"
-                                           placeholder="培训编号"
+                                           placeholder="培训任务单编号"
                                     />
                                     <input type="hidden" name="type" value="${type}">
                                 </div>

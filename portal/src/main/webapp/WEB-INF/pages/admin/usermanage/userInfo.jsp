@@ -71,7 +71,7 @@
             <header class="panel-heading bg-white text-md b-b">
                 用户 /
                 <a href="javascript:backRoleDistribute()">用户管理</a> /
-                <span class="font-bold text-shallowred">用户</span>
+                <span class="font-bold text-shallowred">创建用户</span>
             </header>
             <div class="row" style="margin-right:25px;float: right">
                 <a href="javascript:backRoleDistribute()" class="btn btn-submit btn-s-md a-noline" style="color: #fff"
@@ -82,11 +82,11 @@
                         <c:choose>
                             <c:when test="${empty querytype or querytype eq 'user'}">
                                 <li class="active" onclick="toggleTab('user')"><a data-toggle="tab">用户信息</a></li>
-                                <li onclick="toggleTab('district')"><a data-toggle="tab">经销商</a></li>
+                                <li onclick="toggleTab('district')"><a data-toggle="tab">经销商表单</a></li>
                             </c:when>
                             <c:when test="${'district' eq querytype}">
                                 <li onclick="toggleTab('user')"><a data-toggle="tab">用户信息</a></li>
-                                <li class="active" onclick="toggleTab('district')"><a data-toggle="tab">经销商</a></li>
+                                <li class="active" onclick="toggleTab('district')"><a data-toggle="tab">经销商表单</a></li>
                             </c:when>
                         </c:choose>
                     </ul>
@@ -291,7 +291,7 @@
                             <table class="table table-striped b-t b-light b-b b-l b-r">
                                 <thead>
                                 <tr>
-                                    <th width="30%">供应商名称</th>
+                                    <th width="30%">经销商名称</th>
                                     <th width="30%">操作</th>
                                 </tr>
                                 </thead>

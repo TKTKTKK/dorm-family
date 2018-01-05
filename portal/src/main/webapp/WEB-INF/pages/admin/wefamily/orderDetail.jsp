@@ -280,13 +280,13 @@
         <section class="scrollable padder">
             <div class="row" id="sugInfoDiv" style="overflow-x: hidden;overflow-y: auto;">
                 <header class="panel-heading bg-white text-md b-b">
-                    满田星 /
+                    销售服务 /
                     <a href="${ctx}/admin/wefamily/orderManage"><span class="font-bold text-shallowred">订单管理</span></a>
                 </header>
                 <div class="col-sm-12 pos">
                     <div id="myTabContent" class="tab-content">
                         <div class="tab-pane fade in active" id="detail">
-                            <div class="b-l b-r">
+                            <div style="margin-bottom: 5px;padding-left: 15px">
                                 <span class="text-success">${successMessage}</span>
                                 <span class="text-danger">${errorMessage}</span>
                             </div>
@@ -364,6 +364,24 @@
                                                             <div class="portlet-body">
                                                                 <div class="row static-info">
                                                                     <div class="col-md-12 col-xs-12 value">
+
+                                                                        <div class="form-group" style="margin-bottom: 10px">
+                                                                            <label class="col-sm-3 col-xs-4 control-label"
+                                                                                   style="padding-top: 5px;padding-left: 10px;padding-right: 10px;text-align: left"
+                                                                            >物流价格:</label>
+                                                                            <div class="col-sm-9 col-xs-8 bg-white">
+                                                                                <span>${order.freight}</span>
+                                                                                <input type="hidden" id="repairWorkerIds" value="${suggestion.maintainer}">
+                                                                                <c:if test="${order.status ne 'FILED'}">
+                                                                                    <shiro:hasRole name="HQ_FINANCE">
+                                                                                        <button class="btn btn-default btn-sm a-noline" style="margin-bottom: 10px"
+                                                                                                data-toggle="modal" data-target=".bs-example-modal-lg-freight"
+                                                                                        ><i class="fa fa-pencil"></i></button>
+                                                                                    </shiro:hasRole>
+                                                                                </c:if>
+
+                                                                            </div>
+                                                                        </div>
                                                                         <c:if test="${fn:length(logisticsList) > 0}">
                                                                             <div class="detaildiv1"
                                                                                  style="padding: 0px 0px 0px 0px;margin-left: 0px;margin-bottom: 10px;width: 100%;">
@@ -402,9 +420,6 @@
                                                                                 </ul>
                                                                             </div>
                                                                         </c:if>
-                                                                        <c:if test="${fn:length(logisticsList) == 0}">
-                                                                            <span>暂无物流信息</span>
-                                                                        </c:if>
                                                                     </div>
                                                                 </div>
                                                                 <shiro:hasRole name="HQ_FINANCE">
@@ -416,16 +431,16 @@
                                                             </div>
                                                         </div>
                                                     </c:if>
-                                                    <!--回执信息-->
+                                                    <!--收货信息-->
                                                     <c:if test="${order.status ne 'NEW'}">
                                                         <div class="portlet blue-hoki box">
                                                             <div class="portlet-title">
-                                                                <div class="caption"><i class="fa fa-cogs"></i>回执信息</div>
+                                                                <div class="caption"><i class="fa fa-cogs"></i>收货信息</div>
                                                             </div>
                                                             <div class="portlet-body">
                                                                 <c:if test="${fn:length(receiptList) > 0}">
                                                                     <div class="row static-info" style="margin-bottom: 0px">
-                                                                        <div class="col-md-2 col-xs-4 name detail-div">回执日期:</div>
+                                                                        <div class="col-md-2 col-xs-4 name detail-div">收货日期:</div>
                                                                         <div class="col-md-4 col-xs-8 value detail-div" >${receiptList[0].receiptdt}</div>
 
                                                                         <div class="col-md-2 col-xs-4 name detail-div">满意度:</div>
@@ -439,7 +454,7 @@
                                                                     </c:if>
                                                                     <c:if test="${fn:length(attachmentList) > 0}">
                                                                         <div class="row static-info" style="margin-bottom: 0px">
-                                                                            <div class="col-md-2 col-xs-4 name detail-div">回执图片:</div>
+                                                                            <div class="col-md-2 col-xs-4 name detail-div">回执照片:</div>
                                                                             <div class="col-md-10 col-xs-8 value detail-div" >
                                                                                 <c:forEach var="receiptImg" items="${attachmentList}">
                                                                                     <img src="${receiptImg.name}" style="width: 50px;height: 50px;" name="${receiptImg.uuid}"
@@ -459,24 +474,26 @@
                                                                 <c:if test="${fn:length(receiptList) == 0}">
                                                                     <div class="row static-info">
                                                                         <div class="col-md-12 col-xs-12 value">
-                                                                            <span>暂无回执信息</span>
+                                                                            <span>暂无收货信息</span>
                                                                         </div>
                                                                     </div>
                                                                 </c:if>
-                                                                <shiro:hasRole name="HQ_FINANCE">
+                                                                <shiro:hasAnyRoles name="HQ_FINANCE,MERCHANT_MANAGER">
                                                                     <c:if test="${ fn:length(logisticsList) > 0 && order.status ne 'FILED' && order.status == 'INLOGISTICS' || order.status == 'RECEIVED'}">
                                                                         <a class="btn btn-sm" href="javascript:addReceipt()" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
-                                                                            <c:if test="${fn:length(receiptList) == 0}">添加回执信息</c:if>
-                                                                            <c:if test="${fn:length(receiptList) == 1}">修改回执信息</c:if>
+                                                                            <c:if test="${fn:length(receiptList) == 0}">确认收货</c:if>
+                                                                            <c:if test="${fn:length(receiptList) == 1}">修改收货信息</c:if>
                                                                         </a>
-                                                                        <button class="hidden" data-toggle="modal" data-target=".bs-example-modal-tj-receipt" style="color: white" id="addReceipt">添加回执信息</button>
-                                                                        <c:if test="${fn:length(receiptList) > 0}">
-                                                                            <a class="btn btn-sm"  data-toggle="modal" data-target=".bs-example-modal-order-remarks" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
-                                                                                <i class="fa fa-check"></i> 订单完成
-                                                                            </a>
-                                                                        </c:if>
+                                                                        <button class="hidden" data-toggle="modal" data-target=".bs-example-modal-tj-receipt" style="color: white" id="addReceipt">添加收货信息</button>
+                                                                        <shiro:hasRole name="HQ_FINANCE">
+                                                                            <c:if test="${fn:length(receiptList) > 0}">
+                                                                                <a class="btn btn-sm"  data-toggle="modal" data-target=".bs-example-modal-order-remarks" style="color: #fff;margin-left: 10px;margin-bottom: 10px;background-color: #67809F">
+                                                                                    <i class="fa fa-check"></i> 订单完成
+                                                                                </a>
+                                                                            </c:if>
+                                                                        </shiro:hasRole>
                                                                     </c:if>
-                                                                </shiro:hasRole>
+                                                                </shiro:hasAnyRoles>
                                                             </div>
                                                         </div>
                                                     </c:if>
@@ -486,7 +503,7 @@
                                                 <!--机器信息-->
                                                 <div class="portlet green box">
                                                         <div class="portlet-title">
-                                                            <div class="caption"><i class="fa fa-cogs"></i>机器信息</div>
+                                                            <div class="caption"><i class="fa fa-cogs"></i>实际发货信息</div>
                                                         </div>
                                                         <div class="portlet-body">
                                                             <div class="table-responsive" id="respDiv">
@@ -543,7 +560,7 @@
                                                                         <a class="btn btn-sm btn-info" href="javascript:addMachine()" style="color: white;margin-left: 10px;margin-bottom: 10px">添加机器</a>
                                                                         <button class="hidden" data-toggle="modal" data-target=".bs-example-modal-tj" style="color: white" id="addMachine">添加机器</button>
                                                                     </c:if>
-                                                                    <c:if test="${fn:length(machineList) >= order.quantity && (order.status =='NEW' || order.status == 'INPLAN')}">
+                                                                    <c:if test="${fn:length(machineList) >= 1 && order.status == 'INPLAN'}">
                                                                         <a class="btn btn-sm btn-success" href="javascript:finishAddMachine('${order.uuid}','${order.versionno}')" style="color: white;margin-left: 10px;margin-bottom: 10px">添加完成</a>
                                                                     </c:if>
                                                                 </shiro:hasRole>
@@ -629,7 +646,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row static-info">
-                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">生产日期:<span class="text-danger">*</span></div>
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">生产日期:</div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
                                                             <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
@@ -679,6 +696,58 @@
                 <!-- /.modal-dialog -->
             </div>
             <!-- /.modal -->
+
+            <!-- /.modal物流价格 start-->
+            <div class="modal fade bs-example-modal-lg-freight" tabindex="-1" role="dialog"
+                 aria-labelledby="myLargeModalLabelMaintainer" aria-hidden="false">
+                <div class="modal-dialog modal-lg" style="margin-top: 15%">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" id="modelCloseBtnSaveFreight"><span
+                                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myLargeModalLabelSaveFreight">物流价格</h4>
+                        </div>
+                        <form method="post" id="frmForSetFreight" action="/admin/wefamily/saveFreight">
+                            <div class="modal-body" style="padding: 10px;">
+                                <div class="row top-margin">
+                                    <div class="col-sm-12">
+                                        <div class="form-group row" style="border: 0;padding: 5px 0;">
+                                            <label class="col-sm-3 col-xs-4 control-label text-right" style="padding-top:6px;padding-right: 10px">价格：</label>
+                                            <div class="col-sm-9  col-xs-8 bg-white" style="padding:0px">
+                                                <input class="form-control" data-required="true" size="6"
+                                                       name="freight" id="freight" data-type="digits"
+                                                       data-maxlength="10"
+                                                       onblur="validateMoney(this,'freightError')"
+                                                       value="${order.freight}">
+                                                <div class="text-danger" id="freightError"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <%--</div>--%>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="hidden">
+                                            <input type="hidden" name="uuid" value="${order.uuid}">
+                                            <input type="hidden" name="versionno" value="${order.versionno}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="text-align: center">
+                                <a class="btn btn-submit btn-s-xs"
+                                   onclick="saveFreightForOrder()" id="saveFreightBtn">
+                                    保存</a>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal物流价格 end-->
 
             <!-- 物流信息modal添加 -->
             <div class="modal fade bs-example-modal-tj-logistics " tabindex="-1" role="dialog"
@@ -764,7 +833,7 @@
             </div>
             <!-- /.modal -->
 
-            <!-- 回执信息modal添加 -->
+            <!-- 收货信息modal添加 -->
             <div class="modal fade bs-example-modal-tj-receipt " tabindex="-1" role="dialog"
                  aria-labelledby="myLargeModalLabelTj" aria-hidden="false">
                 <div class="modal-dialog modal-lg" style="margin-top: 15%">
@@ -772,7 +841,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" id="modelCloseBtnAddReceipt"><span
                                     aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                            <h4 class="modal-title" id="myLargeModalLabelAddReceipt">回执</h4>
+                            <h4 class="modal-title" id="myLargeModalLabelAddReceipt">收货</h4>
                         </div>
                         <form action="${ctx}/admin/wefamily/addReceiptForOrder" method="POST" id="addReceiptFrm" data-validate="parsley">
                             <div class="modal-body">
@@ -780,11 +849,11 @@
                                     <div class="col-md-12">
                                         <div class="portlet green box">
                                             <div class="portlet-title">
-                                                <div class="caption"><i class="fa fa-cogs"></i>回执信息</div>
+                                                <div class="caption"><i class="fa fa-cogs"></i>收货信息</div>
                                             </div>
                                             <div class="portlet-body">
                                                 <div class="row static-info">
-                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">回执日期:<span class="text-danger">*</span></div>
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">收货日期:<span class="text-danger">*</span></div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
                                                             <input class="datepicker-input form-control" size="16" type="text" data-type="dateIso"
@@ -796,7 +865,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row static-info">
-                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">满意度:<span class="text-danger">*</span></div>
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">运输满意度:<span class="text-danger">*</span></div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
                                                             <select  class="form-control" name="satisfactionAdd" id="satisfactionAdd"
@@ -822,7 +891,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row static-info">
-                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">回执照片:</div>
+                                                    <div class="col-md-3 col-xs-4 name" style="margin-top: 7px;text-align: left">发送回执照片:</div>
                                                     <div class="col-md-9 col-xs-12 value">
                                                         <div class="my-display-inline-box">
                                                             <div id="receiptImgUrlContainer">
@@ -928,7 +997,7 @@
                                         </div>
 
                                     </div>
-                                    <shiro:hasRole name="HQ_FINANCE">
+                                    <shiro:hasAnyRoles name="HQ_FINANCE,MERCHANT_MANAGER">
                                         <c:if test="${order.status ne 'FILED'}">
                                             <div class="text-center">
                                                 <a  class="btn btn-submit btn-s-xs"
@@ -936,7 +1005,7 @@
                                                     删除</a>
                                             </div>
                                         </c:if>
-                                    </shiro:hasRole>
+                                    </shiro:hasAnyRoles>
                                 </div>
                             </div>
                         </div>
@@ -959,6 +1028,10 @@
             //显示父菜单
             showParentMenu('销售服务');
         }
+    }
+
+    function saveFreightForOrder(){
+        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/saveFreightForOrder?uuid=${order.uuid}&versionno=${order.versionno}&freight="+$('#freight').val();
     }
 
     function deletePic(){
@@ -1021,11 +1094,25 @@
     }
 
     function finishAddMachine(orderId,versionno){
-        $.get("${ctx}/admin/wefamily/finishAddMachine?orderId="+orderId+"&versionno="+versionno,function(data,status){
-            if(undefined != data.finishAddFlag){
-                window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&finishAddFlag="+data.finishAddFlag;
-            }
-        });
+        if(${fn:length(machineList) < order.quantity}){
+            qikoo.dialog.confirm('未达到订单数量，结束添加？',function(){
+                $.get("${ctx}/admin/wefamily/finishAddMachine?orderId="+orderId+"&versionno="+versionno,function(data,status){
+                    if(undefined != data.finishAddFlag){
+                        window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&finishAddFlag="+data.finishAddFlag;
+                    }
+                });
+            },function(){
+                //取消
+            });
+        }else{
+            $.get("${ctx}/admin/wefamily/finishAddMachine?orderId="+orderId+"&versionno="+versionno,function(data,status){
+                if(undefined != data.finishAddFlag){
+                    window.location.href = "<%=request.getContextPath()%>/admin/wefamily/orderDetail?orderId=${order.uuid}&finishAddFlag="+data.finishAddFlag;
+                }
+            });
+        }
+
+
     }
 
     function resubmitSearch(page){
@@ -1128,7 +1215,7 @@
     //订单添加回执
     function submitReceiptInfo(){
         $("#addReceiptFrm").parsley("validate");
-        if($('#addReceiptFrm').parsley().isValid() && validateContactno()){
+        if($('#addReceiptFrm').parsley().isValid()){
             $('#submitAddReceiptBtn').attr('disabled', true);
             $.ajax({
                 cache: true,
@@ -1165,7 +1252,7 @@
     function validateContactno(){
         document.getElementById("contactnoError").innerHTML = "";
         var phoneno = $('#driverphoneAdd').val();
-        var rule = /^\d*-?\d*$/;
+        var rule=/^[1][3,4,5,7,8][0-9]{9}$/;
         if(!rule.test(phoneno) || phoneno.length > 11){
             document.getElementById("contactnoError").innerHTML = "输入非法";
             return false;

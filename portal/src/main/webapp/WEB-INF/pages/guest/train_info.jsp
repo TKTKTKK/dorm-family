@@ -92,72 +92,39 @@
                     <img src="../../../../static/guest/img/list.png" alt="" id="machineListImg" class="up">
                 </a>
             </div>
-            <ul class="list" id="machineUl">
+            <ul class="list" id="machineUl" style="margin-bottom: 0px;">
                 <li>
-                    <span>机器型号<a class="dataRequired">*</a></span>
+                    <span>机器型号</span>
                     <input type="text" id="machinemodel" name="machinemodel" value="${train.machinemodel}"
                            data-required="true" placeholder="请填写机器型号" data-maxlength="32" readonly/>
                 </li>
                 <li>
-                    <span>机器号<a class="dataRequired">*</a></span>
+                    <span>机器号</span>
                     <input type="text" id="machineno" name="machineno" value="${train.machineno}"
                            data-required="true" placeholder="请填写机器号" data-maxlength="32" readonly/>
                 </li>
-                <li>
-                    <span>发动机号<a class="dataRequired">*</a></span>
-                    <input type="text" id="engineno" name="engineno" value="${train.engineno}"
-                           data-required="true" placeholder="请填写发动机号" data-maxlength="32" readonly/>
-                </li>
-                <li>
-                    <span>生产日期<a class="dataRequired">*</a></span>
-                    <input class="input" type="text" name="productiondt" id="productiondt" value="${train.productiondt}" readonly
-                           data-required="true" placeholder="请选择生产日期" data-maxlength="23">
-                </li>
             </ul>
-            <div class="goal_total">
-                <span>培训项目</span>
+            <div class="goal_total" style="margin-top: 0px ">
+                <a href="javaScript:enableUl('situationUl','situationListImg')">
+                    <span>现场情况</span>
+                    <img src="../../../../static/guest/img/list.png" alt="" id="situationListImg" class="up">
+                </a>
             </div>
-            <ul class="list" id="programUl">
+            <ul class="list" id="situationUl" style="margin-bottom: 0px">
                 <li>
-                    <span>培训类型<a class="dataRequired">*</a></span>
-                    <select name="type" id="type" data-required="true" onchange="changeTrainProgram()" disabled>
-                        <c:set var="commonCodeList" value="${web:queryCommonCodeList('TRAIN_TYPE')}"></c:set>
-                        <c:forEach items="${commonCodeList}" var="commonCode">
-                            <option value="${commonCode.code}" <c:if test="${train.type == commonCode.code}">selected</c:if>>${commonCode.codevalue}</option>
-                        </c:forEach>
-                    </select>
+                    <span>培训日期</span>
+                    <input class="input" type="text" name="traindt" id="traindt" readonly
+                           value="${train.traindt}" placeholder="请选择培训日期" data-required="true" data-maxlength="23">
                 </li>
-
-                <c:forEach items="${web:queryCommonCodeList('TRAIN_PROGRAM_FIRST')}" var="programCode">
-                    <c:set var="showFlag" value="0" scope="page"></c:set>
-                    <c:forEach items="${trainProgramList}" var="program">
-                        <c:if test="${program == programCode.code}">
-                            <c:set var="showFlag" value="1" scope="page"></c:set>
-                        </c:if>
-                    </c:forEach>
-                        <li class="first">
-                            <input type="checkbox" class="chk" id="${programCode.code}" name="trainPrograms" onchange="checkProgram('${programCode.code}')" style="display: none;" <c:if test="${showFlag == 1}">checked </c:if> value="${programCode.code}">
-                            <label for="${programCode.code}" disabled="disabled"></label>
-                            <span>${programCode.codevalue}</span>
-                        </li>
-                </c:forEach>
-                <c:forEach items="${web:queryCommonCodeList('TRAIN_PROGRAM_SCENE')}" var="programCode">
-                    <c:set var="showFlag" value="0" scope="page"></c:set>
-                    <c:forEach items="${trainProgramList}" var="program">
-                        <c:if test="${program == programCode.code}">
-                            <c:set var="showFlag" value="1" scope="page"></c:set>
-                        </c:if>
-                    </c:forEach>
-                    <li class="scene">
-                        <input type="checkbox" class="chk" id="${programCode.code}" name="trainPrograms" onchange="checkProgram('${programCode.code}')" style="display: none;" <c:if test="${showFlag == 1}">checked </c:if> value="${programCode.code}">
-                        <label for="${programCode.code}" disabled="disabled"></label>
-                        <span>${programCode.codevalue}</span>
-                    </li>
-                </c:forEach>
+                <li>
+                    <span>培训地点</span>
+                    <input type="text" name="location" id="location" value="${train.location}" data-maxlength="32" readonly onblur="initLocation()">
+                </li>
             </ul>
+
        <form class="form-horizontal" data-validate="parsley"
                   action="" method="POST" id="frm">
-            <div class="goal_total">
+            <div class="goal_total" style="margin-top: 0px ">
                 <span>用户评价</span>
             </div>
             <ul class="list">
@@ -187,7 +154,7 @@
     <div class="choose" style="display: none">
         <div class="error">
             <p id="Message"></p >
-            <button onclick="closeModel()">OK</button>
+            <button onclick="closeModel()">朕知道了</button>
         </div>
     </div>
 
@@ -235,8 +202,6 @@
             Message.innerHTML = "${errorMessage}";
             $(".choose").css("display","block");
         }
-
-        changeTrainProgram();
     }
 
     $(function () {

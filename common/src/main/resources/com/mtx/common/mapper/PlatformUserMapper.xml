@@ -154,10 +154,10 @@
         and   ur.roleid = pr.uuid
         <choose>
             <when test="type == 'REPAIR'">
-                and   pr.rolekey = 'MTX_REPAIR_WORKER'
+                and   pr.rolekey in ('MTX_REPAIR_WORKER','HQ_SERVICE')
             </when>
             <when test="type == 'MAINTAIN'">
-                and   pr.rolekey = 'MTX_MAINTAIN_WORKER'
+                and   pr.rolekey in ('MTX_MAINTAIN_WORKER','HQ_SERVICE')
             </when>
         </choose>
 
@@ -169,10 +169,10 @@
         and   ur.roleid = pr.uuid
         <choose>
             <when test="type == 'REPAIR'">
-                and   pr.rolekey = 'MTX_REPAIR_WORKER'
+                and   pr.rolekey in ('MTX_REPAIR_WORKER','HQ_SERVICE')
             </when>
             <when test="type == 'MAINTAIN'">
-                and   pr.rolekey = 'MTX_MAINTAIN_WORKER'
+                and   pr.rolekey in ('MTX_MAINTAIN_WORKER','HQ_SERVICE')
             </when>
         </choose>
         and   not exists (select um.userid from tb_mtx_user_merchant um where um.userid = pu.uuid);

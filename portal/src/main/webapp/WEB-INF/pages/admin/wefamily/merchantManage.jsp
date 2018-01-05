@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            满田星 / <span class="font-bold  text-shallowred"> 经销商</span>
+            销售服务 / <span class="font-bold  text-shallowred"> 经销商管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
@@ -155,9 +155,11 @@
 
 
     function deleteMerchant(merchantId){
-        if(confirm("确认删除？")){
+        qikoo.dialog.confirm('确认删除？',function(){
             window.location.href = "<%=request.getContextPath()%>/admin/wefamily/deleteMerchant?merchantId="+merchantId;
-        }
+        },function(){
+            //取消
+        });
     }
 
 

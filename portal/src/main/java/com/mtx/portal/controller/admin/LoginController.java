@@ -1,11 +1,16 @@
 package com.mtx.portal.controller.admin;
 
+import com.mtx.common.entity.PlatformRole;
 import com.mtx.common.entity.PlatformUser;
 import com.mtx.common.security.UsernamePasswordToken;
+import com.mtx.common.service.PlatformRoleService;
 import com.mtx.common.service.PlatformUserService;
 import com.mtx.common.utils.ConfigHolder;
 import com.mtx.common.utils.RequestUtil;
+import com.mtx.common.utils.StringUtils;
 import com.mtx.common.utils.UserUtils;
+import com.mtx.family.entity.Merchant;
+import com.mtx.family.service.MerchantService;
 import com.mtx.wechat.entity.admin.WechatBinding;
 import com.mtx.wechat.service.WechatBindingService;
 import org.apache.shiro.SecurityUtils;
@@ -20,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Created by wensheng on 14-12-13.
@@ -32,6 +38,10 @@ public class LoginController {
     private PlatformUserService platformUserService;
     @Autowired
     private WechatBindingService wechatBindingService;
+    @Autowired
+    private MerchantService merchantService;
+    @Autowired
+    private PlatformRoleService platformRoleService;
 
 
     /**
@@ -81,6 +91,30 @@ public class LoginController {
         RequestUtil.isValidateCodeLogin(user.getUsername(), false, true);
         //当前账号WechatBinding放入Cache
         wechatBindingService.getWechatBindingByUser();
+
+        String ifHqUser = "N";
+        String ifMerchantManager = "N";
+        List<PlatformRole> platformRoleList = platformRoleService.queryUserRoleListForUser();
+        for(PlatformRole pr:platformRoleList){
+            if(pr.getRolekey().split("_")[0].equals("HQ") || pr.getRolekey().equals("WP_SUPER")){
+                ifHqUser = "Y";
+            }
+            if(pr.getRolekey().equals("MERCHANT_MANAGER")){
+                ifMerchantManager = "Y";
+            }
+        }
+        model.addAttribute("ifHqUser",ifHqUser);
+        model.addAttribute("ifMerchantManager",ifMerchantManager);
+
+        List<Merchant> merchantList = merchantService.selectMerchantForUser();
+        model.addAttribute("merchantList",merchantList);
+
+        String merchantId = request.getParameter("merchantId");
+        if(StringUtils.isNotBlank(merchantId)){
+            model.addAttribute("merchantId",merchantId);
+        }else{
+            model.addAttribute("merchantId",merchantList.get(0).getUuid());
+        }
         return "admin/home";
     }
 
