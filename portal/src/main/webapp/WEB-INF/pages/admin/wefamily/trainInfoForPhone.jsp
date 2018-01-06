@@ -115,9 +115,9 @@
                            data-required="true" placeholder="请填写发动机号" data-maxlength="32"/>
                 </li>
                 <li>
-                    <span>生产日期<a class="dataRequired">*</a></span>
+                    <span>生产日期</span>
                     <input class="input" type="text" name="productiondt" id="productiondt" value="${train.productiondt}" readonly
-                           data-required="true" placeholder="请选择生产日期" data-maxlength="23">
+                           placeholder="请选择生产日期" data-maxlength="23">
                 </li>
                 <li>
                     <span>经销商<a class="dataRequired">*</a></span></span>

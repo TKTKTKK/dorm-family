@@ -106,7 +106,7 @@
                 <li>
                     <span>生产日期</span>
                     <input class="input" type="text" name="productiondt" id="productiondt" value="${qualityMgmt.productiondt}" readonly
-                           data-required="true" placeholder="请选择生产日期" data-maxlength="23" onblur="trimText(this)">
+                           placeholder="请选择生产日期" data-maxlength="23" onblur="trimText(this)">
                 </li>
                 <li>
                     <span>报修位置<a class="dataRequired">*</a></span>
@@ -265,22 +265,17 @@
         if(engineno == ""){
             enginenoError = "请填写发动机号！"
         }
-        var productiondtError = '';
-        var productiondt = document.getElementById("productiondt").value;
-        if(productiondt == ""){
-            productiondtError = "请填写生产日期！"
-        }
         var contentError = '';
         var content = document.getElementById("content").value;
         if(content == ""){
             contentError = "请填写问题描述！"
         }
 
-        if(contentError == "" && machinenoError=="" && enginenoError=="" && productiondtError==""){
+        if(contentError == "" && machinenoError=="" && enginenoError==""){
             var searchForm = document.getElementById("frm");
             searchForm.submit();
         }else{
-            errorMessage.innerHTML = machinemodelError+machinenoError+enginenoError+productiondtError+contentError;
+            errorMessage.innerHTML = machinemodelError+machinenoError+enginenoError+contentError;
             $(".choose").css("display","block");
         }
     }
