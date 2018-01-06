@@ -56,7 +56,7 @@
     $(function(){
         $(".man").slideUp();
         var length=$(".man").find("img").length;
-        $(".total-user").css("height",(length-2)*60);
+        $(".total-user").css("height",(length+1)*60);
     })
 </script>
 <script src="${ctx}/static/guest/js/myslideup.js" type="text/javascript"></script>

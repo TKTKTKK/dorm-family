@@ -247,11 +247,11 @@
                                     <div class="col-sm-9 b-l bg-white">
                                         <div class="row">
                                             <div class="col-sm-2">
-                                                <input type="text" placeholder="姓名：" id="participantname" name="participantname" style="width:100%;height: 34px" value="${participantname}"/></div>
+                                                <input type="text" placeholder="姓名" id="participantname" name="participantname" style="width:100%;height: 34px" value="${participantname}"/></div>
 
                                             <span class="text-danger"  id="participantnameMessage" style="position: absolute;margin-top: 32px;margin-left: -190px"></span>
                                             <div class="col-sm-2">
-                                                <input type="text" placeholder="手机号：" id="participantphone" name="participantphone" style="width:100%;height: 34px" value="${participantphone}"/></div>
+                                                <input type="text" placeholder="手机号" id="participantphone" name="participantphone" style="width:100%;height: 34px" value="${participantphone}"/></div>
                                             <div class="col-sm-2">
                                                 <a type="submit"  class="btn btn-submit btn-s-xs"
                                                    onclick="searchUser()"
@@ -477,17 +477,10 @@
     }
 
     function searchUser(){
-        participantnameMessage
-        var participantnameMessage=document.getElementById("participantnameMessage");
-        participantnameMessage.innerHTML="";
         var uuid='${activity.uuid}';
         var participantname=document.getElementById("participantname").value;
         var participantphone=document.getElementById("participantphone").value;
-        if((participantname==null||participantname=='')&&(participantphone==null||participantphone=='')){
-            participantnameMessage.innerHTML="姓名手机号至少填一个！";
-        }else{
-            window.location.href="${ctx}/admin/wefamily/goMtxActivity?uuid="+uuid+"&participantname="+participantname+"&participantphone="+participantphone;
-        }
+        window.location.href="${ctx}/admin/wefamily/goMtxActivity?uuid="+uuid+"&participantname="+participantname+"&participantphone="+participantphone;
     }
 
     function submitParticipant(){

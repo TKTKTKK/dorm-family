@@ -153,7 +153,8 @@
                                                                class="btn  btn-infonew btn-sm" style="color: white;background: mediumpurple;border: 1px solid mediumpurple">
                                                                 详情
                                                             </a>
-                                                            <a href="${ctx}/guest/clickDrawing?uuid=${activity.uuid}" class="btn  btn-infonew btn-sm" style="color: white">
+                                                            <a href="javascript:clickDrawing('${activity.uuid}')"
+                                                                     class="btn  btn-infonew btn-sm" style="color: white">
                                                                 </i>开始抽奖
                                                             </a>
                                                             <a href="javascript:stopMtxActivity('${activity.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">结束</a>
@@ -169,14 +170,16 @@
                                                                class="btn  btn-infonew btn-sm" style="color: white;background: green;border: 1px solid green">
                                                                 详情
                                                             </a>
-                                                            <a href="${ctx}/guest/clickDrawing?uuid=${activity.uuid}" class="btn  btn-infonew btn-sm" style="color: white">
+                                                            <a href="javascript:goBackDrawing('${activity.uuid}')"
+                                                                     class="btn  btn-infonew btn-sm" style="color: white">
                                                                 </i>返回抽奖
                                                             </a>
                                                             <a href="javascript:stopMtxActivity('${activity.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">结束</a>
                                                         </c:if>
                                                     </c:otherwise>
                                                 </c:choose>
-                                                <a href="${ctx}/guest/goBuyUser?uuid=${activity.uuid}" class="btn  btn-infonew btn-sm" style="color: white">
+                                                <a href="javascript:goBuyUser('${activity.uuid}')"
+                                                         class="btn  btn-infonew btn-sm" style="color: white">
                                                     </i>购机用户
                                                 </a>
                                             </td>
@@ -300,6 +303,30 @@
                     searchForm.submit();
                 }
             });
+        },function(){
+            //取消删除
+        });
+    }
+
+    function clickDrawing(uuid){
+        qikoo.dialog.confirm('点击开始后，人员无法再加入！确定开始抽奖吗？',function(){
+            window.location.href="${ctx}/guest/clickDrawing?uuid="+uuid;
+        },function(){
+            //取消删除
+        });
+    }
+
+    function goBackDrawing(uuid){
+        qikoo.dialog.confirm('确定返回抽奖吗？',function(){
+            window.location.href="${ctx}/guest/clickDrawing?uuid="+uuid;
+        },function(){
+            //取消删除
+        });
+    }
+
+    function goBuyUser(uuid){
+        qikoo.dialog.confirm('确定要跳到购机用户页面吗？',function(){
+            window.location.href="${ctx}/guest/goBuyUser?uuid="+uuid;
         },function(){
             //取消删除
         });

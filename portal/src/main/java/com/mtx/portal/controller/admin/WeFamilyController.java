@@ -295,11 +295,6 @@ public class WeFamilyController extends BaseAdminController {
             if(flag){
                 if (StringUtils.isBlank(mtxProduct.getUuid())) {
                     mtxProduct.setType("PRODUCT");
-                    int p=0;
-                    if(mtxProduct.getPrice()!=null){
-                        p  = mtxProduct.getPrice().intValue();
-                        mtxProduct.setPoints(p);
-                    }
                     if(StringUtils.isNotBlank(mtxProduct.getWatchornot())){
                         mtxProduct.setWatchornot("Y");
                     }else{
@@ -314,11 +309,6 @@ public class WeFamilyController extends BaseAdminController {
                             mtxProduct.setWatchornot("Y");
                         }else{
                             mtxProduct.setWatchornot("N");
-                        }
-                        int p=0;
-                        if(mtxProduct.getPrice()!=null){
-                            p  = mtxProduct.getPrice().intValue();
-                            mtxProduct.setPoints(p);
                         }
                         mxtProductService.updatePartial(mtxProduct);
                         MtxProduct mtxProductTemp = mxtProductService.queryForObjectByPk(mtxProduct);

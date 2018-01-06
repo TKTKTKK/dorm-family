@@ -51,7 +51,7 @@
             </form>
             <p>零售价：<input type="text" id="price" value="${partsCenter.price}${partsCenter.format}"/></p>
             <p>适用机型：<input type="text" id="fitmodel" value="${partsCenter.machinemodel}"/></p>
-            <p>产地：<input type="text" id="address" value="${partsCenter.address}"/> </p>
+            <p>说明书版本：<input type="text" id="instruction" value="${partsCenter.instruction}"/> </p>
             <hr>
             <div id="imgid">
                 <p>配件图片</p>
@@ -138,7 +138,7 @@
                         $("#machinename").val(paramArr[1]);
                         $("#price").val(paramArr[2]);
                         $("#fitmodel").val(paramArr[3]);
-                        $("#address").val(paramArr[4]);
+                        $("#instruction").val(paramArr[4]);
                         $.post("${ctx}/guest/getMtxParts?code="+$("#material_code").val(),function(data){
                             if(data.machine){
                                 $("#imgid").css("display","block");

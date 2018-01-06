@@ -77,10 +77,11 @@
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
                                     <tr>
-                                        <th width="16%">产品型号</th>
-                                        <th width="16%">产品名称</th>
-                                        <th width="16%">指导价</th>
-                                        <th width="16%">状态</th>
+                                        <th width="12%">产品型号</th>
+                                        <th width="12%">产品名称</th>
+                                        <th width="12%">指导价</th>
+                                        <th width="12%">积分</th>
+                                        <th width="12%">状态</th>
                                         <th width="16%">图片</th>
                                         <th width="20%">操作</th>
                                     </tr>
@@ -96,6 +97,9 @@
                                             </td>
                                             <td>
                                                     ${mtxProduct.price}
+                                            </td>
+                                            <td>
+                                                    ${mtxProduct.points}
                                             </td>
                                             <td>
                                                 ${web:getCodeDesc("PRODUCT_STATUS", mtxProduct.status)}
