@@ -2928,7 +2928,7 @@ public class WeFamilyController extends BaseAdminController {
      */
     @RequestMapping(value = "/qualityMgmtAsy", method = RequestMethod.GET)
     @ResponseBody
-    public int qualityMgmtAsy(HttpServletRequest request){
+    public int qualityMgmtAsy(HttpServletRequest request,Model model){
         String merchantId = request.getParameter("merchantId");
         String status = request.getParameter("status");
         String type = request.getParameter("type");
@@ -2937,6 +2937,11 @@ public class WeFamilyController extends BaseAdminController {
         qualityMgmt.setMerchantid(merchantId);
         qualityMgmt.setStatus(status);
         qualityMgmt.setType(type);
+        String unDistributed = request.getParameter("unDistributed");
+        if("Y".equals(unDistributed)){
+            qualityMgmt.setMerchantid(unDistributed);
+            model.addAttribute("unDistributed",unDistributed);
+        }
         List<QualityMgmt> qualityMgmtList = qualityMgmtService.queryQualityMgmtAsy(qualityMgmt);
         int count = qualityMgmtList.size();
         return count;

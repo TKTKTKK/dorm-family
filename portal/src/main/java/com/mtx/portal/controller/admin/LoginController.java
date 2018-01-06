@@ -113,7 +113,11 @@ public class LoginController {
         if(StringUtils.isNotBlank(merchantId)){
             model.addAttribute("merchantId",merchantId);
         }else{
-            model.addAttribute("merchantId",merchantList.get(0).getUuid());
+            if("Y".equals(ifHqUser)){
+                model.addAttribute("merchantId",null);
+            }else{
+                model.addAttribute("merchantId",merchantList.get(0).getUuid());
+            }
         }
         return "admin/home";
     }

@@ -239,7 +239,7 @@
     <div class="choose" style="display: none">
         <div class="error">
             <p id="Message"></p >
-            <button onclick="closeModel()">朕知道了</button>
+            <button onclick="closeModel()">我知道了</button>
         </div>
     </div>
 

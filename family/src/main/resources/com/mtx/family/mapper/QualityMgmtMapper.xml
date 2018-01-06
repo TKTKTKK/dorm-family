@@ -132,11 +132,13 @@
         where qm.type = #{qualityMgmt.type}
         and qm.status = #{qualityMgmt.status}
         <choose>
-            <when test="qualityMgmt.merchantid == null or qualityMgmt.merchantid ==''">
+            <when test="qualityMgmt.merchantid == 'Y'.toString()">
                 and qm.merchantid is null
             </when>
             <otherwise>
-                and qm.merchantid = #{qualityMgmt.merchantid}
+                <if test="qualityMgmt.merchantid != null and qualityMgmt.merchantid != ''">
+                    and qm.merchantid = #{qualityMgmt.merchantid}
+                </if>
             </otherwise>
         </choose>
 
