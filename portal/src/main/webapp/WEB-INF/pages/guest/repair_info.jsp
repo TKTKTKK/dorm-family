@@ -175,6 +175,7 @@
 <script src="${ctx}/static/js/mobiscroll.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script src="${ctx}/static/js/wechatUtil.js?20171201"></script>
+<script src="${ctx}/static/js/coordtransform.js"></script>
 <script type="text/javascript">
 
     var errorMessage = document.getElementById("errorMessage");
