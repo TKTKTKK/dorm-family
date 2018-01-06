@@ -105,13 +105,11 @@
                                 <div class=" row">
                                     <div class="col-sm-2">
                                         <select data-required="true" class="form-control" onchange="searchMyConsole(this.value)" id="merchantId">
+                                            <c:if test="${ifHqUser == 'Y'}">
+                                                <option value="">全部</option>
+                                            </c:if>
                                             <c:forEach items="${merchantList}" var="merchant">
-                                                <c:if test="${merchantId == merchant.uuid}">
-                                                    <option value="${merchant.uuid}" selected>${merchant.name}</option>
-                                                </c:if>
-                                                <c:if test="${merchantId != merchant.uuid}">
-                                                    <option value="${merchant.uuid}">${merchant.name}</option>
-                                                </c:if>
+                                                <option value="${merchant.uuid}" <c:if test="${not empty merchantId && merchantId== merchant.uuid}">selected</c:if>>${merchant.name}</option>
                                             </c:forEach>
                                         </select>
                                     </div>
@@ -344,7 +342,7 @@
             $('#newRepair').text(data);
         });
         //未分配新任务
-        $.get(encodeURI("/admin/wefamily/qualityMgmtAsy?status=NEW&type=REPAIR"),function(data,status){
+        $.get(encodeURI("/admin/wefamily/qualityMgmtAsy?status=NEW&type=REPAIR&unDistributed=Y"),function(data,status){
             $('#newRepairForHQ').text(data);
         });
         //处理中

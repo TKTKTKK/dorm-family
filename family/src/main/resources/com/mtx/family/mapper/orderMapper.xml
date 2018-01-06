@@ -59,8 +59,11 @@
 
     <select id="selectOrderListForHomeData" resultMap="selectResultMap">
         select * from tb_mtx_order mo
-        where mo.merchantid = #{order.merchantid}
-        and mo.status = #{order.status}
+        where
+        mo.status = #{order.status}
+        <if test="order.merchantid != null and order.merchantid != ''">
+          and mo.merchantid = #{order.merchantid}
+        </if>
     </select>
 
 </mapper>
