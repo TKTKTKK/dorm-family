@@ -336,21 +336,6 @@
         window.location.href = "${ctx}/admin/account/queryAllWpUsersByBindid";
     }
 
-    function goOrderManage(merchantid,status){
-       /* $.get(encodeURI("/admin/wefamily/qualityMgmtAsy?status=NEW&type=REPAIR&merchantId=${merchantId}"),function(data,status){
-            $('#newRepair').text(data);
-        });*/
-
-        $.post("${ctx}/admin/wefamily/orderManage?status=NEW&type=REPAIR&merchantId=${merchantId}",
-                {
-                    merchantid:merchantid,
-                    status:status
-                },
-                function(data,status){
-
-                });
-    }
-
 
     //异步查询数据
     function queryDataAsy(){
