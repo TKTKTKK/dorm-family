@@ -41,6 +41,10 @@
     <span class="spanid" onclick="searchParts()">查询</span>
 </div>
 </form>
+<div style="text-align: center;margin-top: 50px;font-size: 1.6rem" id="msg">
+    <span>请输入配件编号进行查询。</span></br>
+    <span>因物流、地域差异，查询数据仅供参考。</span>
+</div>
 <div class="content" style="display: none">
     <div class="goods_info">
         <div class="info_name">
@@ -60,7 +64,6 @@
                             <a class="swipebox" id="swipebox" href= "${attachment.name}" onclick="reviewMediaShow(this)">
                                 <li><img src="${attachment.name}" alt=""></li>
                             </a>
-
                         </c:forEach>
                     </ul>
             </div>
@@ -85,9 +88,11 @@
     window.onload=function (){
         if('${Flag}'=='1'){
             closeImg();
+            $("#msg").css("display","none");
         }
         if('${Flag}'=='0'){
             closeImg();
+            $("#msg").css("display","none");
             errorMessage.innerHTML="对不起，配件不存在！";
             $("#chooseClose").css("display","block");
         }
@@ -101,6 +106,7 @@
         $("#moneyDiv").css("display","none");
     }
     function searchParts(){
+        $("#msg").css("display","none");
         var code=$("#code").val();
         if(code!=null&&code!=''){
             var searchForm = document.getElementById("frm");
@@ -112,7 +118,6 @@
         }
     }
     function searchPartsAuto(){
-        var code=$("#material_code").val();
         if(code!=null&&code!=''){
             var searchForm = document.getElementById("form");
             searchForm.action = "${ctx}/guest/parts_center";
