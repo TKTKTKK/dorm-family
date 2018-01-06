@@ -34,6 +34,8 @@ public class MtxActivity extends BaseEntity {
     private Integer everyLuckyCount;
     @Column
     private Integer currentLuckyCount;
+    @Column
+    private String qrcode;
 
     public Integer getCurrentLuckyCount() {
         return currentLuckyCount;
@@ -137,5 +139,13 @@ public class MtxActivity extends BaseEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getQrcode() {
+        return qrcode;
+    }
+
+    public void setQrcode(String qrcode) {
+        this.qrcode = qrcode;
     }
 }

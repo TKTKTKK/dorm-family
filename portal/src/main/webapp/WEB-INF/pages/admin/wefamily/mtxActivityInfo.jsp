@@ -231,6 +231,15 @@
                                           <c:if test="${activity.status eq 'APP'}">disabled</c:if>>
                                 </div>
                             </div>
+                            <c:if test="${not empty activity.qrcode}">
+                                <div class="form-group" >
+                                    <label class="col-sm-3 control-label">活动二维码</label>
+                                    <div class="col-sm-9  b-l bg-white">
+                                            <img src="${activity.qrcode}" width="50" height="50"
+                                                 onclick="viewBigImage(this)" data-toggle="modal" data-target=".bs-example-modal-lg-image"/>
+                                    </div>
+                                </div>
+                            </c:if>
 
                             <div id="participantid" class="hidden">
                                 <div class="form-group">

@@ -16,6 +16,17 @@ public class QRCodeUtil {
     }
 
     /**
+     * 活动二维码
+     * @param content
+     * @return
+     */
+    public static String generateActivityQRCode(String content){
+        ByteArrayOutputStream out = QRCode.from(content).to(ImageType.PNG).withSize(250,250).stream();
+        return UploadUtils.uploadFile(out,"qrcodeForActivity",".png");
+    }
+
+
+    /**
      * 生成快递员支付二维码
      * @param content
      * @return

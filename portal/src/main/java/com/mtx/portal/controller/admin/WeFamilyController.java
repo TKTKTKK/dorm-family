@@ -5,14 +5,12 @@ import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.mtx.common.entity.*;
 import com.mtx.common.exception.ServiceException;
 import com.mtx.common.service.*;
-import com.mtx.common.utils.DateUtils;
-import com.mtx.common.utils.StringUtils;
-import com.mtx.common.utils.UploadUtils;
-import com.mtx.common.utils.UserUtils;
+import com.mtx.common.utils.*;
 import com.mtx.family.entity.*;
 import com.mtx.family.service.*;
 import com.mtx.portal.PortalContants;
 import com.mtx.portal.utils.ExportUtil;
+import com.mtx.wechat.WechatConstants;
 import com.mtx.wechat.entity.WpUser;
 import com.mtx.wechat.entity.admin.WechatBinding;
 import com.mtx.wechat.service.WechatBindingService;
@@ -2666,6 +2664,15 @@ public class WeFamilyController extends BaseAdminController {
         if (StringUtils.isBlank(activity.getUuid())) {
             activity.setBindid(UserUtils.getUserBindId());
             mtxActivityService.insert(activity);
+
+            //生成活动二维码
+            String domainUrl = RequestUtil.getDomainUrl();
+            String qrCodeUrl = domainUrl + "/guest/activity_info?activityId="+activity.getUuid();
+            String staffqrcode = QRCodeUtil.generateActivityQRCode(qrCodeUrl);
+            activity.setQrcode(staffqrcode);
+            mtxActivityService.updatePartial(activity);
+
+            activity = mtxActivityService.queryForObjectByPk(activity);
             model.addAttribute("activity", activity);
             if(detailImgs!=null&&detailImgs.length>0){
                 for(int i=0;i<detailImgs.length;i++){
