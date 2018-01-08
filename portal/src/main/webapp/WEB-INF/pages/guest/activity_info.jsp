@@ -214,7 +214,7 @@
         var errorMessage = document.getElementById("errorMessage");
         errorMessage.innerHTML = "";
 
-        if('${wpUser.ifsubscribe}' == ''){
+        if('${wpUser.ifsubscribe}' == 'N'){
             $("#Msg").css("display","block");
             errorMessage.innerHTML = "请先关注公众号！"
         }else{
