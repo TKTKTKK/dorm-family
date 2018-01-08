@@ -179,8 +179,8 @@
                     </li>
                     <li>
                         <span>手&nbsp;&nbsp;&nbsp;机：</span>
-                        <input type="text" id="contactno" name="contactno" value="${wpUser.contactno}"
-                               data-required="true"  data-maxlength="32" placeholder="请填写手机"/>
+                        <input type="number" id="contactno" name="contactno" value="${wpUser.contactno}"
+                               data-required="true"  data-maxlength="11" placeholder="请填写手机"/>
                     </li>
                     <li>
                         <span id="inviteCodeError"></span>
@@ -196,6 +196,7 @@
 
             <div class="choose" id="Msg" style="display: none">
                 <div class="error">
+                    <img src="${ctx}/static/guest/img/mtx.jpg" style="display: none" id="public"/>
                     <p id="errorMessage"></p >
                     <button onclick="closeModel()">我知道了</button>
                 </div>
@@ -214,8 +215,9 @@
         var errorMessage = document.getElementById("errorMessage");
         errorMessage.innerHTML = "";
 
-        if('${wpUser.ifsubscribe}' == 'N'){
+        if('${wpUser.ifsubscribe}' != 'Y'){
             $("#Msg").css("display","block");
+            $("#public").css("display","block");
             errorMessage.innerHTML = "请先关注公众号！"
         }else{
             $("#participantDiv").css("display","block");
@@ -242,11 +244,10 @@
         var name = $("#name").val();
         var contactno = $("#contactno").val();
 
-        var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
 
         if(inviteCode != '${mtxActivity.password}'){
             inviteCodeError.innerHTML = "邀请码错误";
-        }else if(!myreg.test(contactno)){
+        }else if(contactno.length!=11){
             contactnoError.innerHTML = "手机号有误";
         }else if(inviteCode.length > 0 && name.length > 0){
 

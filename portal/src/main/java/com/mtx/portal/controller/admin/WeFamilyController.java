@@ -2837,10 +2837,6 @@ public class WeFamilyController extends BaseAdminController {
         mtxActivity.setVersionno(Integer.valueOf(versionno));
         mtxActivity.setTotalLuckyCount(Integer.valueOf(totalLuckyCount));
         mtxActivity.setEveryLuckyCount(Integer.valueOf(everyLuckyCount));
-        String status = request.getParameter("status");
-        if(StringUtils.isNotBlank(status)){
-            mtxActivity.setStatus(status);
-        }
         mtxActivityService.updatePartial(mtxActivity);
         String fromPhone  = request.getParameter("fromPhone");
         if(StringUtils.isNotBlank(message)){

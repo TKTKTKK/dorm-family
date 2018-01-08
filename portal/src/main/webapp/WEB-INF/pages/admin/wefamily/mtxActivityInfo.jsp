@@ -188,21 +188,7 @@
                                 <label class="col-sm-3  control-label"><span class="text-danger">*</span>状态：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <c:choose>
-                                        <c:when test="${activity.status eq 'PENDING'||activity.status eq 'DRAWING'}">
-                                            <select class="form-control" id="status" name="status">
-                                                <option value="">--全部--</option>
-                                                <c:set var="typeList" value="${web:queryCommonCodeList('ACTIVITY_STATUS')}"></c:set>
-                                                <c:forEach items="${typeList}" var="typeCode">
-                                                    <c:if test="${activity.status == typeCode.code}">
-                                                        <option value="${typeCode.code}" selected>${typeCode.codevalue}</option>
-                                                    </c:if>
-                                                    <c:if test="${activity.status != typeCode.code}">
-                                                        <option value="${typeCode.code}">${typeCode.codevalue}</option>
-                                                    </c:if>
-                                                </c:forEach>
-                                            </select>
-                                        </c:when>
-                                        <c:when test="${activity.status eq 'APP'}">
+                                        <c:when test="${activity.status eq 'PENDING'||activity.status eq 'DRAWING'||activity.status eq 'APP'}">
                                             <input class="form-control hidden" type="text" name="status" value="${activity.status}"
                                                    id="status"
                                                    data-required="true">
@@ -501,7 +487,6 @@
         var uuid='${activity.uuid}';
         var participantname=document.getElementById("participantname").value;
         var participantphone=document.getElementById("participantphone").value;
-        var status=$("select[name='status'] option:selected").val();
         if((participantname!=''&&participantname!=null)||(participantphone!=''&&participantphone!=null)){
             var searchForm = document.getElementById("frm");
             searchForm.action = "${ctx}/admin/wefamily/addParticipant?uuid="+uuid+"&participantname="+participantname+"&participantphone="+participantphone;
@@ -509,7 +494,7 @@
         }else{
             if(validRegular()){
                 var searchForm = document.getElementById("frm");
-                searchForm.action = "${ctx}/admin/wefamily/addParticipant?uuid="+uuid+"&status="+status;
+                searchForm.action = "${ctx}/admin/wefamily/addParticipant?uuid="+uuid;
                 searchForm.submit();
             }
         }
