@@ -7,6 +7,8 @@
     <!-- 指明满足被装饰页面路径，但需要排除在外的/不需要被装饰的页面的path -->
     <mapping path="/admin/login" exclude="true"/>
     <mapping path="/admin/register" exclude="true"/>
+    <mapping path="/admin/wefamily/goBuyUser" exclude="true"/>
+    <mapping path="/admin/wefamily/clickDrawing" exclude="true"/>
     <!--<mapping path="/admin/wefamily/trainManageForPhone" exclude="true"/>-->
     <!--<mapping path="/admin/wefamily/trainInfoForPhone" exclude="true"/>-->
     <!--<mapping path="/admin/wefamily/repairManageForPhone" exclude="true"/>-->
