@@ -48,7 +48,9 @@
                                     <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 经销商：</label>
                                     <div class="col-sm-7  my-display-inline-box">
                                         <select class="form-control" id="merchantid" name="merchantid">
+                                            <c:if test="${fn:length(merchantList)>1}">
                                             <option value="">全部</option>
+                                            </c:if>
                                             <c:forEach items="${merchantList}" var="merchant">
                                                 <option value="${merchant.uuid}" <c:if test="${merchant.uuid==mtxReserve.merchantid}"> selected</c:if>>${merchant.name}</option>
                                             </c:forEach>

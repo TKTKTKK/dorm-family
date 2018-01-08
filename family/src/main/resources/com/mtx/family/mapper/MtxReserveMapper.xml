@@ -33,6 +33,11 @@
         inner join tb_mtx_merchant mm on mm.uuid=mr.merchantid
         left join tb_mtx_product mp on mp.uuid=mr.productid
         where mm.bindid=#{bindid}
+        and mm.uuid in
+        <foreach item="item" index="index" collection="list" open="("
+                 separator="," close=")">
+            #{item}
+        </foreach>
         <if test="mtxReserve.name != null and mtxReserve.name != ''">
             and mr.name like concat("%",#{mtxReserve.name},"%")
         </if>

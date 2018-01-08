@@ -7,11 +7,13 @@ import com.mtx.family.entity.MtxReserve;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface MtxReserveMapper extends BaseMapper<MtxReserve> {
     public PageList<MtxReserve> selectMtxReserveList(@Param("mtxReserve") MtxReserve mtxReserve, PageBounds pageBounds);
 
-    PageList<MtxReserve> queryMerchantReserve(@Param("mtxReserve")MtxReserve mtxReserve, PageBounds pageBounds,@Param("bindid")String bindid);
+    PageList<MtxReserve> queryMerchantReserve(@Param("mtxReserve")MtxReserve mtxReserve, PageBounds pageBounds,@Param("bindid")String bindid,@Param("list")List<String> list);
 
     MtxReserve queryByPK(@Param("mtxReserve")MtxReserve mtxReserve);
 }

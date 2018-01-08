@@ -999,8 +999,7 @@ public class WeFamilyController extends BaseAdminController {
             }
         }
         if(identify){
-            Merchant merchant=new Merchant();
-            List<Merchant> merchantList=merchantService.queryForList(merchant);
+            List<Merchant> merchantList=merchantService.selectMerchantForUser();
             model.addAttribute("merchantList",merchantList);
             if(StringUtils.isBlank(mtxReserve.getStatus())){
                 mtxReserve.setStatus("N_DEAL");
@@ -1012,15 +1011,19 @@ public class WeFamilyController extends BaseAdminController {
 
             return "admin/wefamily/mtxReserveManage";
         }else{
-            Merchant merchant=new Merchant();
-            merchant.setBindid(UserUtils.getUserBindId());
-            List<Merchant> merchantList=merchantService.queryForList(merchant);
+            List<Merchant> merchantList=merchantService.selectMerchantForUser();
             model.addAttribute("merchantList",merchantList);
+            List<String> uuidList=new ArrayList<String>();
+            if(merchantList.size()>0){
+                for(int i=0;i<merchantList.size();i++){
+                    uuidList.add(merchantList.get(i).getUuid());
+                }
+            }
             if(StringUtils.isBlank(mtxReserve.getStatus())){
                 mtxReserve.setStatus("CHANGE");
             }
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-            PageList<MtxReserve> mtxReserveList = mtxReserveService.queryMerchantReserve(mtxReserve, pageBounds,UserUtils.getUserBindId());
+            PageList<MtxReserve> mtxReserveList = mtxReserveService.queryMerchantReserve(mtxReserve, pageBounds,UserUtils.getUserBindId(),uuidList);
             model.addAttribute("mtxReserveList", mtxReserveList);
             model.addAttribute("mtxReserve",mtxReserve);
             return "admin/wefamily/mtxReserveMerchant";
@@ -1030,8 +1033,7 @@ public class WeFamilyController extends BaseAdminController {
 
     @RequestMapping(value = "/goMtxReserve",method = RequestMethod.GET)
     public String goMtxReserve(MtxReserve mtxReserve,Model model){
-        Merchant merchant=new Merchant();
-        List<Merchant> merchantList=merchantService.queryForList(merchant);
+        List<Merchant> merchantList=merchantService.selectMerchantForUser();
         model.addAttribute("merchantList",merchantList);
         mtxReserve=mtxReserveService.queryByPK(mtxReserve);
         model.addAttribute("mtxReserve",mtxReserve);
@@ -1040,9 +1042,7 @@ public class WeFamilyController extends BaseAdminController {
 
     @RequestMapping(value = "/goReserveMerchant",method = RequestMethod.GET)
     public String goReserveMerchant(MtxReserve mtxReserve,Model model){
-        Merchant merchant=new Merchant();
-        merchant.setBindid(UserUtils.getUserBindId());
-        List<Merchant> merchantList=merchantService.queryForList(merchant);
+        List<Merchant> merchantList=merchantService.selectMerchantForUser();
         model.addAttribute("merchantList",merchantList);
         mtxReserve=mtxReserveService.queryByPK(mtxReserve);
         model.addAttribute("mtxReserve",mtxReserve);
@@ -1053,8 +1053,7 @@ public class WeFamilyController extends BaseAdminController {
     public String updateMtxReserve(MtxReserve mtxReserve, RedirectAttributes redirectAttributes, Model model,String flag){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
-        Merchant merchant=new Merchant();
-        List<Merchant> merchantList=merchantService.queryForList(merchant);
+        List<Merchant> merchantList=merchantService.selectMerchantForUser();
         model.addAttribute("merchantList",merchantList);
         try {
             mtxReserveService.updatePartial(mtxReserve);
