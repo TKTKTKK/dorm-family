@@ -29,6 +29,8 @@ public class Merchant extends BaseEntity {
     private String license;
     @Column
     private String frequentcontacts;
+    @Column
+    private String contactsphone;
 
 
     public String getBindid() {
@@ -109,5 +111,13 @@ public class Merchant extends BaseEntity {
 
     public void setFrequentcontacts(String frequentcontacts) {
         this.frequentcontacts = frequentcontacts;
+    }
+
+    public String getContactsphone() {
+        return contactsphone;
+    }
+
+    public void setContactsphone(String contactsphone) {
+        this.contactsphone = contactsphone;
     }
 }

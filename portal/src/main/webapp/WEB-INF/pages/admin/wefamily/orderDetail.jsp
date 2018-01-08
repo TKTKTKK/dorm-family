@@ -443,7 +443,7 @@
                                                                         <div class="col-md-2 col-xs-4 name detail-div">收货日期:</div>
                                                                         <div class="col-md-4 col-xs-8 value detail-div" >${receiptList[0].receiptdt}</div>
 
-                                                                        <div class="col-md-2 col-xs-4 name detail-div">满意度:</div>
+                                                                        <div class="col-md-2 col-xs-4 name detail-div">运输满意度:</div>
                                                                         <div class="col-md-4 col-xs-8 value detail-div" >${web:getCodeDesc("SATISFACTION", receiptList[0].satisfaction)}</div>
                                                                     </div>
                                                                     <c:if test="${not empty receiptList[0].question}">

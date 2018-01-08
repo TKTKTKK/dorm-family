@@ -67,9 +67,10 @@
                                     <tr>
                                         <th class="text-center">经销商名称</th>
                                         <th class="text-center">地址</th>
+                                        <th class="text-center">经销商电话</th>
                                         <th class="text-center">法人代表</th>
                                         <th class="text-center">常用联系人</th>
-                                        <th class="text-center">电话</th>
+                                        <th class="text-center">常用联系人电话</th>
                                         <th class="text-center">操作</th>
                                     </tr>
                                     </thead>
@@ -83,13 +84,16 @@
                                                     ${merchant.address}
                                             </td>
                                             <td>
+                                                    ${merchant.contactno}
+                                            </td>
+                                            <td>
                                                     ${merchant.legalperson}
                                             </td>
                                             <td>
                                                     ${merchant.frequentcontacts}
                                             </td>
                                             <td>
-                                                    ${merchant.contactno}
+                                                    ${merchant.contactsphone}
                                             </td>
                                             <td>
                                                 <a href="${ctx}/admin/wefamily/merchantInfo?merchantId=${merchant.uuid}"

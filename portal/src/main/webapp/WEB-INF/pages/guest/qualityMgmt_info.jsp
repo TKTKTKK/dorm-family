@@ -15,8 +15,9 @@
     <link rel="stylesheet" href="${ctx}/static/guest/css/reviewMediaSwipebox.css" type="text/css" />
     <style>
         .goal_total{padding-left: 1.25rem;border-bottom: 1px solid rgba(0,0,0,0.1);font-size: 1.6rem;color: #333;background-color: #fff;position: relative;padding: 1.17rem 2rem 1.17rem 1.25rem;margin-top: 1rem;}
-        .goal_total:nth-of-type(even) span{border-left: 4px solid #ff9933;padding-left: 1.25rem;}
-        .goal_total:nth-of-type(odd) span {border-left: 4px solid #5bbc4e;padding-left: 1.25rem;}
+        .goal_total:nth-of-type(odd) span{border-left: 4px solid #ff9933;padding-left: 1.25rem;}
+        .goal_total:nth-of-type(2) span {border-left: 4px solid #5bbc4e;padding-left: 1.25rem;}
+        .goal_total:nth-of-type(3) span {border-left: 4px solid #5bbc4e;padding-left: 1.25rem;}
         .goal_total img{float: right;right: 1.25rem;position: absolute;width: 1rem;height: 1.6rem;top:1.2rem;}
         .list{background: #fff;}
         .list li{justify-content: space-between;border-bottom: 1px solid rgba(0,0,0,0.1);padding: 1.17rem 2rem;}
@@ -124,12 +125,12 @@
                       action="" method="POST" id="frm">
                 <c:if test="${qualityMgmt.status == 'FINISH'}">
                     <div class="goal_total">
-                        <span>评价</span>
+                        <span>您对本次服务满意吗？</span>
                         <img src="../../../../static/guest/img/list.png" alt="" id="situationListImg" class="up">
                     </div>
                     <ul class="list">
                         <li>
-                            <span>用户评价</span>
+                            <span>评价</span>
                             <select name="evaluate" id="evaluate">
                                 <c:set var="commonCodeList" value="${web:queryCommonCodeList('REPAIR_EVALUATE')}"></c:set>
                                 <option value="">请选择</option>
