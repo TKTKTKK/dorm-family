@@ -837,48 +837,6 @@ public class MtxGuestController extends BaseGuestController{
         return "redirect:/guest/activity_info?activityId="+activityId;
     }
 
-    @RequestMapping(value = "/clickDrawing", method = RequestMethod.GET)
-    public String clickDrawing(String uuid,Model model){
-        if(StringUtils.isNotBlank(uuid)){
-            MtxActivity activityTemp=new MtxActivity();
-            activityTemp.setUuid(uuid);
-            activityTemp=mtxActivityService.queryForObjectByPk(activityTemp);
-            MtxActivityParticipant activityParticipant=new MtxActivityParticipant();
-            MtxActivityParticipant participant=new MtxActivityParticipant();
-            activityParticipant.setActivityid(uuid);
-            participant.setActivityid(uuid);
-            participant.setStatus("WIN");
-            //总人数
-            List<MtxActivityParticipant> activityParticipantList=mtxActivityParticipantService.queryForWaitDrawingList(activityParticipant);
-            //中奖人名单
-            List<MtxActivityParticipant> winList=mtxActivityParticipantService.queryForParticipantList(participant);
-            MtxActivity activity=new MtxActivity();
-            activity.setUuid(uuid);
-            activity=mtxActivityService.queryForObjectByPk(activity);
-            if(winList.size()!=activityTemp.getTotalLuckyCount()){
-                activity.setStatus("DRAWING");
-                mtxActivityService.updatePartial(activity);
-            }
-            //待抽奖人
-            List<MtxActivityParticipant> otherWaitPList=mtxActivityParticipantService.queryForWaitDrawingList(participant);
-            model.addAttribute("activityParticipantList",activityParticipantList);
-            model.addAttribute("winList",winList);
-            MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
-            luckyParticipant.setActivityid(uuid);
-            luckyParticipant.setStatus("WIN");
-            List<MtxLuckyParticipant> luckyParticipantList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"0");
-            if(luckyParticipantList.size()>0){
-                model.addAttribute("luckyParticipantList",luckyParticipantList);
-            }else{
-                model.addAttribute("luckyParticipantList",otherWaitPList);
-            }
-            model.addAttribute("totalLuckyCount",activityTemp.getTotalLuckyCount());
-            model.addAttribute("everyLuckyCount",activityTemp.getEveryLuckyCount());
-        }
-        model.addAttribute("uuid",uuid);
-        return "guest/activity_center";
-    }
-
     @RequestMapping(value = "/drawing")
     public void drawing(String uuid,String winnerId,int totalnumber){
         if(StringUtils.isNotBlank(uuid)&&StringUtils.isNotBlank(winnerId)){
@@ -915,18 +873,6 @@ public class MtxGuestController extends BaseGuestController{
             }
         }
         return resultMap;
-    }
-
-    @RequestMapping(value = "/goBuyUser", method = RequestMethod.GET)
-    public String goBuyUser(String uuid,Model model){
-
-        if(StringUtils.isNotBlank(uuid)) {
-            MtxLuckyParticipant luck=new MtxLuckyParticipant();;
-            luck.setActivityid(uuid);
-            List<MtxLuckyParticipant> luckList=mtxLuckyParticipantService.queryForLuckyParticipantList(luck,"");
-            model.addAttribute("luckList",luckList);
-        }
-        return "guest/activity_center_buy";
     }
 
 }

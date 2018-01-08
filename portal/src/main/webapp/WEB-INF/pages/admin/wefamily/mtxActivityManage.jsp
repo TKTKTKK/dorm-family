@@ -310,7 +310,7 @@
 
     function clickDrawing(uuid){
         qikoo.dialog.confirm('点击开始后，人员无法再加入！确定开始抽奖吗？',function(){
-            window.location.href="${ctx}/guest/clickDrawing?uuid="+uuid;
+            window.location.href="${ctx}/admin/wefamily/clickDrawing?uuid="+uuid;
         },function(){
             //取消删除
         });
@@ -318,7 +318,7 @@
 
     function goBackDrawing(uuid){
         qikoo.dialog.confirm('确定返回抽奖吗？',function(){
-            window.location.href="${ctx}/guest/clickDrawing?uuid="+uuid;
+            window.location.href="${ctx}/admin/wefamily/clickDrawing?uuid="+uuid;
         },function(){
             //取消删除
         });
@@ -326,7 +326,7 @@
 
     function goBuyUser(uuid){
         qikoo.dialog.confirm('确定要跳到购机用户页面吗？',function(){
-            window.location.href="${ctx}/guest/goBuyUser?uuid="+uuid;
+            window.location.href="${ctx}/admin/wefamily/goBuyUser?uuid="+uuid;
         },function(){
             //取消删除
         });
