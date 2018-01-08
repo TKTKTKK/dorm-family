@@ -70,8 +70,12 @@ public class WechatOAuthFilter implements Filter {
                     }
                 } else {
                     StringBuffer originalUrl = req.getRequestURL();
+                    String queryString = req.getQueryString();
                     logger.info("originalUrl : " + originalUrl.toString());
-                    resp.sendRedirect(WechatUtil.getOAuthUrl(wechatBinding.getAppid(), originalUrl.toString()));
+                    logger.info("queryString : " + queryString);
+                    String fullUrl = originalUrl + "?" + queryString;
+                    logger.info("fullUrl : " + fullUrl);
+                    resp.sendRedirect(WechatUtil.getOAuthUrl(wechatBinding.getAppid(), fullUrl));
                     return;
                 }
             }
