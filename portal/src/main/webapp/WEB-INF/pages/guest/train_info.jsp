@@ -18,8 +18,9 @@
     <link href="${ctx}/static/guest/css/mobiscroll_date.css" rel="stylesheet" />
     <style>
         .goal_total{padding-left: 1.25rem;border-bottom: 1px solid rgba(0,0,0,0.1);font-size: 1.6rem;color: #333;background-color: #fff;position: relative;padding: 1.17rem 2rem 1.17rem 1.25rem;margin-top: 1rem;}
-        .goal_total:nth-of-type(even) span{border-left: 4px solid #ff9933;padding-left: 1.25rem;}
-        .goal_total:nth-of-type(odd) span {border-left: 4px solid #5bbc4e;padding-left: 1.25rem;}
+        .goal_total:nth-of-type(odd) span{border-left: 4px solid #ff9933;padding-left: 1.25rem;}
+        .goal_total:nth-of-type(2) span {border-left: 4px solid #5bbc4e;padding-left: 1.25rem;}
+        .goal_total:nth-of-type(3) span {border-left: 4px solid #5bbc4e;padding-left: 1.25rem;}
         .goal_total img{float: right;right: 1.25rem;position: absolute;width: 1rem;height: 1.6rem;top:1.2rem;}
         .list{background: #fff;}
         .list li{justify-content: space-between;border-bottom: 1px solid rgba(0,0,0,0.1);padding: 1.17rem 2rem;}
@@ -77,6 +78,7 @@
         .fixsubmit>a:nth-of-type(1){left: 0;background: #5bbc4e;width: 100%;color: white}
         #productiondt{height: auto;width: auto}
         #traindt{height: auto;width: auto}
+
     </style>
 </head>
 <body>
@@ -125,7 +127,7 @@
        <form class="form-horizontal" data-validate="parsley"
                   action="" method="POST" id="frm">
             <div class="goal_total" style="margin-top: 0px ">
-                <span>用户评价</span>
+                <span class="evaluateSpan">您对本次服务满意吗？</span>
             </div>
             <ul class="list">
                 <li>

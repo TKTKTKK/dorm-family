@@ -40,7 +40,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">
                                     <span class="text-danger">*</span>
-                                    电话：</label>
+                                    经销商电话：</label>
 
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="text" name="contactno" class="form-control" data-required="true"
@@ -60,6 +60,20 @@
                                            onblur="trimText(this)"
                                            value="${merchant.frequentcontacts}">
                                     <span id="frequentcontactsError" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+                                    <span class="text-danger">*</span>
+                                    常用联系人电话：</label>
+
+                                <div class="col-sm-9 b-l bg-white">
+                                    <input type="text" name="contactsphone" class="form-control" data-required="true"
+                                           onblur="trimText(this)"
+                                           value="${merchant.contactsphone}"
+                                           data-maxlength="20" id="contactsphone">
+                                    <span id="contactsphoneError" class="text-danger"></span>
                                 </div>
                             </div>
 
@@ -246,6 +260,14 @@
         var contactnoValid = validateChineseText(100, document.getElementById('contactno').value, 'contactnoError');
         //物业地址
         var addressValid = validateChineseText(256, document.getElementById('address').value, 'addressError');
+
+        document.getElementById("contactsphoneError").innerHTML = "";
+        var phoneno = $('#contactsphone').val();
+        var rule=/^[1][3,4,5,7,8][0-9]{9}$/;
+        if(!rule.test(phoneno) || phoneno.length > 11){
+            document.getElementById("contactsphoneError").innerHTML = "输入非法";
+            return false;
+        }
 
         return nameValid && contactnoValid && addressValid;
     }

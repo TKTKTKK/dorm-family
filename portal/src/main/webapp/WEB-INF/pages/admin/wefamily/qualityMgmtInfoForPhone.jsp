@@ -82,6 +82,23 @@
         #servicedt{width: auto;height: auto}
         #content{font-size: initial}
         #remarks{font-size: initial}
+        .confirm{position: fixed;background: rgba(0,0,0,0.5);width: 100%;top: 0;bottom: 0;left: 0;text-align: center;}
+        .yes{
+            width: 50% !important;
+            background: #5bbc4e;
+            color: #fff;
+            border-radius: 0 0 0 10px !important;
+            padding: 0.8rem;
+            float: left !important;
+        }
+        .no{
+            width: 50% !important;
+            background: #f0d439 !important;
+            color: #fff;
+            border-radius: 0 0 10px 0 !important;
+            padding: 0.8rem;
+            float: left;
+        }
     </style>
 </head>
 <body>
@@ -317,10 +334,18 @@
         </div>
     </div>
 
+    <div class="confirm" style="display: none">
+        <div class="error">
+            <p id="confirmMessage"></p >
+            <button class="yes" onclick="closeConfirmModel('Y')">确定</button>
+            <button class="no" onclick="closeConfirmModel('N')">取消</button>
+        </div>
+    </div>
+
         <c:if test="${qualityMgmt.status ne 'FINISH'}">
             <div class="fixsubmit">
                 <a href="javascript:submitQualityMgmtInfo()">保存</a>
-                <a href="javascript:finishQualityMgmt()">提交</a>
+                <a href="javascript:confirmfinishQualityMgmt()">提交</a>
             </div>
         </c:if>
 
@@ -361,6 +386,8 @@
 
     var Message = document.getElementById("Message");
     Message.innerHTML = "";
+    var confirmMessage = document.getElementById("confirmMessage");
+    confirmMessage.innerHTML = "";
 
     function closeModel(){
         $(".choose").css("display","none");
@@ -481,6 +508,18 @@
                 lis[i].style.display = "none";
                 img.className = "down";
             }
+        }
+    }
+
+    function confirmfinishQualityMgmt(){
+        confirmMessage.innerHTML = "确定提交？";
+        $(".confirm").css("display","block");
+    }
+
+    function closeConfirmModel(finishFlag){
+        $(".confirm").css("display","none");
+        if(finishFlag == 'Y'){
+            finishQualityMgmt();
         }
     }
 

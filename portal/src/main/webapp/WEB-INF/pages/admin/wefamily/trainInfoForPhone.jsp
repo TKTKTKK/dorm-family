@@ -78,6 +78,23 @@
         .fixsubmit>a:nth-of-type(2){right: 0;background: #f0d439;width: 30%;color: white}
         #productiondt{height: auto;width: auto}
         #traindt{height: auto;width: auto}
+        .confirm{position: fixed;background: rgba(0,0,0,0.5);width: 100%;top: 0;bottom: 0;left: 0;text-align: center;}
+        .yes{
+            width: 50% !important;
+            background: #5bbc4e;
+            color: #fff;
+            border-radius: 0 0 0 10px !important;
+            padding: 0.8rem;
+            float: left !important;
+        }
+        .no{
+            width: 50% !important;
+            background: #f0d439 !important;
+            color: #fff;
+            border-radius: 0 0 10px 0 !important;
+            padding: 0.8rem;
+            float: left;
+        }
     </style>
 </head>
 <body>
@@ -243,10 +260,18 @@
         </div>
     </div>
 
+    <div class="confirm" style="display: none">
+        <div class="error">
+            <p id="confirmMessage"></p >
+            <button class="yes" onclick="closeConfirmModel('Y')">确定</button>
+            <button class="no" onclick="closeConfirmModel('N')">取消</button>
+        </div>
+    </div>
+
         <c:if test="${train.status ne 'FINISH'}">
             <div class="fixsubmit">
                 <a href="javascript:submitTrainInfo()">保存</a>
-                <a href="javascript:finishTrain()">提交</a>
+                <a href="javascript:confirmFinishTrain()">提交</a>
             </div>
         </c:if>
 
@@ -287,6 +312,8 @@
 
     var Message = document.getElementById("Message");
     Message.innerHTML = "";
+    var confirmMessage = document.getElementById("confirmMessage");
+    confirmMessage.innerHTML = "";
 
     function closeModel(){
         $(".choose").css("display","none");
@@ -379,6 +406,18 @@
                 lis[i].style.display = "none";
                 img.className = "down";
             }
+        }
+    }
+
+    function confirmFinishTrain(){
+        confirmMessage.innerHTML = "确定提交？";
+        $(".confirm").css("display","block");
+    }
+
+    function closeConfirmModel(finishFlag){
+        $(".confirm").css("display","none");
+        if(finishFlag == 'Y'){
+            finishTrain();
         }
     }
 

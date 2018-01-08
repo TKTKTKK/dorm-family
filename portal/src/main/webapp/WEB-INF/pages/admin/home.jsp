@@ -118,43 +118,6 @@
                                 </div>
                             </form>
                         </div>
-                        <c:if test="${ifHqUser eq 'Y'}">
-                            <div class="col-lg-4" style="text-align: left">
-                                <div class=" sc-navy-bg sc-widget">
-                                    <div class="sc-card-content style1">
-                                        <div class="row">
-                                            <div class="col-xs-4">
-                                                <i class="fa fa-wrench fa-5x"></i>
-                                            </div>
-                                            <div class="col-xs-8 text-right needo">
-                                                <a>
-                                                    <span>&nbsp;&nbsp;</span>
-                                                    <span>&nbsp;&nbsp;</span>
-                                                </a>
-                                                <a href="${ctx}/admin/wefamily/qualityMgmtManage?type=REPAIR&status=NEW&unDistributed=Y" style="color: #fff;">
-                                                    <span> 未分配新任务 </span>
-                                                    <span id="newRepairForHQ">0</span>
-                                                </a>
-                                                <a>
-                                                    <span>&nbsp;&nbsp;</span>
-                                                    <span>&nbsp;&nbsp;</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="panel-footer"
-                                         style="background: rgba(255, 255, 255, 0.1) !important;filter: Alpha(opacity=30);
-                                         border:0;padding-left: 10px;">
-                                        <span style="color: #fff;font-weight: bold">报修分配</span>
-                                        <a href="${ctx}/admin/wefamily/qualityMgmtManage?type=REPAIR&status=NEW&unDistributed=Y"
-                                           class="pull-right" style="color:#fff">
-                                            进入<span class="fa fa-angle-double-right"></span>
-                                        </a>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:if>
                         <div class="col-lg-4" style="text-align: left">
                             <div class=" sc-navy-bg sc-widget">
                                 <div class="sc-card-content style1">
@@ -163,6 +126,14 @@
                                             <i class="fa fa-wrench fa-5x"></i>
                                         </div>
                                         <div class="col-xs-8 text-right needo">
+
+                                            <c:if test="${ifHqUser eq 'Y'}">
+                                                <a href="${ctx}/admin/wefamily/qualityMgmtManage?type=REPAIR&status=NEW&unDistributed=Y" style="color: #fff;">
+                                                    <span> 未分配新任务 </span>
+                                                    <span id="newRepairForHQ">0</span>
+                                                </a>
+
+                                            </c:if>
 
                                             <a href="${ctx}/admin/wefamily/qualityMgmtManage?type=REPAIR&merchantid=${merchantId}&status=NEW" style="color: #fff;">
                                                 <span> 新任务 </span>

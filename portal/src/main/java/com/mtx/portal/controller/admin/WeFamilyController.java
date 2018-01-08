@@ -202,6 +202,7 @@ public class WeFamilyController extends BaseAdminController {
                     merchantForMod.setLicense(licenseImg);
                 }
                 merchantForMod.setFrequentcontacts(merchant.getFrequentcontacts());
+                merchantForMod.setContactsphone(merchant.getContactsphone());
                 merchantForMod.setAddress(merchant.getAddress());
                 merchantForMod.setVersionno(merchant.getVersionno());
                 merchantForMod.setProvince(merchant.getProvince());

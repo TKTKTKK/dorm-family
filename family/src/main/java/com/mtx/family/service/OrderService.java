@@ -114,12 +114,14 @@ public class OrderService extends BaseService<OrderMapper,Order> {
     }
 
     public int finishOrder(Order order) {
+        order = this.mapper.retrieveByPk(order);
         order.setStatus("FILED");
         this.mapper.updatePartial(order);
         return 1;
     }
 
     public int finishAddMachine(Order order) {
+        order = this.mapper.retrieveByPk(order);
         order.setStatus("INLOGISTICS");
         this.mapper.updatePartial(order);
         return 1;
