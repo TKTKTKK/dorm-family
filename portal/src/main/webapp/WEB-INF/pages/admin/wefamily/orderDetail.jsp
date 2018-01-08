@@ -367,10 +367,12 @@
 
                                                                         <div class="form-group" style="margin-bottom: 10px">
                                                                             <label class="col-sm-3 col-xs-4 control-label"
-                                                                                   style="padding-top: 5px;padding-left: 10px;padding-right: 10px;text-align: left"
+                                                                                   style="padding-top: 0px;padding-left: 30px;padding-right: 10px;text-align:left;"
                                                                             >物流价格:</label>
                                                                             <div class="col-sm-9 col-xs-8 bg-white">
-                                                                                <span>${order.freight}</span>
+                                                                                <input type="text" value="${order.freight}"
+                                                                                       id="transportationfee" style="border: 0px;background-color: white" disabled>
+                                                                                <%--<span style="margin-left: -11%">${order.freight}</span>--%>
                                                                                 <input type="hidden" id="repairWorkerIds" value="${suggestion.maintainer}">
                                                                                 <c:if test="${order.status ne 'FILED'}">
                                                                                     <shiro:hasRole name="HQ_FINANCE">
@@ -1028,6 +1030,7 @@
             //显示父菜单
             showParentMenu('销售服务');
         }
+        formatMoney(document.getElementById("transportationfee"));
     }
 
     function saveFreightForOrder(){

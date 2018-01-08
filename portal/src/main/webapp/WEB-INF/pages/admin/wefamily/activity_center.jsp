@@ -78,7 +78,7 @@
     //提交获奖者，每抽中一个即请求一次
     function submitWinner(winnerId){
         // console.log("提交中奖者");
-        $.post( "${ctx}/guest/drawing?totalnumber="+Totalnumber+"&uuid="+uuid, {winnerId:winnerId});
+        $.post( "${ctx}/admin/wefamily/drawing?totalnumber="+Totalnumber+"&uuid="+uuid, {winnerId:winnerId});
     }
 
     $(function(){

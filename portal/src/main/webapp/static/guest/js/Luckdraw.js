@@ -23,7 +23,7 @@ $(function () {
 
 // 开始/停止
 function start() {
-	$.post("/guest/getTotalLuckyParticipant?uuid="+uuid,function(data){
+	$.post("/admin/wefamily/getTotalLuckyParticipant?uuid="+uuid,function(data){
 		if(data){
 			Lotterynumber = data.everyLuckyCount;
 			Totalnumber = data.totalLuckyCount;

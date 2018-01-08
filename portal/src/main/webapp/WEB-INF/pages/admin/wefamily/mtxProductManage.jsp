@@ -76,7 +76,7 @@
                             <div class="table-responsive" >
                                 <table class="table table-striped b-t b-light  b-l b-r b-b">
                                     <thead>
-                                    <tr>
+                                    <tr id="1">
                                         <th width="12%">产品型号</th>
                                         <th width="12%">产品名称</th>
                                         <th width="12%">指导价</th>
@@ -88,7 +88,7 @@
                                     </thead>
                                     <tbody>
                                     <c:forEach items="${mtxProductList}" var="mtxProduct">
-                                        <tr>
+                                        <tr id="${mtxProduct.uuid}id">
                                             <td>
                                                     ${mtxProduct.model}
                                             </td>
@@ -96,7 +96,8 @@
                                                     ${mtxProduct.name}
                                             </td>
                                             <td>
-                                                    ${mtxProduct.price}
+                                                <input type="text" value="${mtxProduct.price}"
+                                                       id="${mtxProduct.uuid}" style="border: 0px;" disabled>
                                             </td>
                                             <td>
                                                     ${mtxProduct.points}
@@ -139,7 +140,19 @@
     window.onload = function(){
         //显示父菜单
         showParentMenu('产品中心');
+
     }
+
+    <c:forEach items="${mtxProductList}" var="mtxProduct" varStatus="s">
+        formatMoney(document.getElementById('${mtxProduct.uuid}'));
+        if(${s.index%2==0}){
+            $("#${mtxProduct.uuid}").css("background-color","#f9f9f9");
+        }else{
+            $("#${mtxProduct.uuid}").css("background-color","white");
+        }
+    </c:forEach>
+
+
     function deleteMtxProduct(uuid){
         qikoo.dialog.confirm('确定要删除吗？',function(){
             //确定删除
