@@ -152,7 +152,7 @@
             </div>
 
 
-            <c:if test="${mtxActivity.status == 'PENDING'}">
+            <c:if test="${mtxActivity.status == 'PENDING' || mtxActivity.status == 'DRAWING'}">
                 <c:choose>
                     <c:when test="${participanted == 'Y'}">
                         <div class="fixsubmit">已参加</div>
