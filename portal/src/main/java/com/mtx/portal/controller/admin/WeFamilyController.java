@@ -3075,4 +3075,42 @@ public class WeFamilyController extends BaseAdminController {
         model.addAttribute("uuid",uuid);
         return "/admin/wefamily/activity_center";
     }
+
+    @RequestMapping(value = "/drawing")
+    public void drawing(String uuid,String winnerId,int totalnumber){
+        if(StringUtils.isNotBlank(uuid)&&StringUtils.isNotBlank(winnerId)){
+            mtxActivityService.updateParticipant(uuid,winnerId,totalnumber);
+        }
+    }
+
+    @RequestMapping(value = "/getTotalLuckyParticipant", method = RequestMethod.POST)
+    @ResponseBody
+    public Map getTotalLuckyParticipant(MtxActivity activity){
+        activity=mtxActivityService.queryForObjectByPk(activity);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        MtxActivityParticipant participant=new MtxActivityParticipant();
+        participant.setActivityid(activity.getUuid());
+        participant.setStatus("WIN");
+        //待抽奖人
+        List<MtxActivityParticipant> otherWaitPList=mtxActivityParticipantService.queryForWaitDrawingList(participant);
+
+        MtxLuckyParticipant luckyParticipant=new MtxLuckyParticipant();
+        luckyParticipant.setActivityid(activity.getUuid());
+        luckyParticipant.setStatus("WIN");
+        List<MtxLuckyParticipant> luckyParticipantList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"0");
+
+
+        if(null!=activity){
+            resultMap.put("totalLuckyCount", activity.getTotalLuckyCount());
+            resultMap.put("everyLuckyCount", activity.getEveryLuckyCount());
+            resultMap.put("currentLuckyCount", activity.getCurrentLuckyCount());
+            if(luckyParticipantList.size()>0){
+                resultMap.put("luckyParticipantList", luckyParticipantList);
+            }else{
+                resultMap.put("luckyParticipantList", otherWaitPList);
+            }
+        }
+        return resultMap;
+    }
 }
