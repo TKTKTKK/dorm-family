@@ -20,7 +20,7 @@
                 </div>
                 <form class="form-horizontal form-bordered" data-validate="parsley"
                       action="${ctx}/admin/wefamily/merchantInfo" method="POST"
-                      onsubmit="return checkIfValid()" enctype="multipart/form-data" id="frm">
+                      onsubmit="return checkIfValid()" id="frm">
                     <section class="panel panel-default">
                         <header class="panel-heading mintgreen">
                             <i class="fa fa-gift"></i>
@@ -104,7 +104,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3  control-label">法人代表：</label>
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>法人代表：</label>
                                 <div class="col-sm-9 b-l bg-white">
                                     <input type="text" class="form-control" data-required="true" name="legalperson" id="legalperson"
                                            data-maxlength="48"
