@@ -115,7 +115,7 @@
             <ul class="list" id="situationUl" style="margin-bottom: 0px">
                 <li>
                     <span>培训日期</span>
-                    <input class="input" type="text" name="traindt" id="traindt" readonly
+                    <input class="input" type="text" name="traindt" id="traindt" disabled
                            value="${train.traindt}" placeholder="请选择培训日期" data-required="true" data-maxlength="23">
                 </li>
                 <li>
