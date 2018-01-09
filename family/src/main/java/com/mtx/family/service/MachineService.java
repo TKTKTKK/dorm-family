@@ -76,7 +76,7 @@ public class MachineService extends BaseService<MachineMapper,Machine> {
                     if(mtxUserMachineTempList.size()<=0){
                         MtxPoint point =new MtxPoint();
                         point.setUserid(userid);
-                        point.setName(machine.getMachinename());
+                        point.setName(machine.getMachinename()+"("+machine.getMachineno()+")");
                         MtxProduct product=new MtxProduct();
                         product.setModel(machine.getMachinemodel());
                         product=mtxProductService.queryForObjectByUniqueKey(product);

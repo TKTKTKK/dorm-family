@@ -12,6 +12,9 @@
         <if test="mtxPoint.membername != null and mtxPoint.membername != ''">
             and wu.name like concat("%",#{mtxPoint.membername},"%")
         </if>
+        <if test="mtxPoint.name != null and mtxPoint.name != ''">
+            and mp.name like concat("%",#{mtxPoint.name},"%")
+        </if>
         <if test="mtxPoint.phone != null and mtxPoint.phone != ''">
             and wu.contactno like concat("%",#{mtxPoint.phone},"%")
         </if>
