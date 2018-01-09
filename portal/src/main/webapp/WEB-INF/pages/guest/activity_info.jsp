@@ -61,8 +61,9 @@
             padding: 5px 10px !important;
         }
         .choose .error{
-            left: 10%;
+            left: 11%;
             width: 80%;
+            top: 20%;
         }
         .choose .error span{
            font-weight: bold;
@@ -196,7 +197,7 @@
 
             <div class="choose" id="Msg" style="display: none">
                 <div class="error">
-                    <img src="${ctx}/static/guest/img/mtx.jpg" style="display: none" id="public"/>
+                    <img src="${ctx}/static/guest/img/mtx.jpg" style="display: none;margin-left: 8%;" id="public"/>
                     <p id="errorMessage"></p >
                     <button onclick="closeModel()">我知道了</button>
                 </div>
