@@ -20,6 +20,8 @@ public class WpUser extends BaseEntity{
     @Column
     private String contactno;
     @Column
+    private double area;//耕地面积
+    @Column
     private String province;
     @Column
     private String city;
@@ -39,6 +41,14 @@ public class WpUser extends BaseEntity{
     private String ifsubscribe;//是否关注
     @Column
     private String ifauth;//是否是会员
+
+    public double getArea() {
+        return area;
+    }
+
+    public void setArea(double area) {
+        this.area = area;
+    }
 
     public String getBindid() {
         return bindid;

@@ -4,6 +4,9 @@
 <html lang="en" class="app">
 <head>
 <style>
+    .money{
+        margin-top: 7px;
+    }
 </style>
 </head>
 <body class="">
@@ -51,6 +54,7 @@
                                 </div>
 
                             </div>
+
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><span class="text-danger">*</span>地址：</label>
                                 <div class="col-sm-9 b-l bg-white">
@@ -78,6 +82,21 @@
                                     <input type="text" class="form-control" data-required="true" name="address" id="address"
                                            onblur="trimText(this)" data-maxlength="256"
                                            value="${wpUser.address}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3  control-label"><span class="text-danger">*</span>耕地面积：</label>
+                                <div class="col-sm-9 b-l bg-white">
+                                    <div class="col-sm-3" style="padding-left: 0">
+                                        <input class="form-control" type="text" name="area" value="${wpUser.area}"
+                                               id="area"
+                                               data-maxlength="10"
+                                               data-required="true"
+                                               onblur="validateArea(this,'areaError')">
+                                        <div class="text-danger" id="areaError"></div>
+                                    </div>
+                                    <div class="col-sm-2 col-xs-2 my-unit money" style="font-size: 1.5rem">亩（667平方米）</div>
+                                    <div style="clear: both"></div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -236,10 +255,31 @@
         if(${wpUser.uuid!=null && wpUser.uuid!=''}){
             $('#extend').css("display","block");
         }
+        if('${wpUser.area}'.length > 0){
+            formatMoney(document.getElementById('area'));
+        }
     }
+
+    //检查面积合法性
+    function validateArea(obj, errorId){
+        var errorObj = document.getElementById(errorId);
+        errorObj.innerHTML = "";
+
+        trimText(obj);
+        if(obj.value.length > 0){
+            var rule = /^\d+(\.\d+)*$/;
+            if(obj.value.length > 0 && (!(rule.test(obj.value)) || obj.value*1 < 0)){
+                errorObj.innerText = "请输入数字";
+                return false;
+            }
+            formatMoney(obj);
+        }
+        return true;
+    }
+
     function checkValid(){
         $("#frm").parsley("validate");
-        if(checkIfValid() && $('#frm').parsley().isValid()&&isPoneAvailable()){
+        if(validateArea(document.getElementById('area'),'areaError') &&checkIfValid() && $('#frm').parsley().isValid()&&isPoneAvailable()){
             var searchForm = document.getElementById("frm");
             searchForm.action = "${ctx}/admin/wefamily/updateWpUser";
             searchForm.submit();

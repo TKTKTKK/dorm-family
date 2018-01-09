@@ -827,10 +827,18 @@ public class MtxGuestController extends BaseGuestController{
         String activityId = request.getParameter("activityId");
         String name = request.getParameter("name");
         String contactno = request.getParameter("contactno");
+        String area = request.getParameter("area");
 
         WpUser wpUser = getWechatMemberInfo(request);
-        wpUser.setName(name);
-        wpUser.setContactno(contactno);
+        if(StringUtils.isNotBlank(name)){
+            wpUser.setName(name);
+        }
+        if(StringUtils.isNotBlank(contactno)){
+            wpUser.setContactno(contactno);
+        }
+        if(StringUtils.isNotBlank(area)){
+            wpUser.setArea(Double.valueOf(area));
+        }
 
         mtxActivityService.participateActivity(activityId,wpUser);
 

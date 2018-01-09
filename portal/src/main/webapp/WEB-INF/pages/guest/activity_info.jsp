@@ -12,6 +12,7 @@
     <title>活动详情</title>
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
     <link rel="stylesheet" href="${ctx}/static/guest/css/reviewMediaSwipebox.css" type="text/css" />
+    <link href="${ctx}/static/admin/css/qikoo/qikoo.css" rel="stylesheet">
     <style>
         .content{background-color: #fff;margin-bottom: 3.67rem;}
         .title{font-size:1.6rem;color: #333;font-weight: bold;margin-bottom: 1.25rem;}
@@ -74,7 +75,7 @@
         .choose .error button{
             font-size: 1.6rem;
         }
-        #inviteCodeError,#contactnoError{
+        #inviteCodeError,#contactnoError,#areaError{
             color: red;font-size: 1.2rem;font-weight: lighter;margin-bottom: 25px !important;
         }
         #activityImgContainer{display: inline-block;vertical-align: middle}
@@ -184,8 +185,16 @@
                                data-required="true"  data-maxlength="11" placeholder="请填写手机"/>
                     </li>
                     <li>
+                        <span>耕地面积：</span>
+                        <input  type="text" name="area" style="width: 33%" value="${wpUser.area}"
+                               id="area"
+                               data-required="true" placeholder="请填写耕地面积">
+                        <span style="margin-left: 3%">亩(667平方米)</span>
+                    </li>
+                    <li>
                         <span id="inviteCodeError"></span>
                         <span id="contactnoError"></span>
+                        <span id="areaError"></span>
                     </li>
 
                     <button onclick="participateActivity()">参加</button>
@@ -209,9 +218,15 @@
 </section>
 </body>
 <script src="${ctx}/static/admin/js/jquery.min.js"></script>
+<script src="${ctx}/static/admin/js/myScript.js"></script>
+<script src="${ctx}/static/admin/js/qikoo/qikoo.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/reviewMediaJquery.swipebox.js"></script>
 <script type="text/javascript">
-
+    window.onload=function (){
+        if('${wpUser.area}'.length > 0){
+            formatMoney(document.getElementById('area'));
+        }
+    }
     function openParticipateDiv(){
         var errorMessage = document.getElementById("errorMessage");
         errorMessage.innerHTML = "";
@@ -240,25 +255,47 @@
         inviteCodeError.innerHTML = "";
         var contactnoError = document.getElementById("contactnoError");
         contactnoError.innerHTML = "";
+        var areaError = document.getElementById("areaError");
+        areaError.innerHTML = "";
 
         var inviteCode = $("#inviteCode").val();
         var name = $("#name").val();
         var contactno = $("#contactno").val();
+        var area = $("#area").val();
 
 
         if(inviteCode != '${mtxActivity.password}'){
             inviteCodeError.innerHTML = "邀请码错误";
-        }else if(contactno.length!=11){
+        }else if(area.length>11){
+            areaError.innerHTML = "面积最多填11位";
+        }else if(contactno.length!=11&&contactno.length>0){
             contactnoError.innerHTML = "手机号有误";
-        }else if(inviteCode.length > 0 && name.length > 0){
+        }else if(inviteCode.length > 0 && validateArea(document.getElementById('area'),'areaError')){
+            qikoo.dialog.confirm('信息无误，点击确定！',function(){
+                window.location.href="${ctx}/guest/participateActivity?activityId=${mtxActivity.uuid}&name="+name+"&contactno="+contactno+"&area="+area;
 
-            window.location.href="${ctx}/guest/participateActivity?activityId=${mtxActivity.uuid}&name="+name+"&contactno="+contactno;
+                $("#participantDiv").css("display","none");
+            },function(){
 
-            $("#participantDiv").css("display","none");
+            });
         }
 
     }
+    //检查面积合法性
+    function validateArea(obj, errorId){
+        var errorObj = document.getElementById(errorId);
+        errorObj.innerHTML = "";
 
+        trimText(obj);
+        if(obj.value.length > 0){
+            var rule = /^\d+(\.\d+)*$/;
+            if(obj.value.length > 0 && (!(rule.test(obj.value)) || obj.value*1 < 0)){
+                errorObj.innerText = "请输入数字";
+                return false;
+            }
+            formatMoney(obj);
+        }
+        return true;
+    }
 </script>
-
 </html>
