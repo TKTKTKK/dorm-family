@@ -15,9 +15,9 @@ public class MtxConsult extends BaseEntity {
     private String identify;
     @Column
     private String status;
-    @Column
+
     private String nickname;
-    @Column
+
     private String headimgurl;
 
     public String getNickname() {
