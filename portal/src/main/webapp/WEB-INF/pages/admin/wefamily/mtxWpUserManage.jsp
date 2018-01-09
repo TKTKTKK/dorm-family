@@ -112,7 +112,7 @@
                                             </td>
                                             <td>
                                                 <c:choose>
-                                                    <c:when test="${wpUser.ifsubscribe eq 'Y'}">
+                                                    <c:when test="${wpUser.ifauth eq 'Y'}">
                                                         是
                                                     </c:when>
                                                     <c:otherwise>
@@ -122,7 +122,7 @@
                                             </td>
                                             <td>
                                                 <c:choose>
-                                                    <c:when test="${wpUser.ifauth eq 'Y'}">
+                                                    <c:when test="${wpUser.ifsubscribe eq 'Y'}">
                                                         是
                                                     </c:when>
                                                     <c:otherwise>
