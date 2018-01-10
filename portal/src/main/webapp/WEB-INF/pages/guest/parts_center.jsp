@@ -28,7 +28,7 @@
     </style>
 </head>
 <body>
-<div class="choose" id="imgDiv" style="z-index: 10;background: rgba(0,0,0,0.7);"><img src="../../../static/guest/img/help.png" alt="" onclick="closeImg()" style="width: 100%"></div>
+<div class="choose" id="imgDiv" style="z-index: 10;background: rgba(0,0,0,0.7);display: none"><img src="../../../static/guest/img/help.png" alt="" onclick="closeImg()" style="width: 100%"></div>
 <div class="choose" id="moneyDiv" style="z-index: 10;background: rgba(0,0,0,0.7);display: none"><img src="../../../static/guest/img/erweima.jpg" alt="" onclick="closeImg()" style="width: 100%"></div>
 <div class="head">
     <span>配件中心</span>
@@ -91,6 +91,10 @@
         if('${Flag}'=='1'){
             closeImg();
             $("#msg").css("display","none");
+        }
+        var codevalue=$("#code").val();
+        if(codevalue==''||codevalue==null){
+            $("#imgDiv").css("display","block");
         }
         if('${Flag}'=='0'){
             closeImg();
