@@ -10,7 +10,7 @@
     <section class="vbox">
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
-                销售服务 / <a href="${ctx}/admin/wefamily/machineManage">机器管理</a> /
+                销售管理 / <a href="${ctx}/admin/wefamily/machineManage">机器管理</a> /
                 <span class="font-bold  text-shallowred"> 机器信息</span>
             </header>
             <div class="col-sm-12 pos">
@@ -112,7 +112,7 @@
 
     window.onload = function () {
         //显示父菜单
-        showParentMenu('销售服务');
+        showParentMenu('销售管理');
         if('${machine.price}'.length > 0){
             formatMoney(document.getElementById('price'));
         }

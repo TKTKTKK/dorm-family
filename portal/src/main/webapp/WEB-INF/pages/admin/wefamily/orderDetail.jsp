@@ -280,7 +280,7 @@
         <section class="scrollable padder">
             <div class="row" id="sugInfoDiv" style="overflow-x: hidden;overflow-y: auto;">
                 <header class="panel-heading bg-white text-md b-b">
-                    销售服务 /
+                    销售管理 /
                     <a href="${ctx}/admin/wefamily/orderManage"><span class="font-bold text-shallowred">订单管理</span></a>
                 </header>
                 <div class="col-sm-12 pos">
@@ -1028,7 +1028,7 @@
         if($(window).width()>500){
             document.getElementById('sugInfoDiv').style.height = (document.documentElement.clientHeight - 85 / 985 * document.documentElement.clientHeight) + "px";
             //显示父菜单
-            showParentMenu('销售服务');
+            showParentMenu('销售管理');
         }
         formatMoney(document.getElementById("transportationfee"));
     }
