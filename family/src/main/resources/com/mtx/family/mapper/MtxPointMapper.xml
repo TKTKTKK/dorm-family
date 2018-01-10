@@ -19,7 +19,7 @@
             and wu.contactno like concat("%",#{mtxPoint.phone},"%")
         </if>
         <if test="mtxPoint.type=='Y'.toString()">
-            and mp.points > 0
+            and mp.points >= 0
         </if>
         <if test="mtxPoint.type=='N'.toString()">
             and mp.points &lt; 0

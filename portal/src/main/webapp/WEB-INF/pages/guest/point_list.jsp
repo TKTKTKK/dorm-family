@@ -35,7 +35,7 @@
     <c:forEach items="${pointList}" var="point">
     <li>
         <p><span>
-            <c:if test="${point.points>0}">购买</c:if>
+            <c:if test="${point.points>=0}">购买</c:if>
             <c:if test="${point.points<0}">兑换</c:if>
                 ${point.name}</span>
             <span><c:if test="${point.points>0}">+</c:if>${point.points}</span></p>
