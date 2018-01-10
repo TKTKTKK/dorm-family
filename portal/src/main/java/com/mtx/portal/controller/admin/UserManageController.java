@@ -351,6 +351,20 @@ public class UserManageController extends BaseAdminController {
         return "redirect:/admin/usermanage/roleDistribute?saveFlag=1";
     }
 
+    /**
+     * 删除用户
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/deleteUser")
+    public String deleteUser(HttpServletRequest request){
+        String userId = request.getParameter("userId");
+        String merchantid = request.getParameter("merchantid");
+        //删除用户信息
+        userMerchantService.deleteUserInfo(userId, merchantid);
+        return "redirect:/admin/usermanage/roleDistribute?deleteFlag=1&merchantid="+merchantid;
+    }
+
 
     @RequestMapping(value = "/getStaffInfoByName", method = RequestMethod.GET)
     @ResponseBody
