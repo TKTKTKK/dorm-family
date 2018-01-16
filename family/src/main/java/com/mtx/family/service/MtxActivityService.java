@@ -79,7 +79,15 @@ public class MtxActivityService extends BaseService<MtxActivityMapper,MtxActivit
             luckyParticipant.setStatus("WIN");
             mtxLuckyParticipantService.updatePartial(luckyParticipant);
         }
-        if(mtxActivity.getCurrentLuckyCount()==count){
+        luckyParticipant=new MtxLuckyParticipant();
+        luckyParticipant.setActivityid(uuid);
+        String stop="";
+        List<MtxLuckyParticipant> selectLuckyParticipantList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"1");
+        List<MtxLuckyParticipant> totalLuckyParticipantList=mtxLuckyParticipantService.queryForList(luckyParticipant);
+        if(totalLuckyParticipantList.size()>0 &&totalLuckyParticipantList.size()==selectLuckyParticipantList.size()){
+            stop="stop";
+        }
+        if(mtxActivity.getCurrentLuckyCount()==count|| "stop".equals(stop)){
             mtxActivity=this.queryForObjectByPk(mtxActivity);
             mtxActivity.setStatus("APP");
             this.updatePartial(mtxActivity);
