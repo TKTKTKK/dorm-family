@@ -54,9 +54,9 @@ public class OrderService extends BaseService<OrderMapper,Order> {
     public String addMachineForOrder(String orderId, Machine machine) {
         String returnMsg = "";
         Machine tempMachine = new Machine();
-        tempMachine.setMachinemodel(machine.getMachinemodel());
+        //tempMachine.setMachinemodel(machine.getMachinemodel());
         tempMachine.setMachineno(machine.getMachineno());
-        tempMachine.setEngineno(machine.getEngineno());
+        //tempMachine.setEngineno(machine.getEngineno());
 
         List<Machine> machineList = machineMapper.select(tempMachine);
         if(null != machineList && machineList.size() > 0){
