@@ -57,7 +57,7 @@ public class MtxMemberService {
             }
             wpUserTemp.setPoints(p);
             point.setPoints(p);
-            point.setName(machine.getMachinename());
+            point.setName(machine.getMachinename()+"("+machine.getMachineno()+")");
             mtxPointService.insert(point);
         }
         wpUserService.updatePartial(wpUserTemp);

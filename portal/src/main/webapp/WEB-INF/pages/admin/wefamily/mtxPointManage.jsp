@@ -45,6 +45,13 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-sm-4" style="margin-top: 20px">
+                                    <label class="control-label col-sm-4 my-display-inline-lbl" style="padding-top: 7px"><span class="text-danger"></span> 商品名称：</label>
+                                    <div class="col-sm-7  my-display-inline-box">
+                                        <input type="text" class="form-control" name="name" id="name"
+                                                value="${mtxPoint.name}">
+                                    </div>
+                                </div>
                                 <div style="clear: both"></div>
                                 <div class="row col-sm-12 text-center text-white" style="margin-top: 20px">
                                     <a type="submit"  class="btn btn-submit btn-s-xs"
@@ -63,7 +70,7 @@
                                     <tr>
                                         <th width="20%">姓名</th>
                                         <th width="20%">手机号</th>
-                                        <th width="20%">商品名</th>
+                                        <th width="20%">商品名称</th>
                                         <th width="20%">积分</th>
                                         <th width="20%">时间</th>
                                     </tr>

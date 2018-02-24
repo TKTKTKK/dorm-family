@@ -70,7 +70,7 @@
     var pcount = participartors.length-1;
     var wcount = winners.length-1;
 
-    if(${fn:length(winList)==totalLuckyCount}){
+    if(${fn:length(winList)==totalLuckyCount || stop eq 'stop' } ){
         $('#start').text("抽奖完毕");
         $('#start').css('background-color','#999');
     }

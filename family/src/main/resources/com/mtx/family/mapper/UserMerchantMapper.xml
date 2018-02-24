@@ -5,7 +5,7 @@
     <resultMap id="selectResultMap" type="com.mtx.family.entity.UserMerchant">
     </resultMap>
 
-    <delete id="deleteUserCommunity">
+    <delete id="deleteUserMerchant">
         delete from tb_mtx_user_merchant
         where userid = #{userMerchant.userid}
         <if test="userMerchant.merchantid != null and userMerchant.merchantid != ''">

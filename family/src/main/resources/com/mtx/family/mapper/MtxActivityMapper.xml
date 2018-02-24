@@ -27,7 +27,7 @@
                     and DATE_FORMAT(ma.enddate, '%Y-%m-%d %H:%i:%S') <= #{mtxActivity.enddate}
             ]]>
         </if>
-        order by ma.modifyon desc;
+        order by ma.createon desc;
     </select>
 
     <select id="selectActivityListForPhone" resultMap="selectResultMap">

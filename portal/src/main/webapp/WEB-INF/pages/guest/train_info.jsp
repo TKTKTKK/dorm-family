@@ -115,7 +115,7 @@
             <ul class="list" id="situationUl" style="margin-bottom: 0px">
                 <li>
                     <span>培训日期</span>
-                    <input class="input" type="text" name="traindt" id="traindt" readonly
+                    <input class="input" type="text" name="traindt" id="traindt" disabled
                            value="${train.traindt}" placeholder="请选择培训日期" data-required="true" data-maxlength="23">
                 </li>
                 <li>
@@ -175,7 +175,7 @@
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script src="${ctx}/static/js/wechatUtil.js?20171201"></script>
 <script src="${ctx}/static/js/coordtransform.js"></script>
-<script src="${ctx}/static/js/mobiscroll_date.js" charset="gb2312"></script>
+<script src="${ctx}/static/js/mobiscroll_date.js" charset="utf-8"></script>
 <script src="${ctx}/static/js/mobiscroll.js"></script>
 <script type="text/javascript">
 

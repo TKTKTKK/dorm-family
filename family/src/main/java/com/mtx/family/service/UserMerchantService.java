@@ -94,7 +94,7 @@ public class UserMerchantService extends BaseService<UserMerchantMapper, UserMer
      * @param userId
      */
     public void deleteUserInfo(String userId, String merchantid){
-        //查询当前用户共几条user-community记录
+        //查询当前用户共几条user-merchant记录
         UserMerchant userMerchant = new UserMerchant();
         userMerchant.setUserid(userId);
         List<UserMerchant> userMerchantList = this.queryForList(userMerchant);

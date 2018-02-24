@@ -127,7 +127,7 @@
                                         </div>
                                         <div class="col-xs-8 text-right needo">
 
-                                            <c:if test="${ifHqUser eq 'Y'}">
+                                            <c:if test="${ifHqUser eq 'Y' && empty merchantId}">
                                                 <a href="${ctx}/admin/wefamily/qualityMgmtManage?type=REPAIR&status=NEW&unDistributed=Y" style="color: #fff;">
                                                     <span> 未分配新任务 </span>
                                                     <span id="newRepairForHQ">0</span>

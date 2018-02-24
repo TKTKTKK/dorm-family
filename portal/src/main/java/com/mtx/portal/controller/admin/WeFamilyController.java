@@ -3060,6 +3060,11 @@ public class WeFamilyController extends BaseAdminController {
             luckyParticipant.setActivityid(uuid);
             luckyParticipant.setStatus("WIN");
             List<MtxLuckyParticipant> luckyParticipantList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"0");
+            List<MtxLuckyParticipant> selectLuckyParticipantList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"1");
+            List<MtxLuckyParticipant> totalLuckyParticipantList=mtxLuckyParticipantService.queryForLuckyParticipantList(luckyParticipant,"");
+            if(totalLuckyParticipantList.size()>0 &&totalLuckyParticipantList.size()==selectLuckyParticipantList.size()){
+                model.addAttribute("stop","stop");
+            }
             if(luckyParticipantList.size()>0){
                 model.addAttribute("luckyParticipantList",luckyParticipantList);
             }else{

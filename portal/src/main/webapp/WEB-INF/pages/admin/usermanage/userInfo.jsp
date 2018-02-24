@@ -197,12 +197,21 @@
                                                     <input type="hidden"   name="status" id="status"  value="NORMAL"/>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <input type="text"  class="form-control"   value="${web:getCodeDesc('USER_STATUS',platformUser.status )}" readonly/>
-                                                    <input type="hidden"   name="status" id="status"  value="${platformUser.status}"/>
+                                                    <select class="form-control" id="status" name="status">
+                                                        <c:set var="statusList" value="${web:queryCommonCodeList('USER_STATUS')}"></c:set>
+                                                        <c:forEach items="${statusList}" var="statusCode">
+                                                            <c:if test="${platformUser.status == statusCode.code}">
+                                                                <option value="${statusCode.code}" selected>${statusCode.codevalue}</option>
+                                                            </c:if>
+                                                            <c:if test="${platformUser.status != statusCode.code}">
+                                                                <option value="${statusCode.code}">${statusCode.codevalue}</option>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </select>
                                                 </c:otherwise>
                                             </c:choose>
-
                                         </div>
+
                                     </div>
                                     <c:if test="${not empty roleList}">
                                         <div class="form-group">
@@ -263,20 +272,6 @@
                                 <footer class="panel-footer text-left bg-light lter">
                                     <c:if test="${empty view}">
                                         <button type="submit" class="btn btn-submit btn-s-xs"><i class="fa fa-check"></i>&nbsp;提&nbsp;交</button>
-                                        <c:if test="${platformUser.uuid != null && currentUserId != platformUser.uuid}">
-                                            <c:choose>
-                                                <c:when test="${platformUser.status == 'FREEZE'}">
-                                                    <a  href="javascript:changeUserStatus('${platformUser.uuid}','${platformUser.versionno}','${querytype}')" class="btn btn-success btn-s-xs" style="margin-left: 100px;">
-                                                        <i class="glyphicon glyphicon-ok"></i>&nbsp;生&nbsp;效
-                                                    </a>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <a  href="javascript:changeUserStatus('${platformUser.uuid}','${platformUser.versionno}','${querytype}')" class="btn btn-danger btn-s-xs" style="margin-left: 100px;">
-                                                        <i class="	glyphicon glyphicon-remove"></i>&nbsp;冻&nbsp;结
-                                                    </a>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:if>
                                     </c:if>
                                 </footer>
                             </section>
@@ -327,11 +322,6 @@
                                    data-toggle="modal" data-target=".bs-example-modal-tj" style="color: #fff"
                                    onclick="showUserMerchantInfo()"
                                 >添 加</a>
-                            </c:if>
-                            <c:if test="${platformUser.uuid != null && currentUserId != platformUser.uuid && platformUser.status == 'FREEZE'}">
-                                        <a  href="javascript:changeUserStatus('${platformUser.uuid}','${platformUser.versionno}','${querytype}')" class="btn btn-success btn-s-xs" style="margin-left: 20px;">
-                                            <i class="glyphicon glyphicon-ok"></i>&nbsp;生&nbsp;效
-                                        </a>
                             </c:if>
                         </div>
                         <!-- /.modal添加 -->
