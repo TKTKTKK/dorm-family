@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.wechat.mapper.RespArticleHistoryMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.wechat.entity.admin.RespArticleHistory">
+    </resultMap>
+
+    <select id="batchInsertRespArticleHistory" parameterType="java.util.List">
+        INSERT INTO tb_resp_article_history(uuid,mediaid,openid,createon,createby,modifyon,modifyby,versionno,delind) VALUES
+        <foreach collection="list"  item="item" separator=",">
+            (#{item.uuid},#{item.mediaid},#{item.openid},#{item.createon},#{item.createby},#{item.modifyon},#{item.modifyby},#{item.versionno},#{item.delind})
+        </foreach>
+    </select>
+</mapper>

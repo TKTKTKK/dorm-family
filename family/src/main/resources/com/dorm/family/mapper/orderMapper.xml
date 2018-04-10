@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.family.mapper.OrderMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.family.entity.Order">
+    </resultMap>
+
+    <select id="selectOrderForSnnoRepeat" resultMap="selectResultMap">
+        select mo.*
+        from tb_mtx_order mo
+        where
+        mo.bindid = #{order.bindid}
+        <if test="order.snno != null and order.snno != ''">
+            and mo.snno = #{order.snno}
+        </if>
+        <if test="order.uuid != null and order.uuid != ''">
+            and mo.uuid != #{order.uuid}
+        </if>
+        ;
+    </select>
+
+    <select id="selectOrderList" resultMap="selectResultMap">
+      select mo.*,mm.name as merchantname
+      from tb_mtx_order mo
+      inner join tb_mtx_merchant mm on mo.merchantid = mm.uuid
+      where
+      mo.bindid = #{order.bindid}
+        <if test="order.merchantid != null and order.merchantid != ''">
+            and mo.merchantid = #{order.merchantid}
+        </if>
+        <if test="order.snno != null and order.snno != ''">
+            and mo.snno like CONCAT('%',#{order.snno},'%')
+        </if>
+        <if test="order.machinemodel != null and order.machinemodel != ''">
+            and mo.machinemodel like CONCAT('%',#{order.machinemodel},'%')
+        </if>
+        <if test="order.statusArr != null">
+            and mo.status in
+            <foreach item="item" index="index" collection="order.statusArr"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="ifHqUser == 'Y'.toString()">
+            and mo.status != 'UNSUBMIT'
+        </if>
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+                              and mo.createon >= #{startTime}
+                            ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+                              and mo.createon <= #{endTime}
+                            ]]>
+        </if>
+        order by mo.modifyon desc
+    </select>
+
+    <select id="selectOrderListForHomeData" resultMap="selectResultMap">
+        select * from tb_mtx_order mo
+        where
+        mo.status = #{order.status}
+        <if test="order.merchantid != null and order.merchantid != ''">
+          and mo.merchantid = #{order.merchantid}
+        </if>
+    </select>
+
+</mapper>

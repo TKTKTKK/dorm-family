@@ -5,8 +5,8 @@
 <%@ page import="org.apache.commons.fileupload.servlet.ServletFileUpload" %>
 <%@ page import="org.json.simple.JSONObject" %>
 <%@ page import="java.util.*" %>
-<%@ page import="com.mtx.common.service.CommonUploader" %>
-<%@ page import="com.mtx.common.utils.ApplicationContextUtil" %>
+<%@ page import="com.dorm.common.service.CommonUploader" %>
+<%@ page import="com.dorm.common.utils.ApplicationContextUtil" %>
 <%
 
 //定义允许上传的文件扩展名

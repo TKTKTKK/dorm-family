@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.wechat.mapper.ImageMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.wechat.entity.admin.Image">
+    </resultMap>
+
+    <select id="selectImageListHaveMediaId" resultMap="selectResultMap">
+        select *
+        from tb_image
+        where bindid = #{image.bindid}
+        and (mediaid is not null and mediaid != '')
+        order by createon desc;
+    </select>
+</mapper>

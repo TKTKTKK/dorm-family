@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.family.mapper.MtxLuckyParticipantMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.family.entity.MtxLuckyParticipant">
+    </resultMap>
+    <select id="selectMtxLuckyParticipantList" resultMap="selectResultMap">
+        select * from tb_mtx_lucky_participant
+        order by activityid desc;
+    </select>
+    <select id="queryForLuckyParticipantList" resultMap="selectResultMap">
+        select mlp.* ,wu.name as name ,wu.headimgurl as headimg ,wu.nickname as nickname ,wu.contactno as contactno
+        from tb_mtx_lucky_participant  mlp
+        inner join tb_wp_user wu on wu.uuid=mlp.userid
+        where mlp.activityid=#{mtxLuckyParticipant.activityid}
+        <if test="flag=='0'.toString()">
+            and mlp.status='WAIT_WIN'
+        </if>
+        <if test="flag=='1'.toString()">
+            and mlp.status='WIN'
+        </if>
+        <if test="mtxLuckyParticipant.userid!=null and mtxLuckyParticipant.userid!=''">
+            and mlp.userid=#{mtxLuckyParticipant.userid}
+        </if>
+        order by mlp.createon desc;
+    </select>
+</mapper>

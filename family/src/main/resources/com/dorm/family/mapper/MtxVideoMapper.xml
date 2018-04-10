@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.family.mapper.MtxVideoMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.family.entity.MtxVideo">
+    </resultMap>
+    <select id="selectMtxVideoList" resultMap="selectResultMap">
+        select mv.*
+        from tb_mtx_video mv
+        where TRUE
+        <if test="mtxVideo.model != null and mtxVideo.model != ''">
+            and mv.model =#{mtxVideo.model}
+        </if>
+        <if test="mtxVideo.status != null and mtxVideo.status != ''">
+            and mv.status =#{mtxVideo.status}
+        </if>
+        <if test="mtxVideo.type != null and mtxVideo.type != ''">
+            and mv.type =#{mtxVideo.type}
+        </if>
+        order by mv.createon desc;
+    </select>
+</mapper>

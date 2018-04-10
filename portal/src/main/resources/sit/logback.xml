@@ -27,7 +27,7 @@
     </appender>
 
     <!-- project default level -->
-    <logger name="com.mtx" level="info"/>
+    <logger name="com.dorm" level="info"/>
     <!--log4jdbc -->
     <logger name="com.ibatis"/>
     <logger name="com.ibatis.common.jdbc.SimpleDataSource"/>

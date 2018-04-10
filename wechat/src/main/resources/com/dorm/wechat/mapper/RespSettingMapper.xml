@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.wechat.mapper.RespSettingMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.wechat.entity.admin.RespSetting">
+    </resultMap>
+
+    <select id="selectRespSettingList" resultMap="selectResultMap">
+        select *
+        from tb_resp_setting
+        where bindid = #{respSetting.bindid}
+        and (reqtype = 'text' or reqtype = 'CLICK')
+        order by modifyon desc;
+    </select>
+
+    <select id="selectRespSettingInfo" resultMap="selectResultMap">
+        select rs.*, img.imgname as imgname
+        from tb_resp_setting rs
+        left join tb_image img on rs.mediaid = img.mediaid and (rs.mediaid is not null and rs.mediaid != '')
+        where 1=1
+        <if test="respSetting.uuid != null and respSetting.uuid != ''">
+            and rs.uuid = #{respSetting.uuid}
+        </if>
+        <if test="respSetting.uuid == null or respSetting.uuid == ''">
+            and rs.bindid = #{respSetting.bindid}
+            and rs.reqtype = #{respSetting.reqtype}
+        </if>
+        ;
+    </select>
+</mapper>

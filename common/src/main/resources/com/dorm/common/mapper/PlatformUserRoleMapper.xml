@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.common.mapper.PlatformUserRoleMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.common.entity.PlatformUserRole">
+    </resultMap>
+
+    <delete id="deleteUserRoleByUserId">
+        delete from tb_platform_user_role
+        where userid = #{userid}
+        and roleid not in (select r.uuid from tb_platform_role r where r.rolekey in ('WP_SUPER','SYSTEM_ADM'));
+    </delete>
+</mapper>

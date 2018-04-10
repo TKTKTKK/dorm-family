@@ -9,7 +9,7 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
 
     <!-- 使用Annotation自动注册Bean，解决事物失效问题：在主容器中不扫描@Controller注解，在SpringMvc中只扫描@Controller注解。  -->
-    <context:component-scan base-package="com.mtx.common,com.mtx.family,com.mtx.wechat"><!-- base-package 如果多个，用“,”分隔 -->
+    <context:component-scan base-package="com.dorm.common,com.dorm.family,com.dorm.wechat"><!-- base-package 如果多个，用“,”分隔 -->
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
@@ -60,8 +60,8 @@
     <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocation" value="classpath:mybatis/mybatis-conf.xml"/>
-        <property name="typeAliasesPackage" value="com.mtx.**.entity"/>
-        <property name="mapperLocations" value="classpath*:com/mtx/**/mapper/*Mapper.xml"/>
+        <property name="typeAliasesPackage" value="com.dorm.**.entity"/>
+        <property name="mapperLocations" value="classpath*:com/dorm/**/mapper/*Mapper.xml"/>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -69,9 +69,9 @@
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.mtx.common.mapper,
-                                            com.mtx.family.mapper,
-                                            com.mtx.wechat.mapper"/>
+        <property name="basePackage" value="com.dorm.common.mapper,
+                                            com.dorm.family.mapper,
+                                            com.dorm.wechat.mapper"/>
     </bean>
 
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">

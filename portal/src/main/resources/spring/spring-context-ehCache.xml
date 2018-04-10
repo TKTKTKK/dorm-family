@@ -9,7 +9,7 @@
         <property name="configLocation" value="classpath:${ehcache.config}" />
     </bean>
 
-    <bean id="ehCacheUtils" class="com.mtx.common.utils.EhCacheUtils">
+    <bean id="ehCacheUtils" class="com.dorm.common.utils.EhCacheUtils">
         <property name="cacheManager" ref="ehCacheCacheManager"/>
     </bean>
 

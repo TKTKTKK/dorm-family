@@ -42,7 +42,7 @@
 		</property>
 	</bean>
 
-    <bean id="urlPermissionsFilter" class="com.mtx.common.security.URLPermissionsFilter"/>
+    <bean id="urlPermissionsFilter" class="com.dorm.common.security.URLPermissionsFilter"/>
 	
 	<!-- 定义 Shiro 主要业务对象 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">

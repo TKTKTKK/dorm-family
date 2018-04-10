@@ -20,7 +20,7 @@
             <property name="dialectClass" value="com.github.miemiedev.mybatis.paginator.dialect.MySQLDialect"/>
         </plugin>
         
-        <plugin interceptor="com.mtx.common.audit.MybatisAuditInterceptor"></plugin>
+        <plugin interceptor="com.dorm.common.audit.MybatisAuditInterceptor"></plugin>
 
     </plugins>
 

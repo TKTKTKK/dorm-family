@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.mtx.common.utils.UploadUtils,org.apache.commons.fileupload.FileItem" %>
+<%@ page import="com.dorm.common.utils.UploadUtils,org.apache.commons.fileupload.FileItem" %>
 <%@ page import="org.apache.commons.fileupload.FileItemFactory" %>
 <%@ page import="org.apache.commons.fileupload.disk.DiskFileItemFactory" %>
 <%@ page import="org.apache.commons.fileupload.servlet.ServletFileUpload" %>

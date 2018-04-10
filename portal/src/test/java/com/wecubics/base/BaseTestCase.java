@@ -1,4 +1,4 @@
-package com.mtx.base;
+package com.dorm.base;
 
 import junit.framework.TestCase;
 import org.springframework.context.ApplicationContext;

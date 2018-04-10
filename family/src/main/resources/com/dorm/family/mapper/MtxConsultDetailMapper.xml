@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.family.mapper.MtxConsultDetailMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.family.entity.MtxConsultDetail">
+    </resultMap>
+    <select id="selectMtxConsultDetailList" resultMap="selectResultMap">
+        select mcd.*
+        from tb_mtx_consult_detail mcd
+        where TRUE
+        <if test="mtxConsultDetail.consultid != null and mtxConsultDetail.consultid != ''">
+            and mcd.consultid =#{mtxConsultDetail.consultid}
+        </if>
+        <if test="mtxConsultDetail.consultid == null or mtxConsultDetail.consultid == ''">
+            and (mcd.consultid is null or mcd.consultid='' )
+        </if>
+        order by date_format(mcd.createon,'%Y-%m-%d %H:%i:%s') asc;
+    </select>
+</mapper>

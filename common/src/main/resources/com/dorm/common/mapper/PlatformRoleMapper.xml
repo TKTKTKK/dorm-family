@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.common.mapper.PlatformRoleMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.common.entity.PlatformRole">
+    </resultMap>
+
+    <select id="getUserRoleList" resultMap="selectResultMap">
+        select * from tb_platform_role r , tb_platform_user_role ur
+        where r.uuid = ur.roleid
+        and   ur.userid = #{userid}
+    </select>
+
+    <select id="selectNonSuperRoles" resultMap="selectResultMap">
+        select * from tb_platform_role r
+        where r.rolekey != 'WP_SUPER'
+        and r.rolekey != 'SYSTEM_ADM'
+        and (r.bindid = #{bindid} or r.bindid is null);
+    </select>
+
+    <select id="selectUserRoleListByOpenId" resultMap="selectResultMap">
+        select r.*
+        from tb_platform_user_role ur, tb_platform_role r , tb_platform_user u
+        where ur.roleid = r.uuid
+        and ur.userid = u.uuid
+        and u.bindid = #{bindid}
+        and u.openid = #{openid};
+    </select>
+
+    <select id="queryBindRoleList" resultMap="selectResultMap">
+        select r.* , br.uuid as bindroleid
+        from tb_platform_role r left join tb_common_bind_role br
+        on r.uuid = br.roleid and br.bindid = #{bindid}
+        where r.bindid = #{bindid} or r.bindid is null
+    </select>
+
+    <select id="selectRolesByBindId" resultMap="selectResultMap">
+        select r.*
+        from tb_platform_role r,tb_common_bind_role br
+        where r.uuid = br.roleid
+        and br.bindid = #{bindid}
+        and r.rolekey != 'WP_SUPER'
+        and r.rolekey != 'SYSTEM_ADM';
+    </select>
+    <select id="querySuperRole" resultMap="selectResultMap">
+        select pr.* from tb_platform_role pr
+        inner join tb_platform_user_role pur on pr.uuid=pur.roleid
+        inner join tb_platform_user pu on  pur.userid=pu.uuid
+        and pu.uuid=#{uuid}
+        ;
+    </select>
+
+</mapper>

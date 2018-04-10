@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.family.mapper.MachineMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.family.entity.Machine">
+    </resultMap>
+
+    <select id="selectMachineForMachineNoRepeat" resultMap="selectResultMap">
+        select mm.* from tb_mtx_machine mm
+        where mm.bindid = #{machine.bindid}
+        and mm.type='MACHINE'
+        <if test="machine.machineno != null and machine.machineno != ''">
+            and mm.machineno = #{machine.machineno}
+        </if>
+        <if test="machine.uuid != null and machine.uuid != ''">
+            and mm.uuid != #{machine.uuid}
+        </if>
+    </select>
+    <select id="queryForListWithPagination" resultMap="selectResultMap">
+        select mm.* from tb_mtx_machine mm
+        where mm.bindid = #{machine.bindid}
+        and mm.type=#{machine.type}
+        <if test="machine.machineno != null and machine.machineno != ''">
+            and mm.machineno = #{machine.machineno}
+        </if>
+        <if test="machine.machinemodel != null and machine.machinemodel != ''">
+            and mm.machinemodel = #{machine.machinemodel}
+        </if>
+        <if test="machine.machinename != null and machine.machinename != ''">
+            and mm.machinename like CONCAT('%',#{machine.machinename},'%')
+        </if>
+        order by mm.machinemodel asc
+        ;
+    </select>
+
+    <select id="selectMachineForEngineNoRepeat" resultMap="selectResultMap">
+        select mm.* from tb_mtx_machine mm
+        where mm.bindid = #{machine.bindid}
+        <if test="machine.engineno != null and machine.engineno != ''">
+            and mm.engineno = #{machine.engineno}
+        </if>
+        <if test="machine.uuid != null and machine.uuid != ''">
+            and mm.uuid != #{machine.uuid}
+        </if>
+    </select>
+
+    <select id="selectMachineList" resultMap="selectResultMap">
+        select mm.*,mo.snno as orderno,mc.name as merchantname
+        from tb_mtx_machine mm
+        left join tb_mtx_order mo on mm.orderid = mo.uuid
+        left join tb_mtx_merchant mc on mo.merchantid = mc.uuid
+        where
+        mm.bindid = #{machine.bindid}
+        and mm.type='MACHINE'
+        <if test="machine.merchantid != null and machine.merchantid != ''">
+            and mo.merchantid = #{machine.merchantid}
+        </if>
+        <if test="machine.orderno != null and machine.orderno != ''">
+            and mo.snno like CONCAT('%',#{machine.orderno},'%')
+        </if>
+        <if test="machine.machineno != null and machine.machineno != ''">
+            and mm.machineno like CONCAT('%',#{machine.machineno},'%')
+        </if>
+        <if test="machine.engineno != null and machine.engineno != ''">
+            and mm.engineno like CONCAT('%',#{machine.engineno},'%')
+        </if>
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+                              and mm.createon >= #{startTime}
+                            ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+                              and mm.createon <= #{endTime}
+                            ]]>
+        </if>
+        order by mm.modifyon desc
+    </select>
+
+    <select id="selectMachineByOrderId" resultMap="selectResultMap">
+        select mm.*
+        from tb_mtx_machine mm
+        where mm.bindid = #{bindid}
+        and mm.orderid = #{orderId}
+        order by mm.modifyon desc
+    </select>
+
+    <select id="selectMachineListForAuto" resultMap="selectResultMap">
+        select mm.* from tb_mtx_machine mm
+        where mm.bindid = #{bindid}
+        <if test="machineno != null and machineno != ''">
+            and mm.machineno like CONCAT('%',#{machineno},'%')
+        </if>
+        order by mm.createon desc;
+    </select>
+
+    <select id="batchInsert">
+        insert into tb_mtx_machine(uuid, bindid,machinemodel,machineno,machinename,price,format,instruction,remarks,type,
+         createon,createby,modifyon,modifyby,versionno,delind) VALUES
+        <foreach collection="list"  item="item" separator=",">
+            (#{item.uuid},#{item.bindid},#{item.machinemodel},#{item.machineno},#{item.machinename},#{item.price},#{item.format},#{item.instruction},#{item.remarks},#{item.type},
+            #{item.createon},#{item.createby},#{item.modifyon},#{item.modifyby},#{item.versionno},#{item.delind})
+        </foreach>
+    </select>
+    <select id="deleteAll">
+        delete from tb_mtx_machine where type='PARTS';
+    </select>
+</mapper>

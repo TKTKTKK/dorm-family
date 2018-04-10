@@ -59,7 +59,7 @@
 
     <filter>
         <filter-name>WechatOAuth</filter-name>
-        <filter-class>com.mtx.portal.filter.WechatOAuthFilter</filter-class>
+        <filter-class>com.dorm.portal.filter.WechatOAuthFilter</filter-class>
     </filter>
 
     <filter-mapping>
@@ -90,7 +90,7 @@
 
     <servlet>
         <servlet-name>ValidateCodeServlet</servlet-name>
-        <servlet-class>com.mtx.portal.servlet.ValidateCodeServlet</servlet-class>
+        <servlet-class>com.dorm.portal.servlet.ValidateCodeServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ValidateCodeServlet</servlet-name>
@@ -99,7 +99,7 @@
 
     <servlet>
         <servlet-name>wechatServlet</servlet-name>
-        <servlet-class>com.mtx.portal.servlet.WeChatServlet</servlet-class>
+        <servlet-class>com.dorm.portal.servlet.WeChatServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
