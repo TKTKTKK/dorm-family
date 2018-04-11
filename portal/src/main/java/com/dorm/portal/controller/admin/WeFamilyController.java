@@ -91,32 +91,36 @@ public class WeFamilyController extends BaseAdminController {
     private MtxLuckyParticipantService mtxLuckyParticipantService;
     @Autowired
     private PartsImportService partsImportService;
+    @Autowired
+    private DormitoryService dormitoryService;
 
     /**
-     * 经销商管理界面
+     * 宿舍楼管理
      *
      * @return
      */
-    @RequestMapping(value = "/merchant")
-    public String merchantManage(@RequestParam(required = false, defaultValue = "1") int page, Model model, HttpServletRequest request) {
+    @RequestMapping(value = "/dormitoryManage")
+    public String dormitoryManage(@RequestParam(required = false, defaultValue = "1") int page, Model model, HttpServletRequest request,Dormitory dormitory) {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         if (null != wechatBinding) {
 
-            Merchant merchant = new Merchant();
-            merchant.setBindid(wechatBinding.getUuid());
-            merchant.setOrderby("modifyon desc");
-            //设置分页参数
+            dormitory.setBindid(wechatBinding.getUuid());
+            dormitory.setOrderby("modifyon desc");
+
             String userid = UserUtils.getUserId();
-            List<Merchant> merchantList = merchantService.selectAssignedMerchantForUser();
+            List<Dormitory> dormitoryList = dormitoryService.getAssignedDormitoryForUser();
             String topAccount = "";
-            if (merchantList == null || merchantList.isEmpty()) {
+            if (dormitoryList == null || dormitoryList.isEmpty()) {
                 topAccount = "Y";
             }
             model.addAttribute("topAccount", topAccount);
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-            PageList<Merchant> mtxMerchantList = merchantService.selectMerchantForUserWithPagination(userid, topAccount, merchant, pageBounds);
-            model.addAttribute("merchantList", mtxMerchantList);
+
+            PageList<Dormitory> dormitoryPageList = dormitoryService.getDormitoryForUserWithPagination(userid, topAccount, dormitory, pageBounds);
+            model.addAttribute("dormitoryPageList",dormitoryPageList);
+
+            model.addAttribute("dormitory",dormitory);
 
             String saveFlag = request.getParameter("saveFlag");
             if ("1".equals(saveFlag)) {
@@ -127,7 +131,7 @@ public class WeFamilyController extends BaseAdminController {
                 model.addAttribute("successMessage", "删除成功");
             }
         }
-        return "admin/wefamily/merchantManage";
+        return "admin/wefamily/dormitoryManage";
     }
 
     /**
@@ -161,74 +165,61 @@ public class WeFamilyController extends BaseAdminController {
      *
      * @return
      */
-    @RequestMapping(value = "/merchantInfo", method = RequestMethod.GET)
-    public String showMerchantInfo(HttpServletRequest request, Model model) {
-        String merchantId = request.getParameter("merchantId");
-        if (StringUtils.isNoneBlank(merchantId)) {
+    @RequestMapping(value = "/dormitoryInfo", method = RequestMethod.GET)
+    public String dormitoryInfo(HttpServletRequest request, Model model) {
+        String dormitoryId = request.getParameter("dormitoryId");
+        if (StringUtils.isNoneBlank(dormitoryId)) {
             //查询小区信息
-            Merchant merchant = new Merchant();
-            merchant.setUuid(merchantId);
-            merchant = merchantService.queryForObjectByPk(merchant);
-            model.addAttribute("merchant", merchant);
+            Dormitory dormitory = new Dormitory();
+            dormitory.setUuid(dormitoryId);
+            dormitory = dormitoryService.queryForObjectByPk(dormitory);
+            model.addAttribute("dormitory", dormitory);
         }
         model.addAttribute("view", request.getParameter("view"));
-        return "admin/wefamily/merchantInfo";
+        return "admin/wefamily/dormitoryInfo";
     }
 
     /**
      *
      * @return
      */
-    @RequestMapping(value = "/merchantInfo", method = RequestMethod.POST)
-    public String addMerchantInfo(Merchant merchant, Model model,HttpServletRequest request) {
+    @RequestMapping(value = "/dormitoryInfo", method = RequestMethod.POST)
+    public String dormitoryInfo(Dormitory dormitory, Model model,HttpServletRequest request,RedirectAttributes redirectAttributes) {
         //检查是否重名
-        Merchant merchantForRepeat = merchantService.selectMerchantForSave(merchant);
-        if (null != merchantForRepeat) {
-            model.addAttribute("errorMessage", "抱歉，该经销商已存在！");
+        Dormitory dormitoryForRepeat = dormitoryService.getDormitoryForSave(dormitory);
+
+        if (null != dormitoryForRepeat) {
+            model.addAttribute("errorMessage", "抱歉，该宿舍楼已存在！");
         } else {
 
-            String[] licenseImgs = request.getParameterValues("licenseImg");
-            String licenseImg = "";
-            if(null != licenseImgs){
-                licenseImg = licenseImgs[0];
-            }
+
             //修改
-            if (StringUtils.isNotBlank(merchant.getUuid())) {
-                Merchant merchantForMod = merchantService.queryForObjectByPk(merchant);
-                merchantForMod.setName(merchant.getName());
-                String contactno = merchant.getContactno().replaceAll("，", ",");
-                merchantForMod.setContactno(contactno);
-                merchantForMod.setLegalperson(merchant.getLegalperson());
-                if(StringUtils.isNotBlank(licenseImg)){
-                    merchantForMod.setLicense(licenseImg);
-                }
-                merchantForMod.setFrequentcontacts(merchant.getFrequentcontacts());
-                merchantForMod.setContactsphone(merchant.getContactsphone());
-                merchantForMod.setAddress(merchant.getAddress());
-                merchantForMod.setVersionno(merchant.getVersionno());
-                merchantForMod.setProvince(merchant.getProvince());
-                merchantForMod.setCity(merchant.getCity());
-                merchantForMod.setDistrict(merchant.getDistrict());
+            if (StringUtils.isNotBlank(dormitory.getUuid())) {
+                Dormitory dormitoryForMod = dormitoryService.queryForObjectByPk(dormitory);
+                dormitoryForMod.setName(dormitory.getName());
+                String contactno = dormitory.getContactno().replaceAll("，", ",");
+                dormitoryForMod.setContactno(contactno);
+                dormitoryForMod.setFrequentcontacts(dormitory.getFrequentcontacts());
+                dormitoryForMod.setContactsphone(dormitory.getContactsphone());
+                dormitoryForMod.setAddress(dormitory.getAddress());
+                dormitoryForMod.setVersionno(dormitory.getVersionno());
                 try {
-                    merchantService.updatePartial(merchantForMod);
-                    model.addAttribute("successMessage", "保存成功！");
+                    dormitoryService.updatePartial(dormitoryForMod);
+                    redirectAttributes.addFlashAttribute("successMessage", "保存成功！");
                 } catch (ServiceException e) {
-                    model.addAttribute("errorMessage", "系统忙，稍候再试！");
+                    redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试！");
                 }
-                merchant = merchantService.queryForObjectByPk(merchant);
+                dormitory = dormitoryService.queryForObjectByPk(dormitory);
             } else {
                 //添加
                 WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
-                merchant.setBindid(wechatBinding.getUuid());
-                if(StringUtils.isNotBlank(licenseImg)){
-                    merchant.setLicense(licenseImg);
-                }
-                merchantService.insert(merchant);
-                model.addAttribute("successMessage", "保存成功！");
+                dormitory.setBindid(wechatBinding.getUuid());
+                dormitoryService.insert(dormitory);
+                redirectAttributes.addFlashAttribute("successMessage", "保存成功！");
             }
-            model.addAttribute("merchant", merchant);
+            model.addAttribute("dormitory", dormitory);
         }
-        return "redirect:/admin/wefamily/merchant";
+        return "redirect:/admin/wefamily/dormitoryInfo?dormitoryId="+dormitory.getUuid();
     }
 
     /**
@@ -237,13 +228,19 @@ public class WeFamilyController extends BaseAdminController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/deleteMerchant")
-    public String deleteMerchant(HttpServletRequest request) {
-        String merchantId = request.getParameter("merchantId");
-        Merchant merchant = new Merchant();
-        merchant.setUuid(merchantId);
-        merchantService.delete(merchant);
-        return "redirect:/admin/wefamily/merchant?successFlag=1";
+    @RequestMapping(value = "/deleteDormitory")
+    @ResponseBody
+    public Map<String, Object> deleteMerchant(HttpServletRequest request) {
+        int deleteFlag = 0;
+
+        String dormitoryId = request.getParameter("dormitoryId");
+        Dormitory dormitory = new Dormitory();
+        dormitory.setUuid(dormitoryId);
+        deleteFlag = dormitoryService.delete(dormitory);
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
     }
 
     public  List<String> getModel(){

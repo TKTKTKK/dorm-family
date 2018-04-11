@@ -3,6 +3,10 @@ package com.dorm.portal.controller.admin;
 import com.dorm.common.entity.*;
 import com.dorm.common.service.*;
 import com.dorm.common.utils.*;
+import com.dorm.family.entity.Dormitory;
+import com.dorm.family.entity.DormitoryUser;
+import com.dorm.family.service.DormitoryService;
+import com.dorm.family.service.DormitoryUserService;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.dorm.common.exception.ServiceException;
@@ -53,6 +57,10 @@ public class UserManageController extends BaseAdminController {
     private PlatformRolePermitService platformRolePermitService;
     @Autowired
     private BindRoleService bindRoleService;
+    @Autowired
+    private DormitoryUserService dormitoryUserService;
+    @Autowired
+    private DormitoryService dormitoryService;
 
     /**
      * 用户微信管理
@@ -462,25 +470,25 @@ public class UserManageController extends BaseAdminController {
         model.addAttribute("querytype", querytype);
 
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
-        boolean allMerchants = false;
+        boolean allDormitorys = false;
         if(null != wechatBinding) {
-            List<Merchant> merchantList = merchantService.selectAssignedMerchantForUser();
-            if(merchantList == null || merchantList.size()== 0) {
-                allMerchants = true;
-                model.addAttribute("allMerchants", allMerchants);
+            List<Dormitory> dormitoryList = dormitoryService.getAssignedDormitoryForUser();
+            if(dormitoryList == null || dormitoryList.size()== 0) {
+                allDormitorys = true;
             }
         }
-        model.addAttribute("allMerchants",allMerchants);
-        //片区信息
+        model.addAttribute("allDormitorys",allDormitorys);
+
+        //宿舍楼信息
         if("district".equals(querytype)){
             if(StringUtils.isNotBlank(userId)){
                 PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-                PageList<UserMerchant> userMerchantList = userMerchantService.queryUserMerchantListByUserId(userId, pageBounds);
-                model.addAttribute("userMerchantList", userMerchantList);
+                PageList<DormitoryUser> dormitoryUserPageList = dormitoryUserService.getDormitoryUserListByUserId(userId, pageBounds);
+                model.addAttribute("dormitoryUserPageList", dormitoryUserPageList);
                 PlatformUser platformUser = platformUserService.getPlatformUserById(userId);
                 model.addAttribute("platformUser", platformUser);
-                List<Merchant> partialMerchantList = merchantService.queryMerchantListNotInUserMerhantTable(UserUtils.getUserBindId(),userId);
-                model.addAttribute("partialMerchantList", partialMerchantList);
+                List<Dormitory> partialDormitoryList = dormitoryService.getDormitoryListNotInDormitoryUserTable(UserUtils.getUserBindId(),userId);
+                model.addAttribute("partialDormitoryList", partialDormitoryList);
             }
         }else{
             //用户信息
@@ -560,7 +568,7 @@ public class UserManageController extends BaseAdminController {
         if(StringUtils.isNotBlank(platformUser.getUuid())){
             try {
                 //修改用户信息
-                userMerchantService.modifyUserInfo(platformUser);
+                dormitoryUserService.modifyUserInfo(platformUser);
                 model.addAttribute("successMessage", "保存成功");
             } catch (Exception e) {
                 model.addAttribute("errorMessage", "系统忙，稍候再试");
@@ -581,7 +589,7 @@ public class UserManageController extends BaseAdminController {
                 //添加用户信息
                 String password = request.getParameter("inputPassword");
                 platformUser.setPassword(password);
-                userMerchantService.addUserInfo(platformUser);
+                dormitoryUserService.addUserInfo(platformUser);
                 //发送手机短信验证码
 //                SMSUtil.sendPlatformUserCreatedNotification(platformUser.getCellphone(), password.toString());
                 model.addAttribute("platformUser", platformUser);

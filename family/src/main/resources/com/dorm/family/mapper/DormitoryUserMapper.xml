@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.family.mapper.DormitoryUserMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.family.entity.DormitoryUser">
+    </resultMap>
+
+    <select id="selectDormitoryUserListByUserId"   resultMap="selectResultMap">
+        select du.*, d.name as dormitoryname
+        from tb_dorm_dormitory_user du, tb_dorm_dormitory d
+        where du.merchantid = d.uuid
+        and du.userid = #{userid}
+        order by du.modifyon desc;
+    </select>
+
+</mapper>

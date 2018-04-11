@@ -73,20 +73,16 @@
                 <a href="javascript:backRoleDistribute()">用户管理</a> /
                 <span class="font-bold text-shallowred">创建用户</span>
             </header>
-            <div class="row" style="margin-right:25px;float: right">
-                <a href="javascript:backRoleDistribute()" class="btn btn-submit btn-s-md a-noline" style="color: #fff"
-                >返回</a>
-            </div>
                 <div class="col-sm-12 pos">
                     <ul id="myTab" class="nav nav-tabs font-bold text-md">
                         <c:choose>
                             <c:when test="${empty querytype or querytype eq 'user'}">
                                 <li class="active" onclick="toggleTab('user')"><a data-toggle="tab">用户信息</a></li>
-                                <li onclick="toggleTab('district')"><a data-toggle="tab">经销商表单</a></li>
+                                <li onclick="toggleTab('district')"><a data-toggle="tab">所管宿舍楼</a></li>
                             </c:when>
                             <c:when test="${'district' eq querytype}">
                                 <li onclick="toggleTab('user')"><a data-toggle="tab">用户信息</a></li>
-                                <li class="active" onclick="toggleTab('district')"><a data-toggle="tab">经销商表单</a></li>
+                                <li class="active" onclick="toggleTab('district')"><a data-toggle="tab">所管宿舍楼</a></li>
                             </c:when>
                         </c:choose>
                     </ul>
@@ -247,21 +243,6 @@
                                             </div>
                                         </div>
                                     </c:if>
-
-
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">绑定微信：</label>
-                                        <div class="col-sm-9  b-l bg-white">
-                                            <div class="col-sm-4 col-xs-12">
-                                                <input id="openid" name="openid" class="form-control" value="${platformUser.openid}"
-                                                       onchange="checkIfSubscribe()"/>
-                                            </div>
-                                            <div class="col-sm-5">
-                                                <a class="btn btn-default btn-s-xs" onclick="sendTestMessage()">发送测试模板消息</a>
-                                                <span style="margin-left: 10px" id="subscribeInfo"></span>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="form-group">
                                         <div class="col-sm-12">
                                             <input type="hidden" name="uuid" id="hidPlatformUserId" class="form-control" value="${platformUser.uuid}">
@@ -286,7 +267,7 @@
                             <table class="table table-striped b-t b-light b-b b-l b-r">
                                 <thead>
                                 <tr>
-                                    <th width="30%">经销商名称</th>
+                                    <th width="30%">宿舍楼</th>
                                     <th width="30%">操作</th>
                                 </tr>
                                 </thead>
@@ -497,7 +478,7 @@
                     }
                 }
             };
-            $("#openid").easyAutocomplete(options);
+            /*$("#openid").easyAutocomplete(options);*/
         }
         //检查返回时用户是否有供应商
         function backRoleDistribute(){
@@ -726,9 +707,9 @@
             });
         }
     }
-    if('district' != '${querytype}'){
+    /*if('district' != '${querytype}'){
         checkIfSubscribe();
-    }
+    }*/
 
     //根据角色查询权限
     function queryPermitListByRoleId(obj, roleId){
