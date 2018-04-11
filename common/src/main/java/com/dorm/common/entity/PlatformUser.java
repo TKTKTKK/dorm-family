@@ -38,10 +38,14 @@ public class PlatformUser extends BaseEntity {
     private String plainpassword;
     //角色
     private String[] roles;
-    //所管merchant id
+    //所管宿舍楼 id
     private String merchantid;
+    //所管宿舍楼 id
+    private String dormitoryid;
     //所管小区名称
     private String merchantname;
+    //所管宿舍楼名称
+    private String dormitoryname;
     //用户分组ID
     private Integer groupId;
 
@@ -179,5 +183,21 @@ public class PlatformUser extends BaseEntity {
 
     public void setTaskcount(Integer taskcount) {
         this.taskcount = taskcount;
+    }
+
+    public String getDormitoryid() {
+        return dormitoryid;
+    }
+
+    public void setDormitoryid(String dormitoryid) {
+        this.dormitoryid = dormitoryid;
+    }
+
+    public String getDormitoryname() {
+        return dormitoryname;
+    }
+
+    public void setDormitoryname(String dormitoryname) {
+        this.dormitoryname = dormitoryname;
     }
 }

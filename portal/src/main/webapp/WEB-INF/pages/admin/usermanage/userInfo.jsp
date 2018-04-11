@@ -70,7 +70,7 @@
         <section class="scrollable">
             <header class="panel-heading bg-white text-md b-b">
                 用户 /
-                <a href="javascript:backRoleDistribute()">用户管理</a> /
+                <a href="${ctx}/admin/usermanage/roleDistribute">用户管理</a> /
                 <span class="font-bold text-shallowred">创建用户</span>
             </header>
                 <div class="col-sm-12 pos">
@@ -148,11 +148,6 @@
                                             <span id="nameError" class="text-danger"></span>
                                         </div>
                                     </div>
-
-                                        <input name="queryMerchantid" id="queryMerchantid" value="${queryMerchantid}" type="hidden">
-                                        <input name="queryUsername" id="queryUsername" value="${queryUsername}" type="hidden">
-                                        <input name="queryName" id="queryName" value="${queryName}" type="hidden">
-                                        <input name="queryTopAccount" id="queryTopAccount" value="${queryTopAccount}" type="hidden">
                                         <input name="wechatUserInfoId" id="wechatUserInfoId" value="${wechatUserInfoId}" type="hidden">
 
                                     <div class="form-group">
@@ -272,19 +267,19 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach items="${userMerchantList}" var="userMerchant" varStatus="stat">
+                                <c:forEach items="${dormitoryUserPageList}" var="dormitoryUser" varStatus="stat">
                                     <tr>
                                         <td>
-                                                ${userMerchant.merchantname}
+                                                ${dormitoryUser.dormitoryname}
                                         </td>
                                         <td>
-                                            <a onclick="showUserMerchantInfo('${userMerchant.uuid}')" type="button"
+                                            <a onclick="showDormitoryUserInfo('${dormitoryUser.uuid}')" type="button"
                                                class="btn btn-sm btn-dangernew  a-noline" style="color:white"
                                                data-toggle="modal" data-target=".bs-example-modal-tj"
                                             >
                                                 修改</a>
                                             <c:if test="${currentUserId != platformUser.uuid}">
-                                                <a href="javascript:deleteUserMerchantInfo('${userMerchant.uuid}', '${platformUser.uuid}')" type="button"
+                                                <a href="javascript:deleteDormitoryUserInfo('${dormitoryUser.uuid}', '${platformUser.uuid}')" type="button"
                                                    class="btn btn-sm btn-yellow a-noline" style="color:white">
                                                     删除</a>
                                             </c:if>
@@ -293,15 +288,15 @@
                                 </c:forEach>
                                 </tbody>
                             </table>
-                            <c:if test="${not empty userMerchantList}">
-                                <web:pagination pageList="${userMerchantList}"/>
+                            <c:if test="${not empty dormitoryUserPageList}">
+                                <web:pagination pageList="${dormitoryUserPageList}"/>
                             </c:if>
                         </div>
                         <div class="navbar-left">
-                            <c:if test="${fn:length(partialMerchantList) > 0}">
+                            <c:if test="${fn:length(partialDormitoryList) > 0}">
                                 <a class="btn btn-primary btn-s-xs"
                                    data-toggle="modal" data-target=".bs-example-modal-tj" style="color: #fff"
-                                   onclick="showUserMerchantInfo()"
+                                   onclick="showDormitoryUserInfo()"
                                 >添 加</a>
                             </c:if>
                         </div>
@@ -313,22 +308,22 @@
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" id="modelCloseBtnAdd"><span
                                                 aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                                        <h4 class="modal-title" id="myLargeModalLabelAdd">经销商</h4>
+                                        <h4 class="modal-title" id="myLargeModalLabelAdd">宿舍楼</h4>
                                     </div>
-                                    <form action="${ctx}/admin/usermanage/saveUserMerchant" method="POST" id="addUserMerchantFrm">
+                                    <form action="${ctx}/admin/usermanage/saveDormitoryUser" method="POST" id="addDormitoryUserFrm">
                                         <div class="modal-body">
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <div class="row static-info" id="merchantAdd">
-                                                        <div class="col-md-3 col-xs-4 name"><span class="text-danger">*</span>经销商:</div>
+                                                    <div class="row static-info" id="dormitoryAdd">
+                                                        <div class="col-md-3 col-xs-4 name"><span class="text-danger">*</span>宿舍楼:</div>
                                                         <div class="col-md-9 col-xs-12 value">
                                                             <div class="my-display-inline-box">
-                                                                <select class="form-control" name="merchantid" id="merchantid" data-required="true">
-                                                                    <c:if test="${fn:length(partialMerchantList) > 0}">
-                                                                        <option value="">--请选择经销商--</option>
+                                                                <select class="form-control" name="dormitoryid" id="dormitoryid" data-required="true">
+                                                                    <c:if test="${fn:length(partialDormitoryList) > 0}">
+                                                                        <option value="">请选择宿舍楼</option>
                                                                     </c:if>
-                                                                    <c:forEach items="${partialMerchantList}" var="merchant">
-                                                                        <option value="${merchant.uuid}">${merchant.name}</option>
+                                                                    <c:forEach items="${partialDormitoryList}" var="dormitory">
+                                                                        <option value="${dormitory.uuid}">${dormitory.name}</option>
                                                                     </c:forEach>
                                                                 </select>
                                                             </div></div>
@@ -342,21 +337,17 @@
 
                                                     <div class="hidden">
                                                         <input type="hidden" name="userid" value="${platformUser.uuid}">
-                                                        <input type="hidden" name="uuid" id="userMerchantId">
-                                                        <input name="queryMerchantid" id="queryMerchantid" value="${queryMerchantid}" type="hidden">
-                                                        <input name="queryUsername" id="queryUsername" value="${queryUsername}" type="hidden">
-                                                        <input name="queryName" id="queryName" value="${queryName}" type="hidden">
-                                                        <input name="queryTopAccount" id="queryTopAccount" value="${queryTopAccount}" type="hidden">
+                                                        <input type="hidden" name="uuid" id="dormitoryUserId">
                                                         <input name="wechatUserInfoId" id="wechatUserInfoId" value="${wechatUserInfoId}" type="hidden">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer" style="text-align: center;border: 0;margin: 0;padding: 0 20px 20px 20px;">
-                                                <a href="javascript:saveUserMerchantInfo()"
+                                            <div class="modal-footer" style="text-align: center;border: 0;margin: 10;padding: 0 20px 20px 20px;">
+                                                <a href="javascript:saveDormitoryUserInfo()"
                                                    class="btn btn-submit btn-s-md a-noline" style="color: #fff"
                                                    id="submitAddBtn"
                                                 >提交</a>
-                                                <a href="javascript:deleteUserMerchantInfo($('#userMerchantId').val(), '${platformUser.uuid}')" type="button"
+                                                <a href="javascript:deleteDormitoryUserInfo($('#dormitoryUserId').val(), '${platformUser.uuid}')" type="button"
                                                    class="btn btn-s-md btn-yellow a-noline hidden" style="color:white" id="deleteBtn">
                                                     删除</a>
                                             </div>
@@ -480,33 +471,6 @@
             };
             /*$("#openid").easyAutocomplete(options);*/
         }
-        //检查返回时用户是否有供应商
-        function backRoleDistribute(){
-            var merchantid = $('#queryMerchantid').val();
-            var username = $('#queryUsername').val();
-            var name = $('#queryName').val();
-            var topAccount = $('#queryTopAccount').val();
-
-            if('${platformUser.uuid}'=='' || '${view}'=='1'){
-                window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?merchantid="+merchantid+"&username="+username+"&name="+name+"&topAccount="+topAccount;
-            }else{
-                var url = "${ctx}/admin/usermanage/checkIfUserMerchant?userId=${platformUser.uuid}";
-                $.get(url,function(data,status){
-                    if(data.checkIfUserMerchantFlag == 'N'){
-                        qikoo.dialog.confirm('未添加供应商，确定返回？',function(){
-                            //确定
-                            window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?merchantid="+merchantid+"&username="+username+"&name="+name+"&topAccount="+topAccount;
-                        },function(){
-                            //取消
-                        });
-                    }else{
-                        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?merchantid="+merchantid+"&username="+username+"&name="+name+"&topAccount="+topAccount;
-                    }
-                });
-            }
-
-
-        }
 
     //提交用户信息
     function submitUserInfo(){
@@ -520,47 +484,35 @@
 
 
         function changeUsername(platformUserId,versionno){
-            var merchantid = $('#queryMerchantid').val();
-            var username = $('#queryUsername').val();
-            var name = $('#queryName').val();
-            var topAccount = $('#queryTopAccount').val();
-            window.location.href = "${ctx}/admin/usermanage/changeUsername?newUsername="+$('#newUsername').val()+"&platformUserId="+platformUserId+"&versionno="+versionno+"&queryMerchantid="+merchantid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
+            window.location.href = "${ctx}/admin/usermanage/changeUsername?newUsername="+$('#newUsername').val()+"&platformUserId="+platformUserId+"&versionno="+versionno;
         }
         function resetPassword(platformUserId,versionno,password){
-            var merchantid = $('#queryMerchantid').val();
-            var username = $('#queryUsername').val();
-            var name = $('#queryName').val();
-            var topAccount = $('#queryTopAccount').val();
             $("#passwordfrm").parsley("validate");
 
             if($('#passwordfrm').parsley().isValid()){
                 if(checkPassword(password)){
-                    passwordfrm.action = "${ctx}/admin/usermanage/resetPassword?platformUserId="+platformUserId+"&versionno="+versionno+"&queryMerchantid="+merchantid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
+                    passwordfrm.action = "${ctx}/admin/usermanage/resetPassword?platformUserId="+platformUserId+"&versionno="+versionno;
                     passwordfrm.submit();
                 }
             }
         }
         function changeUserStatus(platformUserId,versionno,querytype){
-            var merchantid = $('#queryMerchantid').val();
-            var username = $('#queryUsername').val();
-            var name = $('#queryName').val();
-            var topAccount = $('#queryTopAccount').val();
             if(${allCommunities && platformUser.status == 'FREEZE'}){
-                var url = "${ctx}/admin/usermanage/checkIfUserMerchant?userId="+platformUserId;
+                var url = "${ctx}/admin/usermanage/checkIfDormitoryUser?userId="+platformUserId;
                 $.get(url,function(data,status){
-                    if(data.checkIfUserMerchantFlag == 'N'){
-                        qikoo.dialog.confirm('未添加供应商，确定生效？',function(){
+                    if(data.checkIfDormitoryUserFlag == 'N'){
+                        qikoo.dialog.confirm('未添加宿舍楼，确定生效？',function(){
                             //确定
-                            window.location.href = "${ctx}/admin/usermanage/changeUserStatus?platformUserId="+platformUserId+"&versionno="+versionno+"&querytype="+querytype+"&queryMerchantid="+merchantid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
+                            window.location.href = "${ctx}/admin/usermanage/changeUserStatus?platformUserId="+platformUserId+"&versionno="+versionno+"&querytype="+querytype;
                         },function(){
                             //取消
                         });
                     }else{
-                        window.location.href = "${ctx}/admin/usermanage/changeUserStatus?platformUserId="+platformUserId+"&versionno="+versionno+"&querytype="+querytype+"&queryMerchantid="+merchantid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
+                        window.location.href = "${ctx}/admin/usermanage/changeUserStatus?platformUserId="+platformUserId+"&versionno="+versionno+"&querytype="+querytype;
                     }
                 });
             }else{
-                window.location.href = "${ctx}/admin/usermanage/changeUserStatus?platformUserId="+platformUserId+"&versionno="+versionno+"&querytype="+querytype+"&queryMerchantid="+merchantid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
+                window.location.href = "${ctx}/admin/usermanage/changeUserStatus?platformUserId="+platformUserId+"&versionno="+versionno+"&querytype="+querytype;
             }
 
         }
@@ -740,47 +692,39 @@
 
     //切换选项卡
     function toggleTab(tabId){
-        var merchantid = $('#queryMerchantid').val();
-        var username = $('#queryUsername').val();
-        var name = $('#queryName').val();
-        var topAccount = $('#queryTopAccount').val();
         var wechatUserInfoId = $('#wechatUserInfoId').val();
-        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/userInfo?userId=${platformUser.uuid}&querytype="+tabId+"&merchantid="+merchantid+"&username="+username+"&name="+name+"&topAccount="+topAccount+"&wechatUserInfoId="+wechatUserInfoId;
+        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/userInfo?userId=${platformUser.uuid}&querytype="+tabId+"&wechatUserInfoId="+wechatUserInfoId;
     }
 
-    function saveUserMerchantInfo(){
-        $("#addUserMerchantFrm").parsley("validate");
+    function saveDormitoryUserInfo(){
+        $("#addDormitoryUserFrm").parsley("validate");
         //检查支信息合法性
-        if($('#addUserMerchantFrm').parsley().isValid()){
-            $('#addUserMerchantFrm').submit();
+        if($('#addDormitoryUserFrm').parsley().isValid()){
+            $('#addDormitoryUserFrm').submit();
         }
     }
 
-    function showUserMerchantInfo(userMerchantId){
+    function showDormitoryUserInfo(dormitoryUserId){
         //修改
-        if(undefined != userMerchantId){
-            $.get("${ctx}/admin/usermanage/queryUserMerchantInfo?userMerchantId="+userMerchantId+"&version=" + Math.random(),function(data,status){
-                if(undefined != data.userMerchant){
-                    $('#merchantid').append($("<option>").val(data.userMerchant.merchantid).text(data.userMerchant.merchantname));
-                    $('#merchantid').val(data.userMerchant.merchantid);
-                    $('#userMerchantId').val(data.userMerchant.uuid);
+        if(undefined != dormitoryUserId){
+            $.get("${ctx}/admin/usermanage/queryDormitoryUserInfo?dormitoryUserId="+dormitoryUserId+"&version=" + Math.random(),function(data,status){
+                if(undefined != data.dormitoryUser){
+                    $('#dormitoryid').append($("<option>").val(data.dormitoryUser.dormitoryid).text(data.dormitoryUser.dormitoryname));
+                    $('#dormitoryid').val(data.dormitoryUser.dormitoryid);
+                    $('#dormitoryUserId').val(data.dormitoryUser.uuid);
                 }
             });
         }else{
             //添加
-            $('#merchantid').val("");
+            $('#dormitoryid').val("");
         }
     }
 
 
-    function deleteUserMerchantInfo(userComId, userId){
-        var merchantid = $('#queryMerchantid').val();
-        var username = $('#queryUsername').val();
-        var name = $('#queryName').val();
-        var topAccount = $('#queryTopAccount').val();
+    function deleteDormitoryUserInfo(dormitoryUserId, userId){
         if(confirm("确定删除?")){
             //确定
-            window.location.href = "<%=request.getContextPath()%>/admin/usermanage/deleteUserMerchant?userId="+userId+"&userMerchantId="+userComId+"&queryMerchantid="+merchantid+"&queryUsername="+username+"&queryName="+name+"&queryTopAccount="+topAccount;
+            window.location.href = "<%=request.getContextPath()%>/admin/usermanage/deleteDormitoryUser?userId="+userId+"&dormitoryUserId="+dormitoryUserId;
         }
     }
 </script>

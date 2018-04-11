@@ -47,9 +47,9 @@
                     <form method="post" action="" class="form-horizontal" data-validate="parsley" id="searchForm" style="margin: 10px 0">
                         <div>
                             <c:choose>
-                                <c:when test="${allMerchants}">
+                                <c:when test="${allDormitorys}">
                                     <div class="col-sm-3 col-xs-12 m-b-sm">
-                                        <select class="form-control" name="topAccount"  id="topAccount" onchange="showMerchantid()">
+                                        <select class="form-control" name="topAccount"  id="topAccount" onchange="showDormitoryid()">
                                                 <option value="Y" <c:if test="${'Y' eq topAccount}">selected="selected"</c:if>>顶级用户</option>
                                                 <option value="N" <c:if test="${'N' eq topAccount}">selected="selected"</c:if>>非顶级用户</option>
                                         </select>
@@ -59,14 +59,14 @@
                                         <input type="hidden" name="topAccount" id="topAccount" value="N">
                                 </c:otherwise>
                             </c:choose>
-                            <div class="col-sm-3 col-xs-12 m-b-sm" id="merchantidDiv">
-                                <select class="form-control" name="merchantid"  id="merchantid">
-                                    <c:if test="${allMerchants}">
-                                        <option value="">经销商</option>
+                            <div class="col-sm-3 col-xs-12 m-b-sm" id="dormitoryidDiv">
+                                <select class="form-control" name="dormitoryid"  id="dormitoryid">
+                                    <c:if test="${allDormitorys}">
+                                        <option value="">宿舍楼</option>
                                     </c:if>
 
-                                    <c:forEach items="${merchantList}" var="merchant">
-                                        <option value="${merchant.uuid}" <c:if test="${merchantid == merchant.uuid}">selected = "selected"</c:if> >${merchant.name}</option>
+                                    <c:forEach items="${dormitoryList}" var="dormitory">
+                                        <option value="${dormitory.uuid}" <c:if test="${dormitoryid == dormitory.uuid}">selected = "selected"</c:if> >${dormitory.name}</option>
                                     </c:forEach>
 
                                 </select>
@@ -116,7 +116,7 @@
                                     <th class="text-center">姓名</th>
                                     <th class="text-center">职位</th>
                                     <c:if test="${topAccount == 'N'}">
-                                        <th class="text-center">经销商</th>
+                                        <th class="text-center">宿舍楼</th>
                                     </c:if>
                                     <th class="text-center">操作</th>
                                 </tr>
@@ -166,7 +166,7 @@
                                         </c:choose>
                                         <c:if test="${topAccount == 'N'}">
                                             <td>
-                                                    ${platformUser.merchantname}
+                                                    ${platformUser.dormitoryname}
                                             </td>
                                         </c:if>
                                         <c:choose>
@@ -178,7 +178,7 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <td>
-                                                    <a href="javascript:goModifyuserInfo('${platformUser.uuid}','${merchantid}')"  type="button"
+                                                    <a href="javascript:goModifyuserInfo('${platformUser.uuid}','${dormitoryid}')"  type="button"
                                                        class="btn btn-sm btn-dangernew  a-noline" style="color:white">
                                                         修改</a>
                                                     <c:if test="${currentUserId != platformUser.uuid}">
@@ -250,32 +250,30 @@
 
         var topAccount = $("#topAccount").find("option:selected").val();
         if(topAccount == 'Y'){
-            $("#merchantidDiv").addClass("hidden");
+            $("#dormitoryidDiv").addClass("hidden");
         }
         if(topAccount == 'N'){
-            $("#merchantidDiv").removeClass("hidden");
+            $("#dormitoryidDiv").removeClass("hidden");
         }
     }
 
     function resubmitSearch(page){
-        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?topAccount="+$('#topAccount').val()+"&page="+page+"&merchantid="+$('#merchantid').val()+"&username="+$('#username').val()+"&name="+$('#name').val();
+        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?topAccount="+$('#topAccount').val()+"&page="+page+"&dormitoryid="+$('#dormitoryid').val()+"&username="+$('#username').val()+"&name="+$('#name').val();
     }
     function submitInfo(){
-        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?topAccount="+$('#topAccount').val()+"&merchantid="+$('#merchantid').val()+"&username="+$('#username').val()+"&name="+$('#name').val();
+        window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?topAccount="+$('#topAccount').val()+"&dormitoryid="+$('#dormitoryid').val()+"&username="+$('#username').val()+"&name="+$('#name').val();
     }
-    function goModifyuserInfo(userId,merchantid){
-        window.location.href="${ctx}/admin/usermanage/userInfo?userId="+userId+"&merchantid="+merchantid+"&username="+$('#username').val()+"&name="+$('#name').val()+"&topAccount="+$('#topAccount').val();
+    function goModifyuserInfo(userId,dormitoryid){
+        window.location.href="${ctx}/admin/usermanage/userInfo?userId="+userId+"&dormitoryid="+dormitoryid+"&username="+$('#username').val()+"&name="+$('#name').val()+"&topAccount="+$('#topAccount').val();
     }
-    function gouserInfo(userId,merchantid){
-        window.location.href="${ctx}/admin/usermanage/userInfo?userId="+userId+"&view=1&merchantid="+merchantid+"&username="+$('#username').val()+"&name="+$('#name').val()+"&topAccount="+$('#topAccount').val();
-    }
-    function showMerchantid(){
+
+    function showDormitoryid(){
         var topAccount = document.getElementById('topAccount').value;
         if(topAccount == 'Y'){
-            $("#merchantidDiv").addClass("hidden");
+            $("#dormitoryidDiv").addClass("hidden");
         }
         if(topAccount == 'N'){
-            $("#merchantidDiv").removeClass("hidden");
+            $("#dormitoryidDiv").removeClass("hidden");
         }
     }
 
@@ -288,9 +286,9 @@
     function deleteUserInfo(userId){
         qikoo.dialog.confirm('确定删除？',function(){
             //确定
-            $.get("${ctx}/admin/usermanage/deleteUser?userId="+userId+"&merchantid=${merchantid}&version="+Math.random(),function(data,status){
+            $.get("${ctx}/admin/usermanage/deleteUser?userId="+userId+"&dormitoryid=${dormitoryid}&version="+Math.random(),function(data,status){
                 if(undefined != data.deleteFlag){
-                    window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?topAccount="+$('#topAccount').val()+"&merchantid="+$('#merchantid').val()+"&username="+$('#username').val()+"&name="+$('#name').val()+"&deleteFlag=1";
+                    window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?topAccount="+$('#topAccount').val()+"&dormitoryid="+$('#dormitoryid').val()+"&username="+$('#username').val()+"&name="+$('#name').val()+"&deleteFlag=1";
                 }
             });
         },function(){

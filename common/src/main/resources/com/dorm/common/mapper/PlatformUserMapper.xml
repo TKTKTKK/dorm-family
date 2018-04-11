@@ -8,25 +8,25 @@
     <select id="selectNonSuperUsers" resultMap="selectResultMap">
         select u.*
         <if test="topAccount =='N'.toString()">
-            ,c.name as merchantname
+            ,d.name as dormitoryname
         </if>
         from tb_platform_user u
         <if test="topAccount =='N'.toString()">
-            inner join tb_mtx_user_merchant uc on uc.userid = u.uuid
-            inner join tb_mtx_merchant c on uc.merchantid = c.uuid
+            inner join tb_dorm_dormitory_user du on du.userid = u.uuid
+            inner join tb_dorm_dormitory d on du.dormitoryid = d.uuid
         </if>
         where
         u.bindid = #{platformUser.bindid}
        <choose>
            <when test="topAccount == 'Y'.toString()">
-               and (u.uuid not in(select distinct uc.userid from tb_mtx_user_merchant uc))
+               and (u.uuid not in(select distinct du.userid from tb_dorm_dormitory_user du))
            </when>
            <otherwise>
-               and (u.uuid  in(select distinct uc.userid from tb_mtx_user_merchant uc))
+               and (u.uuid  in(select distinct du.userid from tb_dorm_dormitory_user du))
            </otherwise>
        </choose>
-        <if test="platformUser.merchantid !=null and platformUser.merchantid !='' and topAccount !='Y'.toString()">
-            and uc.merchantid = #{platformUser.merchantid}
+        <if test="platformUser.dormitoryid !=null and platformUser.dormitoryid !='' and topAccount !='Y'.toString()">
+            and du.dormitoryid = #{platformUser.dormitoryid}
         </if>
         <if test="platformUser.username !=null and platformUser.username !=''">
             and u.username like concat('%', #{platformUser.username}, '%')

@@ -41,8 +41,8 @@
     <select id="selectDormitoryListNotInDormitoryUserTable" resultMap="selectResultMap">
         select distinct d.*
         from tb_dorm_dormitory d
-        where d.bindid = #{bindid}
-        and d.uuid not in (select du.dormitoryid from tb_dorm_dormitory_user du where du.userid = #{userid})
+        where d.bindid = #{userBindId}
+        and d.uuid not in (select du.dormitoryid from tb_dorm_dormitory_user du where du.userid = #{userId})
         order by d.createon;
     </select>
 

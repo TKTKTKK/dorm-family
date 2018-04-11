@@ -260,24 +260,24 @@ public class UserManageController extends BaseAdminController {
     public String roleDistributePage(@RequestParam(required = false,defaultValue = "1") int page,Model model,HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
-        boolean allMerchants = false;
+        boolean allDormitorys = false;
         if(null != wechatBinding){
-            List<Merchant> merchantList = merchantService.selectAssignedMerchantForUser();
-            if(merchantList == null || merchantList.size()== 0) {
-                allMerchants = true;
-                model.addAttribute("allMerchants", allMerchants);
+            List<Dormitory> dormitoryList = dormitoryService.getAssignedDormitoryForUser();
+            if(dormitoryList == null || dormitoryList.size()== 0) {
+                allDormitorys = true;
+                model.addAttribute("allDormitorys", allDormitorys);
             }
-            merchantList = merchantService.selectMerchantForUser();
-            model.addAttribute("merchantList", merchantList);
+            dormitoryList = dormitoryService.getDormitoryForUser();
+            model.addAttribute("dormitoryList", dormitoryList);
 
             String username = request.getParameter("username");
             String name = request.getParameter("name");
-            String merchantid=request.getParameter("merchantid");
-            if(StringUtils.isBlank(merchantid)){
-                if(allMerchants){
-                    merchantid="";
+            String dormitoryid = request.getParameter("dormitoryid");
+            if(StringUtils.isBlank(dormitoryid)){
+                if(allDormitorys){
+                    dormitoryid = "";
                 }else{
-                    merchantid = merchantList.get(0).getUuid();
+                    dormitoryid = dormitoryList.get(0).getUuid();
                 }
             }
             //默认查询非顶级账号
@@ -287,13 +287,13 @@ public class UserManageController extends BaseAdminController {
             }
             model.addAttribute("username",username);
             model.addAttribute("name",name);
-            model.addAttribute("merchantid",merchantid);
+            model.addAttribute("dormitoryid",dormitoryid);
             model.addAttribute("topAccount",topAccount);
             model.addAttribute("page",page);
             //查询该bindid下的用户：（当前用户是超级管理员时，可以查看全部角色的用户；当前用户是管理员时，只可以查看非超级管理员角色的用户。）
             //设置分页参数
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-            List<PlatformUser> platformUserList = platformUserService.selectNonSuperUsers(topAccount,merchantid,pageBounds,username,name);
+            List<PlatformUser> platformUserList = platformUserService.selectNonSuperUsers(topAccount,dormitoryid,pageBounds,username,name);
             model.addAttribute("platformUserList", platformUserList);
 
             //所有非超级管理员角色
@@ -317,17 +317,6 @@ public class UserManageController extends BaseAdminController {
 
             String staffqrcode = wechatBinding.getStaffqrcode();
 
-            if (StringUtils.isNotBlank(wechatBinding.getAppid())) {
-                if(StringUtils.isBlank(staffqrcode)){
-                    String domainUrl = RequestUtil.getDomainUrl();
-                    String qrCodeUrl = domainUrl + "/guest/staff/bind";
-                    staffqrcode = QRCodeUtil.generateQRCode(qrCodeUrl);
-                    wechatBinding.setStaffqrcode(staffqrcode);
-                    wechatBindingService.updatePartial(wechatBinding);
-                    CacheUtils.remove(WechatConstants.BIND_DETAILS_CACHE,wechatBinding.getUuid());
-                }
-                model.addAttribute("staffqrcode", staffqrcode);
-            }
         }
         return "admin/usermanage/roleDistribute";
     }
@@ -369,9 +358,9 @@ public class UserManageController extends BaseAdminController {
         int deleteFlag = 0;
 
         String userId = request.getParameter("userId");
-        String merchantid = request.getParameter("merchantid");
+        String dormitoryid = request.getParameter("dormitoryid");
         //删除用户信息
-        deleteFlag = userMerchantService.deleteUserInfo(userId, merchantid);
+        deleteFlag = dormitoryUserService.deleteUserInfo(userId, dormitoryid);
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("deleteFlag", deleteFlag);
         return resultMap;
@@ -457,15 +446,7 @@ public class UserManageController extends BaseAdminController {
 
         model.addAttribute("view", request.getParameter("view"));
 
-        String userId = request.getParameter("userId");
-        String merchantid = request.getParameter("merchantid");
-        model.addAttribute("queryMerchantid", merchantid);
-        String username = request.getParameter("username");
-        model.addAttribute("queryUsername",username);
-        String name = request.getParameter("name");
-        model.addAttribute("queryName",name);
-        String topAccount = request.getParameter("topAccount");
-        model.addAttribute("queryTopAccount",topAccount);
+        String userId = request.getParameter("userId");;
         String querytype = request.getParameter("querytype");
         model.addAttribute("querytype", querytype);
 
@@ -1039,7 +1020,7 @@ public class UserManageController extends BaseAdminController {
         //权限配置
         if("rolepermit".equals(signType)){
             int flag = platformRolePermitService.deleteByRoleId(uuid);
-            return "redirect:/admin/usermanage/rolePermitManage?signType=rolepermit&deleteFlag="+flag;
+            return "redirect:/admin/usermanage/rolePermitManage?sign Type=rolepermit&deleteFlag="+flag;
         }
         return "redirect:/admin/usermanage/rolePermitManage";
     }
@@ -1048,43 +1029,35 @@ public class UserManageController extends BaseAdminController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/queryUserMerchantInfo")
+    @RequestMapping(value = "/queryDormitoryUserInfo")
     @ResponseBody
-    public Map<String, Object> queryUserMerchantInfo(HttpServletRequest request){
+    public Map<String, Object> queryDormitoryUserInfo(HttpServletRequest request){
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        String userMerchantId = request.getParameter("userMerchantId");
-        if(StringUtils.isNotBlank(userMerchantId)){
-            UserMerchant userMerchant = userMerchantService.queryUserMerchantInfoById(userMerchantId);
-            resultMap.put("userMerchant", userMerchant);
+        String dormitoryUserId = request.getParameter("dormitoryUserId");
+        if(StringUtils.isNotBlank(dormitoryUserId)){
+            DormitoryUser dormitoryUser = dormitoryUserService.getDormitoryUserInfoById(dormitoryUserId);
+            resultMap.put("dormitoryUser", dormitoryUser);
         }
         return resultMap;
     }
 
     /**
      *
-     * @param userMerchant
+     * @param dormitoryUser
      * @param redirectAttributes
      * @param request
      * @return
      */
-    @RequestMapping(value = "/saveUserMerchant", method = RequestMethod.POST)
-    public String saveUserMerchant(UserMerchant userMerchant,
+    @RequestMapping(value = "/saveDormitoryUser", method = RequestMethod.POST)
+    public String saveDormitoryUser(DormitoryUser dormitoryUser,
                                     RedirectAttributes redirectAttributes,HttpServletRequest request){
-        String queryMerchantid = request.getParameter("queryMerchantid");
-        redirectAttributes.addAttribute("merchantid",queryMerchantid);
-        String queryUsername = request.getParameter("queryUsername");
-        redirectAttributes.addAttribute("username",queryUsername);
-        String queryName = request.getParameter("queryName");
-        redirectAttributes.addAttribute("name",queryName);
-        String queryTopAccount = request.getParameter("queryTopAccount");
-        redirectAttributes.addAttribute("topAccount",queryTopAccount);
         //修改
-        if(StringUtils.isNotBlank(userMerchant.getUuid())){
+        if(StringUtils.isNotBlank(dormitoryUser.getUuid())){
             try {
-                UserMerchant tempUserMerchant = userMerchantService.queryForObjectByPk(userMerchant);
-                if(null != tempUserMerchant){
-                    tempUserMerchant.setMerchantid(userMerchant.getMerchantid());
-                    userMerchantService.update(tempUserMerchant);
+                DormitoryUser tempDormitoryUser = dormitoryUserService.queryForObjectByPk(dormitoryUser);
+                if(null != tempDormitoryUser){
+                    tempDormitoryUser.setDormitoryid(dormitoryUser.getDormitoryid());
+                    dormitoryUserService.update(tempDormitoryUser);
                     redirectAttributes.addAttribute("successMessage", "保存成功");
                 }
             } catch (Exception e) {
@@ -1092,34 +1065,26 @@ public class UserManageController extends BaseAdminController {
             }
         }else{
             //添加
-            userMerchantService.insert(userMerchant);
+            dormitoryUserService.insert(dormitoryUser);
             redirectAttributes.addAttribute("successMessage", "保存成功");
         }
-        return "redirect:userInfo?userId=" + userMerchant.getUserid() + "&querytype=district";
+        return "redirect:userInfo?userId=" + dormitoryUser.getUserid() + "&querytype=district";
     }
 
     /**
      * @param redirectAttributes
      * @return
      */
-    @RequestMapping(value = "/deleteUserMerchant")
-    public String deleteUserMerchant(HttpServletRequest request,
+    @RequestMapping(value = "/deleteDormitoryUser")
+    public String deleteDormitoryUser(HttpServletRequest request,
                                    RedirectAttributes redirectAttributes) {
-        String userMerchantId = request.getParameter("userMerchantId");
+        String dormitoryUserId = request.getParameter("dormitoryUserId");
         String userId = request.getParameter("userId");
-        String queryMerchantid = request.getParameter("queryMerchantid");
-        redirectAttributes.addAttribute("merchantid", queryMerchantid);
-        String queryUsername = request.getParameter("queryUsername");
-        redirectAttributes.addAttribute("username", queryUsername);
-        String queryName = request.getParameter("queryName");
-        redirectAttributes.addAttribute("name", queryName);
-        String queryTopAccount = request.getParameter("queryTopAccount");
-        redirectAttributes.addAttribute("topAccount", queryTopAccount);
 
-        if (StringUtils.isNotBlank(userMerchantId)) {
-            UserMerchant userMerchant = new UserMerchant();
-            userMerchant.setUuid(userMerchantId);
-            userMerchantService.delete(userMerchant);
+        if (StringUtils.isNotBlank(dormitoryUserId)) {
+            DormitoryUser dormitoryUser = new DormitoryUser();
+            dormitoryUser.setUuid(dormitoryUserId);
+            dormitoryUserService.delete(dormitoryUser);
             redirectAttributes.addAttribute("successMessage", "删除成功");
         }
 

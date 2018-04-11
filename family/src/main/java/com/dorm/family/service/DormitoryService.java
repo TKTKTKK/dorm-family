@@ -43,4 +43,19 @@ public class DormitoryService extends BaseService<DormitoryMapper,Dormitory> {
     public Dormitory getDormitoryForSave(Dormitory dormitory) {
         return mapper.selectDormitoryForSave(dormitory);
     }
+
+    public List<Dormitory> getDormitoryForUser() {
+        String userid = UserUtils.getUserId();
+        List<Dormitory> list = mapper.selectDormitoryForUser(userid);
+        if(list == null || list.isEmpty()){
+            String bindid = UserUtils.getUserBindId();
+            if(StringUtils.isNotBlank(bindid)){
+                Dormitory dormitory = new Dormitory();
+                dormitory.setBindid(bindid);
+                dormitory.setOrderby("createon");
+                list = this.queryForList(dormitory);
+            }
+        }
+        return list;
+    }
 }

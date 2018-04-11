@@ -82,4 +82,39 @@ public class DormitoryUserService extends BaseService<DormitoryUserMapper,Dormit
     public PageList<DormitoryUser> getDormitoryUserListByUserId(String userId, PageBounds pageBounds) {
         return this.mapper.selectDormitoryUserListByUserId(userId, pageBounds);
     }
+
+    public DormitoryUser getDormitoryUserInfoById(String dormitoryUserId) {
+        return this.mapper.selectDormitoryUserInfoById(dormitoryUserId);
+    }
+
+    public int deleteUserInfo(String userId, String dormitoryid) {
+        //查询当前用户共几条dormitoryUser记录
+        DormitoryUser dormitoryUser = new DormitoryUser();
+        dormitoryUser.setUserid(userId);
+        List<DormitoryUser> dormitoryUserList = this.queryForList(dormitoryUser);
+        //没有，删除user-role, user
+        if(null == dormitoryUserList || dormitoryUserList.size() == 0){
+            platformUserRoleService.deleteUserRoleByUserId(userId);
+            PlatformUser platformUser = new PlatformUser();
+            platformUser.setUuid(userId);
+            platformUserService.deleteUser(platformUser);
+        }else if(dormitoryUserList.size() == 1){
+            //一条，删除dormitoryUser， user-role, user
+            this.deleteDormitoryUser(dormitoryUser);
+            platformUserRoleService.deleteUserRoleByUserId(userId);
+            PlatformUser platformUser = new PlatformUser();
+            platformUser.setUuid(userId);
+            platformUserService.deleteUser(platformUser);
+        }else{
+            //多于一条，dormitory
+            dormitoryUser.setDormitoryid(dormitoryid);
+            this.deleteDormitoryUser(dormitoryUser);
+        }
+
+        return 1;
+    }
+
+    private int deleteDormitoryUser(DormitoryUser dormitoryUser) {
+        return this.mapper.deleteDormitoryUser(dormitoryUser);
+    }
 }

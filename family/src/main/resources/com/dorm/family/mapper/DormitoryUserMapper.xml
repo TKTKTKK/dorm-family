@@ -8,9 +8,24 @@
     <select id="selectDormitoryUserListByUserId"   resultMap="selectResultMap">
         select du.*, d.name as dormitoryname
         from tb_dorm_dormitory_user du, tb_dorm_dormitory d
-        where du.merchantid = d.uuid
-        and du.userid = #{userid}
+        where du.dormitoryid = d.uuid
+        and du.userid = #{userId}
         order by du.modifyon desc;
     </select>
+
+    <select id="selectDormitoryUserInfoById"   resultMap="selectResultMap">
+        select du.*, d.name as dormitoryname
+        from tb_dorm_dormitory_user du, tb_dorm_dormitory d
+        where du.dormitoryid = d.uuid
+        and du.uuid = #{dormitoryUserId};
+    </select>
+
+    <delete id="deleteDormitoryUser">
+        delete from tb_dorm_dormitory_user
+        where userid = #{dormitoryUser.userid}
+        <if test="dormitoryUser.dormitoryid != null and dormitoryUser.dormitoryid != ''">
+            and dormitoryid = #{dormitoryUser.dormitoryid}
+        </if>;
+    </delete>
 
 </mapper>

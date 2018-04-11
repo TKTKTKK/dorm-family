@@ -4,7 +4,7 @@
 <html lang="en" class="app">
 <head>
     <meta charset="utf-8"/>
-    <title>满田星管理系统</title>
+    <title>宿舍管理系统</title>
     <meta name="description"
           content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
@@ -154,7 +154,7 @@
         <%--<i class="icon-earphones"></i>--%>
         <%--<img src="${ctx}/static/admin/img/logo.png" alt="." >--%>
             <span class=" m-l-sm" style="font-size: 16px;line-height: 46px;padding-left: 10px;">
-                <span class="text-white">满田星</span><span style="color: #ff3f3f">管理系统</span></span>
+                <span class="text-white">宿舍</span><span style="color: #ff3f3f">管理系统</span></span>
     </a>
     <a class=" btn-link visible-xs" data-toggle="dropdown" data-target=".user" style="  text-align: right;text-decoration: none;
   font-size: 18px;

@@ -121,11 +121,11 @@ public class PlatformUserService  extends BaseService<PlatformUserMapper,Platfor
      * 查询该bindid下的用户
      * @return
      */
-    public PageList<PlatformUser> selectNonSuperUsers(String topAccount, String merchantid, PageBounds pageBounds, String username, String name){
+    public PageList<PlatformUser> selectNonSuperUsers(String topAccount, String dormitoryid, PageBounds pageBounds, String username, String name){
         PlatformUser platformUser = new PlatformUser();
         platformUser.setBindid(UserUtils.getUserBindId());
         platformUser.setUuid(UserUtils.getUserId());
-        platformUser.setMerchantid(merchantid);
+        platformUser.setDormitoryid(dormitoryid);
         platformUser.setUsername(username);
         platformUser.setName(name);
         return mapper.selectNonSuperUsers(platformUser,topAccount, pageBounds);
