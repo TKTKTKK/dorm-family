@@ -182,8 +182,8 @@
     <ul class="nav navbar-nav m-n hidden-xs nav-user user text-right">
 
         <li class="dropdown">
-            <img alt="" class=" dropdown-toggle img-circle" src="/static/guest/property/img/mi.png" style="width: 11%;"
-                 data-toggle="dropdown">
+           <%-- <img alt="" class=" dropdown-toggle img-circle" src="/static/guest/property/img/mi.png" style="width: 11%;"
+                 data-toggle="dropdown">--%>
             <a href="#" class="dropdown-toggle bg clear" data-toggle="dropdown"
                style="padding: 0;line-height: 46px;display:inline;color: #999c9e" >
                 <shiro:principal/>

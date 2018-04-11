@@ -48,7 +48,7 @@
                         <div>
                             <c:choose>
                                 <c:when test="${allMerchants}">
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-3 col-xs-12 m-b-sm">
                                         <select class="form-control" name="topAccount"  id="topAccount" onchange="showMerchantid()">
                                                 <option value="Y" <c:if test="${'Y' eq topAccount}">selected="selected"</c:if>>顶级用户</option>
                                                 <option value="N" <c:if test="${'N' eq topAccount}">selected="selected"</c:if>>非顶级用户</option>
@@ -59,7 +59,7 @@
                                         <input type="hidden" name="topAccount" id="topAccount" value="N">
                                 </c:otherwise>
                             </c:choose>
-                            <div class="col-sm-2" id="merchantidDiv">
+                            <div class="col-sm-3 col-xs-12 m-b-sm" id="merchantidDiv">
                                 <select class="form-control" name="merchantid"  id="merchantid">
                                     <c:if test="${allMerchants}">
                                         <option value="">经销商</option>
@@ -71,7 +71,7 @@
 
                                 </select>
                             </div>
-                            <div class="col-sm-2 col-xs-12 m-b-sm" style="padding-right: 0px">
+                            <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
 
                                 <input type="text" class="form-control" id="username" name="username"
                                        data-maxlength="11"
@@ -80,7 +80,7 @@
                                 >
                             </div>
 
-                            <div class="col-sm-2 col-xs-12 m-b-sm" style="padding-right: 0px">
+                            <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
 
                                 <input type="text" class="form-control" id="name" name="name"
                                        data-maxlength="11"
@@ -96,13 +96,13 @@
                                         onclick="submitInfo()">查 询
                                 </button>
                                 <a href="javascript:showUserInfo()" class="btn btn-primary btn-s-xs"  style="color: #fff">新建用户</a>
-                                <div class="col-sm-1 text-right" style="float: right">
+                                <%--<div class="col-sm-1 text-right" style="float: right">
                                     <c:if test="${not empty staffqrcode}">
                                         <img src="${staffqrcode}" style="width: 100px;height: 100px;margin-top: -56px;"
                                              data-toggle="modal" data-target=".bs-example-modal-lg">
                                     </c:if>
                                 </div>
-                                <a href="${ctx}/admin/usermanage/wechatUserManage" class="btn btn-primary btn-s-xs"  style="color: #fff;float: right;">用户微信</a>
+                                <a href="${ctx}/admin/usermanage/wechatUserManage" class="btn btn-primary btn-s-xs"  style="color: #fff;float: right;">用户微信</a>--%>
                             </div>
                         </div>
                        </form>
@@ -115,10 +115,6 @@
                                     <th class="text-center">用户名</th>
                                     <th class="text-center">姓名</th>
                                     <th class="text-center">职位</th>
-                                    <th class="text-center">微信昵称</th>
-                                    <th class="text-center">微信头像</th>
-                                    <th class="text-center">是否关注</th>
-                                    <th class="text-center">绑定微信</th>
                                     <c:if test="${topAccount == 'N'}">
                                         <th class="text-center">经销商</th>
                                     </c:if>
@@ -168,72 +164,6 @@
                                                 </td>
                                             </c:otherwise>
                                         </c:choose>
-                                        <c:choose>
-                                            <c:when test="${status.index > 0
-                                                                && platformUserList[status.index].uuid eq platformUserList[status.index-1].uuid}">
-                                                <td style="border-top: 0px">
-                                                    &nbsp;
-                                                </td>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <td>
-                                                        ${web:getWechatUser(platformUser.openid).nickname}
-                                                </td>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <c:choose>
-                                            <c:when test="${status.index > 0
-                                                                && platformUserList[status.index].uuid eq platformUserList[status.index-1].uuid}">
-                                                <td style="border-top: 0px">
-                                                    &nbsp;
-                                                </td>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <td>
-                                                    <c:if test="${not empty web:getWechatUser(platformUser.openid).headimgurl}">
-                                                        <img src="${web:getWechatUser(platformUser.openid).headimgurl}" style="width: 50px;height: 50px;">
-                                                    </c:if>
-                                                </td>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <c:choose>
-                                            <c:when test="${status.index > 0
-                                                                && platformUserList[status.index].uuid eq platformUserList[status.index-1].uuid}">
-                                                <td style="border-top: 0px">
-                                                    &nbsp;
-                                                </td>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <td>
-                                                    <c:if test="${web:getWechatUser(platformUser.openid).subscribe == 1}">
-                                                        是
-                                                    </c:if>
-                                                    <c:if test="${web:getWechatUser(platformUser.openid).subscribe == 0}">
-                                                        否
-                                                    </c:if>
-
-                                                </td>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <c:choose>
-                                            <c:when test="${status.index > 0
-                                                                && platformUserList[status.index].uuid eq platformUserList[status.index-1].uuid}">
-                                                <td style="border-top: 0px">
-                                                    &nbsp;
-                                                </td>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <td>
-                                                    <c:if test="${ empty platformUser.openid}">
-                                                        否
-                                                    </c:if>
-                                                    <c:if test="${not empty platformUser.openid}">
-                                                        是
-                                                    </c:if>
-
-                                                </td>
-                                            </c:otherwise>
-                                        </c:choose>
                                         <c:if test="${topAccount == 'N'}">
                                             <td>
                                                     ${platformUser.merchantname}
@@ -272,8 +202,6 @@
                         </div>
 
                         <div style="clear: both"></div>
-                        <p class="warningword"> <i class="fa fa-warning">：</i>1. 点击二维码，可查看大图。</p>
-                        <p  class="warningword" style="text-indent: 2em">2. 扫码二维码，提交用户信息。</p>
                     </c:if>
                     <c:if test="${empty wechatBinding}">
                         <span>您还没有添加公众号，请先去</span>
@@ -290,7 +218,7 @@
                             <button type="button" class="close" data-dismiss="modal" id="modelCloseBtn"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                             <h4 class="modal-title" id="myLargeModalLabel">扫码提交</h4>
                         </div>
-                        <c:if test="${!empty staffqrcode}">
+                        <%--<c:if test="${!empty staffqrcode}">
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col-sm-12">
@@ -303,7 +231,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </c:if>
+                        </c:if>--%>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
             </div>
@@ -360,7 +288,11 @@
     function deleteUserInfo(userId){
         qikoo.dialog.confirm('确定删除？',function(){
             //确定
-            window.location.href = "<%=request.getContextPath()%>/admin/usermanage/deleteUser?userId="+userId+"&merchantid=${merchantid}";
+            $.get("${ctx}/admin/usermanage/deleteUser?userId="+userId+"&merchantid=${merchantid}&version="+Math.random(),function(data,status){
+                if(undefined != data.deleteFlag){
+                    window.location.href = "<%=request.getContextPath()%>/admin/usermanage/roleDistribute?topAccount="+$('#topAccount').val()+"&merchantid="+$('#merchantid').val()+"&username="+$('#username').val()+"&name="+$('#name').val()+"&deleteFlag=1";
+                }
+            });
         },function(){
             //取消
         });

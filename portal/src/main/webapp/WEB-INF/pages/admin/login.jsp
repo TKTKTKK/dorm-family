@@ -14,10 +14,10 @@
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
     <style>
         @media  screen  and (max-width: 520px){
-            body{background: url(../../../static/admin/img/background.jpg) no-repeat 0 0;background-size: cover;}
+            body{background: url(../../../static/admin/img/hytcbackgroundphone.png) no-repeat 0 0;background-size: cover;}
         }
         @media  screen  and (min-width: 520px){
-            body{background: url(../../../static/admin/img/backgroundpc.jpg) no-repeat 0 0;background-size: cover;}
+            body{background: url(../../../static/admin/img/hytcbackground.jpg) no-repeat 0 0;background-size: cover;}
         }
         body{max-width: 520px;margin: auto;}
         html {max-width: none}
@@ -56,7 +56,7 @@
 </head>
 <body>
 <div class="logo">
-    <img src="../../../static/guest/img/logo.png" alt="">
+   <%-- <img src="../../../static/guest/img/hytclogo.png" alt="">--%>
 </div>
 <div  id="errorId" style="display: none">
     <span id="fontErrorId"></span>

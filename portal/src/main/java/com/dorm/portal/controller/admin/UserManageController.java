@@ -299,7 +299,7 @@ public class UserManageController extends BaseAdminController {
             }
 
             String deleteFlag = request.getParameter("deleteFlag");
-            //保存成功
+            //删除成功
             if("1".equals(deleteFlag)){
                 model.addAttribute("successMessage", "删除成功");
             }
@@ -355,13 +355,18 @@ public class UserManageController extends BaseAdminController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/deleteUser")
-    public String deleteUser(HttpServletRequest request){
+    @RequestMapping("/deleteUser")
+    @ResponseBody
+    public Map<String, Object> deleteUser(HttpServletRequest request){
+        int deleteFlag = 0;
+
         String userId = request.getParameter("userId");
         String merchantid = request.getParameter("merchantid");
         //删除用户信息
-        userMerchantService.deleteUserInfo(userId, merchantid);
-        return "redirect:/admin/usermanage/roleDistribute?deleteFlag=1&merchantid="+merchantid;
+        deleteFlag = userMerchantService.deleteUserInfo(userId, merchantid);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
     }
 
 
