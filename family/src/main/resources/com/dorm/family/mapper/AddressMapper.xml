@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.family.mapper.AddressMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.family.entity.Address">
+    </resultMap>
+
+    <select id="selectAddressForSave" resultMap="selectResultMap">
+        select a.* from tb_dorm_address a
+        where a.dormitoryid = #{address.dormitoryid}
+        and a.layer = #{address.layer}
+        and a.roomno = #{address.roomno}
+        <if test="address.uuid != null and address.uuid != ''">
+            and a.uuid != #{address.uuid}
+        </if>
+    </select>
+
+    <select id="selectAddressListWithPagination" resultMap="selectResultMap">
+        select a.* from tb_dorm_address a
+        where a.dormitoryid = #{address.dormitoryid}
+        <if test="address.layer != null and address.layer != ''">
+            and a.layer like concat("%",#{address.layer},"%")
+        </if>
+        <if test="address.roomno != null and address.roomno != ''">
+            and a.roomno like concat("%",#{address.roomno},"%")
+        </if>
+        order by a.createon desc
+    </select>
+
+    <select id="selectAddressBylayerAndRoomno" resultMap="selectResultMap">
+        select a.* from tb_dorm_address a
+        where a.dormitoryid = #{address.dormitoryid}
+        <if test="address.layer != null and address.layer != ''">
+            and a.layer = #{address.layer}
+        </if>
+        <if test="address.roomno != null and address.roomno != ''">
+            and a.roomno = #{address.roomno}
+        </if>
+    </select>
+
+    <select id="batchInsert">
+        insert into tb_dorm_address(uuid,dormitoryid,layer,roomno,area,
+        createon,createby,modifyon,modifyby,versionno,delind) VALUES
+        <foreach collection="list"  item="item" separator=",">
+            (#{item.uuid},#{item.dormitoryid},#{item.layer},#{item.roomno},#{item.area},
+            #{item.createon},#{item.createby},#{item.modifyon},#{item.modifyby},#{item.versionno},#{item.delind})
+        </foreach>
+    </select>
+
+</mapper>

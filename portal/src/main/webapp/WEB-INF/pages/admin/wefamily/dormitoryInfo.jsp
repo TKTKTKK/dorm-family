@@ -11,7 +11,7 @@
     <section class="vbox">
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
-                销售管理 / <a href="${ctx}/admin/wefamily/dormitoryManage"><span class="font-bold  text-shallowred"> 宿舍楼</span></a>
+                宿舍管理 / <a href="${ctx}/admin/wefamily/dormitoryManage"> 宿舍楼管理</a> / <span class="font-bold  text-shallowred">宿舍楼信息</span>
             </header>
             <div class="col-sm-12 pos">
                 <div style="margin-bottom: 5px">

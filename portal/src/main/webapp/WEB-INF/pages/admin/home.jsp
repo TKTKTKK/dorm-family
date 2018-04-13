@@ -225,7 +225,7 @@
             <section id="content" class="pager contentStyle">
                 <div id="contentDiv">
                     <div style="padding-top: 10%">
-                        <H1 class="icon-emoticon-smile icon text-success-dker">欢迎光临满田星微信管理系统！</H1>
+                        <H1 class="icon-emoticon-smile icon text-success-dker">欢迎使用宿舍管理系统！</H1>
                     </div>
                 </div>
             </section>

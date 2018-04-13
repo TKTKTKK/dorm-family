@@ -13,7 +13,7 @@
 <section id="content">
     <section class="vbox">
         <header class="panel-heading bg-white text-lg">
-            销售管理 / <span class="font-bold  text-shallowred"> 宿舍楼管理</span>
+            宿舍管理 / <span class="font-bold  text-shallowred"> 宿舍楼管理</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
@@ -100,7 +100,10 @@
                                                    class="btn  btn-infonew btn-sm" style="color: white">
                                                     修改
                                                 </a>
-
+                                                <a href="${ctx}/admin/wefamily/addressManage?dormitoryId=${dormitory.uuid}"
+                                                   class="btn  btn-yellow btn-sm" style="color: white">
+                                                    房间信息
+                                                </a>
                                                 <a href="javascript:deleteDormitory('${dormitory.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
                                             </td>
                                         </tr>
@@ -129,7 +132,7 @@
 
     window.onload = function(){
         //显示父菜单
-        showParentMenu('销售管理');
+        showParentMenu('宿舍管理');
     }
 
     //提交查询

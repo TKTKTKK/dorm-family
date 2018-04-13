@@ -93,6 +93,10 @@ public class WeFamilyController extends BaseAdminController {
     private PartsImportService partsImportService;
     @Autowired
     private DormitoryService dormitoryService;
+    @Autowired
+    private AddressService addressService;
+    @Autowired
+    private AddressImportService addressImportService;
 
     /**
      * 宿舍楼管理
@@ -237,6 +241,149 @@ public class WeFamilyController extends BaseAdminController {
         Dormitory dormitory = new Dormitory();
         dormitory.setUuid(dormitoryId);
         deleteFlag = dormitoryService.delete(dormitory);
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
+    }
+
+    /**
+     * 房间信息管理界面
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/addressManage",method = RequestMethod.GET)
+    public String addressManage(HttpServletRequest request,Model model){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        String dormitoryId = request.getParameter("dormitoryId");
+        if(StringUtils.isNoneBlank(dormitoryId)){
+            Dormitory dormitory = new Dormitory();
+            dormitory.setUuid(dormitoryId);
+            dormitory = dormitoryService.queryForObjectByPk(dormitory);
+            model.addAttribute("dormitory",dormitory);
+        }
+        return "admin/wefamily/addressManage";
+    }
+
+    /**
+     * 房间管理查询
+     * @param address
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/addressManage",method = RequestMethod.POST)
+    public String addressManage(@RequestParam(required = false, defaultValue = "1") int page,Model model,Address address,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+
+        PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+        PageList<Address> addressPageList = addressService.getAddressListWithPagination(address,pageBounds);
+        model.addAttribute("addressPageList",addressPageList);
+
+        Dormitory dormitory = new Dormitory();
+        dormitory.setUuid(address.getDormitoryid());
+        dormitory = dormitoryService.queryForObjectByPk(dormitory);
+        model.addAttribute("dormitory",dormitory);
+
+        String deleteFlag = request.getParameter("deleteFlag");
+        if ("1".equals(deleteFlag)) {
+            model.addAttribute("successMessage", "删除成功");
+        }
+
+        return "admin/wefamily/addressManage";
+    }
+
+    /**
+     * 房间信息界面
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/addressInfo",method = RequestMethod.GET)
+    public String addressInfo(HttpServletRequest request,Model model){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        String dormitoryId = request.getParameter("dormitoryId");
+        if(StringUtils.isNoneBlank(dormitoryId)){
+            Dormitory dormitory = new Dormitory();
+            dormitory.setUuid(dormitoryId);
+            dormitory = dormitoryService.queryForObjectByPk(dormitory);
+            model.addAttribute("dormitory",dormitory);
+        }
+        String addressId = request.getParameter("addressId");
+        if(StringUtils.isNotBlank(addressId)){
+            Address address = new Address();
+            address.setUuid(addressId);
+            address = addressService.queryForObjectByPk(address);
+            model.addAttribute("address",address);
+        }
+        return "admin/wefamily/addressInfo";
+    }
+
+    /**
+     * 房间信息保存
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/addressInfo",method = RequestMethod.POST)
+    public String addressInfo(HttpServletRequest request,Model model,Address address){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+
+
+            //检查是否存在
+            Address addressForRepeat = addressService.getAddressForSave(address);
+
+            if (null != addressForRepeat) {
+                model.addAttribute("errorMessage", "抱歉，该房间已存在！");
+            } else {
+                //修改
+                if (StringUtils.isNotBlank(address.getUuid())) {
+                    Address addressForMod = addressService.queryForObjectByPk(address);
+                    addressForMod.setLayer(address.getLayer());
+                    addressForMod.setRoomno(address.getRoomno());
+                    addressForMod.setArea(address.getArea());
+                    addressForMod.setVersionno(address.getVersionno());
+                    try {
+                        addressService.updatePartial(addressForMod);
+                        model.addAttribute("successMessage", "保存成功！");
+                    } catch (ServiceException e) {
+                        model.addAttribute("errorMessage", "系统忙，稍候再试！");
+                    }
+                    address = addressService.queryForObjectByPk(address);
+                } else {
+                    //添加
+                    addressService.insert(address);
+                    model.addAttribute("successMessage", "保存成功！");
+                }
+                model.addAttribute("address", address);
+            }
+            Dormitory dormitory = new Dormitory();
+            dormitory.setUuid(address.getDormitoryid());
+            dormitory = dormitoryService.queryForObjectByPk(dormitory);
+            model.addAttribute("dormitory",dormitory);
+
+        return "admin/wefamily/addressInfo";
+    }
+
+    /**
+     * 删除
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/deleteAddress")
+    @ResponseBody
+    public Map<String, Object> deleteAddress(HttpServletRequest request) {
+        int deleteFlag = 0;
+
+        String addressId = request.getParameter("addressId");
+        Address address = new Address();
+        address.setUuid(addressId);
+        deleteFlag = addressService.delete(address);
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("deleteFlag", deleteFlag);
@@ -2973,6 +3120,60 @@ public class WeFamilyController extends BaseAdminController {
         beanParams.put("machine", machineList);
         //导出
         ExportUtil.exportExcel(beanParams, "/tpl/partsTpl.xls", response);
+    }
+
+    @RequestMapping(value = "/downloadAddressTpl")
+    public void downloadAddressTpl(HttpServletRequest request, HttpServletResponse response){
+        Map<String,List> beanParams = new HashMap<String, List>();
+        String type = request.getParameter("type");
+        String dormitoryId = request.getParameter("dormitoryId");
+
+        Address address = new Address();
+        address.setDormitoryid(dormitoryId);
+        List<Address> addressList = new ArrayList<>();
+        addressList.add(address);
+        beanParams.put("address", addressList);
+        //导出
+        if("N".equals(type)){
+            ExportUtil.exportExcel(beanParams, "/tpl/normalAddressTpl.xls", response);
+        }else{
+            ExportUtil.exportExcel(beanParams, "/tpl/flatAddressTpl.xls", response);
+        }
+    }
+
+    @RequestMapping(value = "/importAddressInfo", method = RequestMethod.POST)
+    public String importAddressInfo(@RequestParam(value = "fileUrl", required = false)MultipartFile multipartFile,
+                                  Model model,RedirectAttributes redirectAttributes,HttpServletRequest request){
+        Map<String, Object> resultMap = new HashMap<>();
+        if(!multipartFile.isEmpty()){
+            try {
+                InputStream inputStream = multipartFile.getInputStream();
+                addressImportService.importAddressData(inputStream,resultMap);
+                if(null != resultMap.get("fileEmptyMsg")||null!=resultMap.get("layerErrorMsg")
+                        || null != resultMap.get("roomnoErrorMsg") || null != resultMap.get("uniqueErrorMsg")
+                        || null != resultMap.get("areaErrorMsg")){
+                    model.addAttribute("fileEmptyMsg", resultMap.get("fileEmptyMsg"));
+                    model.addAttribute("layerErrorMsg", resultMap.get("layerErrorMsg"));
+                    model.addAttribute("roomnoErrorMsg", resultMap.get("roomnoErrorMsg"));
+                    model.addAttribute("areaErrorMsg", resultMap.get("areaErrorMsg"));
+                    model.addAttribute("uniqueErrorMsg", resultMap.get("uniqueErrorMsg"));
+
+                    WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+                    model.addAttribute("wechatBinding", wechatBinding);
+                    return "admin/wefamily/addressManage";
+                }else{
+                    redirectAttributes.addFlashAttribute("successMessages", "导入成功");
+                }
+            } catch (Exception e) {
+                model.addAttribute("errorMessage", "导入失败");
+                model.addAttribute("uniqueErrorMsg", resultMap.get("uniqueErrorMsg"));
+                WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+                model.addAttribute("wechatBinding", wechatBinding);
+                return "admin/wefamily/addressManage";
+            }
+        }
+        String dormitoryId = request.getParameter("dormitoryId");
+        return "redirect:/admin/wefamily/addressManage?dormitoryId="+dormitoryId;
     }
 
     @RequestMapping(value = "/importPartsInfo", method = RequestMethod.POST)
