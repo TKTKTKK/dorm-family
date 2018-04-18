@@ -97,6 +97,196 @@ public class WeFamilyController extends BaseAdminController {
     private AddressService addressService;
     @Autowired
     private AddressImportService addressImportService;
+    @Autowired
+    private StudentService studentService;
+
+
+    /**
+     *
+     * @return
+     */
+    @RequestMapping(value = "/stuInfo", method = RequestMethod.POST)
+    public String stuInfo(Student student, Model model,HttpServletRequest request,RedirectAttributes redirectAttributes) {
+        //检查是否重复
+        Student studentForRepeat = studentService.getStudentForSave(student);
+
+        if (null != studentForRepeat) {
+            model.addAttribute("errorMessage", "抱歉，该学号对应学生信息已存在！");
+            model.addAttribute("student",student);
+            List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+            model.addAttribute("dormitoryList",dormitoryList);
+            return "admin/wefamily/stuInfo";
+        } else {
+            //修改
+            if (StringUtils.isNotBlank(student.getUuid())) {
+                try {
+                    studentService.updatePartial(student);
+                    redirectAttributes.addFlashAttribute("successMessage", "保存成功！");
+                } catch (ServiceException e) {
+                    redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试！");
+                }
+                student = studentService.queryForObjectByPk(student);
+            } else {
+                //添加
+                WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+                student.setBindid(wechatBinding.getUuid());
+                if(StringUtils.isBlank(student.getIdtype())){
+                    student.setIdtype(null);
+                    student.setIdno(null);
+                }
+                if(StringUtils.isBlank(student.getNation())){
+                    student.setNation(null);
+                }
+                if(StringUtils.isBlank(student.getPolitical())){
+                    student.setPolitical(null);
+                }
+                studentService.insert(student);
+                redirectAttributes.addFlashAttribute("successMessage", "保存成功！");
+            }
+        }
+        return "redirect:/admin/wefamily/stuInfo?studentId="+student.getUuid();
+    }
+
+
+    /**
+     * 获取分层列表
+     * @return
+     */
+    @RequestMapping(value = "/{dormitoryid}/layer", produces = "application/json")
+    public @ResponseBody Map<String, Object> getlayerJson(@PathVariable("dormitoryid") String dormitoryid,HttpServletRequest request,Model model){
+
+        Address address = new Address();
+        address.setDormitoryid(dormitoryid);
+
+        List<Address> layerList = addressService.getLayerListForDropDown(address);
+        List<Map<String,Object>> returnMapList = new ArrayList<Map<String,Object>>();
+        for(Address tempAddress : layerList){
+            Map<String,Object> map = new HashMap<String,Object>();
+            map.put("layer",tempAddress.getLayer());
+            returnMapList.add(map);
+        }
+
+        Map<String, Object> responseMap = new HashMap<String, Object>();
+        responseMap.put("layerList",returnMapList);
+        return responseMap;
+    }
+
+    /**
+     *
+     * @param dormitoryid
+     * @param layer
+     * @return
+     */
+    @RequestMapping(value = "/{dormitoryid}/{layer}/roomno", produces = "application/json")
+    public @ResponseBody Map<String, Object> getRoomnoJson(
+            @PathVariable("dormitoryid") String dormitoryid,
+            @PathVariable("layer") String layer){
+        Address address = new Address();
+        address.setDormitoryid(dormitoryid);
+        address.setLayer(layer);
+        address.setOrderby("roomno");
+        List<Address> addressList = addressService.getRoomnoListForDropDown(address);
+        List<Map<String,Object>> returnMapList = new ArrayList<Map<String,Object>>();
+        for(Address tempAddress : addressList){
+            Map<String,Object> map = new HashMap<String,Object>();
+            map.put("roomno", tempAddress.getRoomno());
+            returnMapList.add(map);
+        }
+        Map<String, Object> responseMap = new HashMap<String, Object>();
+        responseMap.put("roomnoList",returnMapList);
+        return responseMap;
+    }
+
+    /**
+     * 学生信息界面
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/stuManage",method = RequestMethod.GET)
+    public String stuManage(Model model,HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+
+        List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+        model.addAttribute("dormitoryList",dormitoryList);
+
+        String fromAddress = request.getParameter("fromAddress");
+        if("Y".equals(fromAddress)){
+            String dormitoryId = request.getParameter("dormitoryId");
+            String layer = request.getParameter("layer");
+            String roomno = request.getParameter("roomno");
+
+            Student student = new Student();
+            student.setBindid(UserUtils.getUserBindId());
+            student.setDormitoryid(dormitoryId);
+            student.setLayer(layer);
+            student.setRoomno(roomno);
+
+            PageBounds pageBounds = new PageBounds(1, PortalContants.PAGE_SIZE);
+            PageList<Student> studentPageList = studentService.getStuListWithPagination(student, pageBounds);
+
+            model.addAttribute("studentPageList",studentPageList);
+            model.addAttribute("student",student);
+        }
+
+        return "admin/wefamily/stuManage";
+    }
+
+    /**
+     * 学生管理
+     *
+     * @return
+     */
+    @RequestMapping(value = "/stuManage",method = RequestMethod.POST)
+    public String stuManage(@RequestParam(required = false, defaultValue = "1") int page, Model model, HttpServletRequest request,Student student) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        if (null != wechatBinding) {
+
+            student.setBindid(wechatBinding.getUuid());
+            student.setOrderby("modifyon desc");
+
+            List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+            model.addAttribute("dormitoryList",dormitoryList);
+
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<Student> studentPageList = studentService.getStuListWithPagination(student, pageBounds);
+            model.addAttribute("studentPageList",studentPageList);
+
+            model.addAttribute("student",student);
+
+            String saveFlag = request.getParameter("saveFlag");
+            if ("1".equals(saveFlag)) {
+                model.addAttribute("successMessage", "保存成功");
+            }
+            String deleteFlag = request.getParameter("deleteFlag");
+            if ("1".equals(deleteFlag)) {
+                model.addAttribute("successMessage", "删除成功");
+            }
+        }
+        return "admin/wefamily/stuManage";
+    }
+
+    /**
+     * 学生信息界面
+     *
+     * @return
+     */
+    @RequestMapping(value = "/stuInfo", method = RequestMethod.GET)
+    public String stuInfo(HttpServletRequest request, Model model) {
+
+        List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+        model.addAttribute("dormitoryList",dormitoryList);
+
+        String studentId = request.getParameter("studentId");
+        if(StringUtils.isNotBlank(studentId)){
+            Student student = new Student();
+            student.setUuid(studentId);
+            student = studentService.queryForObjectByPk(student);
+            model.addAttribute("student",student);
+        }
+        return "admin/wefamily/stuInfo";
+    }
 
     /**
      * 宿舍楼管理
@@ -173,7 +363,7 @@ public class WeFamilyController extends BaseAdminController {
     public String dormitoryInfo(HttpServletRequest request, Model model) {
         String dormitoryId = request.getParameter("dormitoryId");
         if (StringUtils.isNoneBlank(dormitoryId)) {
-            //查询小区信息
+            //查询宿舍楼信息
             Dormitory dormitory = new Dormitory();
             dormitory.setUuid(dormitoryId);
             dormitory = dormitoryService.queryForObjectByPk(dormitory);
@@ -241,6 +431,47 @@ public class WeFamilyController extends BaseAdminController {
         Dormitory dormitory = new Dormitory();
         dormitory.setUuid(dormitoryId);
         deleteFlag = dormitoryService.delete(dormitory);
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("deleteFlag", deleteFlag);
+        return resultMap;
+    }
+
+
+    /**
+     * 设置舍长
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/setDormHead")
+    @ResponseBody
+    public Map<String, Object> setDormHead(HttpServletRequest request) {
+        int setFlag = 0;
+
+        String studentId = request.getParameter("studentId");
+
+        setFlag = studentService.setDormHead(studentId);
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("setFlag", setFlag);
+        return resultMap;
+    }
+
+    /**
+     * 删除
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/deleteStudent")
+    @ResponseBody
+    public Map<String, Object> deleteStudent(HttpServletRequest request) {
+        int deleteFlag = 0;
+
+        String studentId = request.getParameter("studentId");
+        Student student = new Student();
+        student.setUuid(studentId);
+        deleteFlag = studentService.delete(student);
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("deleteFlag", deleteFlag);

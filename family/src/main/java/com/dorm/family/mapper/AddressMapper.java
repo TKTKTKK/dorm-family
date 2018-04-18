@@ -21,4 +21,8 @@ public interface AddressMapper extends BaseMapper<Address> {
     List<Address> selectAddressBylayerAndRoomno(@Param("address") Address address);
 
     void batchInsert(@Param("list") List<Address> addressList);
+
+    List<Address> selectLayerListForDropDown(@Param("address") Address address);
+
+    List<Address> selectRoomnoListForDropDown(@Param("address") Address address);
 }

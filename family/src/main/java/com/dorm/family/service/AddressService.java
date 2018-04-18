@@ -40,4 +40,12 @@ public class AddressService extends BaseService<AddressMapper,Address> {
     public void batchInsert(List<Address> addressList) {
         mapper.batchInsert(addressList);
     }
+
+    public List<Address> getLayerListForDropDown(Address address) {
+        return mapper.selectLayerListForDropDown(address);
+    }
+
+    public List<Address> getRoomnoListForDropDown(Address address) {
+        return mapper.selectRoomnoListForDropDown(address);
+    }
 }

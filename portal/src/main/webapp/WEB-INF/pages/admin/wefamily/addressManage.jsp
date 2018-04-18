@@ -108,7 +108,7 @@
                                                    class="btn  btn-infonew btn-sm" style="color: white">
                                                     修改
                                                 </a>
-                                                <a href="${ctx}/admin/wefamily/studentManage?addressId=${address.uuid}"
+                                                <a href="${ctx}/admin/wefamily/stuManage?fromAddress=Y&dormitoryId=${address.dormitoryid}&layer=${address.layer}&roomno=${address.roomno}"
                                                    class="btn  btn-yellow btn-sm" style="color: white">
                                                     学生信息
                                                 </a>

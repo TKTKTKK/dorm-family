@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.family.mapper.StudentMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.family.entity.Student">
+    </resultMap>
+
+    <select id="selectStudentForSave" resultMap="selectResultMap">
+        select s.* from tb_dorm_student s
+        where s.stuno = #{student.stuno}
+        <if test="student.uuid != null and student.uuid != ''">
+            and s.uuid != #{student.uuid}
+        </if>
+    </select>
+
+    <select id="selectStuListWithPagination" resultMap="selectResultMap">
+        select s.*,d.name as dormitoryname from tb_dorm_student s
+        inner join tb_dorm_dormitory d on s.dormitoryid = d.uuid
+        where s.bindid = #{student.bindid}
+        <if test="student.dormitoryid != null and student.dormitoryid != ''">
+            and s.dormitoryid = #{student.dormitoryid}
+        </if>
+        <if test="student.layer != null and student.layer != ''">
+            and s.layer = #{student.layer}
+        </if>
+        <if test="student.roomno != null and student.roomno != ''">
+            and s.roomno = #{student.roomno}
+        </if>
+        <if test="student.name != null and student.name != ''">
+            and s.name like concat("%",#{student.name},"%")
+        </if>
+        <if test="student.stuno != null and student.stuno != ''">
+            and s.stuno like concat("%",#{student.stuno},"%")
+        </if>
+        <if test="student.contactno != null and student.contactno != ''">
+            and s.contactno like concat("%",#{student.contactno},"%")
+        </if>
+        <if test="student.gender == 'M'.toString()">
+            and s.gender = 'M'
+        </if>
+        <if test="student.gender == 'F'.toString()">
+            and s.gender = 'F'
+        </if>
+        <if test="student.political != null and student.political != ''">
+            and s.political = #{student.political}
+        </if>
+        order by s.modifyon desc
+    </select>
+
+    <update id="delteDormHead">
+        update tb_dorm_student
+        set type = 'NORMAL'
+        where dormitoryid = #{student.dormitoryid}
+        and layer = #{student.layer}
+        and roomno = #{student.roomno}
+    </update>
+
+</mapper>

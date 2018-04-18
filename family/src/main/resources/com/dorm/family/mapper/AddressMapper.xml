@@ -47,4 +47,19 @@
         </foreach>
     </select>
 
+    <select id="selectLayerListForDropDown" resultMap="selectResultMap">
+        select distinct a.layer
+        from tb_dorm_address a
+        where a.dormitoryid = #{address.dormitoryid}
+        order by a.layer
+    </select>
+
+    <select id="selectRoomnoListForDropDown" resultMap="selectResultMap">
+        select distinct a.roomno
+        from tb_dorm_address a
+        where a.dormitoryid = #{address.dormitoryid}
+        and a.layer = #{address.layer}
+        order by a.roomno
+    </select>
+
 </mapper>
