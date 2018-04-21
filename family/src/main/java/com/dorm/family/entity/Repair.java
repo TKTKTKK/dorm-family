@@ -44,6 +44,16 @@ public class Repair extends BaseEntity {
     @Column
     private Double price;
 
+    //状态数组
+    private String[] statusArr;
+
+    private String statusDesc;
+
+    private String dormitoryname;
+
+    private String workername;
+
+
     public String getBindid() {
         return bindid;
     }
@@ -178,5 +188,37 @@ public class Repair extends BaseEntity {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public String[] getStatusArr() {
+        return statusArr;
+    }
+
+    public void setStatusArr(String[] statusArr) {
+        this.statusArr = statusArr;
+    }
+
+    public String getStatusDesc() {
+        return statusDesc;
+    }
+
+    public void setStatusDesc(String statusDesc) {
+        this.statusDesc = statusDesc;
+    }
+
+    public String getDormitoryname() {
+        return dormitoryname;
+    }
+
+    public void setDormitoryname(String dormitoryname) {
+        this.dormitoryname = dormitoryname;
+    }
+
+    public String getWorkername() {
+        return workername;
+    }
+
+    public void setWorkername(String workername) {
+        this.workername = workername;
     }
 }

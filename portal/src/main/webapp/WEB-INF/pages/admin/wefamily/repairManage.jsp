@@ -125,60 +125,48 @@
                                     <thead>
                                     <tr>
                                         <th class="text-center">任务单编号</th>
-                                        <th class="text-center">经销商</th>
-                                        <th class="text-center">机器型号</th>
-                                        <th class="text-center">用户姓名</th>
-                                        <th class="text-center">用户电话</th>
+                                        <th class="text-center">宿舍楼</th>
+                                        <th class="text-center">姓名</th>
+                                        <th class="text-center">电话</th>
                                         <th class="text-center">报修日期</th>
                                         <th class="text-center">报修状态</th>
                                         <th class="text-center">处理人</th>
-                                        <th class="text-center">奖励状态</th>
                                         <th class="text-center">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach items="${qualityMgmtList}" var="qualityMgmt">
+                                    <c:forEach items="${repairPageList}" var="repair">
                                         <tr>
                                             <td>
-                                                    ${qualityMgmt.snno}
+                                                    ${repair.snno}
                                             </td>
                                             <td>
-                                                    ${qualityMgmt.merchantname}
+                                                    ${repair.dormitoryname}
                                             </td>
                                             <td>
-                                                    ${qualityMgmt.machinemodel}
+                                                    ${repair.reportername}
                                             </td>
                                             <td>
-                                                    ${qualityMgmt.reportername}
+                                                    ${repair.reporterphone}
                                             </td>
                                             <td>
-                                                    ${qualityMgmt.reporterphone}
+                                                    ${fn:substring(repair.createon, 0, 10)}
                                             </td>
                                             <td>
-                                                    ${fn:substring(qualityMgmt.createon, 0, 10)}
+                                                    ${web:getCodeDesc("REPAIR_STATUS",repair.status)}
                                             </td>
                                             <td>
-                                                    ${web:getCodeDesc("REPAIR_STATUS",qualityMgmt.status)}
+                                                    ${repair.workername}
                                             </td>
                                             <td>
-                                                    ${qualityMgmt.worker}
-                                            </td>
-                                            <td>
-                                                    ${web:getCodeDesc("PRAISE_STATUS",qualityMgmt.praisestatus)}
-                                            </td>
-                                            <td>
-                                                <a href="${ctx}/admin/wefamily/qualityMgmtInfo?qualityMgmtId=${qualityMgmt.uuid}&type=${type}" class="btn  btn-infonew btn-sm" style="color: white" >处理</a>
-                                                <c:if test="${type == 'MAINTAIN' && qualityMgmt.status == 'NEW'}">
-                                                    <a href="javascript:deleteQualityMgmt('${qualityMgmt.uuid}')" class="btn  btn-dangernew btn-sm" style="color: white">删除</a>
-                                                </c:if>
-
+                                                <a href="${ctx}/admin/wefamily/repairInfo?repairId=${repair.uuid}" class="btn  btn-infonew btn-sm" style="color: white" >处理</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
                                     </tbody>
                                 </table>
-                                <c:if test="${not empty qualityMgmtList}">
-                                    <web:pagination pageList="${qualityMgmtList}" postParam="true"/>
+                                <c:if test="${not empty repairPageList}">
+                                    <web:pagination pageList="${repairPageList}" postParam="true"/>
                                 </c:if>
                             </div>
                         <div class="navbar-left">
@@ -205,7 +193,7 @@
 
     window.onload = function(){
         //显示父菜单
-        showParentMenu('品质服务');
+        showParentMenu('宿舍服务');
 
         $("button[data-id='status']").attr('title', "状态");
         $($("button[data-id='status']").find('span')[0]).text("状态")
@@ -215,22 +203,6 @@
             var statusArr = '${statusStr}'.split(",");
             $('.selectpicker').selectpicker('val', statusArr);
         }
-    }
-
-    function deleteQualityMgmt(qualityMgmtId){
-        qikoo.dialog.confirm('确定删除该保养？',function(){
-            //确定
-            $.get("${ctx}/admin/wefamily/deleteQualityMgmt?qualityMgmtId="+qualityMgmtId+"&version="+Math.random(),function(data,status){
-                if(undefined != data.deleteFlag){
-                    var searchForm = document.getElementById("searchForm");
-                    searchForm.action = "${ctx}/admin/wefamily/qualityMgmtManage?deleteFlag=" + data.deleteFlag;
-                    searchForm.submit();
-                }
-            });
-        },function(){
-            //取消
-        });
-
     }
 
     //提交查询
@@ -291,7 +263,7 @@
             //ui block
             pleaseWait();
             var searchForm = document.getElementById("searchForm");
-            searchForm.action = "${ctx}/admin/wefamily/qualityMgmtManage?page=" + page;
+            searchForm.action = "${ctx}/admin/wefamily/repairManage?page=" + page;
             searchForm.submit();
         }
     }
@@ -302,14 +274,14 @@
 
     //获取处理人列表
     function getDealPersonList(){
-        var merchantId = $("select[name='merchantid'] option:selected").val();
-        if(merchantId.length > 0){
-            $.get("${ctx}/admin/wefamily/"+merchantId+"/dealQualityMgmtPerson?type=${type}",function(data,status){
+        var dormitoryId = $("select[name='dormitoryid'] option:selected").val();
+        if(dormitoryId.length > 0){
+            $.get("${ctx}/admin/wefamily/"+dormitoryId+"/dealRepairPerson",function(data,status){
                 var workerList = data.workerList;
                 initDealPersonList();
                 for(i=0;i<workerList.length;i++){
                     $("select[name='worker']").append($("<option>").val(workerList[i].uuid).text(workerList[i].name));
-                    if('${qualityMgmt.worker}' != "" && '${qualityMgmt.worker}' == workerList[i].uuid){
+                    if('${repair.worker}' != "" && '${repair.worker}' == workerList[i].uuid){
                         $("select[name='worker']").val(workerList[i].uuid);
                     }
                 }

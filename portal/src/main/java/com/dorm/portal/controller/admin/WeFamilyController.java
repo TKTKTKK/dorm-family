@@ -2156,11 +2156,11 @@ public class WeFamilyController extends BaseAdminController {
      * 获取处理人列表
      * @return
      */
-    @RequestMapping(value = "/{merchantId}/dealQualityMgmtPerson", produces = "application/json")
-    public @ResponseBody Map<String, Object> finddealQualityMgmtPersonJson(@PathVariable("merchantId") String merchantId,HttpServletRequest request){
+    @RequestMapping(value = "/{dormitoryId}/dealRepairPerson", produces = "application/json")
+    public @ResponseBody Map<String, Object> getdealRepairPersonJson(@PathVariable("dormitoryId") String dormitoryId,HttpServletRequest request){
 
-        String type = request.getParameter("type");
-        List<PlatformUser> workerList = platformUserService.queryWorkersByMerchantIdAndServiveType(merchantId,type);
+
+        List<PlatformUser> workerList = platformUserService.getWorkersByDormitoryId(dormitoryId);
 
         Map<String, Object> responseMap = new HashMap<String, Object>();
         responseMap.put("workerList",workerList);
@@ -2217,28 +2217,25 @@ public class WeFamilyController extends BaseAdminController {
 
     /**
      * 报修管理
-     * @param qualityMgmt
+     * @param repair
      * @param model
      * @return
      */
-    @RequestMapping(value = "/qualityMgmtManage")
-    public String qualityMgmtManage(@RequestParam(required = false,defaultValue = "1") int page, QualityMgmt qualityMgmt, Model model, HttpServletRequest request){
+    @RequestMapping(value = "/repairManage",method = RequestMethod.POST)
+    public String repairManage(@RequestParam(required = false,defaultValue = "1") int page, Repair repair, Model model, HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
-        model.addAttribute("qualityMgmt",qualityMgmt);
-        List<String> machineModelList = getModel();
-        model.addAttribute("machineModelList",machineModelList);
-        List<Merchant> merchantList = merchantService.selectMerchantForUser();
-        model.addAttribute("merchantList",merchantList);
-        String type = request.getParameter("type");
-        model.addAttribute("type",type);
-        qualityMgmt.setType(type);
-        //首页点击查询未分配任务
+        model.addAttribute("repair",repair);
+
+        List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+        model.addAttribute("dormitoryList",dormitoryList);
+
+        /*//首页点击查询未分配任务
         String unDistributed = request.getParameter("unDistributed");
         if("Y".equals(unDistributed)){
             qualityMgmt.setMerchantid(unDistributed);
             model.addAttribute("unDistributed",unDistributed);
-        }
+        }*/
         if(null != wechatBinding){
             String startDateStr = request.getParameter("startDateStr");
             model.addAttribute("startDateStr", startDateStr);
@@ -2266,11 +2263,11 @@ public class WeFamilyController extends BaseAdminController {
             if(null != statusArr && statusArr.length == 1 && StringUtils.isBlank(statusArr[0])){
                 statusArr = null;
             }
-            qualityMgmt.setStatusArr(statusArr);
+            repair.setStatusArr(statusArr);
 
             PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-            PageList<QualityMgmt> qualityMgmtList = qualityMgmtService.queryQualityMgmtPageList(qualityMgmt, startDateTimeStr, endDateTimeStr, pageBounds);
-            model.addAttribute("qualityMgmtList", qualityMgmtList);
+            PageList<Repair> repairPageList = repairService.getRepairPageList(repair, startDateTimeStr, endDateTimeStr, pageBounds);
+            model.addAttribute("repairPageList", repairPageList);
 
             //删除结果
             String deleteFlag = request.getParameter("deleteFlag");
@@ -2281,7 +2278,7 @@ public class WeFamilyController extends BaseAdminController {
             }
         }
 
-        return "admin/wefamily/qualityMgmtManage";
+        return "admin/wefamily/repairManage";
     }
 
     /**

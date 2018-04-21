@@ -14,4 +14,5 @@ import java.util.List;
 public interface RepairMapper extends BaseMapper<Repair> {
 
 
+    PageList<Repair> selectRepairPageList(@Param("repair") Repair repair,@Param("startDateTimeStr") String startDateTimeStr,@Param("endDateTimeStr") String endDateTimeStr, PageBounds pageBounds);
 }

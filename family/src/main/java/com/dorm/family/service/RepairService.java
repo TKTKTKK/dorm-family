@@ -97,4 +97,8 @@ public class RepairService extends BaseService<RepairMapper,Repair> {
         tempRepair.setStatus("FINISH");
         this.mapper.updatePartial(tempRepair);
     }
+
+    public PageList<Repair> getRepairPageList(Repair repair, String startDateTimeStr, String endDateTimeStr, PageBounds pageBounds) {
+        return mapper.selectRepairPageList(repair,startDateTimeStr,endDateTimeStr,pageBounds);
+    }
 }

@@ -5,5 +5,47 @@
     <resultMap id="selectResultMap" type="com.dorm.family.entity.Repair">
     </resultMap>
 
+    <select id="selectRepairPageList" resultMap="selectResultMap">
+        select distinct r.*,d.name as dormitoryname,u.name as workername
+        from tb_dorm_repair r
+        left join tb_dorm_dormitory d on r.dormitoryid = d.uuid
+        left join tb_platform_user u on u.uuid = r.worker
+        where
+        1=1
+        <if test="repair.snno != null and repair.snno != ''">
+            and r.snno like concat("%",#{repair.snno},"%")
+        </if>
 
+        <if test="repair.dormitoryid != null and repair.dormitoryid != ''">
+            and r.dormitoryid = #{repair.dormitoryid}
+        </if>
+        <if test="repair.worker != null and repair.worker != ''">
+            and r.worker = #{repair.worker}
+        </if>
+        <if test="repair.statusArr != null">
+            and r.status in
+            <foreach item="item" index="index" collection="repair.statusArr"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="repair.reportername != null and repair.reportername != ''">
+            and r.reportername like concat("%",#{repair.reportername},"%")
+        </if>
+        <if test="repair.reporterphone != null and repair.reporterphone != ''">
+            and r.reporterphone like concat("%",#{repair.reporterphone},"%")
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and r.servicedt >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and r.servicedt <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        order by r.modifyon desc
+
+    </select>
 </mapper>
