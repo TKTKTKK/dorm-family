@@ -258,4 +258,8 @@ public class PlatformUserService  extends BaseService<PlatformUserMapper,Platfor
     public List<String> queryPlatformUserOpenIdsByAddress(String bindid, String province, String city, String district, String mediaid) {
         return mapper.selectPlatformUserOpenIdsByAddress(bindid,province,city,district,mediaid);
     }
+
+    public List<PlatformUser> getWorkersByDormitoryId(String dormitoryid) {
+        return mapper.selectWorkersByDormitoryId(dormitoryid);
+    }
 }

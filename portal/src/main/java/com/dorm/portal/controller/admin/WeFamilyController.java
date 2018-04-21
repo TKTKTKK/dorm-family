@@ -99,6 +99,8 @@ public class WeFamilyController extends BaseAdminController {
     private AddressImportService addressImportService;
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private RepairService repairService;
 
 
     /**
@@ -2130,12 +2132,9 @@ public class WeFamilyController extends BaseAdminController {
     public String repairManage(Model model){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
-        model.addAttribute("type","REPAIR");
-        List<String> machineModelList = getModel();
-        model.addAttribute("machineModelList",machineModelList);
-        List<Merchant> merchantList = merchantService.selectMerchantForUser();
-        model.addAttribute("merchantList",merchantList);
-        return "admin/wefamily/qualityMgmtManage";
+        List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+        model.addAttribute("dormitoryList",dormitoryList);
+        return "admin/wefamily/repairManage";
     }
 
     /**
@@ -2190,21 +2189,22 @@ public class WeFamilyController extends BaseAdminController {
     /**
      *指派工人
      */
-    @RequestMapping(value = "/addWorkerForQualityMgmt",method= RequestMethod.POST)
+    @RequestMapping(value = "/addWorkerForRepair",method= RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> addWorkerForQualityMgmt(HttpServletRequest request){
+    public Map<String,Object> addWorkerForRepair(HttpServletRequest request){
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        String qualityMgmtId = request.getParameter("qualityMgmtId");
+        String repairId = request.getParameter("repairId");
         String versionno = request.getParameter("versionno");
         String workerId = request.getParameter("workerId");
-        QualityMgmt qualityMgmt = new QualityMgmt();
-        qualityMgmt.setUuid(qualityMgmtId);
-        qualityMgmt.setVersionno(Integer.valueOf(versionno));
-        qualityMgmt.setWorkerid(workerId);
+        Repair repair = new Repair();
+        repair.setUuid(repairId);
+        repair.setVersionno(Integer.valueOf(versionno));
+        repair.setWorker(workerId);
+        repair.setStatus("REPAIRING");
 
         try {
-            qualityMgmtService.chooseWorker(qualityMgmt);
+            repairService.updatePartial(repair);
             resultMap.put("successMessage", "指派成功");
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -2359,56 +2359,33 @@ public class WeFamilyController extends BaseAdminController {
     /**
      * 报修信息
      */
-    @RequestMapping(value = "/qualityMgmtInfo",method = RequestMethod.GET)
-    public String qualityMgmtInfo(HttpServletRequest request,Model model){
-        List<Merchant> merchantList = merchantService.selectMerchantForUser();
-        model.addAttribute("merchantList",merchantList);
+    @RequestMapping(value = "/repairInfo",method = RequestMethod.GET)
+    public String repairInfo(HttpServletRequest request,Model model){
+        List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+        model.addAttribute("dormitoryList",dormitoryList);
 
-        List<String> machineModelList = getModel();
-        model.addAttribute("machineModelList",machineModelList);
+        String repairId= request.getParameter("repairId");
 
-        String qualityMgmtId= request.getParameter("qualityMgmtId");
-        String type = request.getParameter("type");
-        model.addAttribute("type",type);
-        if(StringUtils.isNotBlank(qualityMgmtId)){
-            QualityMgmt qualityMgmt = new QualityMgmt();
-            qualityMgmt.setUuid(qualityMgmtId);
-            qualityMgmt = qualityMgmtService.queryForObjectByPk(qualityMgmt);
+        if(StringUtils.isNotBlank(repairId)){
+            Repair repair = new Repair();
+            repair.setUuid(repairId);
+            repair = repairService.queryForObjectByPk(repair);
 
 
-            if(StringUtils.isNotBlank(qualityMgmt.getMerchantid())){
-                List<PlatformUser> workerUserList = platformUserService.queryWorkersByMerchantIdAndServiveType(qualityMgmt.getMerchantid(),qualityMgmt.getType());
+            if(StringUtils.isNotBlank(repair.getDormitoryid())){
+                List<PlatformUser> workerUserList = platformUserService.getWorkersByDormitoryId(repair.getDormitoryid());
                 model.addAttribute("workerUserList",workerUserList);
-            }else{
-                Machine machine = new Machine();
-                machine.setMachinemodel(qualityMgmt.getMachinemodel());
-                machine.setMachineno(qualityMgmt.getMachineno());
-                machine.setEngineno(qualityMgmt.getEngineno());
-                Merchant merchant = merchantService.queryMerchantByMachineInfo(machine);
-                if(null != merchant){
-                    qualityMgmt.setMerchantid(merchant.getUuid());
-                    qualityMgmtService.updatePartial(qualityMgmt);
-                    /*qualityMgmt.setVersionno(qualityMgmt.getVersionno()+1);*/
-                }
             }
-            model.addAttribute("qualityMgmt",qualityMgmt);
-
-            Worker worker = new Worker();
-            worker.setRefid(qualityMgmtId);
-            List<Worker> tempWorkerList = workerService.queryForList(worker);
-            if(null != tempWorkerList && tempWorkerList.size() > 0 ){
-                model.addAttribute("worker",tempWorkerList.get(0));
-            }
-
+            model.addAttribute("repair",repair);
 
             Attachment reporterAttachment = new Attachment();
-            reporterAttachment.setRefid(qualityMgmtId);
+            reporterAttachment.setRefid(repairId);
             reporterAttachment.setType("reporter");
             List<Attachment> reporterAttachmentList = attachmentService.queryForList(reporterAttachment);
             model.addAttribute("reporterAttachmentList",reporterAttachmentList);
 
             Attachment workerAttachment = new Attachment();
-            workerAttachment.setRefid(qualityMgmtId);
+            workerAttachment.setRefid(repairId);
             workerAttachment.setType("worker");
             List<Attachment> workerAttachmentList = attachmentService.queryForList(workerAttachment);
             model.addAttribute("workerAttachmentList",workerAttachmentList);
@@ -2433,7 +2410,7 @@ public class WeFamilyController extends BaseAdminController {
             model.addAttribute("errorMessage", "操作失败");
         }
 
-        return "admin/wefamily/qualityMgmtInfo";
+        return "admin/wefamily/repairInfo";
     }
 
     /**
@@ -2454,18 +2431,17 @@ public class WeFamilyController extends BaseAdminController {
     /**
      *保存用户、机器、经销商信息
      */
-    @RequestMapping(value = "/saveReportQualityMgmtInfo",method= RequestMethod.POST)
+    @RequestMapping(value = "/saveReportRepairInfo",method= RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> saveReportQualityMgmtInfo(QualityMgmt qualityMgmt, HttpServletRequest request){
+    public Map<String,Object> saveReportRepairInfo(Repair repair, HttpServletRequest request){
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        String type = request.getParameter("type");
-        qualityMgmt.setType(type);
-        String returnMsg = qualityMgmtService.saveReportQualityMgmtInfo(qualityMgmt);
+        String[] repairImgs = request.getParameterValues("repairImg");
+        String returnMsg = repairService.saveReportRepairInfo(repair,repairImgs);
         if(StringUtils.isNotBlank(returnMsg)){
             resultMap.put("returnMsg",returnMsg);
         }else{
             resultMap.put("successMessage", "保存成功");
-            resultMap.put("qualityMgmtId",qualityMgmt.getUuid());
+            resultMap.put("repairId",repair.getUuid());
         }
         return resultMap;
     }
@@ -2493,37 +2469,28 @@ public class WeFamilyController extends BaseAdminController {
     /**
      *保存维修信息
      */
-    @RequestMapping(value = "/saveQualityMgmtInfo",method= RequestMethod.POST)
+    @RequestMapping(value = "/saveRepairInfo",method= RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> saveQualityMgmtInfo(QualityMgmt qualityMgmt,Worker worker, HttpServletRequest request, Model model){
+    public Map<String,Object> saveRepairInfo(Repair repair, HttpServletRequest request, Model model){
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        String qualityMgmtId = request.getParameter("qualityMgmtId");
-        String versionno = request.getParameter("qualityMgmtVersionno");
-        qualityMgmt.setUuid(qualityMgmtId);
-        qualityMgmt.setVersionno(Integer.valueOf(versionno));
-
         String workerId = request.getParameter("workerId");
-        PlatformUser platformUser = platformUserService.getPlatformUserById(workerId);
-        worker.setRefid(qualityMgmtId);
-        List<Worker> workerList = workerService.queryForList(worker);
-        if(null != workerList && workerList.size() > 0){
-            worker = workerList.get(0);
-        }
-        worker.setUserid(workerId);
-        worker.setName(platformUser.getName());
-        worker.setPhone(platformUser.getCellphone());
+        String repairId = request.getParameter("repairId");
+        String versionno = request.getParameter("repairVersionno");
+        repair.setUuid(repairId);
+        repair.setVersionno(Integer.valueOf(versionno));
+        repair.setWorker(workerId);
 
-        String[] qualityMgmtImgs = request.getParameterValues("qualityMgmtImg");
+        String[] workerImgs = request.getParameterValues("workerImg");
 
-        qualityMgmtService.saveQualityMgmtInfo(qualityMgmt,worker,qualityMgmtImgs);
+        repairService.saveRepairInfo(repair,workerImgs);
 
         String saveType = request.getParameter("saveType");
         if("FINISH".equals(saveType)){
-            QualityMgmt tempQualityMgmt = new QualityMgmt();
-            tempQualityMgmt.setUuid(qualityMgmtId);
-            tempQualityMgmt = qualityMgmtService.queryForObjectByPk(tempQualityMgmt);
-            qualityMgmtService.finishQualityMgmt(tempQualityMgmt);
+            Repair tempRepair = new Repair();
+            tempRepair.setUuid(repairId);
+            tempRepair = repairService.queryForObjectByPk(tempRepair);
+            repairService.finishRepair(tempRepair);
         }
         resultMap.put("successMessage", "保存成功");
         return resultMap;

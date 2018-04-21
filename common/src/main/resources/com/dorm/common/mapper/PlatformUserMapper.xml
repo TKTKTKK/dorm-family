@@ -304,4 +304,24 @@
             where uc.communityid =  #{communityId}
         )
     </select>
+
+    <select id="selectWorkersByDormitoryId" resultMap="selectResultMap">
+
+        select pu.*
+        from tb_platform_user pu ,tb_platform_user_role ur, tb_platform_role pr,tb_dorm_dormitory_user du
+        where du.dormitoryid = #{dormitoryid}
+        and   du.userid = pu.uuid
+        and   pu.uuid = ur.userid
+        and   ur.roleid = pr.uuid
+        and   pr.rolekey = 'DORM_REPAIR_WORKER'
+
+        union
+
+        select pu.*
+        from tb_platform_user pu ,tb_platform_user_role ur, tb_platform_role pr
+        where pu.uuid = ur.userid
+        and   ur.roleid = pr.uuid
+        and   pr.rolekey = 'DORM_REPAIR_WORKER'
+        and   not exists (select du.userid from tb_dorm_dormitory_user du where du.userid = pu.uuid);
+    </select>
 </mapper>
