@@ -92,4 +92,14 @@
         </if>
         order by r.modifyon desc
     </select>
+
+    <select id="selectRepairAsy" resultMap="selectResultMap">
+        select r.*
+        from tb_dorm_repair r
+        where 
+        r.status = #{repair.status}
+        <if test="repair.dormitoryid != null and repair.dormitoryid != ''">
+            and r.dormitoryid = #{repair.dormitoryid}
+        </if>
+    </select>
 </mapper>

@@ -36,7 +36,7 @@ body{background-color: #f8f8f8}
 .error{position: absolute;width: 60%;left: 20%;top: 40%;background-color: #fff;border-radius: 10px;padding: 2rem 0 0 0;font-size: 1.4rem;color: #333;box-sizing: border-box;}
 .error button{width: 100%;background: #5bbc4e;color: #fff;border-radius: 0 0 10px 10px;padding: 0.8rem;}
 .error p{padding: 1.5rem 0;}
-.fixsubmit{background: #5bbc4e;height: 3.67rem;line-height: 3.67rem;text-align: center;color: #fff;font-size: 1.7rem;position: fixed;bottom:0;width: 100%;max-width: 1080px;left: 0}
+.fixsubmit{background: #5bbc4e;height: 3.67rem;line-height: 3.67rem;text-align: center;color: #fff;font-size: 1.7rem;position: fixed;bottom:0;width: 100%;max-width: 1080px;}
 /*//border*/
   body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td { margin: 0; padding: 0;  font-family: "微软雅黑"; }
 fieldset, img { border: 0; }

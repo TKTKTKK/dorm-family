@@ -8,7 +8,9 @@ import com.dorm.common.service.PlatformUserService;
 import com.dorm.common.utils.RequestUtil;
 import com.dorm.common.utils.StringUtils;
 import com.dorm.common.utils.UserUtils;
+import com.dorm.family.entity.Dormitory;
 import com.dorm.family.entity.Merchant;
+import com.dorm.family.service.DormitoryService;
 import com.dorm.family.service.MerchantService;
 import com.dorm.wechat.service.WechatBindingService;
 import org.apache.shiro.SecurityUtils;
@@ -40,6 +42,8 @@ public class LoginController {
     private MerchantService merchantService;
     @Autowired
     private PlatformRoleService platformRoleService;
+    @Autowired
+    private DormitoryService dormitoryService;
 
 
     /**
@@ -90,31 +94,28 @@ public class LoginController {
         //当前账号WechatBinding放入Cache
         wechatBindingService.getWechatBindingByUser();
 
-        String ifHqUser = "N";
-        String ifMerchantManager = "N";
+        String superUser = "N";
+
         List<PlatformRole> platformRoleList = platformRoleService.queryUserRoleListForUser();
         for(PlatformRole pr:platformRoleList){
-            if(pr.getRolekey().split("_")[0].equals("HQ") || pr.getRolekey().equals("WP_SUPER")){
-                ifHqUser = "Y";
-            }
-            if(pr.getRolekey().equals("MERCHANT_MANAGER")){
-                ifMerchantManager = "Y";
+            if(pr.getRolekey().equals("DORM_MANAGER")){
+                superUser = "Y";
             }
         }
-        model.addAttribute("ifHqUser",ifHqUser);
-        model.addAttribute("ifMerchantManager",ifMerchantManager);
+        model.addAttribute("superUser",superUser);
 
-        List<Merchant> merchantList = merchantService.selectMerchantForUser();
-        model.addAttribute("merchantList",merchantList);
 
-        String merchantId = request.getParameter("merchantId");
-        if(StringUtils.isNotBlank(merchantId)){
-            model.addAttribute("merchantId",merchantId);
+        List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+        model.addAttribute("dormitoryList",dormitoryList);
+
+        String dormitoryId = request.getParameter("dormitoryId");
+        if(StringUtils.isNotBlank(dormitoryId)){
+            model.addAttribute("dormitoryId",dormitoryId);
         }else{
-            if("Y".equals(ifHqUser)){
-                model.addAttribute("merchantId",null);
+            if("Y".equals(superUser)){
+                model.addAttribute("dormitoryId",null);
             }else{
-                model.addAttribute("merchantId",merchantList.get(0).getUuid());
+                model.addAttribute("dormitoryId",dormitoryList.get(0).getUuid());
             }
         }
         return "admin/home";

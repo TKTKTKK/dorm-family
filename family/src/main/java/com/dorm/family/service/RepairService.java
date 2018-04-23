@@ -105,4 +105,23 @@ public class RepairService extends BaseService<RepairMapper,Repair> {
     public List<Repair> getRepairListForExport(Repair repair, String startDateStr, String endDateStr) {
         return mapper.selectRepairListForExport(repair,startDateStr,endDateStr);
     }
+
+    public List<Repair> getRepairAsy(Repair repair) {
+        return this.mapper.selectRepairAsy(repair);
+    }
+
+    public void createRepair(Repair repair, String[] repairImgs) {
+        this.insert(repair);
+
+        if(null != repairImgs){
+            for(String img : repairImgs){
+                Attachment attachment = new Attachment();
+                attachment.setRefid(repair.getUuid());
+                attachment.setName(img);
+                attachment.setType("student");
+                attachmentService.insert(attachment);
+            }
+        }
+
+    }
 }

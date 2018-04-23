@@ -130,7 +130,7 @@
                                 <div class="col-sm-9  b-l bg-white">
                                     <c:set var="authIdTypeList"
                                            value="${web:queryCommonCodeList('ID_TYPE')}"></c:set>
-                                    <select class="form-control" name="idtype" id="idtype">
+                                    <select class="form-control" name="idtype" id="idtype" data-required="true">
                                         <option value="">--请选择--</option>
                                         <c:forEach items="${authIdTypeList}" var="authIdType">
                                                 <option value="${authIdType.code}"
@@ -146,7 +146,7 @@
                                 <label class="col-sm-3 control-label">证件号码：</label>
                                 <div class="col-sm-9  b-l bg-white">
                                     <input type="text" class="form-control"
-                                           name="idno" id="idno" value="${student.idno}"
+                                           name="idno" id="idno" value="${student.idno}" data-required="true"
                                     >
                                     <div id="idnoError" class="text-danger"></div>
                                 </div>

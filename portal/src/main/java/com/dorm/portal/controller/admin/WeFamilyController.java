@@ -2129,11 +2129,26 @@ public class WeFamilyController extends BaseAdminController {
      * 报修管理
      */
     @RequestMapping(value = "/repairManage",method = RequestMethod.GET)
-    public String repairManage(Model model){
+    public String repairManage(Model model,HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
         List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
         model.addAttribute("dormitoryList",dormitoryList);
+
+        String fromHome = request.getParameter("fromHome");
+        if("Y".equals(fromHome)){
+            PageBounds pageBounds = new PageBounds(1, PortalContants.PAGE_SIZE);
+            Repair repair = new Repair();
+            repair.setDormitoryid(request.getParameter("dormitoryId"));
+            repair.setStatus(request.getParameter("status"));
+            //多选状态框 默认选中 所需字符串
+            String statusStr = request.getParameter("status");
+            model.addAttribute("statusStr",statusStr);
+            PageList<Repair> repairPageList = repairService.getRepairPageList(repair, null, null, pageBounds);
+            model.addAttribute("repairPageList", repairPageList);
+            model.addAttribute("repair",repair);
+        }
+
         return "admin/wefamily/repairManage";
     }
 
@@ -2230,12 +2245,6 @@ public class WeFamilyController extends BaseAdminController {
         List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
         model.addAttribute("dormitoryList",dormitoryList);
 
-        /*//首页点击查询未分配任务
-        String unDistributed = request.getParameter("unDistributed");
-        if("Y".equals(unDistributed)){
-            qualityMgmt.setMerchantid(unDistributed);
-            model.addAttribute("unDistributed",unDistributed);
-        }*/
         if(null != wechatBinding){
             String startDateStr = request.getParameter("startDateStr");
             model.addAttribute("startDateStr", startDateStr);
@@ -3245,24 +3254,18 @@ public class WeFamilyController extends BaseAdminController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/qualityMgmtAsy", method = RequestMethod.GET)
+    @RequestMapping(value = "/repairAsy", method = RequestMethod.GET)
     @ResponseBody
     public int qualityMgmtAsy(HttpServletRequest request,Model model){
-        String merchantId = request.getParameter("merchantId");
+        String dormitoryId = request.getParameter("dormitoryId");
         String status = request.getParameter("status");
-        String type = request.getParameter("type");
 
-        QualityMgmt qualityMgmt = new QualityMgmt();
-        qualityMgmt.setMerchantid(merchantId);
-        qualityMgmt.setStatus(status);
-        qualityMgmt.setType(type);
-        String unDistributed = request.getParameter("unDistributed");
-        if("Y".equals(unDistributed)){
-            qualityMgmt.setMerchantid(unDistributed);
-            model.addAttribute("unDistributed",unDistributed);
-        }
-        List<QualityMgmt> qualityMgmtList = qualityMgmtService.queryQualityMgmtAsy(qualityMgmt);
-        int count = qualityMgmtList.size();
+
+        Repair repair = new Repair();
+        repair.setDormitoryid(dormitoryId);
+        repair.setStatus(status);
+        List<Repair> repairList = repairService.getRepairAsy(repair);
+        int count = repairList.size();
         return count;
     }
 

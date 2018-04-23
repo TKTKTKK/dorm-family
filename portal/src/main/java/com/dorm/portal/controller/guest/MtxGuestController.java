@@ -1,7 +1,9 @@
 package com.dorm.portal.controller.guest;
 
 import com.dorm.common.entity.Attachment;
+import com.dorm.common.entity.PlatformUser;
 import com.dorm.common.service.AttachmentService;
+import com.dorm.common.service.PlatformUserService;
 import com.dorm.common.service.SequenceService;
 import com.dorm.common.utils.StringUtils;
 import com.dorm.family.entity.*;
@@ -78,6 +80,58 @@ public class MtxGuestController extends BaseGuestController{
     private MtxLuckyParticipantService mtxLuckyParticipantService;
     @Autowired
     private TrainService trainService;
+    @Autowired
+    private StudentService studentService;
+    @Autowired
+    private RepairService repairService;
+    @Autowired
+    private DormitoryService dormitoryService;
+    @Autowired
+    private PlatformUserService platformUserService;
+
+    @RequestMapping(value = "/studentPortal",method = RequestMethod.GET)
+    public String studentPortal(){
+        return "guest/studentPortal";
+    }
+
+    @RequestMapping(value = "/studentPortal",method = RequestMethod.POST)
+    public String studentPortal(HttpServletRequest request, Model model){
+
+        String stuno = request.getParameter("stuno");
+        model.addAttribute("stuno",stuno);
+        String idnoForCheck = request.getParameter("idnoForCheck");
+        model.addAttribute("idnoForCheck",idnoForCheck);
+        String type = request.getParameter("type");
+        model.addAttribute("type",type);
+        Student student = new Student();
+        student.setStuno(stuno);
+        student = studentService.queryForObjectByUniqueKey(student);
+        if(null != student){
+            String idno = student.getIdno();
+            if(!idno.equals(idnoForCheck)){
+                model.addAttribute("errorMessage","请检查证件号码是否正确！");
+                return "guest/studentPortal";
+            }
+        }else{
+            model.addAttribute("errorMessage","请检查学号是否正确！");
+            return "guest/studentPortal";
+        }
+
+        if("REPAIR".equals(type)){
+            return "redirect:/guest/repair_list?stuId="+student.getUuid();
+        }else if("CONSULT".equals(type)){
+            return "redirect:/guest/consult_list?stuno="+stuno;
+        }else if("MESSAGE".equals(type)){
+            return "redirect:/guest/message_list?stuno="+stuno;
+        }else if("HYGIENE".equals(type)){
+            return "redirect:/guest/hygiene_list?stuno="+stuno;
+        }else if("VIOLATION".equals(type)){
+            return "redirect:/guest/violation_list?stuno="+stuno;
+        }else{
+            return "redirect:/guest/wandefee_list?stuno="+stuno;
+        }
+
+    }
 
 
     @RequestMapping(value = "/product_center")
@@ -354,40 +408,43 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 保养详情
      */
-    @RequestMapping(value = "/qualityMgmt_info",method = RequestMethod.GET)
+    @RequestMapping(value = "/repair_info",method = RequestMethod.GET)
     public String maintain_info(HttpServletRequest request,Model model){
-        String qualityMgmtId= request.getParameter("qualityMgmtId");
-        if(StringUtils.isNotBlank(qualityMgmtId)){
-            QualityMgmt qualityMgmt = new QualityMgmt();
-            qualityMgmt.setUuid(qualityMgmtId);
-            qualityMgmt = qualityMgmtService.queryForObjectByPk(qualityMgmt);
-            model.addAttribute("qualityMgmt", qualityMgmt);
+        String repairId= request.getParameter("repairId");
+        if(StringUtils.isNotBlank(repairId)){
+            Repair repair = new Repair();
+            repair.setUuid(repairId);
+            repair = repairService.queryForObjectByPk(repair);
+            model.addAttribute("repair", repair);
 
-            if(StringUtils.isNotBlank(qualityMgmt.getMerchantid())){
-                Merchant merchant = new Merchant();
-                merchant.setUuid(qualityMgmt.getMerchantid());
-                merchant = merchantService.queryForObjectByPk(merchant);
-                model.addAttribute("merchant",merchant);
+            if(StringUtils.isNotBlank(repair.getDormitoryid())){
+                Dormitory dormitory = new Dormitory();
+                dormitory.setUuid(repair.getDormitoryid());
+                dormitory = dormitoryService.queryForObjectByPk(dormitory);
+                model.addAttribute("dormitory",dormitory);
             }
 
             Attachment reporterAttachment = new Attachment();
-            reporterAttachment.setRefid(qualityMgmtId);
-            reporterAttachment.setType("reporter");
+            reporterAttachment.setRefid(repairId);
+            reporterAttachment.setType("student");
             List<Attachment> reporterAttachmentList = attachmentService.queryForList(reporterAttachment);
             model.addAttribute("reporterAttachmentList",reporterAttachmentList);
 
             Attachment workerAttachment = new Attachment();
-            workerAttachment.setRefid(qualityMgmtId);
+            workerAttachment.setRefid(repairId);
             workerAttachment.setType("worker");
             List<Attachment> workerAttachmentList = attachmentService.queryForList(workerAttachment);
             model.addAttribute("workerAttachmentList",workerAttachmentList);
 
-            Worker worker = new Worker();
-            worker.setRefid(qualityMgmtId);
-            List<Worker> workerList = workerService.queryForList(worker);
-            model.addAttribute("workerList",workerList);
+            if(StringUtils.isNotBlank(repair.getWorker())){
+                PlatformUser platformUser = new PlatformUser();
+                platformUser.setUuid(repair.getWorker());
+                platformUser = platformUserService.queryForObjectByPk(platformUser);
+                model.addAttribute("platformUser",platformUser);
+            }
+
         }
-        return "guest/qualityMgmt_info";
+        return "guest/repair_info";
     }
 
     /**
@@ -403,19 +460,18 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 报修列表
      */
-    @RequestMapping(value = "/member/repair_list",method = RequestMethod.GET)
+    @RequestMapping(value = "/repair_list",method = RequestMethod.GET)
     public String repair_list(HttpServletRequest request,Model model){
 
-        WpUser wpUser = getWechatMemberInfo(request);
-        model.addAttribute("wpUser",wpUser);
-        QualityMgmt qualityMgmt = new QualityMgmt();
-        qualityMgmt.setReporter(wpUser.getUuid());
-        qualityMgmt.setType("REPAIR");
-        model.addAttribute("type","REPAIR");
-        qualityMgmt.setOrderby("createon desc");
-        List<QualityMgmt> qualityMgmtList = qualityMgmtService.queryForList(qualityMgmt);
-        model.addAttribute("qualityMgmtList",qualityMgmtList);
-        return "guest/qualityMgmt_list";
+        String stuId = request.getParameter("stuId");
+        model.addAttribute("stuId",stuId);
+
+        Repair repair = new Repair();
+        repair.setReporter(stuId);
+        repair.setOrderby("createon desc");
+        List<Repair> repairList = repairService.queryForList(repair);
+        model.addAttribute("repairList",repairList);
+        return "guest/repair_list";
     }
 
     /**
@@ -483,33 +539,39 @@ public class MtxGuestController extends BaseGuestController{
     /**
      * 报修信息
      */
-    @RequestMapping(value = "/member/repair_info",method = RequestMethod.GET)
-    public String repair_info(Model model){
-        List<String> machineModelList = mtxProductService.getAllModel();
-        model.addAttribute("machineModelList",machineModelList);
-        return "guest/repair_info";
+    @RequestMapping(value = "/repair_add",method = RequestMethod.GET)
+    public String repair_add(Model model,HttpServletRequest request){
+        String stuId = request.getParameter("stuId");
+        Student student = new Student();
+        student.setUuid(stuId);
+        student = studentService.queryForObjectByPk(student);
+        model.addAttribute("student",student);
+
+        Dormitory dormitory = new Dormitory();
+        dormitory.setUuid(student.getDormitoryid());
+        dormitory = dormitoryService.queryForObjectByPk(dormitory);
+        model.addAttribute("dormitory",dormitory);
+
+
+        return "guest/repair_add";
     }
 
     /**
      * 报修信息
      */
-    @RequestMapping(value = "/member/repair_info",method = RequestMethod.POST)
-    public String repair_info(QualityMgmt qualityMgmt, RedirectAttributes redirectAttributes, HttpServletRequest request){
+    @RequestMapping(value = "/repair_add",method = RequestMethod.POST)
+    public String repair_add(Repair repair, RedirectAttributes redirectAttributes, HttpServletRequest request){
 
-        String[] qualityMgmtImgs = request.getParameterValues("qualityMgmtImg");
+        String[] repairImgs = request.getParameterValues("repairImg");
 
         //添加
-        WpUser wpUser = getWechatMemberInfo(request);
-        qualityMgmt.setReporter(wpUser.getUuid());
-        qualityMgmt.setReportername(wpUser.getName());
-        qualityMgmt.setReporterphone(wpUser.getContactno());
-        qualityMgmt.setType("REPAIR");
-        qualityMgmt.setStatus("NEW");
-        qualityMgmt.setSnno(sequenceService.getRepairSeqNo());
-        qualityMgmtService.saveQualityMgmt(qualityMgmt,qualityMgmtImgs);
+        repair.setType("STUDENT");
+        repair.setStatus("NEW");
+        repair.setSnno(sequenceService.getRepairSeqNo());
+        repairService.createRepair(repair,repairImgs);
         redirectAttributes.addFlashAttribute("successMessage", "保存成功");
 
-        return "redirect:/guest/member/repair_list";
+        return "redirect:/guest/repair_list?stuId"+repair.getReporter();
     }
 
     /**

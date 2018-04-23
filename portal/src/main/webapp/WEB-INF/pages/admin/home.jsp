@@ -89,27 +89,23 @@
 <body class="">
 
     <%--<section id="content" class="pager">--%>
-    <c:if test="${ifHqUser == 'Y' || ifMerchantManager == 'Y'}">
+    <c:if test="${superUser == 'Y'}">
         <section id="content" class="pager contentStyle">
             <div id="contentDiv">
 
 
-                <c:if test="${not empty merchantList}">
-                    <div class="row
-            <c:if test="${'ALL' eq queryType}">
-                hidden
-            </c:if>
-            " id="computerCardDiv">
+                <c:if test="${not empty dormitoryList}">
+                    <div class="row" id="computerCardDiv">
                         <div  class="col-sm-12">
                             <form method="post" action="" class="form-horizontal" data-validate="parsley" id="searchForm" style="margin: 10px 0">
                                 <div class=" row">
                                     <div class="col-sm-2">
-                                        <select data-required="true" class="form-control" onchange="searchMyConsole(this.value)" id="merchantId">
-                                            <c:if test="${ifHqUser == 'Y'}">
+                                        <select data-required="true" class="form-control" onchange="searchMyConsole(this.value)" id="dormitoryId">
+                                            <c:if test="${superUser == 'Y'}">
                                                 <option value="">全部</option>
                                             </c:if>
-                                            <c:forEach items="${merchantList}" var="merchant">
-                                                <option value="${merchant.uuid}" <c:if test="${not empty merchantId && merchantId== merchant.uuid}">selected</c:if>>${merchant.name}</option>
+                                            <c:forEach items="${dormitoryList}" var="dormitory">
+                                                <option value="${dormitory.uuid}" <c:if test="${not empty dormitoryId && dormitoryId== dormitory.uuid}">selected</c:if>>${dormitory.name}</option>
                                             </c:forEach>
                                         </select>
                                     </div>
@@ -127,25 +123,17 @@
                                         </div>
                                         <div class="col-xs-8 text-right needo">
 
-                                            <c:if test="${ifHqUser eq 'Y' && empty merchantId}">
-                                                <a href="${ctx}/admin/wefamily/qualityMgmtManage?type=REPAIR&status=NEW&unDistributed=Y" style="color: #fff;">
-                                                    <span> 未分配新任务 </span>
-                                                    <span id="newRepairForHQ">0</span>
-                                                </a>
-
-                                            </c:if>
-
-                                            <a href="${ctx}/admin/wefamily/qualityMgmtManage?type=REPAIR&merchantid=${merchantId}&status=NEW" style="color: #fff;">
+                                            <a href="${ctx}/admin/wefamily/repairManage?fromHome=Y&dormitoryId=${dormitoryId}&status=NEW" style="color: #fff;">
                                                 <span> 新任务 </span>
                                                 <span id="newRepair">0</span>
                                             </a>
 
 
-                                            <a href="${ctx}/admin/wefamily/qualityMgmtManage?type=REPAIR&merchantid=${merchantId}&status=REPAIRING" style="color: #fff;">
+                                            <a href="${ctx}/admin/wefamily/repairManage?fromHome=Y&dormitoryId=${dormitoryId}&status=REPAIRING" style="color: #fff;">
                                                 <span> 处理中 </span>
                                                 <span id="inRepair">0</span>
                                             </a>
-                                            <a href="${ctx}/admin/wefamily/qualityMgmtManage?type=REPAIR&merchantid=${merchantId}&status=FINISH" style="color: #fff;">
+                                            <a href="${ctx}/admin/wefamily/repairManage?fromHome=Y&dormitoryId=${dormitoryId}&status=FINISH" style="color: #fff;">
                                                 <span> 处理完成 </span>
                                                 <span id="completeRepair">0</span>
                                             </a>
@@ -174,28 +162,28 @@
                                         </div>
                                         <div class="col-xs-8 text-right needo">
                                             <c:if test="${ifHqUser eq 'N'}">
-                                                <a href="${ctx}/admin/wefamily/goOrderManage?merchantid=${merchantId}&status=UNSUBMIT" style="color: #fff;">
+                                                <a href="${ctx}/admin/wefamily/goOrderManage?dormitoryId=${dormitoryId}&status=UNSUBMIT" style="color: #fff;">
                                                     <span> 未发送 </span> <span id="unsubmitOrder">0</span>
                                                 </a>
                                             </c:if>
                                             <c:if test="${ifHqUser eq 'Y'}">
-                                                <a href="${ctx}/admin/wefamily/goOrderManage?merchantid=${merchantId}&status=NEW" style="color: #fff;">
+                                                <a href="${ctx}/admin/wefamily/goOrderManage?dormitoryId=${dormitoryId}&status=NEW" style="color: #fff;">
                                                     <span> 新订单 </span> <span id="newOrder">0</span>
                                                 </a>
                                             </c:if>
-                                            <a href="${ctx}/admin/wefamily/goOrderManage?merchantid=${merchantId}&status=INPLAN" style="color: #fff;">
+                                            <a href="${ctx}/admin/wefamily/goOrderManage?dormitoryId=${dormitoryId}&status=INPLAN" style="color: #fff;">
                                                 <span> 计划中 </span>
                                                 <span id="planingOrder">0</span>
                                             </a>
-                                            <a href="${ctx}/admin/wefamily/goOrderManage?merchantid=${merchantId}&status=INLOGISTICS" style="color: #fff;">
+                                            <a href="${ctx}/admin/wefamily/goOrderManage?dormitoryId=${dormitoryId}&status=INLOGISTICS" style="color: #fff;">
                                                 <span> 运输中 </span>
                                                 <span id="transportOrder">0</span>
                                             </a>
-                                            <a href="${ctx}/admin/wefamily/goOrderManage?merchantid=${merchantId}&status=RECEIVED" style="color: #fff;">
+                                            <a href="${ctx}/admin/wefamily/goOrderManage?dormitoryId=${dormitoryId}&status=RECEIVED" style="color: #fff;">
                                                 <span> 已收货 </span>
                                                 <span id="receivedOrder">0</span>
                                             </a>
-                                            <a href="${ctx}/admin/wefamily/goOrderManage?merchantid=${merchantId}&status=FILED" style="color: #fff;">
+                                            <a href="${ctx}/admin/wefamily/goOrderManage?dormitoryId=${dormitoryId}&status=FILED" style="color: #fff;">
                                                 <span> 归档完成 </span>
                                                 <span id="filedOrder">0</span>
                                             </a>
@@ -220,7 +208,7 @@
         </section>
     </c:if>
 
-    <c:if test="${ifHqUser == 'N' && ifMerchantManager == 'N'}">
+    <c:if test="${superUser == 'N'}">
         <div>
             <section id="content" class="pager contentStyle">
                 <div id="contentDiv">
@@ -256,8 +244,8 @@
     };
 
     //查询我的工作台
-    function searchMyConsole(merchantId){
-        window.location.href = "${ctx}/admin/home?merchantId=" + merchantId;
+    function searchMyConsole(dormitoryId){
+        window.location.href = "${ctx}/admin/home?dormitoryId=" + dormitoryId;
     }
 
     //删除屏幕样式
@@ -309,43 +297,39 @@
     //异步查询数据
     function queryDataAsy(){
         //已分配新任务
-        $.get(encodeURI("/admin/wefamily/qualityMgmtAsy?status=NEW&type=REPAIR&merchantId=${merchantId}"),function(data,status){
+        $.get(encodeURI("/admin/wefamily/repairAsy?status=NEW&dormitoryId=${dormitoryId}"),function(data,status){
             $('#newRepair').text(data);
         });
-        //未分配新任务
-        $.get(encodeURI("/admin/wefamily/qualityMgmtAsy?status=NEW&type=REPAIR&unDistributed=Y"),function(data,status){
-            $('#newRepairForHQ').text(data);
-        });
         //处理中
-        $.get(encodeURI("/admin/wefamily/qualityMgmtAsy?status=REPAIRING&type=REPAIR&merchantId=${merchantId}"),function(data,status){
+        $.get(encodeURI("/admin/wefamily/repairAsy?status=REPAIRING&dormitoryId=${dormitoryId}"),function(data,status){
             $('#inRepair').text(data);
         });
         //处理完成
-        $.get(encodeURI("/admin/wefamily/qualityMgmtAsy?status=FINISH&type=REPAIR&merchantId=${merchantId}"),function(data,status){
+        $.get(encodeURI("/admin/wefamily/repairAsy?status=FINISH&dormitoryId=${dormitoryId}"),function(data,status){
             $('#completeRepair').text(data);
         });
         //未发送订单
-        $.get(encodeURI("/admin/wefamily/orderAsy?status=UNSUBMIT&merchantId=${merchantId}"),function(data,status){
+        $.get(encodeURI("/admin/wefamily/orderAsy?status=UNSUBMIT&dormitoryId=${dormitoryId}"),function(data,status){
             $('#unsubmitOrder').text(data);
         });
         //新订单
-        $.get(encodeURI("/admin/wefamily/orderAsy?status=NEW&merchantId=${merchantId}"),function(data,status){
+        $.get(encodeURI("/admin/wefamily/orderAsy?status=NEW&dormitoryId=${dormitoryId}"),function(data,status){
             $('#newOrder').text(data);
         });
         //计划中
-        $.get(encodeURI("/admin/wefamily/orderAsy?status=INPLAN&merchantId=${merchantId}"),function(data,status){
+        $.get(encodeURI("/admin/wefamily/orderAsy?status=INPLAN&dormitoryId=${dormitoryId}"),function(data,status){
             $('#planingOrder').text(data);
         });
         //运输中
-        $.get(encodeURI("/admin/wefamily/orderAsy?status=INLOGISTICS&merchantId=${merchantId}"),function(data,status){
+        $.get(encodeURI("/admin/wefamily/orderAsy?status=INLOGISTICS&dormitoryId=${dormitoryId}"),function(data,status){
             $('#transportOrder').text(data);
         });
         //已收货
-        $.get(encodeURI("/admin/wefamily/orderAsy?status=RECEIVED&merchantId=${merchantId}"),function(data,status){
+        $.get(encodeURI("/admin/wefamily/orderAsy?status=RECEIVED&dormitoryId=${dormitoryId}"),function(data,status){
             $('#receivedOrder').text(data);
         });
         //归档完成
-        $.get(encodeURI("/admin/wefamily/orderAsy?status=FILED&merchantId=${merchantId}"),function(data,status){
+        $.get(encodeURI("/admin/wefamily/orderAsy?status=FILED&dormitoryId=${dormitoryId}"),function(data,status){
             $('#filedOrder').text(data);
         });
     }
