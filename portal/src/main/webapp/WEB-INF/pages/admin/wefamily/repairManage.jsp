@@ -224,9 +224,9 @@
         if (compareBeginEndDate('starttime', 'endtime', 'dateError')
                 && $('#searchForm').parsley().isValid()) {
             var searchForm = document.getElementById("searchForm");
-            searchForm.action = "${ctx}/admin/wefamily/exportQualityMgmtList?type=${type}&unDistributed=${unDistributed}";
+            searchForm.action = "${ctx}/admin/wefamily/exportRepairList";
             searchForm.submit();
-            searchForm.action = "${ctx}/admin/wefamily/qualityMgmtManage";
+            searchForm.action = "${ctx}/admin/wefamily/repairManage";
         }
     }
 

@@ -2282,14 +2282,11 @@ public class WeFamilyController extends BaseAdminController {
     }
 
     /**
-     * 导出报修、保养查询结果
+     * 导出报修查询结果
      */
-    @RequestMapping(value = "/exportQualityMgmtList",method = RequestMethod.POST)
-    public void exportQualityMgmtList(QualityMgmt qualityMgmt, HttpServletRequest request, HttpServletResponse response){
+    @RequestMapping(value = "/exportRepairList",method = RequestMethod.POST)
+    public void exportRepairList(Repair repair, HttpServletRequest request, HttpServletResponse response){
         Map<String,List> beanParams = new HashMap<String, List>();
-
-        String type = request.getParameter("type");
-        qualityMgmt.setType(type);
 
         String startDateStr = request.getParameter("startDateStr");
         String endDateStr = request.getParameter("endDateStr");
@@ -2297,14 +2294,6 @@ public class WeFamilyController extends BaseAdminController {
         Date endDate = DateUtils.parseDate(endDateStr);
         startDate = DateUtils.getDateStart(startDate);
         endDate = DateUtils.getDateEnd(endDate);
-        String startDateTimeStr = "";
-        if(null != startDate){
-            startDateTimeStr = DateUtils.formatDate(startDate, "yyyy-MM-dd HH:mm:ss");
-        }
-        String endDateTimeStr = "";
-        if(null != endDate){
-            endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
-        }
 
         String[] statusArr = request.getParameterValues("status");
         String statusStr = "";
@@ -2314,23 +2303,13 @@ public class WeFamilyController extends BaseAdminController {
         if(null != statusArr && statusArr.length == 1 && StringUtils.isBlank(statusArr[0])){
             statusArr = null;
         }
-        qualityMgmt.setStatusArr(statusArr);
-        String unDistributed = request.getParameter("unDistributed");
-        if("Y".equals(unDistributed)){
-            qualityMgmt.setMerchantid(unDistributed);
-        }
+        repair.setStatusArr(statusArr);
 
-        List<QualityMgmt> qualityMgmtListForExport = qualityMgmtService.queryQualityMgmtListForExport(qualityMgmt,startDateStr,endDateStr);
-        beanParams.put("qualityMgmtListForExport", qualityMgmtListForExport);
-
+        List<Repair> repairListForExport = repairService.getRepairListForExport(repair,startDateStr,endDateStr);
+        beanParams.put("repairListForExport", repairListForExport);
 
         //导出
-        if("REPAIR".equals(type)){
-            ExportUtil.exportExcel(beanParams, "/tpl/repair.xls", response);
-        }else{
-            ExportUtil.exportExcel(beanParams, "/tpl/maintain.xls", response);
-        }
-
+        ExportUtil.exportExcel(beanParams, "/tpl/repair.xls", response);
     }
 
     /**

@@ -101,4 +101,8 @@ public class RepairService extends BaseService<RepairMapper,Repair> {
     public PageList<Repair> getRepairPageList(Repair repair, String startDateTimeStr, String endDateTimeStr, PageBounds pageBounds) {
         return mapper.selectRepairPageList(repair,startDateTimeStr,endDateTimeStr,pageBounds);
     }
+
+    public List<Repair> getRepairListForExport(Repair repair, String startDateStr, String endDateStr) {
+        return mapper.selectRepairListForExport(repair,startDateStr,endDateStr);
+    }
 }
