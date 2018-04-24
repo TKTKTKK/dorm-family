@@ -88,6 +88,8 @@ public class MtxGuestController extends BaseGuestController{
     private DormitoryService dormitoryService;
     @Autowired
     private PlatformUserService platformUserService;
+    @Autowired
+    private ConsultService consultService;
 
     @RequestMapping(value = "/studentPortal",method = RequestMethod.GET)
     public String goStudentPortal(HttpServletRequest request,Model model){
@@ -129,7 +131,7 @@ public class MtxGuestController extends BaseGuestController{
         if("REPAIR".equals(type)){
             return "redirect:/guest/repair_list?stuId="+student.getUuid();
         }else if("CONSULT".equals(type)){
-            return "redirect:/guest/consult_list?stuno="+stuno;
+            return "redirect:/guest/consult_list?stuId="+student.getUuid();
         }else if("MESSAGE".equals(type)){
             return "redirect:/guest/message_list?stuno="+stuno;
         }else if("HYGIENE".equals(type)){
@@ -140,6 +142,72 @@ public class MtxGuestController extends BaseGuestController{
             return "redirect:/guest/wandefee_list?stuno="+stuno;
         }
 
+    }
+
+
+    /**
+     * 咨询列表
+     */
+    @RequestMapping(value = "/consult_list",method = RequestMethod.GET)
+    public String consult_list(HttpServletRequest request,Model model){
+
+        String stuId = request.getParameter("stuId");
+        model.addAttribute("stuId",stuId);
+
+        Consult consult = new Consult();
+        consult.setStuid(stuId);
+        consult.setOrderby("createon desc");
+        List<Consult> consultList = consultService.queryForList(consult);
+        model.addAttribute("consultList",consultList);
+        return "guest/consult_list";
+    }
+
+    /**
+     * 报修信息
+     */
+    @RequestMapping(value = "/consult_add",method = RequestMethod.GET)
+    public String consult_add(Model model,HttpServletRequest request){
+        String stuId = request.getParameter("stuId");
+        Student student = new Student();
+        student.setUuid(stuId);
+        student = studentService.queryForObjectByPk(student);
+        model.addAttribute("student",student);
+
+        Dormitory dormitory = new Dormitory();
+        dormitory.setUuid(student.getDormitoryid());
+        dormitory = dormitoryService.queryForObjectByPk(dormitory);
+        model.addAttribute("dormitory",dormitory);
+
+        return "guest/consult_add";
+    }
+
+    /**
+     * 报修信息
+     */
+    @RequestMapping(value = "/consult_add",method = RequestMethod.POST)
+    public String consult_add(Consult consult, RedirectAttributes redirectAttributes, HttpServletRequest request){
+
+        //添加
+        consult.setStatus("N_REPALY");
+        consultService.insert(consult);
+        redirectAttributes.addFlashAttribute("successMessage", "保存成功");
+
+        return "redirect:/guest/consult_list?stuId"+consult.getStuid();
+    }
+
+    /**
+     * 咨询详情
+     */
+    @RequestMapping(value = "/consult_info",method = RequestMethod.GET)
+    public String consult_info(HttpServletRequest request,Model model){
+        String consultId= request.getParameter("consultId");
+        if(StringUtils.isNotBlank(consultId)){
+            Consult consult = new Consult();
+            consult.setUuid(consultId);
+            consult = consultService.queryForObjectByPk(consult);
+            model.addAttribute("consult", consult);
+        }
+        return "guest/consult_info";
     }
 
 
@@ -415,7 +483,7 @@ public class MtxGuestController extends BaseGuestController{
     }
 
     /**
-     * 保养详情
+     * 报修详情
      */
     @RequestMapping(value = "/repair_info",method = RequestMethod.GET)
     public String maintain_info(HttpServletRequest request,Model model){

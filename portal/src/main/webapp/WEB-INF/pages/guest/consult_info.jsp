@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
     <meta http-equiv="x-dns-prefetch-control" content="on">
-    <title>报修详情</title>
+    <title>咨询详情</title>
     <link rel="stylesheet" href="${ctx}/static/guest/css/common.css" type="text/css" />
     <link rel="stylesheet" href="${ctx}/static/guest/css/reviewMediaSwipebox.css" type="text/css" />
     <style>
@@ -79,45 +79,34 @@
 </head>
 <body>
     <div class="head">
-        <a class="back" href="${ctx}/guest/repair_list?stuId=${repair.reporter}"></a>
-        <span>报修详情</span>
+        <a class="back" href="${ctx}/guest/consult_list?stuId=${consult.stuid}"></a>
+        <span>咨询详情</span>
     </div>
             <div class="goal_total" style="margin-top: 0px">
-                    <span>报修信息</span>
+                    <span>咨询信息</span>
                     <img src="../../../../static/guest/img/list.png" alt="" id="machineListImg" class="up">
             </div>
             <ul class="list" id="machineUl">
                 <li>
-                    <span>预约日期</span>
-                    <input type="text" id="servicedt" name="servicedt" value="${repair.servicedt}"
+                    <span>咨询日期</span>
+                    <input type="text" id="createon" name="createon" value="${fn:substring(consult.createon, 0, 16)}"
                            data-required="true"  data-maxlength="32" readonly/>
                 </li>
-                <li>
-                    <span>问题描述</span>
-                    <input type="text" id="content" name="content" value="${repair.content}"
-                           data-required="true"  data-maxlength="32" readonly/>
+                <li style="display: flex;display: -webkit-flex; margin-top: 10px">
+                    <span style="vertical-align: middle;">咨询问题<a class="dataRequired">*</a></span>
+                    <textarea rows="4" name="detail" id="detail" data-maxlength="256"
+                              style=" width: 16rem;vertical-align: middle;">${consult.detail}</textarea>
                 </li>
             </ul>
             <div class="goal_total">
-                    <span>维修情况</span>
+                    <span>回复</span>
                     <img src="../../../../static/guest/img/list.png" alt="" id="situationListImg" class="up">
             </div>
             <ul class="list" id="situationUl" style="margin-bottom: 0px;">
-                <li>
-                    <span>维修日期</span>
-                    <input class="Wdate" type="text" name="repairdt" id="repairdt" onClick="WdatePicker()"
-                           value="${repair.repairdt}"  data-required="true" data-maxlength="23" disabled>
-                </li>
-                <li>
-                    <span>维修人</span>
-                    <input class="Wdate" type="text" name="worker" id="worker" onClick="WdatePicker()"
-                           value="${platformUser.name}"  data-required="true" data-maxlength="23" disabled>
-                </li>
-                <li>
-                    <span>收费金额</span>
-                    <input name="price" id="price" value="${repair.price}" size="24"
-                           data-maxlength="10" readonly>
-                    <span id="priceError" class="text-danger" style="float: right;color: red;font-size: 1.2rem;"></span>
+                <li style="display: flex;display: -webkit-flex; margin-top: 10px">
+                    <span style="vertical-align: middle;">回复内容<a class="dataRequired">*</a></span>
+                    <textarea rows="4" name="reply" id="reply" data-maxlength="256"
+                              style=" width: 16rem;vertical-align: middle;">${consult.reply}</textarea>
                 </li>
             </ul>
 

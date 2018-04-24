@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.family.mapper.ConsultMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.family.entity.Consult">
+    </resultMap>
+
+
+    <select id="selectConsultPageList" resultMap="selectResultMap">
+        select c.*,s.stuno as stuno,s.name as stuname,s.contactno as stuphone,d.name as dormitoryname
+        from tb_dorm_consult c
+        inner join tb_dorm_student s on c.stuid = s.uuid
+        inner join tb_dorm_dormitory d on s.dormitoryid = d.uuid
+        where 1=1
+        <if test="consult.dormitoryid != null and consult.dormitoryid != ''">
+            s.dormitoryid = #{consult.dormitoryid}
+        </if>
+        <if test="consult.status != null and consult.status != ''">
+            c.status = #{consult.status}
+        </if>
+        <if test="consult.stuno != null and consult.stuno != ''">
+            s.stuno like concat('%',#{consult.stuno},'%')
+        </if>
+        <if test="consult.stuname != null and consult.stuname != ''">
+            s.name like concat('%',#{consult.stuname},'%')
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and c.createon >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and c.createon <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        order by c.modifyon desc
+    </select>
+</mapper>

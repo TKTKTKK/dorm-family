@@ -101,6 +101,8 @@ public class WeFamilyController extends BaseAdminController {
     private StudentService studentService;
     @Autowired
     private RepairService repairService;
+    @Autowired
+    private ConsultService consultService;
 
 
     /**
@@ -1363,60 +1365,98 @@ public class WeFamilyController extends BaseAdminController {
     /**
      * 咨询管理
      */
-    @RequestMapping(value = "/mtxReserveManage")
-    public String mtxReserveManage(@RequestParam(required = false, defaultValue = "1") int page, MtxReserve mtxReserve, Model model, HttpServletRequest request) {
+    @RequestMapping(value = "/consultManage",method = RequestMethod.GET)
+    public String mtxReserveManage(Model model, HttpServletRequest request) {
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
-        Boolean identify=false;
-        List<PlatformRole> platformRoleList = platformRoleService.queryUserRoleListForUser();
-        if(platformRoleList.size()>0){
-            for(int i=0;i<platformRoleList.size();i++){
-                if("WP_SUPER".equals(platformRoleList.get(i).getRolekey())){
-                    identify=true;
-                    break;
-                }
-            }
-        }
-        if(identify){
-            List<Merchant> merchantList=merchantService.selectMerchantForUser();
-            model.addAttribute("merchantList",merchantList);
-            if(StringUtils.isBlank(mtxReserve.getStatus())){
-                mtxReserve.setStatus("N_DEAL");
-            }
-            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-            PageList<MtxReserve> mtxReserveList = mtxReserveService.queryForListWithPagination(mtxReserve, pageBounds);
-            model.addAttribute("mtxReserveList", mtxReserveList);
-            model.addAttribute("mtxReserve",mtxReserve);
 
-            return "admin/wefamily/mtxReserveManage";
-        }else{
-            List<Merchant> merchantList=merchantService.selectMerchantForUser();
-            model.addAttribute("merchantList",merchantList);
-            List<String> uuidList=new ArrayList<String>();
-            if(merchantList.size()>0){
-                for(int i=0;i<merchantList.size();i++){
-                    uuidList.add(merchantList.get(i).getUuid());
-                }
-            }
-            if(StringUtils.isBlank(mtxReserve.getStatus())){
-                mtxReserve.setStatus("CHANGE");
-            }
-            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
-            PageList<MtxReserve> mtxReserveList = mtxReserveService.queryMerchantReserve(mtxReserve, pageBounds,UserUtils.getUserBindId(),uuidList);
-            model.addAttribute("mtxReserveList", mtxReserveList);
-            model.addAttribute("mtxReserve",mtxReserve);
-            return "admin/wefamily/mtxReserveMerchant";
-        }
+        List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+        model.addAttribute("dormitoryList",dormitoryList);
 
+        return "admin/wefamily/consultManage";
     }
 
-    @RequestMapping(value = "/goMtxReserve",method = RequestMethod.GET)
-    public String goMtxReserve(MtxReserve mtxReserve,Model model){
-        List<Merchant> merchantList=merchantService.selectMerchantForUser();
-        model.addAttribute("merchantList",merchantList);
-        mtxReserve=mtxReserveService.queryByPK(mtxReserve);
-        model.addAttribute("mtxReserve",mtxReserve);
-        return "admin/wefamily/mtxReserveInfo";
+
+    /**
+     * 咨询管理
+     * @param consult
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/consultManage",method = RequestMethod.POST)
+    public String consultManage(@RequestParam(required = false,defaultValue = "1") int page, Consult consult, Model model, HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        model.addAttribute("consult",consult);
+
+        List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+        model.addAttribute("dormitoryList",dormitoryList);
+
+        if(null != wechatBinding){
+            String startDateStr = request.getParameter("startDateStr");
+            model.addAttribute("startDateStr", startDateStr);
+            String endDateStr = request.getParameter("endDateStr");
+            model.addAttribute("endDateStr", endDateStr);
+            Date startDate = DateUtils.parseDate(startDateStr);
+            Date endDate = DateUtils.parseDate(endDateStr);
+            startDate = DateUtils.getDateStart(startDate);
+            endDate = DateUtils.getDateEnd(endDate);
+            String startDateTimeStr = "";
+            if(null != startDate){
+                startDateTimeStr = DateUtils.formatDate(startDate, "yyyy-MM-dd HH:mm:ss");
+            }
+            String endDateTimeStr = "";
+            if(null != endDate){
+                endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
+            }
+
+
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<Consult> consultPageList = consultService.getConsultPageList(consult, startDateTimeStr, endDateTimeStr, pageBounds);
+            model.addAttribute("consultPageList", consultPageList);
+
+            //删除结果
+            String deleteFlag = request.getParameter("deleteFlag");
+            if("1".equals(deleteFlag)){
+                model.addAttribute("successMessage", "删除成功");
+            }else if("0".equals(deleteFlag)){
+                model.addAttribute("errorMessage", "删除失败");
+            }
+        }
+
+        return "admin/wefamily/consultManage";
+    }
+
+    @RequestMapping(value = "/consultInfo",method = RequestMethod.GET)
+    public String consultInfo(HttpServletRequest request,Model model){
+        String consultId = request.getParameter("consultId");
+        if(StringUtils.isNotBlank(consultId)){
+            Consult consult = new Consult();
+            consult.setUuid(consultId);
+            consult = consultService.queryForObjectByPk(consult);
+            model.addAttribute("consult",consult);
+            if(null != consult){
+                Student student = new Student();
+                student.setUuid(consult.getStuid());
+                student = studentService.queryForObjectByPk(student);
+                model.addAttribute("student",student);
+                if(null != student){
+                    Dormitory dormitory = new Dormitory();
+                    dormitory.setUuid(student.getDormitoryid());
+                    dormitory = dormitoryService.queryForObjectByPk(dormitory);
+                    model.addAttribute("dormitory",dormitory);
+                }
+            }
+        }
+        return "admin/wefamily/consultInfo";
+    }
+
+    @RequestMapping(value = "/consultInfo",method = RequestMethod.POST)
+    public String consultInfo(Consult consult,RedirectAttributes redirectAttributes){
+
+        consultService.updatePartial(consult);
+        redirectAttributes.addFlashAttribute("successMessage","回复成功！");
+        return "redirect:/admin/wefamily/consultInfo?consultId="+consult.getUuid();
     }
 
     @RequestMapping(value = "/goReserveMerchant",method = RequestMethod.GET)
