@@ -90,7 +90,14 @@ public class MtxGuestController extends BaseGuestController{
     private PlatformUserService platformUserService;
 
     @RequestMapping(value = "/studentPortal",method = RequestMethod.GET)
-    public String studentPortal(){
+    public String goStudentPortal(HttpServletRequest request,Model model){
+        String stuId = request.getParameter("stuId");
+        if(StringUtils.isNotBlank(stuId)){
+            Student student = new Student();
+            student.setUuid(stuId);
+            student = studentService.queryForObjectByPk(student);
+            model.addAttribute("student",student);
+        }
         return "guest/studentPortal";
     }
 
@@ -98,9 +105,11 @@ public class MtxGuestController extends BaseGuestController{
     public String studentPortal(HttpServletRequest request, Model model){
 
         String stuno = request.getParameter("stuno");
-        model.addAttribute("stuno",stuno);
         String idnoForCheck = request.getParameter("idnoForCheck");
-        model.addAttribute("idnoForCheck",idnoForCheck);
+        Student tempStudent = new Student();
+        tempStudent.setStuno(stuno);
+        tempStudent.setIdno(idnoForCheck);
+        model.addAttribute("student",tempStudent);
         String type = request.getParameter("type");
         model.addAttribute("type",type);
         Student student = new Student();

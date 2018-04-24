@@ -88,12 +88,12 @@
             <ul class="list">
                 <li style="margin-top: 180px;">
                     <span>学生学号<a class="dataRequired">*</a></span>
-                    <input type="text" id="stuno" name="stuno" value="${stuno}"
+                    <input type="text" id="stuno" name="stuno" value="${student.stuno}"
                            data-required="true" placeholder="请填写学号" data-maxlength="32" onblur="trimText(this)"/>
                 </li>
                 <li>
                     <span>身份验证<a class="dataRequired">*</a></span>
-                    <input type="text" id="idnoForCheck" name="idnoForCheck" value="${idnoForCheck}"
+                    <input type="text" id="idnoForCheck" name="idnoForCheck" value="${student.idno}"
                            data-required="true" placeholder="请填写证件号码" data-maxlength="32" onblur="trimText(this)"/>
                 </li>
                 <li>
