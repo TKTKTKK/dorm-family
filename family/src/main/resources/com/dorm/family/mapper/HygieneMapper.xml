@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.family.mapper.HygieneMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.family.entity.Hygiene">
+    </resultMap>
+
+    <select id="selectHygieneForSave" resultMap="selectResultMap">
+        select h.* from tb_dorm_hygiene h
+        where h.dormitoryid = #{hygiene.dormitoryid}
+        and h.layer = #{hygiene.layer}
+        and h.roomno = #{hygiene.roomno}
+        and h.term = #{hygiene.term}
+        and h.week = #{hygiene.week}
+        and left(h.createon, 4) = (select year(now()))
+        <if test="hygiene.uuid != null and hygiene.uuid != ''">
+            and h.uuid != #{hygiene.uuid}
+        </if>
+    </select>
+
+    <select id="selectHygienePageList" resultMap="selectResultMap">
+        select distinct h.*,d.name as dormitoryname
+        from tb_dorm_hygiene h
+        inner join tb_dorm_dormitory d on h.dormitoryid = d.uuid
+        where
+        1=1
+        <if test="hygiene.term != null and hygiene.term != ''">
+            and h.term = #{hygiene.term}
+        </if>
+        <if test="hygiene.week != null and hygiene.week != ''">
+            and h.week = #{hygiene.week}
+        </if>
+        <if test="hygiene.dormitoryid != null and hygiene.dormitoryid != ''">
+            and h.dormitoryid = #{hygiene.dormitoryid}
+        </if>
+        <if test="hygiene.layer != null and hygiene.layer != ''">
+            and h.layer = #{hygiene.layer}
+        </if>
+        <if test="hygiene.roomno != null and hygiene.roomno != ''">
+            and h.roomno = #{hygiene.roomno}
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and h.createon >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="endDateTimeStr != null and endDateTimeStr != ''">
+            <![CDATA[
+                              and h.createon <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        order by h.modifyon desc
+    </select>
+
+
+
+</mapper>

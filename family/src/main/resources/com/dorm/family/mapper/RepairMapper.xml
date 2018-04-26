@@ -85,7 +85,7 @@
                               and r.servicedt >= #{startDateTimeStr}
                             ]]>
         </if>
-        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+        <if test="endDateTimeStr != null and endDateTimeStr != ''">
             <![CDATA[
                               and r.servicedt <= #{endDateTimeStr}
                             ]]>
