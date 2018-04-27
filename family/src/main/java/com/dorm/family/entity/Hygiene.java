@@ -38,6 +38,10 @@ public class Hygiene extends BaseEntity {
 
     private String dormitoryname;
 
+    private Integer mintotal;
+
+    private Integer maxtotal;
+
     public Integer getTerm() {
         return term;
     }
@@ -148,5 +152,21 @@ public class Hygiene extends BaseEntity {
 
     public void setDormitoryname(String dormitoryname) {
         this.dormitoryname = dormitoryname;
+    }
+
+    public Integer getMintotal() {
+        return mintotal;
+    }
+
+    public void setMintotal(Integer mintotal) {
+        this.mintotal = mintotal;
+    }
+
+    public Integer getMaxtotal() {
+        return maxtotal;
+    }
+
+    public void setMaxtotal(Integer maxtotal) {
+        this.maxtotal = maxtotal;
     }
 }

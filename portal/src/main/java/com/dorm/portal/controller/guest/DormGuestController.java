@@ -30,7 +30,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping(value = "/guest")
-public class MtxGuestController extends BaseGuestController{
+public class DormGuestController extends BaseGuestController{
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private WechatBindingService wechatBindingService;
@@ -90,6 +90,8 @@ public class MtxGuestController extends BaseGuestController{
     private PlatformUserService platformUserService;
     @Autowired
     private ConsultService consultService;
+    @Autowired
+    private HygieneService hygieneService;
 
     @RequestMapping(value = "/studentPortal",method = RequestMethod.GET)
     public String goStudentPortal(HttpServletRequest request,Model model){
@@ -132,16 +134,46 @@ public class MtxGuestController extends BaseGuestController{
             return "redirect:/guest/repair_list?stuId="+student.getUuid();
         }else if("CONSULT".equals(type)){
             return "redirect:/guest/consult_list?stuId="+student.getUuid();
-        }else if("MESSAGE".equals(type)){
-            return "redirect:/guest/message_list?stuno="+stuno;
         }else if("HYGIENE".equals(type)){
-            return "redirect:/guest/hygiene_list?stuno="+stuno;
+            return "redirect:/guest/hygiene_list?stuId="+student.getUuid();
         }else if("VIOLATION".equals(type)){
             return "redirect:/guest/violation_list?stuno="+stuno;
         }else{
             return "redirect:/guest/wandefee_list?stuno="+stuno;
         }
 
+    }
+
+
+    /**
+     * 卫生列表
+     */
+    @RequestMapping(value = "/hygiene_list",method = RequestMethod.GET)
+    public String hygiene_list(HttpServletRequest request,Model model){
+
+        String stuId = request.getParameter("stuId");
+        model.addAttribute("stuId",stuId);
+
+        List<Hygiene> hygieneList = hygieneService.queryHygieneListByStuId(stuId);
+        model.addAttribute("hygieneList",hygieneList);
+        return "guest/hygiene_list";
+    }
+
+    /**
+     * 卫生详情
+     */
+    @RequestMapping(value = "/hygiene_info",method = RequestMethod.GET)
+    public String hygiene_info(HttpServletRequest request,Model model){
+        String stuId = request.getParameter("stuId");
+        model.addAttribute("stuId",stuId);
+        String hygieneId = request.getParameter("hygieneId");
+        if(StringUtils.isNotBlank(hygieneId)){
+            Hygiene hygiene = new Hygiene();
+            hygiene.setUuid(hygieneId);
+            hygiene = hygieneService.queryForObjectByPk(hygiene);
+            model.addAttribute("hygiene", hygiene);
+        }
+        return "guest/hygiene_info";
     }
 
 
@@ -200,7 +232,7 @@ public class MtxGuestController extends BaseGuestController{
      */
     @RequestMapping(value = "/consult_info",method = RequestMethod.GET)
     public String consult_info(HttpServletRequest request,Model model){
-        String consultId= request.getParameter("consultId");
+        String consultId = request.getParameter("consultId");
         if(StringUtils.isNotBlank(consultId)){
             Consult consult = new Consult();
             consult.setUuid(consultId);

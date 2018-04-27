@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @Transactional
@@ -29,5 +31,9 @@ public class HygieneService extends BaseService<HygieneMapper,Hygiene> {
 
     public PageList<Hygiene> getHygienePageList(Hygiene hygiene, String startDateTimeStr, String endDateTimeStr, PageBounds pageBounds) {
         return mapper.selectHygienePageList(hygiene,startDateTimeStr,endDateTimeStr,pageBounds);
+    }
+
+    public List<Hygiene> queryHygieneListByStuId(String stuId) {
+        return mapper.selectHygieneListByStuId(stuId);
     }
 }

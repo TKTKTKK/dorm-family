@@ -39,6 +39,16 @@
         <if test="hygiene.roomno != null and hygiene.roomno != ''">
             and h.roomno = #{hygiene.roomno}
         </if>
+        <if test="hygiene.mintotal != null and hygiene.mintotal != ''">
+            <![CDATA[
+                              and h.total >= #{hygiene.mintotal}
+                            ]]>
+        </if>
+        <if test="hygiene.maxtotal != null and hygiene.maxtotal != ''">
+            <![CDATA[
+                              and h.total <= #{hygiene.maxtotal}
+                            ]]>
+        </if>
         <if test="startDateTimeStr != null and startDateTimeStr != ''">
             <![CDATA[
                               and h.createon >= #{startDateTimeStr}
@@ -50,6 +60,15 @@
                             ]]>
         </if>
         order by h.modifyon desc
+    </select>
+
+    <select id="selectHygieneListByStuId" resultMap="selectResultMap">
+        select h.*,d.name as dormitoryname
+        from tb_dorm_hygiene h
+        inner join tb_dorm_dormitory d on h.dormitoryid = d.uuid
+        inner join tb_dorm_student s on h.dormitoryid = s.dormitoryid and h.layer = s.layer and h.roomno = s.roomno
+        where s.uuid = #{stuId}
+        order by h.createon desc
     </select>
 
 

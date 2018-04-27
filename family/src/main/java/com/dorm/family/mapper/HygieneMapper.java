@@ -9,10 +9,14 @@ import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface HygieneMapper extends BaseMapper<Hygiene> {
 
     Hygiene selectHygieneForSave(@Param("hygiene") Hygiene hygiene);
 
     PageList<Hygiene> selectHygienePageList(@Param("hygiene") Hygiene hygiene,@Param("startDateTimeStr") String startDateTimeStr,@Param("endDateTimeStr") String endDateTimeStr, PageBounds pageBounds);
+
+    List<Hygiene> selectHygieneListByStuId(@Param("stuId") String stuId);
 }

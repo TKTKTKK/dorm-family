@@ -53,6 +53,18 @@
                                 </div>
 
                                 <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <input type="text" class="form-control" id="mintotal" name="mintotal" onblur="trimText(this)" value="${hygiene.mintotal}"
+                                           placeholder="最低分"
+                                    />
+                                </div>
+
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
+                                    <input type="text" class="form-control" id="maxtotal" name="maxtotal" onblur="trimText(this)" value="${hygiene.maxtotal}"
+                                           placeholder="最高分"
+                                    />
+                                </div>
+
+                                <div class="col-sm-3 col-xs-12 m-b-sm" style="padding-right: 0px">
                                     <select class="form-control" name="dormitoryid" id="dormitoryid" onchange="getLayerList()">
                                         <c:if test="${fn:length(dormitoryList) > 1}">
                                             <option value="">宿舍楼</option>
