@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dorm.family.mapper.EchargeMapper">
+
+    <resultMap id="selectResultMap" type="com.dorm.family.entity.Echarge">
+    </resultMap>
+
+    <select id="selectEchargePageList" resultMap="selectResultMap">
+        select distinct e.*,d.name as dormitoryname,s.stuno as stuno,s.name as stuname
+        from tb_dorm_echarge e
+        inner join tb_dorm_dormitory d on e.dormitoryid = d.uuid
+        inner join tb_dorm_student s on e.stuid = s.uuid
+        where
+        1=1
+        <if test="echarge.dormitoryid != null and echarge.dormitoryid != ''">
+            and e.dormitoryid = #{echarge.dormitoryid}
+        </if>
+        <if test="echarge.layer != null and echarge.layer != ''">
+            and e.layer = #{echarge.layer}
+        </if>
+        <if test="echarge.roomno != null and echarge.roomno != ''">
+            and e.roomno = #{echarge.roomno}
+        </if>
+        <if test="echarge.stuno != null and echarge.stuno != ''">
+            and s.stuno = #{echarge.stuno}
+        </if>
+
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and e.createon >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="endDateTimeStr != null and endDateTimeStr != ''">
+            <![CDATA[
+                              and e.createon <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        order by e.modifyon desc
+    </select>
+
+</mapper>

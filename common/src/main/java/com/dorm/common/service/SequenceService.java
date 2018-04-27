@@ -17,7 +17,18 @@ public class SequenceService {
      * @return
      */
     public String getRepairSeqNo(){
-        Integer seq = sequenceMapper.selectNextVal("MTX_REPAIR");
+        Integer seq = sequenceMapper.selectNextVal("DORM_REPAIR");
+        String formatSeq = StringUtils.leftPad(seq.toString(),8,"0");
+        String prefix = DateUtils.getDate("yyMMdd");
+        return prefix + formatSeq;
+    }
+
+    /**
+     * 获取电费缴费编号
+     * @return
+     */
+    public String getEchargeSeqNo(){
+        Integer seq = sequenceMapper.selectNextVal("DORM_ECHARGE");
         String formatSeq = StringUtils.leftPad(seq.toString(),8,"0");
         String prefix = DateUtils.getDate("yyMMdd");
         return prefix + formatSeq;

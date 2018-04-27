@@ -105,6 +105,142 @@ public class WeFamilyController extends BaseAdminController {
     private ConsultService consultService;
     @Autowired
     private HygieneService hygieneService;
+    @Autowired
+    private EchargeService echargeService;
+
+
+    /**
+     * 电费记录
+     */
+    @RequestMapping(value = "/echargeManage",method = RequestMethod.GET)
+    public String echargeManage(Model model, HttpServletRequest request) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+
+        List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+        model.addAttribute("dormitoryList",dormitoryList);
+
+        return "admin/wefamily/echargeManage";
+    }
+
+    /**
+     * 卫生管理
+     * @param echarge
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/echargeManage",method = RequestMethod.POST)
+    public String echargeManage(@RequestParam(required = false,defaultValue = "1") int page, Echarge echarge, Model model, HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        model.addAttribute("echarge",echarge);
+
+        List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+        model.addAttribute("dormitoryList",dormitoryList);
+
+        if(null != wechatBinding){
+            String startDateStr = request.getParameter("startDateStr");
+            model.addAttribute("startDateStr", startDateStr);
+            String endDateStr = request.getParameter("endDateStr");
+            model.addAttribute("endDateStr", endDateStr);
+            Date startDate = DateUtils.parseDate(startDateStr);
+            Date endDate = DateUtils.parseDate(endDateStr);
+            startDate = DateUtils.getDateStart(startDate);
+            endDate = DateUtils.getDateEnd(endDate);
+            String startDateTimeStr = "";
+            if(null != startDate){
+                startDateTimeStr = DateUtils.formatDate(startDate, "yyyy-MM-dd HH:mm:ss");
+            }
+            String endDateTimeStr = "";
+            if(null != endDate){
+                endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
+            }
+
+
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<Echarge> echargePageList = echargeService.getEchargePageList(echarge, startDateTimeStr, endDateTimeStr, pageBounds);
+            model.addAttribute("echargePageList", echargePageList);
+
+            //删除结果
+            String deleteFlag = request.getParameter("deleteFlag");
+            if("1".equals(deleteFlag)){
+                model.addAttribute("successMessage", "删除成功");
+            }else if("0".equals(deleteFlag)){
+                model.addAttribute("errorMessage", "删除失败");
+            }
+        }
+
+        return "admin/wefamily/echargeManage";
+    }
+
+
+    @RequestMapping(value = "/echargeInfo",method = RequestMethod.GET)
+    public String echargeInfo(HttpServletRequest request,Model model){
+
+        List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+        model.addAttribute("dormitoryList",dormitoryList);
+
+        String echargeId = request.getParameter("echargeId");
+        if(StringUtils.isNotBlank(echargeId)){
+            Echarge echarge = new Echarge();
+            echarge.setUuid(echargeId);
+            echarge = echargeService.queryForObjectByPk(echarge);
+            model.addAttribute("echarge",echarge);
+            if(null != echarge){
+                Dormitory dormitory = new Dormitory();
+                dormitory.setUuid(echarge.getDormitoryid());
+                dormitory = dormitoryService.queryForObjectByPk(dormitory);
+                model.addAttribute("dormitory",dormitory);
+
+                if(StringUtils.isNotBlank(echarge.getStuid())){
+                    Student student = new Student();
+                    student.setUuid(echarge.getStuid());
+                    student = studentService.queryForObjectByPk(student);
+                    model.addAttribute("student",student);
+                }
+            }
+        }
+        return "admin/wefamily/echargeInfo";
+    }
+
+    /**
+     *  卫生信息
+     * @return
+     */
+    @RequestMapping(value = "/echargeInfo", method = RequestMethod.POST)
+    public String echargeInfo(Echarge echarge, Model model,HttpServletRequest request,RedirectAttributes redirectAttributes) {
+        //检查缴费学号 是否存在
+        Student student = new Student();
+        student.setStuno(echarge.getStuno());
+        student = studentService.queryForObjectByUniqueKey(student);
+
+        if (null == student) {
+            model.addAttribute("errorMessage", "抱歉，缴费学生学号不正确！");
+            model.addAttribute("echarge",echarge);
+            List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+            model.addAttribute("dormitoryList",dormitoryList);
+            return "admin/wefamily/echargeInfo";
+        } else {
+            //修改
+            if (StringUtils.isNotBlank(echarge.getUuid())) {
+                try {
+                    echargeService.updatePartial(echarge);
+                    redirectAttributes.addFlashAttribute("successMessage", "保存成功！");
+                } catch (ServiceException e) {
+                    redirectAttributes.addFlashAttribute("errorMessage", "系统忙，稍候再试！");
+                }
+                echarge = echargeService.queryForObjectByPk(echarge);
+            } else {
+                //添加
+                echarge.setSnno(sequenceService.getEchargeSeqNo());
+                echarge.setStuid(student.getUuid());
+                echargeService.insert(echarge);
+                redirectAttributes.addFlashAttribute("successMessage", "保存成功！");
+            }
+        }
+        return "redirect:/admin/wefamily/echargeInfo?echargeId="+echarge.getUuid();
+    }
+
 
 
     /**
@@ -139,7 +275,7 @@ public class WeFamilyController extends BaseAdminController {
     public String hygieneManage(@RequestParam(required = false,defaultValue = "1") int page, Hygiene hygiene, Model model, HttpServletRequest request){
         WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
         model.addAttribute("wechatBinding", wechatBinding);
-        model.addAttribute("consult",hygiene);
+        model.addAttribute("hygiene",hygiene);
 
         List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
         model.addAttribute("dormitoryList",dormitoryList);
@@ -214,7 +350,7 @@ public class WeFamilyController extends BaseAdminController {
 
         if (null != hygienetForRepeat) {
             model.addAttribute("errorMessage", "抱歉，该时间卫生信息已存在！");
-            model.addAttribute("student",hygiene);
+            model.addAttribute("hygiene",hygiene);
             List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
             model.addAttribute("dormitoryList",dormitoryList);
             return "admin/wefamily/hygieneInfo";
