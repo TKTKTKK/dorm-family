@@ -9,9 +9,7 @@ import com.dorm.common.utils.RequestUtil;
 import com.dorm.common.utils.StringUtils;
 import com.dorm.common.utils.UserUtils;
 import com.dorm.family.entity.Dormitory;
-import com.dorm.family.entity.Merchant;
 import com.dorm.family.service.DormitoryService;
-import com.dorm.family.service.MerchantService;
 import com.dorm.wechat.service.WechatBindingService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
@@ -38,8 +36,6 @@ public class LoginController {
     private PlatformUserService platformUserService;
     @Autowired
     private WechatBindingService wechatBindingService;
-    @Autowired
-    private MerchantService merchantService;
     @Autowired
     private PlatformRoleService platformRoleService;
     @Autowired

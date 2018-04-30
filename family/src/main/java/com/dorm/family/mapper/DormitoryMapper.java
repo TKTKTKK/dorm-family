@@ -2,8 +2,6 @@ package com.dorm.family.mapper;
 
 import com.dorm.common.base.BaseMapper;
 import com.dorm.family.entity.Dormitory;
-import com.dorm.family.entity.Machine;
-import com.dorm.family.entity.Merchant;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.apache.ibatis.annotations.Param;

@@ -128,11 +128,11 @@
                                                 <span id="newRepair">0</span>
                                             </a>
 
-
                                             <a href="${ctx}/admin/wefamily/repairManage?fromHome=Y&dormitoryId=${dormitoryId}&status=REPAIRING" style="color: #fff;">
                                                 <span> 处理中 </span>
                                                 <span id="inRepair">0</span>
                                             </a>
+
                                             <a href="${ctx}/admin/wefamily/repairManage?fromHome=Y&dormitoryId=${dormitoryId}&status=FINISH" style="color: #fff;">
                                                 <span> 处理完成 </span>
                                                 <span id="completeRepair">0</span>
@@ -161,31 +161,17 @@
                                             <i class="fa fa-users fa-5x"></i>
                                         </div>
                                         <div class="col-xs-8 text-right needo">
-                                            <c:if test="${ifHqUser eq 'N'}">
-                                                <a href="${ctx}/admin/wefamily/goOrderManage?dormitoryId=${dormitoryId}&status=UNSUBMIT" style="color: #fff;">
-                                                    <span> 未发送 </span> <span id="unsubmitOrder">0</span>
-                                                </a>
-                                            </c:if>
-                                            <c:if test="${ifHqUser eq 'Y'}">
-                                                <a href="${ctx}/admin/wefamily/goOrderManage?dormitoryId=${dormitoryId}&status=NEW" style="color: #fff;">
-                                                    <span> 新订单 </span> <span id="newOrder">0</span>
-                                                </a>
-                                            </c:if>
-                                            <a href="${ctx}/admin/wefamily/goOrderManage?dormitoryId=${dormitoryId}&status=INPLAN" style="color: #fff;">
-                                                <span> 计划中 </span>
-                                                <span id="planingOrder">0</span>
+                                            <a href="${ctx}/admin/wefamily/consultManage?dormitoryId=${dormitoryId}&fromHome=Y&status=N_REPLY" style="color: #fff;">
+                                                <span> 未回复 </span>
+                                                <span id="NReply">0</span>
                                             </a>
-                                            <a href="${ctx}/admin/wefamily/goOrderManage?dormitoryId=${dormitoryId}&status=INLOGISTICS" style="color: #fff;">
-                                                <span> 运输中 </span>
-                                                <span id="transportOrder">0</span>
+                                            <a href="${ctx}/admin/wefamily/consultManage?dormitoryId=${dormitoryId}&fromHome=Y&status=Y_REPLY" style="color: #fff;">
+                                                <span> 已回复 </span>
+                                                <span id="YReply">0</span>
                                             </a>
-                                            <a href="${ctx}/admin/wefamily/goOrderManage?dormitoryId=${dormitoryId}&status=RECEIVED" style="color: #fff;">
-                                                <span> 已收货 </span>
-                                                <span id="receivedOrder">0</span>
-                                            </a>
-                                            <a href="${ctx}/admin/wefamily/goOrderManage?dormitoryId=${dormitoryId}&status=FILED" style="color: #fff;">
-                                                <span> 归档完成 </span>
-                                                <span id="filedOrder">0</span>
+                                            <a style="color: #fff;">
+                                                <span> </span>
+                                                <span>&nbsp;</span>
                                             </a>
                                         </div>
                                     </div>
@@ -193,8 +179,8 @@
                                 <div class="panel-footer"
                                      style="background: rgba(255, 255, 255, 0.1) !important;filter: Alpha(opacity=30);
                                      border:0;padding-left: 10px;">
-                                    <span style="color: #fff;font-weight: bold">订单管理</span>
-                                    <a href="${ctx}/admin/wefamily/orderManage"
+                                    <span style="color: #fff;font-weight: bold">咨询留言</span>
+                                    <a href="${ctx}/admin/wefamily/consultManage"
                                        class="pull-right" style="color:#fff">
                                         进入<span class="fa fa-angle-double-right"></span>
                                     </a>
@@ -308,30 +294,15 @@
         $.get(encodeURI("/admin/wefamily/repairAsy?status=FINISH&dormitoryId=${dormitoryId}"),function(data,status){
             $('#completeRepair').text(data);
         });
-        //未发送订单
-        $.get(encodeURI("/admin/wefamily/orderAsy?status=UNSUBMIT&dormitoryId=${dormitoryId}"),function(data,status){
-            $('#unsubmitOrder').text(data);
+        //未回复
+        $.get(encodeURI("/admin/wefamily/consultAsy?status=N_REPLY&dormitoryId=${dormitoryId}"),function(data,status){
+            $('#NReply').text(data);
         });
-        //新订单
-        $.get(encodeURI("/admin/wefamily/orderAsy?status=NEW&dormitoryId=${dormitoryId}"),function(data,status){
-            $('#newOrder').text(data);
+        //已回复
+        $.get(encodeURI("/admin/wefamily/consultAsy?status=Y_REPLY&dormitoryId=${dormitoryId}"),function(data,status){
+            $('#YReply').text(data);
         });
-        //计划中
-        $.get(encodeURI("/admin/wefamily/orderAsy?status=INPLAN&dormitoryId=${dormitoryId}"),function(data,status){
-            $('#planingOrder').text(data);
-        });
-        //运输中
-        $.get(encodeURI("/admin/wefamily/orderAsy?status=INLOGISTICS&dormitoryId=${dormitoryId}"),function(data,status){
-            $('#transportOrder').text(data);
-        });
-        //已收货
-        $.get(encodeURI("/admin/wefamily/orderAsy?status=RECEIVED&dormitoryId=${dormitoryId}"),function(data,status){
-            $('#receivedOrder').text(data);
-        });
-        //归档完成
-        $.get(encodeURI("/admin/wefamily/orderAsy?status=FILED&dormitoryId=${dormitoryId}"),function(data,status){
-            $('#filedOrder').text(data);
-        });
+
     }
 
 </script>

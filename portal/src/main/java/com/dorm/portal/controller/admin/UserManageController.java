@@ -10,12 +10,7 @@ import com.dorm.family.service.DormitoryUserService;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.dorm.common.exception.ServiceException;
-import com.dorm.family.entity.Merchant;
-import com.dorm.family.entity.UserMerchant;
-import com.dorm.family.service.MerchantService;
-import com.dorm.family.service.UserMerchantService;
 import com.dorm.portal.PortalContants;
-import com.dorm.wechat.WechatConstants;
 import com.dorm.wechat.entity.WechatGroup;
 import com.dorm.wechat.entity.WechatUser;
 import com.dorm.wechat.entity.WechatUserInfo;
@@ -49,10 +44,6 @@ public class UserManageController extends BaseAdminController {
     private WechatBindingService wechatBindingService;
     @Autowired
     private WechatUserInfoService wechatUserInfoService;
-    @Autowired
-    private MerchantService merchantService;
-    @Autowired
-    private UserMerchantService userMerchantService;
     @Autowired
     private PlatformRolePermitService platformRolePermitService;
     @Autowired
@@ -1089,18 +1080,5 @@ public class UserManageController extends BaseAdminController {
         }
 
         return "redirect:userInfo?userId=" + userId + "&querytype=district";
-    }
-
-    @RequestMapping(value = "/checkIfUserMerchant")
-    @ResponseBody
-    public Map<String, Object> checkIfUserCommunity(HttpServletRequest request){
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        String userId = request.getParameter("userId");
-        PageBounds pageBounds = new PageBounds();
-        List<UserMerchant> userMerchantList = userMerchantService.queryUserMerchantListByUserId(userId,pageBounds);
-        if(userMerchantList.size()==0){
-            resultMap.put("checkIfUserMerchantFlag", "N");
-        }
-        return resultMap;
     }
 }

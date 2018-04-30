@@ -5,8 +5,6 @@ import com.dorm.common.utils.DateUtils;
 import com.dorm.common.utils.StringUtils;
 import com.dorm.common.utils.UserUtils;
 import com.dorm.family.entity.Address;
-import com.dorm.family.entity.Machine;
-import com.dorm.family.entity.MtxProduct;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -83,8 +81,6 @@ public class AddressImportService extends ExcelDataImportService{
                     address.setModifyon(dt);
                     address.setVersionno(1);
                     address.setDelind("N");
-
-                    MtxProduct product=new MtxProduct();
 
                     row = sheet.getRow(i);
                     if(row==null){

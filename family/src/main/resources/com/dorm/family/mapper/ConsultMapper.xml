@@ -13,16 +13,16 @@
         inner join tb_dorm_dormitory d on s.dormitoryid = d.uuid
         where 1=1
         <if test="consult.dormitoryid != null and consult.dormitoryid != ''">
-            s.dormitoryid = #{consult.dormitoryid}
+            and s.dormitoryid = #{consult.dormitoryid}
         </if>
         <if test="consult.status != null and consult.status != ''">
-            c.status = #{consult.status}
+            and c.status = #{consult.status}
         </if>
         <if test="consult.stuno != null and consult.stuno != ''">
             s.stuno like concat('%',#{consult.stuno},'%')
         </if>
         <if test="consult.stuname != null and consult.stuname != ''">
-            s.name like concat('%',#{consult.stuname},'%')
+            and s.name like concat('%',#{consult.stuname},'%')
         </if>
         <if test="startDateTimeStr != null and startDateTimeStr != ''">
             <![CDATA[
@@ -35,5 +35,15 @@
                             ]]>
         </if>
         order by c.modifyon desc
+    </select>
+
+    <select id="selectConsultAsy" resultMap="selectResultMap">
+        select c.*
+        from tb_dorm_consult c
+        where
+        c.status = #{consult.status}
+        <if test="consult.dormitoryid != null and consult.dormitoryid != ''">
+            and c.dormitoryid = #{consult.dormitoryid}
+        </if>
     </select>
 </mapper>
