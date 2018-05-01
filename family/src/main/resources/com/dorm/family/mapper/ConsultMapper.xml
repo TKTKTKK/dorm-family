@@ -169,7 +169,6 @@
 
         <if test="consult.dormitoryid == null or consult.dormitoryid == ''">
             union
-
             select '总计' as dormitoryname,'' as dormitoryid,
             (select count(*) from tb_dorm_consult c where c.status = 'N_REPLY') as nreplyCount,
             (select count(*) from tb_dorm_consult c where c.status = 'Y_REPLY') as yreplyCount,
