@@ -149,7 +149,7 @@
 
     window.onload = function(){
         //显示父菜单
-        showParentMenu('宿舍管理');
+        showParentMenu('宿舍服务');
 
         getLayerList();
     }

@@ -138,7 +138,7 @@
 
     window.onload = function () {
         //显示父菜单
-        showParentMenu('销售管理');
+        showParentMenu('宿舍管理');
     }
 
     setup();

@@ -136,7 +136,7 @@
 
     window.onload = function () {
         //显示父菜单
-        showParentMenu('产品中心');
+        showParentMenu('宿舍服务');
     }
     if(${mtxReserve.status=='N_DEAL'}){
         changeMerchant();

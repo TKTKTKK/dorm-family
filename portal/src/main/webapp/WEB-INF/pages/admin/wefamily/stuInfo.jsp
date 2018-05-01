@@ -205,7 +205,7 @@
 
     window.onload = function () {
         //显示父菜单
-        showParentMenu('学生管理');
+        showParentMenu('宿舍管理');
 
         getLayerList();
     }

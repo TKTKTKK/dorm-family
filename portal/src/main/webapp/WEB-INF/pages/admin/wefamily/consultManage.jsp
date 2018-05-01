@@ -137,7 +137,7 @@
 
     window.onload = function(){
         //显示父菜单
-        showParentMenu('咨询留言');
+        showParentMenu('宿舍服务');
     }
 
     //提交查询

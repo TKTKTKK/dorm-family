@@ -11,7 +11,7 @@
     <section class="vbox">
         <section class="scrollable">
             <header class="panel-heading bg-white text-lg">
-                学生管理 / <a href="${ctx}/admin/wefamily/echargeManage"> 电费缴费记录</a> / <span class="font-bold  text-shallowred">信息详情</span>
+                宿舍服务 / <a href="${ctx}/admin/wefamily/echargeManage"> 电费缴费记录</a> / <span class="font-bold  text-shallowred">信息详情</span>
             </header>
             <div class="col-sm-12 pos">
                 <div style="margin-bottom: 5px">
@@ -154,7 +154,7 @@
 
     window.onload = function () {
         //显示父菜单
-        showParentMenu('宿舍管理');
+        showParentMenu('宿舍服务');
 
         getLayerList();
     }
