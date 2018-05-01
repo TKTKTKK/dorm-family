@@ -123,4 +123,125 @@ public class ReportController extends BaseAdminController {
 
         return "admin/wefamily/repairReportManage";
     }
+
+
+    /**
+     * 咨询报表
+     */
+    @RequestMapping(value = "/consultReportManage",method = RequestMethod.GET)
+    public String consultReportManage(Model model, HttpServletRequest request) {
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+
+        List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+        model.addAttribute("dormitoryList",dormitoryList);
+
+        return "admin/wefamily/consultReportManage";
+    }
+
+
+    /**
+     * 咨询报表查询
+     * @param repair
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/consultReportManage",method = RequestMethod.POST)
+    public String consultReportManage(@RequestParam(required = false,defaultValue = "1") int page, Consult consult, Model model, HttpServletRequest request){
+        WechatBinding wechatBinding = wechatBindingService.getWechatBindingByUser();
+        model.addAttribute("wechatBinding", wechatBinding);
+        model.addAttribute("consult",consult);
+
+        List<Dormitory> dormitoryList = dormitoryService.getDormitoryForUser();
+        model.addAttribute("dormitoryList",dormitoryList);
+
+        if(null != wechatBinding){
+            String startDateStr = request.getParameter("startDateStr");
+            model.addAttribute("startDateStr", startDateStr);
+            String endDateStr = request.getParameter("endDateStr");
+            model.addAttribute("endDateStr", endDateStr);
+            Date startDate = DateUtils.parseDate(startDateStr);
+            Date endDate = DateUtils.parseDate(endDateStr);
+            startDate = DateUtils.getDateStart(startDate);
+            endDate = DateUtils.getDateEnd(endDate);
+            String startDateTimeStr = "";
+            if(null != startDate){
+                startDateTimeStr = DateUtils.formatDate(startDate, "yyyy-MM-dd HH:mm:ss");
+            }
+            String endDateTimeStr = "";
+            if(null != endDate){
+                endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
+            }
+
+            PageBounds pageBounds = new PageBounds(page, PortalContants.PAGE_SIZE);
+            PageList<Consult> consultReportPageList = consultService.getConsultReportPageList(consult, startDateTimeStr, endDateTimeStr, pageBounds);
+            model.addAttribute("consultReportPageList", consultReportPageList);
+
+        }
+
+        return "admin/wefamily/consultReportManage";
+    }
+
+
+    /**
+     * 导出报修查询结果
+     */
+    @RequestMapping(value = "/exportRepairReportList",method = RequestMethod.POST)
+    public void exportRepairList(Repair repair, HttpServletRequest request, HttpServletResponse response){
+        Map<String,List> beanParams = new HashMap<String, List>();
+
+        String startDateStr = request.getParameter("startDateStr");
+        String endDateStr = request.getParameter("endDateStr");
+        Date startDate = DateUtils.parseDate(startDateStr);
+        Date endDate = DateUtils.parseDate(endDateStr);
+        startDate = DateUtils.getDateStart(startDate);
+        endDate = DateUtils.getDateEnd(endDate);
+
+        String startDateTimeStr = "";
+        if(null != startDate){
+            startDateTimeStr = DateUtils.formatDate(startDate, "yyyy-MM-dd HH:mm:ss");
+        }
+        String endDateTimeStr = "";
+        if(null != endDate){
+            endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
+        }
+
+        List<Repair> repairReportListForExport = repairService.getRepairReportListForExport(repair,startDateTimeStr,endDateTimeStr);
+        beanParams.put("repairReportListForExport", repairReportListForExport);
+
+        //导出
+        ExportUtil.exportExcel(beanParams, "/tpl/repairReport.xls", response);
+    }
+
+
+
+    /**
+     * 导出咨询查询结果
+     */
+    @RequestMapping(value = "/exportConsultReportList",method = RequestMethod.POST)
+    public void exportConsultReportList(Consult consult, HttpServletRequest request, HttpServletResponse response){
+        Map<String,List> beanParams = new HashMap<String, List>();
+
+        String startDateStr = request.getParameter("startDateStr");
+        String endDateStr = request.getParameter("endDateStr");
+        Date startDate = DateUtils.parseDate(startDateStr);
+        Date endDate = DateUtils.parseDate(endDateStr);
+        startDate = DateUtils.getDateStart(startDate);
+        endDate = DateUtils.getDateEnd(endDate);
+
+        String startDateTimeStr = "";
+        if(null != startDate){
+            startDateTimeStr = DateUtils.formatDate(startDate, "yyyy-MM-dd HH:mm:ss");
+        }
+        String endDateTimeStr = "";
+        if(null != endDate){
+            endDateTimeStr = DateUtils.formatDate(endDate, "yyyy-MM-dd HH:mm:ss");
+        }
+
+        List<Consult> consultReportListForExport = consultService.getConsultReportListForExport(consult,startDateTimeStr,endDateTimeStr);
+        beanParams.put("consultReportListForExport", consultReportListForExport);
+
+        //导出
+        ExportUtil.exportExcel(beanParams, "/tpl/consultReport.xls", response);
+    }
 }

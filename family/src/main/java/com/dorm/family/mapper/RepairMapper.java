@@ -21,4 +21,6 @@ public interface RepairMapper extends BaseMapper<Repair> {
     List<Repair> selectRepairAsy(@Param("repair") Repair repair);
 
     PageList<Repair> selectRepairReportPageList(@Param("repair") Repair repair,@Param("startDateTimeStr") String startDateTimeStr,@Param("endDateTimeStr") String endDateTimeStr, PageBounds pageBounds);
+
+    List<Repair> selectRepairReportListForExport(@Param("repair") Repair repair,@Param("startDateTimeStr") String startDateTimeStr,@Param("endDateTimeStr") String endDateTimeStr);
 }

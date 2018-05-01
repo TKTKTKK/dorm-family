@@ -47,4 +47,136 @@
             and s.dormitoryid = #{consult.dormitoryid}
         </if>
     </select>
+
+    <select id="selectConsultReportPageList" resultMap="selectResultMap">
+        select d.name as dormitoryname,d.uuid as dormitoryid,
+        (select count(*) from tb_dorm_consult c inner join tb_dorm_student s on s.uuid = c.stuid where  s.uuid = co.stuid and c.status = 'N_REPLY'
+        <if test="consult.dormitoryid != null and consult.dormitoryid != ''">
+            and s.dormitoryid = #{consult.dormitoryid}
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and c.createon >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="endDateTimeStr != null and endDateTimeStr != ''">
+        <![CDATA[
+                              and c.createon <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        ) as nreplyCount,
+        (select count(*) from tb_dorm_consult c inner join tb_dorm_student s on s.uuid = c.stuid where  s.uuid = co.stuid and c.status = 'Y_REPLY'
+        <if test="consult.dormitoryid != null and consult.dormitoryid != ''">
+            and s.dormitoryid = #{consult.dormitoryid}
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and c.createon >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="endDateTimeStr != null and endDateTimeStr != ''">
+            <![CDATA[
+                              and c.createon <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        ) as yreplyCount,
+        (select ROUND(nreplyCount/(nreplyCount+yreplyCount)*100,2)) as nreplyPercent,
+        (select ROUND(yreplyCount/(nreplyCount+yreplyCount)*100,2)) as yreplyPercent
+        from tb_dorm_consult co
+        inner join tb_dorm_student s on co.stuid = s.uuid
+        INNER JOIN tb_dorm_dormitory d on d.uuid = s.dormitoryid
+        where 1=1
+        <if test="consult.dormitoryid != null and consult.dormitoryid != ''">
+            and s.dormitoryid = #{consult.dormitoryid}
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and c.createon >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="endDateTimeStr != null and endDateTimeStr != ''">
+            <![CDATA[
+                              and c.createon <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        group by d.uuid
+
+        <if test="consult.dormitoryid == null or consult.dormitoryid == ''">
+            union
+
+            select '总计' as dormitoryname,'' as dormitoryid,
+            (select count(*) from tb_dorm_consult c where c.status = 'N_REPLY') as nreplyCount,
+            (select count(*) from tb_dorm_consult c where c.status = 'Y_REPLY') as yreplyCount,
+            (select ROUND(nreplyCount/(nreplyCount+yreplyCount)*100,2)) as nreplyPercent,
+            (select ROUND(yreplyCount/(nreplyCount+yreplyCount)*100,2)) as yreplyPercent
+            from tb_dorm_consult co
+        </if>
+
+    </select>
+
+    <select id="selectConsultReportListForExport" resultMap="selectResultMap">
+        select d.name as dormitoryname,d.uuid as dormitoryid,
+        (select count(*) from tb_dorm_consult c inner join tb_dorm_student s on s.uuid = c.stuid where  s.uuid = co.stuid and c.status = 'N_REPLY'
+        <if test="consult.dormitoryid != null and consult.dormitoryid != ''">
+            and s.dormitoryid = #{consult.dormitoryid}
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and c.createon >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="endDateTimeStr != null and endDateTimeStr != ''">
+            <![CDATA[
+                              and c.createon <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        ) as nreplyCount,
+        (select count(*) from tb_dorm_consult c inner join tb_dorm_student s on s.uuid = c.stuid where  s.uuid = co.stuid and c.status = 'Y_REPLY'
+        <if test="consult.dormitoryid != null and consult.dormitoryid != ''">
+            and s.dormitoryid = #{consult.dormitoryid}
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and c.createon >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="endDateTimeStr != null and endDateTimeStr != ''">
+            <![CDATA[
+                              and c.createon <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        ) as yreplyCount,
+        concat((select ROUND(nreplyCount/(nreplyCount+yreplyCount)*100,2)),'%') as nreplyPercent,
+        concat((select ROUND(yreplyCount/(nreplyCount+yreplyCount)*100,2)),'%') as yreplyPercent
+        from tb_dorm_consult co
+        inner join tb_dorm_student s on co.stuid = s.uuid
+        INNER JOIN tb_dorm_dormitory d on d.uuid = s.dormitoryid
+        where 1=1
+        <if test="consult.dormitoryid != null and consult.dormitoryid != ''">
+            and s.dormitoryid = #{consult.dormitoryid}
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and c.createon >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="endDateTimeStr != null and endDateTimeStr != ''">
+            <![CDATA[
+                              and c.createon <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        group by d.uuid
+
+        <if test="consult.dormitoryid == null or consult.dormitoryid == ''">
+            union
+
+            select '总计' as dormitoryname,'' as dormitoryid,
+            (select count(*) from tb_dorm_consult c where c.status = 'N_REPLY') as nreplyCount,
+            (select count(*) from tb_dorm_consult c where c.status = 'Y_REPLY') as yreplyCount,
+            concat((select ROUND(nreplyCount/(nreplyCount+yreplyCount)*100,2)),'%') as nreplyPercent,
+            concat((select ROUND(yreplyCount/(nreplyCount+yreplyCount)*100,2)),'%') as yreplyPercent
+            from tb_dorm_consult co
+        </if>
+
+    </select>
 </mapper>

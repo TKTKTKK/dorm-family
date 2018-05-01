@@ -28,6 +28,14 @@ public class Consult extends BaseEntity {
 
     private String stuphone;
 
+    private String nreplyCount;
+
+    private String yreplyCount;
+
+    private String nreplyPercent;
+
+    private String yreplyPercent;
+
     public String getStuid() {
         return stuid;
     }
@@ -98,5 +106,37 @@ public class Consult extends BaseEntity {
 
     public void setStuphone(String stuphone) {
         this.stuphone = stuphone;
+    }
+
+    public String getNreplyCount() {
+        return nreplyCount;
+    }
+
+    public void setNreplyCount(String nreplyCount) {
+        this.nreplyCount = nreplyCount;
+    }
+
+    public String getYreplyCount() {
+        return yreplyCount;
+    }
+
+    public void setYreplyCount(String yreplyCount) {
+        this.yreplyCount = yreplyCount;
+    }
+
+    public String getNreplyPercent() {
+        return nreplyPercent;
+    }
+
+    public void setNreplyPercent(String nreplyPercent) {
+        this.nreplyPercent = nreplyPercent;
+    }
+
+    public String getYreplyPercent() {
+        return yreplyPercent;
+    }
+
+    public void setYreplyPercent(String yreplyPercent) {
+        this.yreplyPercent = yreplyPercent;
     }
 }

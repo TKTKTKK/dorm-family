@@ -42,14 +42,14 @@
     <section class="vbox">
 
         <header class="panel-heading bg-white text-lg">
-            报表统计 / <span class="font-bold  text-shallowred">
-            报修报表</span>
+            报表管理 / <span class="font-bold  text-shallowred">
+            咨询报表</span>
         </header>
         <section class="scrollable padder">
             <div class="row">
                 <div class="bg-white closel">
                     <div class="col-sm-12 no-padder">
-                        <form method="post" action="${ctx}/admin/report/repairReportManage" class="form-horizontal b-l b-r b-b b-t padding20"
+                        <form method="post" action="${ctx}/admin/report/consultReportManage" class="form-horizontal b-l b-r b-b b-t padding20"
                               data-validate="parsley"
                               id="searchForm">
                             <div class="row">
@@ -59,7 +59,7 @@
                                             <option value="">宿舍楼</option>
                                         </c:if>
                                         <c:forEach items="${dormitoryList}" var="dormitory">
-                                            <option value="${dormitory.uuid}" <c:if test="${repair.dormitoryid == dormitory.uuid}">selected="selected"</c:if>>${dormitory.name}</option>
+                                            <option value="${dormitory.uuid}" <c:if test="${consult.dormitoryid == dormitory.uuid}">selected="selected"</c:if>>${dormitory.name}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -97,87 +97,57 @@
                                     <thead>
                                     <tr>
                                         <th class="text-center">宿舍楼</th>
-                                        <th class="text-center">学生报修</th>
-                                        <th class="text-center">宿管报修</th>
-                                        <th class="text-center">未处理</th>
+                                        <th class="text-center">未回复</th>
                                         <th class="text-center">占比</th>
-                                        <th class="text-center">处理中</th>
+                                        <th class="text-center">已回复</th>
                                         <th class="text-center">占比</th>
-                                        <th class="text-center">已完成</th>
-                                        <th class="text-center">占比</th>
-                                        <th class="text-center">维修总额</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach items="${repairReportPageList}" var="repair" varStatus="vs">
+                                    <c:forEach items="${consultReportPageList}" var="consult" varStatus="vs">
                                         <tr
                                                 <c:if test="${vs.index%2==1 }">style="background-color: #E1EEF0" </c:if>
                                                 <c:if test="${vs.index%2==0 }">style="background-color: #ffffff"</c:if>>
                                             <td>
-                                                    ${repair.dormitoryname}
+                                                    ${consult.dormitoryname}
                                             </td>
                                             <td>
-                                                    ${repair.countByStudent}
-                                            </td>
-                                            <td>
-                                                    ${repair.countByDormitoryManage}
-                                            </td>
-                                            <td>
-                                                <c:if test="${not empty repair.dormitoryid}">
-                                                    <a href="/admin/wefamily/repairManage?fromHome=Y&status=NEW&dormitoryId=${repair.dormitoryid}&startDateStr=${startDateStr}&endDateStr=${endDateStr}" style="text-decoration: underline;">
-                                                            ${repair.newCount}
+                                                <c:if test="${not empty consult.dormitoryid}">
+                                                    <a href="/admin/wefamily/consultManage?fromHome=Y&status=N_REPLY&dormitoryId=${consult.dormitoryid}&startDateStr=${startDateStr}&endDateStr=${endDateStr}" style="text-decoration: underline;">
+                                                            ${consult.nreplyCount}
                                                     </a>
                                                 </c:if>
-                                                <c:if test="${empty repair.dormitoryid}">
-                                                    ${repair.newCount}
+                                                <c:if test="${empty consult.dormitoryid}">
+                                                    ${consult.nreplyCount}
                                                 </c:if>
 
                                             </td>
                                             <td>
-                                                    ${repair.newPercent}%
+                                                    ${consult.nreplyPercent}%
                                             </td>
                                             <td>
-                                                <c:if test="${not empty repair.dormitoryid}">
-                                                    <a href="/admin/wefamily/repairManage?fromHome=Y&status=REPAIRING&dormitoryId=${repair.dormitoryid}&startDateStr=${startDateStr}&endDateStr=${endDateStr}" style="text-decoration: underline;">
-                                                            ${repair.repairingCount}
+                                                <c:if test="${not empty consult.dormitoryid}">
+                                                    <a href="/admin/wefamily/consultManage?fromHome=Y&status=Y_REPLY&dormitoryId=${consult.dormitoryid}&startDateStr=${startDateStr}&endDateStr=${endDateStr}" style="text-decoration: underline;">
+                                                            ${consult.yreplyCount}
                                                     </a>
                                                 </c:if>
-                                                <c:if test="${empty repair.dormitoryid}">
-                                                    ${repair.repairingCount}
+                                                <c:if test="${empty consult.dormitoryid}">
+                                                    ${consult.yreplyCount}
                                                 </c:if>
                                             </td>
                                             <td>
-                                                    ${repair.repairingPercent}%
+                                                    ${consult.yreplyPercent}%
                                             </td>
-                                            <td>
-                                                <c:if test="${not empty repair.dormitoryid}">
-                                                    <a href="/admin/wefamily/repairManage?fromHome=Y&status=FINISH&dormitoryId=${repair.dormitoryid}&startDateStr=${startDateStr}&endDateStr=${endDateStr}" style="text-decoration: underline;">
-                                                            ${repair.finishCount}
-                                                    </a>
-                                                </c:if>
-                                                <c:if test="${empty repair.dormitoryid}">
-                                                    ${repair.finishCount}
-                                                </c:if>
-
-                                            </td>
-                                            <td>
-                                                    ${repair.finishPercent}%
-                                            </td>
-                                            <td>
-                                                    ${repair.totalMoney}
-                                            </td>
-
                                         </tr>
                                     </c:forEach>
                                     </tbody>
                                 </table>
-                                <c:if test="${not empty repairReportPageList}">
-                                    <web:pagination pageList="${repairReportPageList}" postParam="true"/>
+                                <c:if test="${not empty consultReportPageList}">
+                                    <web:pagination pageList="${consultReportPageList}" postParam="true"/>
                                 </c:if>
                             </div>
-
                         <div class="navbar-left">
-                            <button class="btn btn-sm btn-submit" onclick="exportRepairReportList()">导出</button>
+                            <button class="btn btn-sm btn-submit" onclick="exportConsultReportList()">导出</button>
                         </div>
                         <div style="clear: both"></div>
                     </c:if>
@@ -198,20 +168,17 @@
     window.onload = function(){
         //显示父菜单
         showParentMenu('报表统计');
-
     }
 
-
-
-    function exportRepairReportList(){
+    function exportConsultReportList(){
         $("#searchForm").parsley("validate");
         //比较起始日期和截止日期 且 表单合法
         if (compareBeginEndDate('starttime', 'endtime', 'dateError')
                 && $('#searchForm').parsley().isValid()) {
             var searchForm = document.getElementById("searchForm");
-            searchForm.action = "${ctx}/admin/report/exportRepairReportList";
+            searchForm.action = "${ctx}/admin/report/exportConsultReportList";
             searchForm.submit();
-            searchForm.action = "${ctx}/admin/report/repairReportManage";
+            searchForm.action = "${ctx}/admin/report/repairConsultManage";
         }
     }
 
@@ -263,11 +230,11 @@
             //ui block
             pleaseWait();
             var searchForm = document.getElementById("searchForm");
-            searchForm.action = "${ctx}/admin/wefamily/repairReportManage?page=" + page;
+            searchForm.action = "${ctx}/admin/wefamily/consultReportManage?page=" + page;
             searchForm.submit();
         }
     }
-
+    
 
 </script>
 </body>

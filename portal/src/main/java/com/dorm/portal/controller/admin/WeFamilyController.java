@@ -873,8 +873,15 @@ public class WeFamilyController extends BaseAdminController {
             Consult consult = new Consult();
             consult.setDormitoryid(dormitoryid);
             consult.setStatus(status);
+
+            String startDateStr = request.getParameter("startDateStr");
+            model.addAttribute("startDateStr",startDateStr);
+
+            String endDateStr = request.getParameter("endDateStr");
+            model.addAttribute("endDateStr",endDateStr);
+
             PageBounds pageBounds = new PageBounds(1, PortalContants.PAGE_SIZE);
-            PageList<Consult> consultPageList = consultService.getConsultPageList(consult,null,null,pageBounds);
+            PageList<Consult> consultPageList = consultService.getConsultPageList(consult,startDateStr,endDateStr,pageBounds);
             model.addAttribute("consultPageList",consultPageList);
             model.addAttribute("consult",consult);
         }

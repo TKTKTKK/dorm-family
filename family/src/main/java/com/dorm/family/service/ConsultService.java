@@ -31,4 +31,12 @@ public class ConsultService extends BaseService<ConsultMapper,Consult> {
     public List<Consult> getConsultAsy(Consult consult) {
         return mapper.selectConsultAsy(consult);
     }
+
+    public PageList<Consult> getConsultReportPageList(Consult consult, String startDateTimeStr, String endDateTimeStr, PageBounds pageBounds) {
+        return mapper.selectConsultReportPageList(consult,startDateTimeStr,endDateTimeStr,pageBounds);
+    }
+
+    public List<Consult> getConsultReportListForExport(Consult consult, String startDateTimeStr, String endDateTimeStr) {
+        return mapper.selectConsultReportListForExport(consult,startDateTimeStr,endDateTimeStr);
+    }
 }

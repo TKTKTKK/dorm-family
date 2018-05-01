@@ -16,4 +16,8 @@ public interface ConsultMapper extends BaseMapper<Consult> {
     PageList<Consult> selectConsultPageList(@Param("consult") Consult consult,@Param("startDateTimeStr") String startDateTimeStr,@Param("endDateTimeStr") String endDateTimeStr, PageBounds pageBounds);
 
     List<Consult> selectConsultAsy(@Param("consult") Consult consult);
+
+    PageList<Consult> selectConsultReportPageList(@Param("consult") Consult consult,@Param("startDateTimeStr") String startDateTimeStr,@Param("endDateTimeStr") String endDateTimeStr, PageBounds pageBounds);
+
+    List<Consult> selectConsultReportListForExport(@Param("consult") Consult consult,@Param("startDateTimeStr") String startDateTimeStr,@Param("endDateTimeStr") String endDateTimeStr);
 }
