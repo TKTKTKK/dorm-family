@@ -54,6 +54,28 @@ public class Repair extends BaseEntity {
     private String workername;
 
 
+
+    private String countByStudent;
+
+    private String countByDormitoryManage;
+
+    private String newCount;
+
+    private String repairingCount;
+
+    private String finishCount;
+
+    private String newPercent;
+
+    private String repairingPercent;
+
+    private String finishPercent;
+
+    private String totalMoney;
+
+
+
+
     public String getBindid() {
         return bindid;
     }
@@ -220,5 +242,77 @@ public class Repair extends BaseEntity {
 
     public void setWorkername(String workername) {
         this.workername = workername;
+    }
+
+    public String getCountByStudent() {
+        return countByStudent;
+    }
+
+    public void setCountByStudent(String countByStudent) {
+        this.countByStudent = countByStudent;
+    }
+
+    public String getCountByDormitoryManage() {
+        return countByDormitoryManage;
+    }
+
+    public void setCountByDormitoryManage(String countByDormitoryManage) {
+        this.countByDormitoryManage = countByDormitoryManage;
+    }
+
+    public String getNewCount() {
+        return newCount;
+    }
+
+    public void setNewCount(String newCount) {
+        this.newCount = newCount;
+    }
+
+    public String getRepairingCount() {
+        return repairingCount;
+    }
+
+    public void setRepairingCount(String repairingCount) {
+        this.repairingCount = repairingCount;
+    }
+
+    public String getFinishCount() {
+        return finishCount;
+    }
+
+    public void setFinishCount(String finishCount) {
+        this.finishCount = finishCount;
+    }
+
+    public String getNewPercent() {
+        return newPercent;
+    }
+
+    public void setNewPercent(String newPercent) {
+        this.newPercent = newPercent;
+    }
+
+    public String getRepairingPercent() {
+        return repairingPercent;
+    }
+
+    public void setRepairingPercent(String repairingPercent) {
+        this.repairingPercent = repairingPercent;
+    }
+
+    public String getFinishPercent() {
+        return finishPercent;
+    }
+
+    public void setFinishPercent(String finishPercent) {
+        this.finishPercent = finishPercent;
+    }
+
+    public String getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(String totalMoney) {
+        this.totalMoney = totalMoney;
     }
 }

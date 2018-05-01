@@ -102,4 +102,187 @@
             and r.dormitoryid = #{repair.dormitoryid}
         </if>
     </select>
+
+    <select id="selectRepairReportPageList" resultMap="selectResultMap">
+        select d.name as dormitoryname,d.uuid as dormitoryid,
+        (select count(*) from tb_dorm_repair r where r.type = 'STUDENT' and r.dormitoryid = re.dormitoryid
+          <if test="repair.dormitoryid != null and repair.dormitoryid != ''">
+              and r.dormitoryid = #{repair.dormitoryid}
+          </if>
+          <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and r.createon >= #{startDateTimeStr}
+                            ]]>
+          </if>
+          <if test="endDateTimeStr != null and endDateTimeStr != ''">
+            <![CDATA[
+                              and r.createon <= #{endDateTimeStr}
+                            ]]>
+          </if>
+        ) as countByStudent,
+        (select count(*) from tb_dorm_repair r where r.type = 'DORMMANAGER' and r.dormitoryid = re.dormitoryid
+        <if test="repair.dormitoryid != null and repair.dormitoryid != ''">
+            and r.dormitoryid = #{repair.dormitoryid}
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and r.createon >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="endDateTimeStr != null and endDateTimeStr != ''">
+            <![CDATA[
+                              and r.createon <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        ) as countByDormitoryManage,
+        (select count(*) from tb_dorm_repair r where r.status = 'NEW' and r.dormitoryid = re.dormitoryid
+        <if test="repair.dormitoryid != null and repair.dormitoryid != ''">
+            and r.dormitoryid = #{repair.dormitoryid}
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and r.createon >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="endDateTimeStr != null and endDateTimeStr != ''">
+            <![CDATA[
+                              and r.createon <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        ) as newCount,
+        (select count(*) from tb_dorm_repair r where r.status = 'REPAIRING' and r.dormitoryid = re.dormitoryid
+        <if test="repair.dormitoryid != null and repair.dormitoryid != ''">
+            and r.dormitoryid = #{repair.dormitoryid}
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and r.createon >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="endDateTimeStr != null and endDateTimeStr != ''">
+            <![CDATA[
+                              and r.createon <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        ) as repairingCount,
+        (select count(*) from tb_dorm_repair r where r.status = 'FINISH' and r.dormitoryid = re.dormitoryid
+        <if test="repair.dormitoryid != null and repair.dormitoryid != ''">
+            and r.dormitoryid = #{repair.dormitoryid}
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and r.createon >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="endDateTimeStr != null and endDateTimeStr != ''">
+            <![CDATA[
+                              and r.createon <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        ) as finishCount,
+        (select ROUND(newCount/(countByStudent+countByDormitoryManage)*100,2)) as newPercent,
+        (select ROUND(repairingCount/(countByStudent+countByDormitoryManage)*100,2)) as repairingPercent,
+        (select ROUND(finishCount/(countByStudent+countByDormitoryManage)*100,2)) as finishPercent,
+        SUM(price) as totalMoney
+        from tb_dorm_repair re
+        INNER JOIN tb_dorm_dormitory d on d.uuid = re.dormitoryid
+        where 1=1
+        <if test="repair.dormitoryid != null and repair.dormitoryid != ''">
+            and re.dormitoryid = #{repair.dormitoryid}
+        </if>
+        <if test="startDateTimeStr != null and startDateTimeStr != ''">
+            <![CDATA[
+                              and re.createon >= #{startDateTimeStr}
+                            ]]>
+        </if>
+        <if test="endDateTimeStr != null and endDateTimeStr != ''">
+            <![CDATA[
+                              and re.createon <= #{endDateTimeStr}
+                            ]]>
+        </if>
+        group by re.dormitoryid
+
+        <if test="repair.dormitoryid == null or repair.dormitoryid == ''">
+            union
+            select '总计' as dormitoryname,'' as dormitoryid,
+            (select count(*) from tb_dorm_repair r where r.type = 'STUDENT'
+            <if test="startDateTimeStr != null and startDateTimeStr != ''">
+                <![CDATA[
+                              and r.createon >= #{startDateTimeStr}
+                            ]]>
+            </if>
+            <if test="endDateTimeStr != null and endDateTimeStr != ''">
+                <![CDATA[
+                              and r.createon <= #{endDateTimeStr}
+                            ]]>
+            </if>
+            ) as countByStudent,
+            (select count(*) from tb_dorm_repair r where r.type = 'DORMMANAGER'
+            <if test="startDateTimeStr != null and startDateTimeStr != ''">
+                <![CDATA[
+                              and r.createon >= #{startDateTimeStr}
+                            ]]>
+            </if>
+            <if test="endDateTimeStr != null and endDateTimeStr != ''">
+                <![CDATA[
+                              and r.createon <= #{endDateTimeStr}
+                            ]]>
+            </if>
+            ) as countByDormitoryManage,
+            (select count(*) from tb_dorm_repair r where r.status = 'NEW'
+            <if test="startDateTimeStr != null and startDateTimeStr != ''">
+                <![CDATA[
+                              and r.createon >= #{startDateTimeStr}
+                            ]]>
+            </if>
+            <if test="endDateTimeStr != null and endDateTimeStr != ''">
+                <![CDATA[
+                              and r.createon <= #{endDateTimeStr}
+                            ]]>
+            </if>
+            ) as newCount,
+            (select count(*) from tb_dorm_repair r where r.status = 'REPAIRING'
+            <if test="startDateTimeStr != null and startDateTimeStr != ''">
+                <![CDATA[
+                              and r.createon >= #{startDateTimeStr}
+                            ]]>
+            </if>
+            <if test="endDateTimeStr != null and endDateTimeStr != ''">
+                <![CDATA[
+                              and r.createon <= #{endDateTimeStr}
+                            ]]>
+            </if>
+            ) as repairingCount,
+            (select count(*) from tb_dorm_repair r where r.status = 'FINISH'
+            <if test="startDateTimeStr != null and startDateTimeStr != ''">
+                <![CDATA[
+                              and r.createon >= #{startDateTimeStr}
+                            ]]>
+            </if>
+            <if test="endDateTimeStr != null and endDateTimeStr != ''">
+                <![CDATA[
+                              and r.createon <= #{endDateTimeStr}
+                            ]]>
+            </if>
+            ) as finishCount,
+            (select ROUND(newCount/(countByStudent+countByDormitoryManage)*100,2)) as newPercent,
+            (select ROUND(repairingCount/(countByStudent+countByDormitoryManage)*100,2)) as repairingPercent,
+            (select ROUND(finishCount/(countByStudent+countByDormitoryManage)*100,2)) as finishPercent,
+            SUM(price) as totalMoney
+            from tb_dorm_repair r
+            where 1=1
+            <if test="startDateTimeStr != null and startDateTimeStr != ''">
+                <![CDATA[
+                              and r.createon >= #{startDateTimeStr}
+                            ]]>
+            </if>
+            <if test="endDateTimeStr != null and endDateTimeStr != ''">
+                <![CDATA[
+                              and r.createon <= #{endDateTimeStr}
+                            ]]>
+            </if>
+
+
+        </if>
+    </select>
 </mapper>

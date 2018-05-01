@@ -867,7 +867,7 @@ public class WeFamilyController extends BaseAdminController {
 
         String fromHome = request.getParameter("fromHome");
         if("Y".equals(fromHome)){
-            String dormitoryid = request.getParameter("dormitoryid");
+            String dormitoryid = request.getParameter("dormitoryId");
             String status = request.getParameter("status");
 
             Consult consult = new Consult();
@@ -986,7 +986,13 @@ public class WeFamilyController extends BaseAdminController {
             String[] statusArr = request.getParameterValues("status");
             repair.setStatusArr(statusArr);
 
-            PageList<Repair> repairPageList = repairService.getRepairPageList(repair, null, null, pageBounds);
+            String startDateStr = request.getParameter("startDateStr");
+            model.addAttribute("startDateStr",startDateStr);
+
+            String endDateStr = request.getParameter("endDateStr");
+            model.addAttribute("endDateStr",endDateStr);
+
+            PageList<Repair> repairPageList = repairService.getRepairPageList(repair, startDateStr, endDateStr, pageBounds);
             model.addAttribute("repairPageList", repairPageList);
             model.addAttribute("repair",repair);
         }
