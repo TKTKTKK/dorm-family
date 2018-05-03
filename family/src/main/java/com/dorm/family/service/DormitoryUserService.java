@@ -62,7 +62,6 @@ public class DormitoryUserService extends BaseService<DormitoryUserMapper,Dormit
         DormitoryUser dormitoryUser = new DormitoryUser();
         dormitoryUser.setUserid(currentUserId);
         List<DormitoryUser> dormitoryUserList = this.mapper.select(dormitoryUser);
-        //当前用户有片区信息时，默认为新创建的用户添加同样片区
         if(null != dormitoryUserList && dormitoryUserList.size() > 0){
             for(DormitoryUser tempDormitoryUser : dormitoryUserList){
                 DormitoryUser dormitoryUserForAdd = new DormitoryUser();

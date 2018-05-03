@@ -562,8 +562,6 @@ public class UserManageController extends BaseAdminController {
                 String password = request.getParameter("inputPassword");
                 platformUser.setPassword(password);
                 dormitoryUserService.addUserInfo(platformUser);
-                //发送手机短信验证码
-//                SMSUtil.sendPlatformUserCreatedNotification(platformUser.getCellphone(), password.toString());
                 model.addAttribute("platformUser", platformUser);
                 model.addAttribute("successMessage", "保存成功");
                 return "redirect:userInfo?userId="+platformUser.getUuid()+"&querytype=district";
