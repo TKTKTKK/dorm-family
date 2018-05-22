@@ -29,7 +29,7 @@
         </if>
         <if test="topAccount == ''">
             and d.uuid in (select c.uuid
-            from tb_platform_user a, tb_dorm_dormitory_user b, tb_mtx_merchant c
+            from tb_platform_user a, tb_dorm_dormitory_user b, tb_dorm_dormitory c
             where a.uuid = b.userid
             and   b.dormitoryid = c.uuid
             and   a.uuid = #{userid}

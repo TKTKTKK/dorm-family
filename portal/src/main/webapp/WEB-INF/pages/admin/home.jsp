@@ -281,25 +281,23 @@
 
 
     //异步查询数据
-    function queryDataAsy(){
-        //已分配新任务
-        $.get(encodeURI("/admin/wefamily/repairAsy?status=NEW&dormitoryId=${dormitoryId}"),function(data,status){
-            $('#newRepair').text(data);
-        });
+    function queryDataAsy() {
+        $.get(encodeURI("/admin/wefamily/repairAsy?status=NEW&dormitoryId=${dormitoryId}"), function (data, status) {
+            $('#newRepair').text(data);});//已分配新任务
         //处理中
-        $.get(encodeURI("/admin/wefamily/repairAsy?status=REPAIRING&dormitoryId=${dormitoryId}"),function(data,status){
+        $.get(encodeURI("/admin/wefamily/repairAsy?status=REPAIRING&dormitoryId=${dormitoryId}"), function (data, status) {
             $('#inRepair').text(data);
         });
         //处理完成
-        $.get(encodeURI("/admin/wefamily/repairAsy?status=FINISH&dormitoryId=${dormitoryId}"),function(data,status){
+        $.get(encodeURI("/admin/wefamily/repairAsy?status=FINISH&dormitoryId=${dormitoryId}"), function (data, status) {
             $('#completeRepair').text(data);
         });
         //未回复
-        $.get(encodeURI("/admin/wefamily/consultAsy?status=N_REPLY&dormitoryId=${dormitoryId}"),function(data,status){
+        $.get(encodeURI("/admin/wefamily/consultAsy?status=N_REPLY&dormitoryId=${dormitoryId}"), function (data, status) {
             $('#NReply').text(data);
         });
         //已回复
-        $.get(encodeURI("/admin/wefamily/consultAsy?status=Y_REPLY&dormitoryId=${dormitoryId}"),function(data,status){
+        $.get(encodeURI("/admin/wefamily/consultAsy?status=Y_REPLY&dormitoryId=${dormitoryId}"), function (data, status) {
             $('#YReply').text(data);
         });
 

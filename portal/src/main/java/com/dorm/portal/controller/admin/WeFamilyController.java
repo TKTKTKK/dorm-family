@@ -1167,7 +1167,7 @@ public class WeFamilyController extends BaseAdminController {
 
             Attachment reporterAttachment = new Attachment();
             reporterAttachment.setRefid(repairId);
-            reporterAttachment.setType("reporter");
+            reporterAttachment.setType("student");
             List<Attachment> reporterAttachmentList = attachmentService.queryForList(reporterAttachment);
             model.addAttribute("reporterAttachmentList",reporterAttachmentList);
 

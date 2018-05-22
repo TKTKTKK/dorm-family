@@ -57,6 +57,8 @@ public class DormGuestController extends BaseGuestController{
     private ConsultService consultService;
     @Autowired
     private HygieneService hygieneService;
+    @Autowired
+    private EchargeService echargeService;
 
     @RequestMapping(value = "/studentPortal",method = RequestMethod.GET)
     public String goStudentPortal(HttpServletRequest request,Model model){
@@ -104,7 +106,7 @@ public class DormGuestController extends BaseGuestController{
         }else if("VIOLATION".equals(type)){
             return "redirect:/guest/violation_list?stuno="+stuno;
         }else{
-            return "redirect:/guest/wandefee_list?stuno="+stuno;
+            return "redirect:/guest/echarge_list?stuId="+student.getUuid();
         }
 
     }
@@ -122,6 +124,23 @@ public class DormGuestController extends BaseGuestController{
         List<Hygiene> hygieneList = hygieneService.queryHygieneListByStuId(stuId);
         model.addAttribute("hygieneList",hygieneList);
         return "guest/hygiene_list";
+    }
+
+    /**
+     * 电费列表
+     */
+    @RequestMapping(value = "/echarge_list",method = RequestMethod.GET)
+    public String echarge_list(HttpServletRequest request,Model model){
+
+        String stuId = request.getParameter("stuId");
+        model.addAttribute("stuId",stuId);
+
+        Echarge echarge = new Echarge();
+        echarge.setStuid(stuId);
+
+        List<Echarge> echargeList = echargeService.queryForList(echarge);
+        model.addAttribute("echargeList",echargeList);
+        return "guest/hygienecharge_liste_list";
     }
 
     /**
